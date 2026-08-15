@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PFMSB Project Portfolio Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+<script src="https://unpkg.com/react-is@18.2.0/umd/react-is.production.min.js"></script>
+<script src="https://unpkg.com/recharts@2.10.3/umd/Recharts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<style>
+  :root{
+    --navy-950:#0a1628;
+    --navy-900:#0e1f38;
+    --navy-800:#132a4a;
+    --navy-700:#1c3a63;
+    --navy-600:#284d80;
+    --gold-500:#c9a227;
+    --gold-400:#dab945;
+    --gold-300:#e8cd6f;
+    --ink-100:#f4f6fa;
+    --ink-300:#c3ccdb;
+    --ink-500:#8393ad;
+    --red-500:#e2574c;
+    --amber-500:#e0a531;
+    --green-500:#3fae6a;
+    --blue-400:#5c9be0;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--navy-950);font-family:'Poppins',sans-serif;color:var(--ink-100);}
+  #root{min-height:100vh;}
+  .app{max-width:1360px;margin:0 auto;padding:28px 32px 64px;}
+  .header{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;border-bottom:1px solid var(--navy-700);padding-bottom:20px;margin-bottom:24px;}
+  .header .eyebrow{color:var(--gold-400);font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;margin:0 0 6px;}
+  .header h1{margin:0;font-size:28px;font-weight:700;letter-spacing:-.01em;}
+  .header .sub{color:var(--ink-500);font-size:13.5px;margin-top:6px;}
+  .cutoff-badge{background:var(--navy-800);border:1px solid var(--navy-600);color:var(--gold-300);padding:8px 16px;border-radius:999px;font-size:13px;font-weight:500;white-space:nowrap;}
+
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+  .kpi-card{background:linear-gradient(155deg,var(--navy-800),var(--navy-900));border:1px solid var(--navy-700);border-radius:14px;padding:20px 22px;position:relative;overflow:hidden;}
+  .kpi-card::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%;background:var(--gold-500);}
+  .kpi-label{font-size:12px;color:var(--ink-500);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:10px;}
+  .kpi-value{font-size:28px;font-weight:700;color:var(--ink-100);line-height:1;}
+  .kpi-sub{font-size:12.5px;margin-top:8px;font-weight:500;color:var(--ink-500);}
+
+  .grid-2{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:16px;}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;}
+  .panel{background:var(--navy-900);border:1px solid var(--navy-700);border-radius:14px;padding:20px 22px 12px;}
+  .panel h3{margin:0 0 2px;font-size:15px;font-weight:600;color:var(--ink-100);}
+  .panel .panel-sub{font-size:12px;color:var(--ink-500);margin-bottom:14px;}
+
+  .legend-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;}
+
+  table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  th{text-align:left;color:var(--ink-500);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:8px 10px;border-bottom:1px solid var(--navy-700);position:sticky;top:0;background:var(--navy-900);cursor:pointer;user-select:none;}
+  td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--ink-300);}
+  tr:hover td{background:rgba(255,255,255,.02);}
+  .status-pill{padding:3px 9px;border-radius:999px;font-size:10.5px;font-weight:600;letter-spacing:.03em;white-space:nowrap;}
+  .status-active{background:rgba(224,165,49,.15);color:var(--amber-500);}
+  .status-end{background:rgba(63,174,106,.15);color:var(--green-500);}
+  .pill-landed{background:rgba(92,155,224,.15);color:var(--blue-400);}
+  .pill-highrise{background:rgba(201,162,39,.15);color:var(--gold-300);}
+  .pill-mc{background:rgba(63,174,106,.15);color:var(--green-500);}
+  .pill-jmb{background:rgba(92,155,224,.15);color:var(--blue-400);}
+  .pill-ra{background:rgba(224,165,49,.15);color:var(--amber-500);}
+  .pill-pr1ma{background:rgba(226,87,76,.12);color:var(--red-500);}
+  .bar-cell{display:flex;align-items:center;gap:8px;}
+  .bar-track{flex:1;height:6px;background:var(--navy-700);border-radius:3px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:3px;}
+  .table-scroll{max-height:440px;overflow-y:auto;}
+  .search-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
+  input[type=text]{background:var(--navy-800);border:1px solid var(--navy-600);color:var(--ink-100);padding:8px 14px;border-radius:8px;font-family:'Poppins';font-size:13px;flex:1;min-width:200px;}
+  input[type=text]::placeholder{color:var(--ink-500);}
+  select{background:var(--navy-800);border:1px solid var(--navy-600);color:var(--ink-100);padding:8px 12px;border-radius:8px;font-family:'Poppins';font-size:13px;}
+  .footer-note{color:var(--ink-500);font-size:11.5px;margin-top:26px;text-align:center;line-height:1.6;}
+  .tooltip-box{background:var(--navy-800);border:1px solid var(--navy-600);border-radius:8px;padding:10px 14px;font-size:12.5px;color:var(--ink-100);}
+  .risk-name{color:var(--ink-100);font-weight:500;}
+
+  .update-panel{background:var(--navy-900);border:1px dashed var(--navy-600);border-radius:14px;padding:18px 22px;margin-bottom:24px;}
+  .update-head{display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
+  .update-head h3{margin:0;font-size:14px;}
+  .update-head .chev{color:var(--gold-400);font-size:13px;transition:transform .15s;}
+  .update-body{margin-top:16px;}
+  .drop-zone{border:1.5px dashed var(--navy-600);border-radius:10px;padding:24px;text-align:center;color:var(--ink-500);font-size:13px;cursor:pointer;transition:border-color .15s,background .15s;}
+  .drop-zone:hover, .drop-zone.dragover{border-color:var(--gold-500);background:rgba(201,162,39,.05);}
+  .drop-zone b{color:var(--gold-300);}
+  .update-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:14px;}
+  .btn{background:var(--gold-500);color:var(--navy-950);border:none;padding:9px 18px;border-radius:8px;font-family:'Poppins';font-weight:600;font-size:13px;cursor:pointer;}
+  .btn:hover{background:var(--gold-400);}
+  .btn.secondary{background:transparent;border:1px solid var(--navy-600);color:var(--ink-300);}
+  .btn.secondary:hover{border-color:var(--gold-500);color:var(--gold-300);}
+  .status-msg{font-size:12.5px;margin-top:10px;padding:8px 12px;border-radius:8px;}
+  .status-msg.ok{background:rgba(63,174,106,.12);color:var(--green-500);}
+  .status-msg.err{background:rgba(226,87,76,.12);color:var(--red-500);}
+  .field-label{font-size:11.5px;color:var(--ink-500);display:block;margin-bottom:5px;}
+
+  @media(max-width:900px){
+    .kpi-grid{grid-template-columns:repeat(2,1fr);}
+    .grid-2,.grid-3{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script id="project-data" type="application/json">
+[{"name": "A'Famosa 1 (A'Famosa Phase 2)", "typology": "Landed", "title": "Stratified", "state": "Melaka", "totalUnits": 280, "developer": "Tanjung Ratna Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 64, "completionYear": 2021, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 279, "movedIn": 104, "khoPct": 99.6, "movedInPct": 37.3, "unsold": 1, "salesExecuted": null, "vpIssued": 279}, {"name": "A'Famosa 2 (A'Famosa Phase 1)", "typology": "High-Rise", "title": "Stratified", "state": "Melaka", "totalUnits": 475, "developer": "Tanjung Ratna Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 80, "completionYear": 2022, "dlpStatusOwner": "END", "managementStatus": "JMB", "keyHandedOver": 448, "movedIn": 290, "khoPct": 94.3, "movedInPct": 64.7, "unsold": 8, "salesExecuted": null, "vpIssued": 467}, {"name": "Alam Damai", "typology": "High-Rise", "title": "Stratified", "state": "WPKL", "totalUnits": 2074, "developer": "Transgreen Structure Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": null, "completionYear": 2017, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 2055, "movedIn": 1832, "khoPct": 99.1, "movedInPct": 89.1, "unsold": 19, "salesExecuted": null, "vpIssued": 2055}, {"name": "Bagan Serai Phase 1", "typology": "Landed", "title": "Individual", "state": "Perak", "totalUnits": 704, "developer": "Sepakat Ehsan Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 72, "completionYear": 2017, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 698, "movedIn": 390, "khoPct": 99.1, "movedInPct": 55.9, "unsold": 6, "salesExecuted": null, "vpIssued": 698}, {"name": "Bagan Serai Phase 2", "typology": "Landed", "title": "Individual", "state": "Perak", "totalUnits": 544, "developer": "Sepakat Ehsan Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": null, "completionYear": 2017, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 542, "movedIn": 370, "khoPct": 99.6, "movedInPct": 68.3, "unsold": 2, "salesExecuted": null, "vpIssued": 542}, {"name": "Bandar Baru Setia Awan Perdana (Sitiawan Phase 1)", "typology": "Landed", "title": "Stratified", "state": "Perak", "totalUnits": 836, "developer": "Taraf Nusantara Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 75, "completionYear": 2021, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 745, "movedIn": 215, "khoPct": 89.1, "movedInPct": 28.9, "unsold": 68, "salesExecuted": null, "vpIssued": 768}, {"name": "Bandar Baru Setia Awan Perdana (Sitiawan Phase 2)", "typology": "Landed", "title": "Stratified", "state": "Perak", "totalUnits": 432, "developer": "Taraf Nusantara Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 75, "completionYear": 2023, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 62, "movedIn": 15, "khoPct": 14.4, "movedInPct": 24.2, "unsold": 350, "salesExecuted": null, "vpIssued": 82}, {"name": "Bandar Bukit Mahkota", "typology": "High-Rise", "title": "Stratified", "state": "Selangor", "totalUnits": 650, "developer": "Citra Hartamas Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 67, "completionYear": 2023, "dlpStatusOwner": "END", "managementStatus": "PR1MA", "keyHandedOver": 575, "movedIn": 222, "khoPct": 88.5, "movedInPct": 38.6, "unsold": 62, "salesExecuted": null, "vpIssued": 588}, {"name": "Bandar Ekar (Rantau Phase 1)", "typology": "Landed", "title": "Individual", "state": "Negeri Sembilan", "totalUnits": 766, "developer": "Bina Terbit Sdn Bhd (former) / \nZikay Sunergy Sdn Bhd (current)", "deliverablePhase": "PR1MA 2.0", "qlassic": 67, "completionYear": 2025, "dlpStatusOwner": "ACTIVE", "managementStatus": "RA", "keyHandedOver": 693, "movedIn": 97, "khoPct": 90.5, "movedInPct": 14.0, "unsold": 12, "salesExecuted": null, "vpIssued": 754}, {"name": "Bandar Layangkasa", "typology": "Landed", "title": "Individual", "state": "Johor", "totalUnits": 475, "developer": "Cahaya Bumimas Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": null, "completionYear": 2017, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 472, "movedIn": 380, "khoPct": 99.4, "movedInPct": 80.5, "unsold": 3, "salesExecuted": null, "vpIssued": 472}, {"name": "Bandar Puteri Jaya 1 (Sungai Petani 2 Phase 1)", "typology": "Landed", "title": "Individual", "state": "Kedah", "totalUnits": 449, "developer": "OSK Properties Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 65, "completionYear": 2016, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 446, "movedIn": 312, "khoPct": 99.3, "movedInPct": 70.0, "unsold": 3, "salesExecuted": null, "vpIssued": 446}, {"name": "Bandar Puteri Jaya 2 (Sungai Petani 2 Phase 2)", "typology": "Landed", "title": "Individual", "state": "Kedah", "totalUnits": 975, "developer": "OSK Properties Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": null, "completionYear": 2017, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 974, "movedIn": 600, "khoPct": 99.9, "movedInPct": 61.6, "unsold": 1, "salesExecuted": null, "vpIssued": 974}, {"name": "Bandar Putra Height (Padang Siding)", "typology": "Landed", "title": "Individual", "state": "Perlis", "totalUnits": 231, "developer": "Optima Hartanah Sdn Bhd (former) / Z&J Bina Sdn Bhd (curremt)", "deliverablePhase": "PR1MA 2.0", "qlassic": 63, "completionYear": 2020, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 229, "movedIn": 201, "khoPct": 99.1, "movedInPct": 87.8, "unsold": 0, "salesExecuted": null, "vpIssued": 231}, {"name": "Bintawa Riverfront", "typology": "High-Rise", "title": "Stratified", "state": "Sarawak", "totalUnits": 1320, "developer": "Hong Seng Construction (E.M.) Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 73, "completionYear": 2020, "dlpStatusOwner": "END", "managementStatus": "JMB", "keyHandedOver": 1317, "movedIn": 1316, "khoPct": 99.8, "movedInPct": 99.9, "unsold": 3, "salesExecuted": null, "vpIssued": 1317}, {"name": "Borneo Cove", "typology": "High-Rise", "title": "Stratified", "state": "Sabah", "totalUnits": 999, "developer": "Sabakekal Sdn Bhd (former) / Akas Permai Sdn Bhd (current)", "deliverablePhase": "PR1MA 2.0", "qlassic": 66, "completionYear": 2021, "dlpStatusOwner": "END", "managementStatus": "PR1MA", "keyHandedOver": 924, "movedIn": 900, "khoPct": 92.5, "movedInPct": 97.4, "unsold": 36, "salesExecuted": null, "vpIssued": 963}, {"name": "Brickfields", "typology": "High-Rise", "title": "Stratified", "state": "WPKL", "totalUnits": 920, "developer": "MRCB Bhd (former) / Breaks Construction Sdn Bhd (current)", "deliverablePhase": "PR1MA 2.0", "qlassic": 82, "completionYear": 2024, "dlpStatusOwner": "END", "managementStatus": "PR1MA", "keyHandedOver": 891, "movedIn": 219, "khoPct": 96.8, "movedInPct": 24.6, "unsold": 4, "salesExecuted": null, "vpIssued": 916}, {"name": "Bukit Katil", "typology": "High-Rise", "title": "Stratified", "state": "Melaka", "totalUnits": 407, "developer": "AG Bumi Hartanah Sdn Bhd", "deliverablePhase": "", "qlassic": null, "completionYear": null, "dlpStatusOwner": "ACTIVE", "managementStatus": "PR1MA", "keyHandedOver": 0, "movedIn": 0, "khoPct": 0, "movedInPct": null, "unsold": 407, "salesExecuted": null, "vpIssued": null}, {"name": "Desa Aman (Padang Meha)", "typology": "Landed", "title": "Individual", "state": "Kedah", "totalUnits": 244, "developer": "Golden Cignet Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 71, "completionYear": 2017, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 241, "movedIn": 215, "khoPct": 98.8, "movedInPct": 89.2, "unsold": 2, "salesExecuted": null, "vpIssued": 242}, {"name": "D'Marina @ Pinggiran Putra 2", "typology": "Landed", "title": "Individual", "state": "Pahang", "totalUnits": 523, "developer": "Sinergi Dayang Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 72, "completionYear": 2023, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 520, "movedIn": 145, "khoPct": 99.4, "movedInPct": 27.9, "unsold": 2, "salesExecuted": null, "vpIssued": 521}, {"name": "Falim", "typology": "High-Rise", "title": "Stratified", "state": "Perak", "totalUnits": 616, "developer": "Amber Synergy Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 74, "completionYear": 2018, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 590, "movedIn": 330, "khoPct": 95.8, "movedInPct": 55.9, "unsold": 22, "salesExecuted": null, "vpIssued": 594}, {"name": "Gambang Baru 1 (Gambang 3 Phase 1)", "typology": "Landed", "title": "Individual", "state": "Pahang", "totalUnits": 500, "developer": "Franky Construction Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 61, "completionYear": 2022, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 498, "movedIn": 300, "khoPct": 99.6, "movedInPct": 60.2, "unsold": 2, "salesExecuted": null, "vpIssued": 498}, {"name": "Jalan Jubilee", "typology": "High-Rise", "title": "Stratified", "state": "WPKL", "totalUnits": 543, "developer": "Southern Score Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 69, "completionYear": 2019, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 530, "movedIn": 506, "khoPct": 97.6, "movedInPct": 95.5, "unsold": 10, "salesExecuted": null, "vpIssued": 533}, {"name": "Junjong Phase 1", "typology": "Landed", "title": "Individual", "state": "Kedah", "totalUnits": 580, "developer": "Bumita SB", "deliverablePhase": "PR1MA 2.0", "qlassic": 79, "completionYear": 2024, "dlpStatusOwner": "ACTIVE", "managementStatus": "RA", "keyHandedOver": 567, "movedIn": 122, "khoPct": 97.8, "movedInPct": 21.5, "unsold": 1, "salesExecuted": null, "vpIssued": 579}, {"name": "Kajang Utama", "typology": "High-Rise", "title": "Stratified", "state": "Selangor", "totalUnits": 566, "developer": "MRCB Utama Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 68, "completionYear": 2020, "dlpStatusOwner": "END", "managementStatus": "PR1MA", "keyHandedOver": 397, "movedIn": 352, "khoPct": 70.1, "movedInPct": 88.7, "unsold": 167, "salesExecuted": null, "vpIssued": 399}, {"name": "Kampar", "typology": "Landed", "title": "Individual", "state": "Perak", "totalUnits": 609, "developer": "Meru Excel Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 68, "completionYear": 2018, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 594, "movedIn": 305, "khoPct": 97.5, "movedInPct": 51.3, "unsold": 13, "salesExecuted": null, "vpIssued": 596}, {"name": "Kampung Paloh", "typology": "High-Rise", "title": "Stratified", "state": "Perak", "totalUnits": 456, "developer": "Seri Perwira Logistic Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 74, "completionYear": 2018, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 434, "movedIn": 325, "khoPct": 95.2, "movedInPct": 74.9, "unsold": 21, "salesExecuted": null, "vpIssued": 435}, {"name": "Kamunting Phase 1", "typology": "Landed", "title": "Individual", "state": "Perak", "totalUnits": 229, "developer": "Antaraya Sdn Bhd", "deliverablePhase": "ta", "qlassic": 62, "completionYear": 2016, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 226, "movedIn": 221, "khoPct": 98.7, "movedInPct": 97.8, "unsold": 1, "salesExecuted": null, "vpIssued": 228}, {"name": "Kamunting Phase 2", "typology": "Landed", "title": "Individual", "state": "Perak", "totalUnits": 296, "developer": "Antaraya Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": null, "completionYear": 2017, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 292, "movedIn": 280, "khoPct": 98.6, "movedInPct": 95.9, "unsold": 3, "salesExecuted": null, "vpIssued": 293}, {"name": "Kepayang (Fairpark)", "typology": "High-Rise", "title": "Stratified", "state": "Perak", "totalUnits": 252, "developer": "SSL Land Sdn Bhd (former) Vertex Central Industries Sdn Bhd ", "deliverablePhase": "PR1MA 2.0", "qlassic": 75, "completionYear": 2022, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 137, "movedIn": 110, "khoPct": 54.4, "movedInPct": 80.3, "unsold": 109, "salesExecuted": null, "vpIssued": 143}, {"name": "Klebang 2", "typology": "High-Rise", "title": "Stratified", "state": "Melaka", "totalUnits": 800, "developer": "Kesuma Sdn Bhd", "deliverablePhase": "", "qlassic": null, "completionYear": null, "dlpStatusOwner": "ACTIVE", "managementStatus": "PR1MA", "keyHandedOver": null, "movedIn": null, "khoPct": 0, "movedInPct": null, "unsold": 800, "salesExecuted": null, "vpIssued": null}, {"name": "Kota Marudu", "typology": "High-Rise", "title": "Stratified", "state": "Sabah", "totalUnits": 360, "developer": "WK Maju Jaya Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 64, "completionYear": 2019, "dlpStatusOwner": "END", "managementStatus": "PR1MA", "keyHandedOver": 359, "movedIn": 191, "khoPct": 99.7, "movedInPct": 53.2, "unsold": 1, "salesExecuted": null, "vpIssued": 359}, {"name": "Kota Tinggi", "typology": "Landed", "title": "Individual", "state": "Johor", "totalUnits": 625, "developer": "Pesaka Persada Sdn Bhd (former) / Majidee (Holdings) Sdn Bhd (current)", "deliverablePhase": "PR1MA 2.0", "qlassic": 77, "completionYear": 2023, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 616, "movedIn": 250, "khoPct": 98.6, "movedInPct": 40.6, "unsold": 1, "salesExecuted": null, "vpIssued": 624}, {"name": "Kuala Ketil", "typology": "Landed", "title": "Individual", "state": "Kedah", "totalUnits": 323, "developer": "Darulaman Realty Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 60, "completionYear": 2015, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 321, "movedIn": 321, "khoPct": 99.4, "movedInPct": 100, "unsold": 2, "salesExecuted": null, "vpIssued": 321}, {"name": "Larkin Indah", "typology": "High-Rise", "title": "Stratified", "state": "Johor", "totalUnits": 1174, "developer": "Alfa Lagenda Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 80, "completionYear": 2024, "dlpStatusOwner": "END", "managementStatus": "JMB", "keyHandedOver": 1128, "movedIn": 287, "khoPct": 96.1, "movedInPct": 25.4, "unsold": 6, "salesExecuted": null, "vpIssued": 1168}, {"name": "Lubok Jong Phase 1", "typology": "Landed", "title": "Individual", "state": "Kelantan", "totalUnits": 965, "developer": "Firalex Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 62, "completionYear": 2020, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 636, "movedIn": 250, "khoPct": 65.9, "movedInPct": 39.3, "unsold": 277, "salesExecuted": null, "vpIssued": 688}, {"name": "Matang Homes", "typology": "High-Rise", "title": "Stratified", "state": "Sarawak", "totalUnits": 912, "developer": "Lee Ling Construction & Development Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 65, "completionYear": 2019, "dlpStatusOwner": "END", "managementStatus": "JMB", "keyHandedOver": 910, "movedIn": 910, "khoPct": 99.8, "movedInPct": 100, "unsold": 2, "salesExecuted": null, "vpIssued": 910}, {"name": "Matang Premier", "typology": "High-Rise", "title": "Stratified", "state": "Sarawak", "totalUnits": 448, "developer": "Lee Ling Construction & Development Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": null, "completionYear": 2019, "dlpStatusOwner": "END", "managementStatus": "JMB", "keyHandedOver": 445, "movedIn": 443, "khoPct": 99.3, "movedInPct": 99.6, "unsold": 3, "salesExecuted": null, "vpIssued": 445}, {"name": "Melaka Tengah 2 (Pokok Mangga)", "typology": "High-Rise", "title": "Stratified", "state": "Melaka", "totalUnits": 980, "developer": "Jeram Anggun Sdn Bhd (former / Consolidated Legend (M) Sdn Bhd (current)", "deliverablePhase": "PR1MA 2.0", "qlassic": 79, "completionYear": 2024, "dlpStatusOwner": "ACTIVE", "managementStatus": "JMB", "keyHandedOver": 731, "movedIn": 295, "khoPct": 74.6, "movedInPct": null, "unsold": null, "salesExecuted": null, "vpIssued": null}, {"name": "Menggatal Phase 1A", "typology": "High-Rise", "title": "Stratified", "state": "Sabah", "totalUnits": 816, "developer": "Puncak Deras Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 82, "completionYear": 2025, "dlpStatusOwner": "ACTIVE", "managementStatus": "PR1MA", "keyHandedOver": 628, "movedIn": 114, "khoPct": 77.0, "movedInPct": 18.2, "unsold": 28, "salesExecuted": null, "vpIssued": 788}, {"name": "Meru (Bandar Meru Raya)", "typology": "High-Rise", "title": "Stratified", "state": "Perak", "totalUnits": 1011, "developer": "Meru Properties Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 71, "completionYear": 2017, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 941, "movedIn": 673, "khoPct": 93.1, "movedInPct": 71.5, "unsold": 65, "salesExecuted": null, "vpIssued": 946}, {"name": "Pauh Permai (Permatang Pauh)", "typology": "High-Rise", "title": "Stratified", "state": "Pulau Pinang", "totalUnits": 1017, "developer": "Excel Focus Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 74, "completionYear": 2021, "dlpStatusOwner": "END", "managementStatus": "JMB", "keyHandedOver": 1017, "movedIn": 989, "khoPct": 100, "movedInPct": 97.2, "unsold": 0, "salesExecuted": null, "vpIssued": 1017}, {"name": "Pelangi Indah", "typology": "High-Rise", "title": "Stratified", "state": "Johor", "totalUnits": 720, "developer": "MJK Group Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 80, "completionYear": 2023, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 714, "movedIn": 600, "khoPct": 99.2, "movedInPct": 84.0, "unsold": 0, "salesExecuted": null, "vpIssued": 720}, {"name": "Port Dickson", "typology": "Landed", "title": "Individual", "state": "Negeri Sembilan", "totalUnits": 659, "developer": "Knowledge Estate Sdn Bhd (former) / Vertex Central Industries Sdn Bhd (current)", "deliverablePhase": "PR1MA 2.0", "qlassic": 79, "completionYear": 2024, "dlpStatusOwner": "END", "managementStatus": "PR1MA", "keyHandedOver": 642, "movedIn": 128, "khoPct": 97.4, "movedInPct": 19.9, "unsold": 8, "salesExecuted": null, "vpIssued": 651}, {"name": "Pulau Sebang", "typology": "Landed", "title": "Stratified", "state": "Melaka", "totalUnits": 972, "developer": "Wintarijaya Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 63, "completionYear": 2021, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 967, "movedIn": 838, "khoPct": 99.5, "movedInPct": 86.7, "unsold": 2, "salesExecuted": null, "vpIssued": 970}, {"name": "Ranggu", "typology": "Landed", "title": "Individual", "state": "Sabah", "totalUnits": 1300, "developer": "Prinsip Hasil Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 72, "completionYear": 2023, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 1280, "movedIn": 900, "khoPct": 98.5, "movedInPct": 70.3, "unsold": 3, "salesExecuted": null, "vpIssued": 1297}, {"name": "Rumpun Bahagia (Melaka Tengah 1)", "typology": "High-Rise", "title": "Stratified", "state": "Melaka", "totalUnits": 600, "developer": "WESB Realty Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 66, "completionYear": 2020, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 589, "movedIn": 499, "khoPct": 98.2, "movedInPct": 84.7, "unsold": 10, "salesExecuted": null, "vpIssued": 590}, {"name": "Segari (Lumut Phase 1)", "typology": "Landed", "title": "Individual", "state": "Perak", "totalUnits": 285, "developer": "Visi Arif Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 63, "completionYear": 2019, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 278, "movedIn": 250, "khoPct": 97.5, "movedInPct": 89.9, "unsold": 6, "salesExecuted": null, "vpIssued": 279}, {"name": "Segari (Lumut Phase 2)", "typology": "Landed", "title": "Individual", "state": "Perak", "totalUnits": 338, "developer": "Visi Arif Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 76, "completionYear": 2021, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 337, "movedIn": 230, "khoPct": 99.7, "movedInPct": 68.2, "unsold": 0, "salesExecuted": null, "vpIssued": 338}, {"name": "Selatan Kinarut (Kinarut South Phase 1)", "typology": "High-Rise", "title": "Stratified", "state": "Sabah", "totalUnits": 232, "developer": "Visaland Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 68, "completionYear": 2021, "dlpStatusOwner": "END", "managementStatus": "PR1MA", "keyHandedOver": 230, "movedIn": 183, "khoPct": 99.1, "movedInPct": 79.6, "unsold": 2, "salesExecuted": null, "vpIssued": 230}, {"name": "Selatan Kinarut (Kinarut South Phase 2)", "typology": "High-Rise", "title": "Stratified", "state": "Sabah", "totalUnits": 270, "developer": "Visaland Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 66, "completionYear": 2021, "dlpStatusOwner": "END", "managementStatus": "PR1MA", "keyHandedOver": 262, "movedIn": 118, "khoPct": 97.0, "movedInPct": 45.0, "unsold": 4, "salesExecuted": null, "vpIssued": 266}, {"name": "Semenggoh Phase 1", "typology": "Landed", "title": "Individual", "state": "Sarawak", "totalUnits": 558, "developer": "Sri Datai Properties (Sarawak) Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 65, "completionYear": 2021, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 553, "movedIn": 553, "khoPct": 99.1, "movedInPct": 100, "unsold": 4, "salesExecuted": null, "vpIssued": 554}, {"name": "Seremban Sentral", "typology": "High-Rise", "title": "Stratified", "state": "Negeri Sembilan", "totalUnits": 1504, "developer": "PR1MA Seremban Sentral Sdn Bhd (former) / Brunsfield Engineering Sdn Bhd (current)", "deliverablePhase": "PR1MA 2.0", "qlassic": null, "completionYear": 2023, "dlpStatusOwner": "END", "managementStatus": "PR1MA", "keyHandedOver": 901, "movedIn": 500, "khoPct": 59.9, "movedInPct": 55.5, "unsold": 548, "salesExecuted": null, "vpIssued": 956}, {"name": "Seri Mahkota (Sungai Ular)", "typology": "Landed", "title": "Individual", "state": "Kedah", "totalUnits": 499, "developer": "Bina Maju Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 73, "completionYear": 2023, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 486, "movedIn": 433, "khoPct": 97.4, "movedInPct": 89.1, "unsold": 2, "salesExecuted": null, "vpIssued": 497}, {"name": "Seri Mahkota Maju (Gambang 1 Phase 1A)", "typology": "Landed", "title": "Individual", "state": "Pahang", "totalUnits": 317, "developer": "Nova Terrace Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 67, "completionYear": 2020, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 311, "movedIn": 290, "khoPct": 98.1, "movedInPct": 93.2, "unsold": 2, "salesExecuted": null, "vpIssued": 315}, {"name": "Simpang Empat 2 Phase 1", "typology": "Landed", "title": "Stratified", "state": "Kedah", "totalUnits": 432, "developer": "Bina Conso Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 78, "completionYear": 2025, "dlpStatusOwner": "ACTIVE", "managementStatus": "PR1MA", "keyHandedOver": 216, "movedIn": 1, "khoPct": 50.0, "movedInPct": 0.5, "unsold": 4, "salesExecuted": null, "vpIssued": 428}, {"name": "Taman Raia Sentosa (Sungai Raia)", "typology": "Landed", "title": "Individual", "state": "Perak", "totalUnits": 376, "developer": "Proaktif Development Sdn Bhd (former) / Pembinaan Bumiasia Sdn Bhd (current)", "deliverablePhase": "PR1MA 2.0", "qlassic": 67, "completionYear": 2023, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 366, "movedIn": 169, "khoPct": 97.3, "movedInPct": 46.2, "unsold": 6, "salesExecuted": null, "vpIssued": 370}, {"name": "Tapah", "typology": "Landed", "title": "Individual", "state": "Perak", "totalUnits": 647, "developer": "Meranti Tiga Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 73, "completionYear": 2018, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 643, "movedIn": 319, "khoPct": 99.4, "movedInPct": 49.6, "unsold": 4, "salesExecuted": null, "vpIssued": 643}, {"name": "Tebrau", "typology": "High-Rise", "title": "Stratified", "state": "Johor", "totalUnits": 1284, "developer": "Tentu Canggih Holdings Sdn Bhd (former) Aturan Prisma Sdn Bhd (current)", "deliverablePhase": "PR1MA 2.0", "qlassic": 63, "completionYear": 2021, "dlpStatusOwner": "END", "managementStatus": "PR1MA", "keyHandedOver": 1280, "movedIn": 1200, "khoPct": 99.7, "movedInPct": 93.8, "unsold": 3, "salesExecuted": null, "vpIssued": 1281}, {"name": "Tok Bali Phase 1", "typology": "Landed", "title": "Individual", "state": "Kelantan", "totalUnits": 193, "developer": "BBGM Tok Bali Developmenrt Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 76, "completionYear": 2025, "dlpStatusOwner": "ACTIVE", "managementStatus": "RA", "keyHandedOver": 165, "movedIn": 3, "khoPct": 85.5, "movedInPct": 1.8, "unsold": 4, "salesExecuted": null, "vpIssued": 189}, {"name": "Utama (Sungai Petani 1)", "typology": "Landed", "title": "Individual", "state": "Kedah", "totalUnits": 1349, "developer": "SP Baiduri Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 68, "completionYear": 2017, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 1345, "movedIn": 874, "khoPct": 99.7, "movedInPct": 65.0, "unsold": 4, "salesExecuted": null, "vpIssued": 1345}, {"name": "Woodford Estate Phase 1", "typology": "Landed", "title": "Individual", "state": "Sabah", "totalUnits": 300, "developer": "Gaya Belian Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 75, "completionYear": 2023, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 299, "movedIn": 200, "khoPct": 99.7, "movedInPct": 66.9, "unsold": 0, "salesExecuted": null, "vpIssued": 300}]
+</script>
+
+<script type="text/babel">
+const { useState, useMemo, useRef } = React;
+
+if (typeof Recharts === "undefined") {
+  document.getElementById('root').innerHTML =
+    '<div style="padding:40px;color:#e2574c;font-family:sans-serif;text-align:center">' +
+    'Chart library failed to load from CDN. Please check your internet connection and refresh the page.' +
+    '</div>';
+  throw new Error("Recharts failed to load");
+}
+
+const {
+  ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis,
+  CartesianGrid, Tooltip, Legend, RadialBarChart, RadialBar
+} = Recharts;
+
+const SEED_PROJECTS = JSON.parse(document.getElementById('project-data').textContent);
+const STORAGE_KEY = "pfmsb_project_dashboard_v1";
+
+const GOLD = "#c9a227";
+const GOLD_LIGHT = "#e8cd6f";
+const RED = "#e2574c";
+const AMBER = "#e0a531";
+const GREEN = "#3fae6a";
+const BLUE = "#5c9be0";
+const NAVY_LINE = "#1c3a63";
+
+function fmt(n){ return (n || 0).toLocaleString(); }
+function num(v){ return typeof v === "number" && !isNaN(v) ? v : 0; }
+function pct1(n){ return (n || 0).toFixed(1) + "%"; }
+
+// ---------- persistence ----------
+function loadStoredProjects() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return null;
+    return parsed;
+  } catch (e) { return null; }
+}
+function saveStoredProjects(projects) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(projects)); } catch (e) {}
+}
+
+// ---------- Excel parsing: merges "PFMSB Master Project Data" + a monthly sales sheet ----------
+function findHeaderRowByLabel(rows, label, withinFirstN) {
+  const limit = withinFirstN ? Math.min(rows.length, withinFirstN) : rows.length;
+  for (let i = 0; i < limit; i++) {
+    if (rows[i] && rows[i].some(c => typeof c === "string" && c.trim() === label)) return i;
+  }
+  return -1;
+}
+function findStopRow(rows, startIdx, marker) {
+  for (let i = startIdx; i < rows.length; i++) {
+    const c0 = rows[i] && rows[i][0];
+    if (typeof c0 === "string" && c0.includes(marker)) return i;
+  }
+  return rows.length;
+}
+
+function parseMasterSheet(workbook, sheetName) {
+  const ws = workbook.Sheets[sheetName];
+  if (!ws) throw new Error("Sheet not found: " + sheetName);
+  const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: null, raw: true });
+  const headerIdx = findHeaderRowByLabel(rows, "Reporting Project Name", 6);
+  if (headerIdx === -1) throw new Error('Could not find "Reporting Project Name" header row.');
+  const headerRow = rows[headerIdx];
+  const colIndex = {};
+  headerRow.forEach((h, i) => { if (h != null) colIndex[String(h).trim()] = i; });
+
+  const required = ["Reporting Project Name","Typology","Title","Total Units","State","Management Status","Key Handed Over","Moved In"];
+  const missing = required.filter(h => !(h in colIndex));
+  if (missing.length) throw new Error("Master sheet missing columns: " + missing.join(", "));
+
+  const dlpKey = Object.keys(colIndex).find(k => k.replace(/\s+/g," ").includes("DLP Status") && k.includes("Owner")) || null;
+
+  const out = {};
+  for (let i = headerIdx + 1; i < rows.length; i++) {
+    const row = rows[i];
+    if (!row) continue;
+    const name = row[colIndex["Reporting Project Name"]];
+    if (!name || typeof name !== "string" || !name.trim()) continue;
+    const kho = num(row[colIndex["Key Handed Over"]]);
+    const moved = num(row[colIndex["Moved In"]]);
+    const totalUnits = num(row[colIndex["Total Units"]]);
+    out[name.trim()] = {
+      name: name.replace(/^Residensi\s+/, ""),
+      typology: row[colIndex["Typology"]] || "",
+      title: row[colIndex["Title"]] || "",
+      state: row[colIndex["State"]] || "",
+      totalUnits,
+      developer: row[colIndex["Developer"]] || "",
+      deliverablePhase: row[colIndex["Deliverable Phase"]] || "",
+      qlassic: typeof row[colIndex["QLASSIC Score"]] === "number" ? row[colIndex["QLASSIC Score"]] : null,
+      completionYear: row[colIndex["Completion Year"]] || null,
+      dlpStatusOwner: dlpKey ? (row[colIndex[dlpKey]] || "") : "",
+      managementStatus: row[colIndex["Management Status"]] || "",
+      keyHandedOver: kho,
+      movedIn: moved,
+      khoPct: totalUnits ? Math.round((kho / totalUnits) * 1000) / 10 : null,
+      movedInPct: totalUnits ? Math.round((moved / totalUnits) * 1000) / 10 : null,
+      unsold: null,
+      salesExecuted: null,
+      vpIssued: null,
+    };
+  }
+  return out;
+}
+
+function parseSalesSheet(workbook, sheetName) {
+  const ws = workbook.Sheets[sheetName];
+  if (!ws) throw new Error("Sheet not found: " + sheetName);
+  const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: null, raw: true });
+  const headerIdx = findHeaderRowByLabel(rows, "Project Name");
+  if (headerIdx === -1) throw new Error('Could not find "Project Name" header row in the monthly sheet.');
+  const headerRow = rows[headerIdx];
+  const colIndex = {};
+  headerRow.forEach((h, i) => { if (h != null) colIndex[String(h).trim()] = i; });
+  if (!("Unsold (Not VP)" in colIndex)) throw new Error('Monthly sheet missing "Unsold (Not VP)" column.');
+
+  const stopIdx = findStopRow(rows, headerIdx + 1, "Project DLP Status");
+  const out = {};
+  for (let i = headerIdx + 1; i < stopIdx; i++) {
+    const row = rows[i];
+    if (!row) continue;
+    const name = row[colIndex["Project Name"]];
+    if (!name || typeof name !== "string" || !name.trim()) continue;
+    out[name.trim()] = {
+      unsold: row[colIndex["Unsold (Not VP)"]],
+      salesExecuted: row[colIndex["Sales Executed"]],
+      vpIssued: row[colIndex["VP issued"]],
+    };
+  }
+  return out;
+}
+
+function mergeProjects(master, sales) {
+  return Object.keys(master).map(key => {
+    const m = master[key];
+    const s = sales[key];
+    return {
+      ...m,
+      unsold: s && typeof s.unsold === "number" ? s.unsold : m.unsold,
+      salesExecuted: s && typeof s.salesExecuted === "number" ? s.salesExecuted : m.salesExecuted,
+      vpIssued: s && typeof s.vpIssued === "number" ? s.vpIssued : m.vpIssued,
+    };
+  });
+}
+
+// ---------- UI atoms ----------
+function KpiCard({ label, value, sub }) {
+  return (
+    <div className="kpi-card">
+      <div className="kpi-label">{label}</div>
+      <div className="kpi-value">{value}</div>
+      {sub && <div className="kpi-sub">{sub}</div>}
+    </div>
+  );
+}
+
+function CustomTooltip({active, payload, label}) {
+  if (!active || !payload || !payload.length) return null;
+  return (
+    <div className="tooltip-box">
+      {label && <div style={{color:GOLD_LIGHT, fontWeight:600, marginBottom:4}}>{label}</div>}
+      {payload.map((p,i) => (
+        <div key={i} style={{color:p.color || p.fill}}>{p.name}: <b>{fmt(p.value)}</b></div>
+      ))}
+    </div>
+  );
+}
+
+function TypologyChart({ projects }) {
+  const landed = projects.filter(p => p.typology === "Landed").reduce((s,p)=>s+num(p.totalUnits),0);
+  const highrise = projects.filter(p => p.typology === "High-Rise").reduce((s,p)=>s+num(p.totalUnits),0);
+  const data = [
+    { name: "Landed", value: landed, color: BLUE },
+    { name: "High-Rise", value: highrise, color: GOLD },
+  ];
+  return (
+    <ResponsiveContainer width="100%" height={220}>
+      <PieChart>
+        <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={55} outerRadius={80} paddingAngle={3}>
+          {data.map((d,i) => <Cell key={i} fill={d.color} stroke="none" />)}
+        </Pie>
+        <Tooltip content={<CustomTooltip />} />
+      </PieChart>
+    </ResponsiveContainer>
+  );
+}
+
+function ManagementChart({ projects }) {
+  const counts = {};
+  projects.forEach(p => { const k = p.managementStatus || "Unknown"; counts[k] = (counts[k]||0)+1; });
+  const colors = { MC: GREEN, JMB: BLUE, RA: AMBER, PR1MA: RED, Unknown: "#5c7ba8" };
+  const data = Object.entries(counts).map(([name,value]) => ({ name, value, color: colors[name] || "#5c7ba8" }));
+  return (
+    <ResponsiveContainer width="100%" height={200}>
+      <BarChart data={data} layout="vertical" margin={{left:10,right:20}}>
+        <CartesianGrid strokeDasharray="3 3" stroke={NAVY_LINE} horizontal={false} />
+        <XAxis type="number" stroke="#8393ad" fontSize={11} tickLine={false} axisLine={false} allowDecimals={false} />
+        <YAxis type="category" dataKey="name" stroke="#c3ccdb" fontSize={12} width={70} tickLine={false} axisLine={false} />
+        <Tooltip content={<CustomTooltip />} />
+        <Bar dataKey="value" radius={[0,4,4,0]} barSize={20} name="Projects">
+          {data.map((d,i) => <Cell key={i} fill={d.color} />)}
+        </Bar>
+      </BarChart>
+    </ResponsiveContainer>
+  );
+}
+
+function StateChart({ projects }) {
+  const counts = {};
+  projects.forEach(p => { const k = p.state || "Unknown"; counts[k] = (counts[k]||0)+num(p.totalUnits); });
+  const data = Object.entries(counts).map(([name,value]) => ({ name, value })).sort((a,b)=>b.value-a.value);
+  return (
+    <ResponsiveContainer width="100%" height={280}>
+      <BarChart data={data} margin={{top:5,right:10,left:-10,bottom:40}}>
+        <CartesianGrid strokeDasharray="3 3" stroke={NAVY_LINE} vertical={false} />
+        <XAxis dataKey="name" stroke="#8393ad" fontSize={11} angle={-40} textAnchor="end" interval={0} tickLine={false} axisLine={{stroke:NAVY_LINE}} height={70} />
+        <YAxis stroke="#8393ad" fontSize={11} tickLine={false} axisLine={false} tickFormatter={v=>fmt(v)} />
+        <Tooltip content={<CustomTooltip />} />
+        <Bar dataKey="value" fill={GOLD} radius={[4,4,0,0]} barSize={22} name="Units" />
+      </BarChart>
+    </ResponsiveContainer>
+  );
+}
+
+function HandoverGauge({ label, pct, count, total, color }) {
+  const data = [{ name: label, value: pct, fill: color }];
+  return (
+    <div style={{textAlign:"center"}}>
+      <ResponsiveContainer width="100%" height={140}>
+        <RadialBarChart innerRadius="70%" outerRadius="100%" data={data} startAngle={90} endAngle={-270}>
+          <RadialBar dataKey="value" cornerRadius={8} background={{fill:"var(--navy-700)"}} max={100} />
+        </RadialBarChart>
+      </ResponsiveContainer>
+      <div style={{marginTop:-90, fontSize:22, fontWeight:700, color:"var(--ink-100)"}}>{pct1(pct)}</div>
+      <div style={{marginTop:56, fontSize:12.5, color:"var(--ink-500)"}}>{label}</div>
+      <div style={{fontSize:11, color:"var(--ink-500)"}}>{fmt(count)} of {fmt(total)} units</div>
+    </div>
+  );
+}
+
+function UnsoldRiskList({ projects }) {
+  const risky = [...projects].filter(p => (p.unsold||0) > 0).sort((a,b)=>(b.unsold||0)-(a.unsold||0)).slice(0,8);
+  if (!risky.length) return <div style={{color:"var(--ink-500)", fontSize:13}}>No unsold-unit data available.</div>;
+  return (
+    <div>
+      {risky.map((p,i) => (
+        <div key={i} style={{display:"flex", alignItems:"center", gap:10, padding:"9px 0", borderBottom: i<risky.length-1 ? "1px solid rgba(255,255,255,.05)" : "none"}}>
+          <div style={{width:20, fontSize:12, color:"var(--ink-500)", fontWeight:600}}>{i+1}</div>
+          <div style={{flex:1}}>
+            <div className="risk-name" style={{fontSize:13}}>{p.name}</div>
+            <div style={{fontSize:11, color:"var(--ink-500)"}}>{p.state} &middot; {p.typology} &middot; {fmt(p.totalUnits)} total units</div>
+          </div>
+          <div style={{textAlign:"right"}}>
+            <div style={{color:AMBER, fontWeight:700, fontSize:14}}>{fmt(p.unsold)}</div>
+            <div style={{fontSize:10, color:"var(--ink-500)"}}>unsold</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ProjectTable({ projects }) {
+  const [query, setQuery] = useState("");
+  const [typologyFilter, setTypologyFilter] = useState("All");
+  const [mgmtFilter, setMgmtFilter] = useState("All");
+  const [sortKey, setSortKey] = useState("totalUnits");
+  const [sortDir, setSortDir] = useState("desc");
+
+  const filtered = useMemo(() => {
+    let rows = [...projects];
+    if (query) rows = rows.filter(p => p.name.toLowerCase().includes(query.toLowerCase()) || (p.state||"").toLowerCase().includes(query.toLowerCase()));
+    if (typologyFilter !== "All") rows = rows.filter(p => p.typology === typologyFilter);
+    if (mgmtFilter !== "All") rows = rows.filter(p => p.managementStatus === mgmtFilter);
+    rows.sort((a,b) => {
+      const av = a[sortKey] ?? 0, bv = b[sortKey] ?? 0;
+      if (typeof av === "string") return sortDir === "asc" ? av.localeCompare(bv) : bv.localeCompare(av);
+      return sortDir === "asc" ? av - bv : bv - av;
+    });
+    return rows;
+  }, [projects, query, typologyFilter, mgmtFilter, sortKey, sortDir]);
+
+  const toggleSort = (key) => {
+    if (sortKey === key) setSortDir(d => d === "asc" ? "desc" : "asc");
+    else { setSortKey(key); setSortDir("desc"); }
+  };
+  const arrow = (key) => sortKey === key ? (sortDir === "asc" ? " \u2191" : " \u2193") : "";
+
+  const mgmtOptions = [...new Set(projects.map(p=>p.managementStatus).filter(Boolean))];
+
+  return (
+    <div className="panel" style={{gridColumn:"1 / -1"}}>
+      <h3>All Projects — Status &amp; Handover</h3>
+      <div className="panel-sub">Click column headers to sort. Search by project name or state.</div>
+      <div className="search-row">
+        <input type="text" placeholder="Search project or state..." value={query} onChange={e=>setQuery(e.target.value)} />
+        <select value={typologyFilter} onChange={e=>setTypologyFilter(e.target.value)}>
+          <option value="All">All typologies</option>
+          <option value="Landed">Landed</option>
+          <option value="High-Rise">High-Rise</option>
+        </select>
+        <select value={mgmtFilter} onChange={e=>setMgmtFilter(e.target.value)}>
+          <option value="All">All management</option>
+          {mgmtOptions.map(m => <option key={m} value={m}>{m}</option>)}
+        </select>
+      </div>
+      <div className="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th onClick={()=>toggleSort("name")}>Project{arrow("name")}</th>
+              <th onClick={()=>toggleSort("state")}>State{arrow("state")}</th>
+              <th onClick={()=>toggleSort("typology")}>Typology{arrow("typology")}</th>
+              <th onClick={()=>toggleSort("dlpStatusOwner")}>DLP{arrow("dlpStatusOwner")}</th>
+              <th onClick={()=>toggleSort("managementStatus")}>Mgmt{arrow("managementStatus")}</th>
+              <th onClick={()=>toggleSort("totalUnits")}>Total Units{arrow("totalUnits")}</th>
+              <th onClick={()=>toggleSort("khoPct")}>Handed Over %{arrow("khoPct")}</th>
+              <th onClick={()=>toggleSort("unsold")}>Unsold{arrow("unsold")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map((p,i) => (
+              <tr key={i}>
+                <td style={{color:"var(--ink-100)", fontWeight:500}}>{p.name}</td>
+                <td>{p.state}</td>
+                <td><span className={"status-pill " + (p.typology === "Landed" ? "pill-landed" : "pill-highrise")}>{p.typology || "—"}</span></td>
+                <td><span className={"status-pill " + (p.dlpStatusOwner === "ACTIVE" ? "status-active" : "status-end")}>{p.dlpStatusOwner === "ACTIVE" ? "Active" : "Ended"}</span></td>
+                <td>
+                  <span className={"status-pill " + (p.managementStatus==="MC"?"pill-mc":p.managementStatus==="JMB"?"pill-jmb":p.managementStatus==="RA"?"pill-ra":"pill-pr1ma")}>
+                    {p.managementStatus || "—"}
+                  </span>
+                </td>
+                <td>{fmt(p.totalUnits)}</td>
+                <td>
+                  {p.khoPct != null ? (
+                    <div className="bar-cell">
+                      <div className="bar-track"><div className="bar-fill" style={{width:Math.min(p.khoPct,100)+"%", background:GREEN}}></div></div>
+                      <span style={{width:40, textAlign:"right", fontVariantNumeric:"tabular-nums"}}>{p.khoPct}%</span>
+                    </div>
+                  ) : "—"}
+                </td>
+                <td style={{color: (p.unsold||0) > 0 ? AMBER : "var(--ink-300)", fontWeight: (p.unsold||0) > 0 ? 600 : 400}}>
+                  {p.unsold != null ? fmt(p.unsold) : "—"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function UpdatePanel({ onImport, onReset, onExport }) {
+  const [open, setOpen] = useState(false);
+  const [file, setFile] = useState(null);
+  const [workbook, setWorkbook] = useState(null);
+  const [masterSheet, setMasterSheet] = useState("");
+  const [salesSheet, setSalesSheet] = useState("");
+  const [status, setStatus] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleFile = (f) => {
+    if (!f) return;
+    setStatus(null);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const wb = XLSX.read(e.target.result, { type: "array", cellDates: false });
+        setWorkbook(wb);
+        setFile(f);
+        const mGuess = wb.SheetNames.find(n => /master/i.test(n)) || wb.SheetNames[0];
+        const sGuess = wb.SheetNames.find(n => /\d{4}/.test(n) && !/master/i.test(n)) || wb.SheetNames[0];
+        setMasterSheet(mGuess);
+        setSalesSheet(sGuess);
+      } catch (err) {
+        setStatus({ type: "err", text: "Could not read file: " + err.message });
+      }
+    };
+    reader.readAsArrayBuffer(f);
+  };
+
+  const handleImport = () => {
+    if (!workbook || !masterSheet) {
+      setStatus({ type: "err", text: "Pick a file and the master project sheet first." });
+      return;
+    }
+    try {
+      const master = parseMasterSheet(workbook, masterSheet);
+      const sales = salesSheet ? parseSalesSheet(workbook, salesSheet) : {};
+      const merged = mergeProjects(master, sales);
+      onImport(merged);
+      setStatus({ type: "ok", text: `Imported ${merged.length} projects from "${masterSheet}"` + (salesSheet ? ` + sales data from "${salesSheet}".` : " (no sales sheet selected — unsold/handover from master only).") });
+      setFile(null); setWorkbook(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    } catch (err) {
+      setStatus({ type: "err", text: err.message });
+    }
+  };
+
+  return (
+    <div className={"update-panel" + (open ? "" : "")}>
+      <div className="update-head" onClick={() => setOpen(o => !o)}>
+        <h3>&#128260; Update Project Data</h3>
+        <span className="chev" style={{transform: open ? "none" : "rotate(-90deg)"}}>&#9660;</span>
+      </div>
+      {open && (
+        <div className="update-body">
+          <div className="panel-sub" style={{marginBottom:12}}>
+            Import a refreshed workbook to update project details and unsold/handover figures — parsing happens entirely in your browser.
+          </div>
+          <div
+            className="drop-zone"
+            onClick={() => fileInputRef.current && fileInputRef.current.click()}
+            onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add("dragover"); }}
+            onDragLeave={(e) => e.currentTarget.classList.remove("dragover")}
+            onDrop={(e) => { e.preventDefault(); e.currentTarget.classList.remove("dragover"); handleFile(e.dataTransfer.files[0]); }}
+          >
+            {file ? <span><b>{file.name}</b> selected — choose the sheets below</span>
+                  : <span>Drag a file here, or <b>click to browse</b> (.xlsx, .xlsm)</span>}
+            <input ref={fileInputRef} type="file" accept=".xlsx,.xls,.xlsm" style={{display:"none"}}
+              onChange={(e) => handleFile(e.target.files[0])} />
+          </div>
+
+          {workbook && (
+            <div className="update-row">
+              <div>
+                <label className="field-label">Master project sheet (Typology, Total Units, Handed Over...)</label>
+                <select value={masterSheet} onChange={(e) => setMasterSheet(e.target.value)}>
+                  {workbook.SheetNames.map(n => <option key={n} value={n}>{n}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="field-label">Sales/monthly sheet for Unsold units (optional)</label>
+                <select value={salesSheet} onChange={(e) => setSalesSheet(e.target.value)}>
+                  <option value="">— none —</option>
+                  {workbook.SheetNames.map(n => <option key={n} value={n}>{n}</option>)}
+                </select>
+              </div>
+              <button className="btn" onClick={handleImport}>Import</button>
+            </div>
+          )}
+
+          {status && <div className={"status-msg " + status.type}>{status.text}</div>}
+
+          <div className="update-row" style={{marginTop:18, borderTop:"1px solid var(--navy-700)", paddingTop:14}}>
+            <button className="btn secondary" onClick={onExport}>Export current dataset (.json)</button>
+            <button className="btn secondary" onClick={() => { if (confirm("Reset to the originally bundled data? This clears anything imported in this browser.")) onReset(); }}>
+              Reset to bundled data
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function App() {
+  const [projects, setProjects] = useState(() => loadStoredProjects() || SEED_PROJECTS);
+
+  const totals = useMemo(() => {
+    const totalUnits = projects.reduce((s,p)=>s+num(p.totalUnits),0);
+    const totalKho = projects.reduce((s,p)=>s+num(p.keyHandedOver),0);
+    const totalMoved = projects.reduce((s,p)=>s+num(p.movedIn),0);
+    const totalUnsold = projects.reduce((s,p)=>s+num(p.unsold),0);
+    const activeDlp = projects.filter(p=>p.dlpStatusOwner==="ACTIVE").length;
+    const endDlp = projects.filter(p=>p.dlpStatusOwner==="END").length;
+    return { totalUnits, totalKho, totalMoved, totalUnsold, activeDlp, endDlp,
+      khoPct: totalUnits ? (totalKho/totalUnits)*100 : 0,
+      movedPct: totalUnits ? (totalMoved/totalUnits)*100 : 0,
+      unsoldPct: totalUnits ? (totalUnsold/totalUnits)*100 : 0 };
+  }, [projects]);
+
+  const handleImport = (merged) => {
+    setProjects(merged);
+    saveStoredProjects(merged);
+  };
+  const handleReset = () => {
+    localStorage.removeItem(STORAGE_KEY);
+    setProjects(SEED_PROJECTS);
+  };
+  const handleExport = () => {
+    const blob = new Blob([JSON.stringify(projects, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "pfmsb_project_dashboard_data.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="app">
+      <div className="header">
+        <div>
+          <p className="eyebrow">PFMSB &middot; Portfolio Reporting</p>
+          <h1>Project Information Dashboard</h1>
+          <div className="sub">Status, typology &amp; handover progress across {projects.length} PR1MA / PPR projects</div>
+        </div>
+        <div className="cutoff-badge">{fmt(totals.totalUnits)} total units in portfolio</div>
+      </div>
+
+      <UpdatePanel onImport={handleImport} onReset={handleReset} onExport={handleExport} />
+
+      <div className="kpi-grid">
+        <KpiCard label="Total Projects" value={projects.length}
+          sub={totals.activeDlp + " active DLP · " + totals.endDlp + " DLP ended"} />
+        <KpiCard label="Total Units" value={fmt(totals.totalUnits)}
+          sub={projects.filter(p=>p.typology==="Landed").length + " landed · " + projects.filter(p=>p.typology==="High-Rise").length + " high-rise projects"} />
+        <KpiCard label="Units Handed Over" value={pct1(totals.khoPct)}
+          sub={fmt(totals.totalKho) + " of " + fmt(totals.totalUnits) + " units"} />
+        <KpiCard label="Unsold Units" value={fmt(totals.totalUnsold)}
+          sub={pct1(totals.unsoldPct) + " of total portfolio"} />
+      </div>
+
+      <div className="grid-2">
+        <div className="panel">
+          <h3>Units by State</h3>
+          <div className="panel-sub">Total unit count per state across the portfolio</div>
+          <StateChart projects={projects} />
+        </div>
+        <div className="panel">
+          <h3>Top Unsold Projects</h3>
+          <div className="panel-sub">Projects with the most unsold units</div>
+          <UnsoldRiskList projects={projects} />
+        </div>
+      </div>
+
+      <div className="grid-3">
+        <div className="panel">
+          <h3>Typology Mix</h3>
+          <div className="panel-sub">Units by Landed vs High-Rise</div>
+          <TypologyChart projects={projects} />
+          <div style={{display:"flex", justifyContent:"center", gap:16, fontSize:12, marginTop:-6}}>
+            <span><span className="legend-dot" style={{background:BLUE}}></span>Landed</span>
+            <span><span className="legend-dot" style={{background:GOLD}}></span>High-Rise</span>
+          </div>
+        </div>
+        <div className="panel">
+          <h3>Management Status</h3>
+          <div className="panel-sub">Projects by handover body</div>
+          <ManagementChart projects={projects} />
+        </div>
+        <div className="panel">
+          <h3>Handover Progress</h3>
+          <div className="panel-sub">Portfolio-wide, cumulative</div>
+          <div style={{display:"flex", justifyContent:"space-around"}}>
+            <HandoverGauge label="Key Handed Over" pct={totals.khoPct} count={totals.totalKho} total={totals.totalUnits} color={GREEN} />
+          </div>
+          <div style={{display:"flex", justifyContent:"space-around", marginTop:-10}}>
+            <HandoverGauge label="Moved In" pct={totals.movedPct} count={totals.totalMoved} total={totals.totalUnits} color={BLUE} />
+          </div>
+        </div>
+      </div>
+
+      <ProjectTable projects={projects} />
+
+      <div className="footer-note">
+        Source: PFMSB Operation Report 2026 — "PFMSB Master Project Data" merged with the latest monthly sales/handover sheet.<br/>
+        Imported data is stored only in this browser (localStorage). Use "Export current dataset" to back it up or move it to another device.
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
