@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitty Homestay Muar | Grooming & Boarding Kucing Premium</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* ==========================================
+           1. CSS VARIABLES & RESET
+           ========================================== */
+        :root {
+            --bg-cream: #FAF7F2;
+            --bg-card: #FFFFFF;
+            --primary-beige: #F3EBE1;
+            --accent-warm: #8C6A5A;
+            --accent-brown-dark: #5A4035;
+            --pink-soft: #F7DCD9;
+            --pink-accent: #E0A9A3;
+            --text-dark: #2C221E;
+            --text-muted: #6E625A;
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --shadow-soft: 0 10px 30px rgba(90, 64, 53, 0.05);
+            --shadow-hover: 0 20px 40px rgba(90, 64, 53, 0.12);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 8px;
+            --transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Fredoka', cursive;
+            letter-spacing: 0.5px;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* ==========================================
+           2. LIGHTING & CUSTOM CURSOR
+           ========================================== */
+        #spotlight {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            background: radial-gradient(600px circle at var(--x, 50%) var(--y, 50%), rgba(247, 220, 217, 0.25), transparent 80%);
+            z-index: 99;
+            transition: opacity 0.3s ease;
+        }
+
+        .custom-cursor {
+            width: 12px;
+            height: 12px;
+            background: var(--accent-warm);
+            border-radius: 50%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
+        }
+
+        .custom-cursor-follower {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--pink-accent);
+            border-radius: 50%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: transform 0.15s ease-out, width 0.2s ease, height 0.2s ease;
+        }
+
+        body.hovered .custom-cursor {
+            width: 20px;
+            height: 20px;
+            background: var(--pink-accent);
+        }
+
+        body.hovered .custom-cursor-follower {
+            width: 50px;
+            height: 50px;
+            border-color: var(--accent-warm);
+        }
+
+        /* ==========================================
+           3. NAVBAR
+           ========================================== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            padding: 12px 8%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-brown-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-warm);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .btn-cta {
+            background: var(--accent-brown-dark);
+            color: #FFF;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(90, 64, 53, 0.2);
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-2px) scale(1.03);
+            background: var(--accent-warm);
+            box-shadow: 0 6px 20px rgba(90, 64, 53, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--pink-soft);
+            color: var(--accent-brown-dark);
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid var(--pink-accent);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            background: #F0C9C5;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: var(--accent-brown-dark);
+        }
+
+        /* ==========================================
+           4. HERO SECTION
+           ========================================== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 120px 8% 60px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--bg-cream) 0%, var(--primary-beige) 100%);
+        }
+
+        .hero-container {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            align-items: center;
+            gap: 4rem;
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 3.8rem;
+            line-height: 1.15;
+            color: var(--accent-brown-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            max-width: 500px;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .hero-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-img-wrapper {
+            position: relative;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: var(--pink-soft);
+            padding: 15px;
+            box-shadow: var(--shadow-soft);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            transition: transform 0.3s ease-out;
+        }
+
+        .floating-badge {
+            position: absolute;
+            bottom: 20px;
+            left: -20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(1deg); }
+        }
+
+        .paw-print {
+            position: absolute;
+            opacity: 0.08;
+            color: var(--accent-brown-dark);
+            pointer-events: none;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        /* ==========================================
+           5. SECTION GENERAL STYLES
+           ========================================== */
+        section {
+            padding: 100px 8%;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 60px;
+        }
+
+        .section-subtitle {
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            color: var(--pink-accent);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--accent-brown-dark);
+        }
+
+        /* ==========================================
+           6. KENAPA KITTY HOMESTAY?
+           ========================================== */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            padding: 35px 25px;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(0,0,0,0.03);
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-beige);
+            color: var(--accent-warm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .feature-card:hover .feature-icon {
+            background: var(--pink-soft);
+            color: var(--accent-brown-dark);
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            color: var(--accent-brown-dark);
+            margin-bottom: 10px;
+        }
+
+        .feature-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .features-grid:hover .feature-card:not(:hover) {
+            opacity: 0.7;
+        }
+
+        /* ==========================================
+           7. PERKHIDMATAN & MODAL
+           ========================================== */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--primary-beige);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: var(--transition);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--pink-accent);
+        }
+
+        .service-header {
+            margin-bottom: 20px;
+        }
+
+        .service-title {
+            font-size: 1.5rem;
+            color: var(--accent-brown-dark);
+            margin-bottom: 15px;
+        }
+
+        .service-list {
+            margin-bottom: 25px;
+        }
+
+        .service-list li {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .service-list li i {
+            color: var(--pink-accent);
+            width: 16px;
+            height: 16px;
+        }
+
+        .btn-details {
+            background: transparent;
+            border: none;
+            color: var(--accent-warm);
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            padding: 0;
+            transition: var(--transition);
+        }
+
+        .btn-details:hover {
+            color: var(--accent-brown-dark);
+            gap: 10px;
+        }
+
+        /* Modal Details */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(44, 34, 30, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            transform: translateY(20px);
+            transition: var(--transition);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--primary-beige);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-brown-dark);
+        }
+
+        /* ==========================================
+           8. PRICING SECTION & TOGGLE
+           ========================================== */
+        .pricing-toggle-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .pricing-toggle {
+            background: var(--primary-beige);
+            padding: 6px;
+            border-radius: 50px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .toggle-btn {
+            padding: 10px 28px;
+            border-radius: 50px;
+            border: none;
+            background: transparent;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-btn.active {
+            background: var(--bg-card);
+            color: var(--accent-brown-dark);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .price-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid transparent;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .price-card.featured {
+            border-color: var(--pink-accent);
+            transform: scale(1.03);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .price-card.featured::before {
+            content: 'POPULAR';
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--pink-accent);
+            color: #FFF;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 16px;
+            border-radius: 50px;
+            letter-spacing: 1px;
+        }
+
+        .price-title {
+            font-size: 1.4rem;
+            color: var(--accent-brown-dark);
+            margin-bottom: 10px;
+        }
+
+        .price-val {
+            font-size: 2.8rem;
+            font-family: 'Fredoka', cursive;
+            color: var(--accent-brown-dark);
+            margin-bottom: 20px;
+        }
+
+        .price-val span {
+            font-size: 1rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-muted);
+        }
+
+        /* ==========================================
+           9. HOW IT WORKS
+           ========================================== */
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline-step {
+            background: var(--bg-card);
+            padding: 30px 20px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-soft);
+            text-align: center;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .timeline-step:hover {
+            transform: translateY(-5px);
+        }
+
+        .step-num {
+            font-family: 'Fredoka', cursive;
+            font-size: 2.5rem;
+            color: var(--pink-accent);
+            opacity: 0.6;
+            margin-bottom: 10px;
+        }
+
+        .step-title {
+            font-size: 1.2rem;
+            color: var(--accent-brown-dark);
+            margin-bottom: 8px;
+        }
+
+        /* ==========================================
+           10. GALLERY & LIGHTBOX
+           ========================================== */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            height: 250px;
+            cursor: pointer;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(44,34,30,0.7), transparent);
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.08);
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-cat {
+            color: #FFF;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* ==========================================
+           11. TESTIMONIALS
+           ========================================== */
+        .testimonial-container {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+            text-align: center;
+        }
+
+        .stars {
+            color: #FFB800;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .testimonial-text {
+            font-size: 1.15rem;
+            font-style: italic;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .testimonial-author {
+            font-weight: 700;
+            color: var(--accent-brown-dark);
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary-beige);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .dot.active {
+            background: var(--pink-accent);
+            width: 24px;
+            border-radius: 10px;
+        }
+
+        /* ==========================================
+           12. INTERACTIVE CAT WALK
+           ========================================== */
+        .interactive-cat-container {
+            position: fixed;
+            bottom: 20px;
+            left: -100px;
+            z-index: 900;
+            pointer-events: auto;
+            transition: left 0.1s linear;
+        }
+
+        .cat-sprite {
+            font-size: 2.2rem;
+            cursor: pointer;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            user-select: none;
+        }
+
+        /* ==========================================
+           13. BOOKING SECTION
+           ========================================== */
+        .booking-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            padding: 50px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--primary-beige);
+        }
+
+        .booking-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-brown-dark);
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid #E0D7CE;
+            background: var(--bg-cream);
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            transition: var(--transition);
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--pink-accent);
+            background: #FFF;
+            box-shadow: 0 0 0 3px rgba(224, 169, 163, 0.2);
+        }
+
+        .error-msg {
+            color: #D9534F;
+            font-size: 0.75rem;
+            display: none;
+        }
+
+        .form-group.error input, .form-group.error select {
+            border-color: #D9534F;
+        }
+
+        .form-group.error .error-msg {
+            display: block;
+        }
+
+        .booking-actions {
+            grid-column: span 2;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 10px;
+        }
+
+        .btn-whatsapp-booking {
+            background: #25D366;
+            color: #FFF;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .btn-whatsapp-booking:hover {
+            background: #1EBE5D;
+            transform: translateY(-2px);
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .success-message i {
+            color: #25D366;
+            width: 48px;
+            height: 48px;
+            margin-bottom: 15px;
+        }
+
+        /* ==========================================
+           14. FLOATING WHATSAPP
+           ========================================== */
+        .floating-wa {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #25D366;
+            color: #FFF;
+            padding: 14px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+            z-index: 999;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .floating-wa span {
+            max-width: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: max-width 0.4s ease, padding 0.3s ease;
+        }
+
+        .floating-wa:hover {
+            padding: 14px 22px;
+            transform: translateY(-3px);
+        }
+
+        .floating-wa:hover span {
+            max-width: 150px;
+            margin-left: 4px;
+        }
+
+        /* ==========================================
+           15. FOOTER
+           ========================================== */
+        footer {
+            background: var(--accent-brown-dark);
+            color: #FFF;
+            padding: 70px 8% 30px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1.5fr 1fr;
+            gap: 3rem;
+            max-width: 1300px;
+            margin: 0 auto 50px;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.6rem;
+            margin-bottom: 12px;
+        }
+
+        .footer-brand p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.95rem;
+        }
+
+        .footer-links h4, .footer-contact h4, .footer-social h4 {
+            font-size: 1.1rem;
+            margin-bottom: 18px;
+            color: var(--pink-soft);
+        }
+
+        .footer-links ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links ul li a {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+        }
+
+        .footer-links ul li a:hover {
+            color: #FFF;
+            padding-left: 4px;
+        }
+
+        .footer-contact p {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFF;
+            transition: var(--transition);
+        }
+
+        .social-btn:hover {
+            background: var(--pink-accent);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+        }
+
+        /* ==========================================
+           16. RESPONSIVE DESIGN
+           ========================================== */
+        @media (max-width: 992px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-subtitle {
+                margin: 0 auto 2.5rem;
+            }
+
+            .hero-btns {
+                justify-content: center;
+            }
+
+            .hero-img-wrapper {
+                width: 300px;
+                height: 300px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .custom-cursor, .custom-cursor-follower {
+                display: none !important;
+            }
+
+            .navbar {
+                padding: 15px 5%;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: var(--bg-card);
+                flex-direction: column;
+                padding: 30px;
+                gap: 1.5rem;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+                transform: translateY(-150%);
+                transition: var(--transition);
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+            }
+
+            .hero-title {
+                font-size: 2.8rem;
+            }
+
+            .booking-form {
+                grid-template-columns: 1fr;
+            }
+
+            .booking-form .form-group {
+                grid-column: span 1;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="spotlight"></div>
+    <div class="custom-cursor"></div>
+    <div class="custom-cursor-follower"></div>
+
+    <nav class="navbar" id="navbar">
+        <a href="#" class="logo">
+            <i data-lucide="paw-print"></i> KITTY HOMESTAY
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#utama" class="active">Utama</a></li>
+            <li><a href="#kenapa">Tentang Kami</a></li>
+            <li><a href="#perkhidmatan">Perkhidmatan</a></li>
+            <li><a href="#harga">Harga</a></li>
+            <li><a href="#galeri">Galeri</a></li>
+            <li><a href="#booking">Tempah</a></li>
+        </ul>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <a href="#booking" class="btn-cta" style="display: none; display: md:inline-flex;">TEMPAH SEKARANG</a>
+            <button class="hamburger" id="hamburger" aria-label="Buka Menu">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </nav>
+
+    <section class="hero" id="utama">
+        <i data-lucide="paw-print" class="paw-print" style="top: 15%; left: 10%; font-size: 2rem;"></i>
+        <i data-lucide="paw-print" class="paw-print" style="top: 70%; left: 5%; font-size: 3rem;"></i>
+        <i data-lucide="paw-print" class="paw-print" style="top: 20%; right: 12%; font-size: 2.5rem;"></i>
+
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Tempat Kedua Untuk Si Manja Anda.</h1>
+                <p class="hero-subtitle">Grooming & Boarding Kucing Dengan Penjagaan Yang Penuh Kasih Sayang Di Muar.</p>
+                <div class="hero-btns">
+                    <a href="#booking" class="btn-cta">TEMPAH SEKARANG</a>
+                    <a href="#perkhidmatan" class="btn-secondary">LIHAT PERKHIDMATAN</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-img-wrapper" id="heroImgWrapper">
+                    <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80" alt="Kucing Comel Kitty Homestay" class="hero-img">
+                    <div class="floating-badge">
+                        <i data-lucide="heart" style="color: var(--pink-accent); fill: var(--pink-accent);"></i>
+                        <span>100% Kasih Sayang</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="kenapa">
+        <div class="section-header">
+            <span class="section-subtitle">Keutamaan Kami</span>
+            <h2 class="section-title">Si Manja Anda, Keutamaan Kami.</h2>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i data-lucide="bath"></i></div>
+                <h3 class="feature-title">Grooming Profesional</h3>
+                <p class="feature-desc">Penjagaan kebersihan dan penampilan kucing oleh pet groomer berpengalaman.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i data-lucide="home"></i></div>
+                <h3 class="feature-title">Boarding Selesa</h3>
+                <p class="feature-desc">Ruang penginapan yang bersih, selamat, luas dan berhawa dingin selesa.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i data-lucide="heart"></i></div>
+                <h3 class="feature-title">Penjagaan Penuh Kasih</h3>
+                <p class="feature-desc">Kami menjaga kucing anda seperti haiwan kesayangan sendiri dengan belaian mesra.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i data-lucide="shield-check"></i></div>
+                <h3 class="feature-title">Selamat & Bersih</h3>
+                <p class="feature-desc">Persekitaran sentiasa dinyahkuman dan dipantau rapi sepanjang masa.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="perkhidmatan" style="background: var(--primary-beige);">
+        <div class="section-header">
+            <span class="section-subtitle">Pilihan Servis</span>
+            <h2 class="section-title">Semua Keperluan Si Manja, Di Satu Tempat.</h2>
+        </div>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-header">
+                    <h3 class="service-title">Grooming Basic</h3>
+                    <ul class="service-list">
+                        <li><i data-lucide="check"></i> Mandi Selesa</li>
+                        <li><i data-lucide="check"></i> Blow Dry Kemas</li>
+                        <li><i data-lucide="check"></i> Potong Kuku</li>
+                        <li><i data-lucide="check"></i> Membersihkan Telinga</li>
+                    </ul>
+                </div>
+                <button class="btn-details" onclick="openModal('Grooming Basic', 'Servis asas untuk memastikan kucing anda sentiasa bersih, harum dan selesa. Menggunakan syampu khas yang selamat untuk kulit kucing.')">LIHAT BUTIRAN <i data-lucide="arrow-right"></i></button>
+            </div>
+            <div class="service-card">
+                <div class="service-header">
+                    <h3 class="service-title">Full Grooming</h3>
+                    <ul class="service-list">
+                        <li><i data-lucide="check"></i> Semua servis Basic Grooming</li>
+                        <li><i data-lucide="check"></i> Potong / Cukur Bulu Style</li>
+                        <li><i data-lucide="check"></i> Rawatan Bulu Halus</li>
+                        <li><i data-lucide="check"></i> Grooming Finishing Parfum</li>
+                    </ul>
+                </div>
+                <button class="btn-details" onclick="openModal('Full Grooming', 'Pakej lengkap merangkumi penggayaan bulu mengikut citarasa pawrent, sangat sesuai untuk kucing bulu panjang atau yang memerlukan potongan rapi.')">LIHAT BUTIRAN <i data-lucide="arrow-right"></i></button>
+            </div>
+            <div class="service-card">
+                <div class="service-header">
+                    <h3 class="service-title">Boarding Hotel</h3>
+                    <ul class="service-list">
+                        <li><i data-lucide="check"></i> Bilik Penginapan Selesa</li>
+                        <li><i data-lucide="check"></i> Makanan & Minuman Terjaga</li>
+                        <li><i data-lucide="check"></i> Pemantauan Harian</li>
+                        <li><i data-lucide="check"></i> Masa Playtime Bebas</li>
+                    </ul>
+                </div>
+                <button class="btn-details" onclick="openModal('Boarding Hotel', 'Hotel kucing eksklusif berhawa dingin. Kami memastikan rutin harian si manja tidak terganggu dan memberikan update video harian kepada anda.')">LIHAT BUTIRAN <i data-lucide="arrow-right"></i></button>
+            </div>
+            <div class="service-card">
+                <div class="service-header">
+                    <h3 class="service-title">Daycare</h3>
+                    <ul class="service-list">
+                        <li><i data-lucide="check"></i> Penjagaan Harian (Satu Hari)</li>
+                        <li><i data-lucide="check"></i> Aktiviti Bermain Mesra</li>
+                        <li><i data-lucide="check"></i> Pemantauan Rapi</li>
+                        <li><i data-lucide="check"></i> Ruang Rehat Mandiri</li>
+                    </ul>
+                </div>
+                <button class="btn-details" onclick="openModal('Daycare', 'Sesuai untuk anda yang sibuk bekerja seharian. Tinggalkan si manja bersama kami dari pagi hingga petang dengan selamat.')">LIHAT BUTIRAN <i data-lucide="arrow-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal-overlay" id="serviceModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()"><i data-lucide="x"></i></button>
+            <h3 class="modal-title" id="modalTitle" style="font-size: 1.8rem; color: var(--accent-brown-dark); margin-bottom: 15px;"></h3>
+            <p id="modalBody" style="color: var(--text-muted); line-height: 1.7; margin-bottom: 20px;"></p>
+            <a href="#booking" class="btn-cta" onclick="closeModal()">TEMPAH SEKARANG</a>
+        </div>
+    </div>
+
+    <section id="harga">
+        <div class="section-header">
+            <span class="section-subtitle">Harga Berpatutan</span>
+            <h2 class="section-title">Pilih Penjagaan Yang Sesuai Untuk Si Manja.</h2>
+        </div>
+
+        <div class="pricing-toggle-container">
+            <div class="pricing-toggle">
+                <button class="toggle-btn active" id="btnGrooming" onclick="switchPricing('grooming')">GROOMING</button>
+                <button class="toggle-btn" id="btnBoarding" onclick="switchPricing('boarding')">BOARDING</button>
+            </div>
+        </div>
+
+        <div class="pricing-grid" id="pricingGrid">
+            </div>
+    </section>
+
+    <section style="background: var(--primary-beige);">
+        <div class="section-header">
+            <span class="section-subtitle">Proses Mudah</span>
+            <h2 class="section-title">Langkah Tempahan Mudah.</h2>
+        </div>
+        <div class="timeline">
+            <div class="timeline-step">
+                <div class="step-num">01</div>
+                <h3 class="step-title">Tempah</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Pilih tarikh dan perkhidmatan pilihan anda menerusi borang dalam talian.</p>
+            </div>
+            <div class="timeline-step">
+                <div class="step-num">02</div>
+                <h3 class="step-title">Hantar Si Manja</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Datang ke Kitty Homestay Muar mengikut waktu slot yang dipilih.</p>
+            </div>
+            <div class="timeline-step">
+                <div class="step-num">03</div>
+                <h3 class="step-title">Kami Jaga</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Proses grooming atau boarding dilaksanakan penuh dengan cermat & kasih sayang.</p>
+            </div>
+            <div class="timeline-step">
+                <div class="step-num">04</div>
+                <h3 class="step-title">Si Manja Pulang</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Kucing anda pulang ke rumah dalam keadaan bersih, wangi dan ceria!</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="galeri">
+        <div class="section-header">
+            <span class="section-subtitle">Galeri Comel</span>
+            <h2 class="section-title">Momen Comel Di Kitty Homestay.</h2>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=800&q=80')">
+                <img src="https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=800&q=80" alt="Kucing Grooming">
+                <div class="gallery-overlay"><span class="gallery-cat">Sesi Grooming</span></div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1533738363-b7f9aef128ce?auto=format&fit=crop&w=800&q=80')">
+                <img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?auto=format&fit=crop&w=800&q=80" alt="Kucing Bersedia Mandi">
+                <div class="gallery-overlay"><span class="gallery-cat">Mandi & Blow</span></div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?auto=format&fit=crop&w=800&q=80')">
+                <img src="https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?auto=format&fit=crop&w=800&q=80" alt="Kucing Berehat">
+                <div class="gallery-overlay"><span class="gallery-cat">Bilik Boarding</span></div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=800&q=80')">
+                <img src="https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=800&q=80" alt="Kucing Bermain">
+                <div class="gallery-overlay"><span class="gallery-cat">Masa Bermain</span></div>
+            </div>
+        </div>
+    </section>
+
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <img id="lightboxImg" src="" alt="Zoom Image">
+    </div>
+
+    <section style="background: var(--primary-beige);">
+        <div class="section-header">
+            <span class="section-subtitle">Maklum Balas</span>
+            <h2 class="section-title">Apa Kata Pawrent Kami?</h2>
+        </div>
+        <div class="testimonial-container" id="testimonialBox">
+            <div class="stars">
+                <i data-lucide="star" style="fill: #FFB800;"></i>
+                <i data-lucide="star" style="fill: #FFB800;"></i>
+                <i data-lucide="star" style="fill: #FFB800;"></i>
+                <i data-lucide="star" style="fill: #FFB800;"></i>
+                <i data-lucide="star" style="fill: #FFB800;"></i>
+            </div>
+            <p class="testimonial-text" id="testiText">"Tempat sangat bersih dan kucing saya balik dalam keadaan wangi dan kemas! Groomer sangat peramah."</p>
+            <div class="testimonial-author" id="testiAuthor">— Aina, Muar</div>
+            <div class="carousel-dots">
+                <div class="dot active" onclick="setTestimonial(0)"></div>
+                <div class="dot" onclick="setTestimonial(1)"></div>
+                <div class="dot" onclick="setTestimonial(2)"></div>
+            </div>
+        </div>
+    </section>
+
+    <div class="interactive-cat-container" id="walkingCat">
+        <div class="cat-sprite" title="Meow! Klik saya!">🐱🐾</div>
+    </div>
+
+    <section id="booking">
+        <div class="section-header">
+            <span class="section-subtitle">Borang Tempahan</span>
+            <h2 class="section-title">Jom Manjakan Si Manja Anda.</h2>
+        </div>
+        <div class="booking-container">
+            <form id="bookingForm" class="booking-form" onsubmit="handleBookingSubmit(event)">
+                <div class="form-group" id="group-nama">
+                    <label>Nama Anda *</label>
+                    <input type="text" id="nama" placeholder="Contoh: Nur Aisyah">
+                    <span class="error-msg">Sila isi nama anda.</span>
+                </div>
+                <div class="form-group" id="group-phone">
+                    <label>No. Telefon / WhatsApp *</label>
+                    <input type="tel" id="phone" placeholder="Contoh: 0123456789">
+                    <span class="error-msg">Sila isi no. telefon yang sah.</span>
+                </div>
+                <div class="form-group" id="group-catName">
+                    <label>Nama Kucing *</label>
+                    <input type="text" id="catName" placeholder="Contoh: Oyen">
+                    <span class="error-msg">Sila isi nama kucing.</span>
+                </div>
+                <div class="form-group">
+                    <label>Baka Kucing</label>
+                    <input type="text" id="catBreed" placeholder="Contoh: Domestic Short Hair / Persian">
+                </div>
+                <div class="form-group" id="group-service">
+                    <label>Pilih Perkhidmatan *</label>
+                    <select id="serviceSelect">
+                        <option value="">-- Pilih Servis --</option>
+                        <option value="Basic Grooming">Basic Grooming</option>
+                        <option value="Full Grooming">Full Grooming</option>
+                        <option value="Boarding Hotel">Boarding Hotel</option>
+                        <option value="Daycare">Daycare Harian</option>
+                    </select>
+                    <span class="error-msg">Sila pilih perkhidmatan.</span>
+                </div>
+                <div class="form-group" id="group-date">
+                    <label>Tarikh *</label>
+                    <input type="date" id="bookingDate">
+                    <span class="error-msg">Sila pilih tarikh.</span>
+                </div>
+                <div class="form-group full-width">
+                    <label>Nota Tambahan (Jika Ada)</label>
+                    <textarea id="notes" rows="3" placeholder="Sebutkan sebarang alahan atau keperluan khas kucing anda..."></textarea>
+                </div>
+                <div class="booking-actions">
+                    <button type="submit" class="btn-cta" style="width: 100%; border-radius: 8px; padding: 14px;" id="btnSubmitForm">
+                        TEMPAH SEKARANG
+                    </button>
+                    <button type="button" class="btn-whatsapp-booking" onclick="bookViaWhatsapp()">
+                        <i data-lucide="message-circle"></i> TEMPAH MELALUI WHATSAPP
+                    </button>
+                </div>
+            </form>
+
+            <div class="success-message" id="successMsg">
+                <i data-lucide="check-circle"></i>
+                <h3 style="font-size: 1.8rem; color: var(--accent-brown-dark); margin-bottom: 10px;">Tempahan Anda Berjaya!</h3>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Terima kasih! Kami akan menghubungi anda sebentar lagi menerusi WhatsApp untuk mengesahkan slot tempahan.</p>
+                <button class="btn-cta" onclick="resetForm()">Buat Tempahan Baru</button>
+            </div>
+        </div>
+    </section>
+
+    <a href="https://wa.me/60123456789?text=Hi%20Kitty%20Homestay,%20saya%20ingin%20bertanya%20tentang%20perkhidmatan%20grooming/boarding%20kucing." target="_blank" class="floating-wa" aria-label="Chat WhatsApp">
+        <i data-lucide="message-circle"></i>
+        <span>Chat Dengan Kami</span>
+    </a>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3 class="font-heading">🐾 KITTY HOMESTAY MUAR</h3>
+                <p>Tempat selesa, bersih dan mesra untuk perkhidmatan grooming dan boarding kucing kesayangan anda di Muar, Johor.</p>
+            </div>
+            <div class="footer-links">
+                <h4 class="font-heading">Pautan Pantas</h4>
+                <ul>
+                    <li><a href="#utama">Utama</a></li>
+                    <li><a href="#perkhidmatan">Perkhidmatan</a></li>
+                    <li><a href="#harga">Harga</a></li>
+                    <li><a href="#galeri">Galeri</a></li>
+                    <li><a href="#booking">Tempah</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4 class="font-heading">Hubungi Kami</h4>
+                <p><i data-lucide="phone" style="width:16px;"></i> +60 12-345 6789</p>
+                <p><i data-lucide="map-pin" style="width:16px;"></i> Jalan Pt Haji Baki, Muar, Johor</p>
+                <p><i data-lucide="clock" style="width:16px;"></i> Isnin - Ahad: 10.00 AM - 7.00 PM</p>
+            </div>
+            <div class="footer-social">
+                <h4 class="font-heading">Ikuti Kami</h4>
+                <div class="social-icons">
+                    <a href="#" class="social-btn" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+                    <a href="#" class="social-btn" aria-label="Facebook"><i data-lucide="facebook"></i></a>
+                    <a href="#" class="social-btn" aria-label="TikTok"><i data-lucide="video"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Kitty Homestay Muar. Semua Hak Terpelihara.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Init Lucide Icons
+        lucide.createIcons();
+
+        /* ==========================================
+           1. NAVBAR STICKY & MOBILE TOGGLE
+           ========================================== */
+        const navbar = document.getElementById('navbar');
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile nav on link click
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        /* ==========================================
+           2. CURSOR-CONTROLLED LIGHTING & CUSTOM CURSOR
+           ========================================== */
+        const spotlight = document.getElementById('spotlight');
+        const cursor = document.querySelector('.custom-cursor');
+        const follower = document.querySelector('.custom-cursor-follower');
+
+        let mouseX = 0, mouseY = 0;
+        let followerX = 0, followerY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            // Update Spotlight
+            spotlight.style.setProperty('--x', `${mouseX}px`);
+            spotlight.style.setProperty('--y', `${mouseY}px`);
+
+            // Update Pointer Cursor Directly
+            cursor.style.left = `${mouseX}px`;
+            cursor.style.top = `${mouseY}px`;
+        });
+
+        // Easing Follower Cursor
+        function animateCursor() {
+            followerX += (mouseX - followerX) * 0.15;
+            followerY += (mouseY - followerY) * 0.15;
+            follower.style.left = `${followerX}px`;
+            follower.style.top = `${followerY}px`;
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // Hover Effect on Interactive Elements
+        const interactiveElements = document.querySelectorAll('a, button, .feature-card, .service-card, .gallery-item, input, select');
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovered'));
+        });
+
+        /* ==========================================
+           3. PRICING TOGGLE DATA & RENDER
+           ========================================== */
+        const pricingData = {
+            grooming: [
+                { title: 'BASIC GROOMING', price: 'RM 35', unit: '/ sesi', featured: false, desc: 'Mandi, blow, potong kuku & bersihkan telinga.' },
+                { title: 'FULL GROOMING', price: 'RM 65', unit: '/ sesi', featured: true, desc: 'Termasuk potong bulu / cukur rapi + perfume.' },
+                { title: 'SPA & MEDIKATED', price: 'RM 80', unit: '/ sesi', featured: false, desc: 'Rawatan syampu khas kuman / kelemumur & mandian spa.' }
+            ],
+            boarding: [
+                { title: 'STANDARD SUITE', price: 'RM 25', unit: '/ malam', featured: false, desc: 'Bilik selesa, penyaman udara, pemantauan kebersihan.' },
+                { title: 'ROYAL SUITE', price: 'RM 40', unit: '/ malam', featured: true, desc: 'Ruang ekstra luas, kamera peribadi, waktu bermain khas.' },
+                { title: 'DAYCARE HARIAN', price: 'RM 15', unit: '/ hari', featured: false, desc: 'Penjagaan harian tanpa bermalam (10 pagi - 6 petang).' }
+            ]
+        };
+
+        function switchPricing(type) {
+            const grid = document.getElementById('pricingGrid');
+            const btnGrooming = document.getElementById('btnGrooming');
+            const btnBoarding = document.getElementById('btnBoarding');
+
+            if (type === 'grooming') {
+                btnGrooming.classList.add('active');
+                btnBoarding.classList.remove('active');
+            } else {
+                btnBoarding.classList.add('active');
+                btnGrooming.classList.remove('active');
+            }
+
+            grid.style.opacity = '0';
+            grid.style.transform = 'translateY(10px)';
+
+            setTimeout(() => {
+                grid.innerHTML = pricingData[type].map(item => `
+                    <div class="price-card ${item.featured ? 'featured' : ''}">
+                        <h3 class="price-title">${item.title}</h3>
+                        <div class="price-val">${item.price} <span>${item.unit}</span></div>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px;">${item.desc}</p>
+                        <a href="#booking" class="btn-cta" style="width: 100%;">PILIH PAKEJ</a>
+                    </div>
+                `).join('');
+
+                grid.style.opacity = '1';
+                grid.style.transform = 'translateY(0)';
+            }, 200);
+        }
+
+        // Init Pricing Grid
+        switchPricing('grooming');
+
+        /* ==========================================
+           4. MODAL & LIGHTBOX
+           ========================================== */
+        function openModal(title, text) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalBody').innerText = text;
+            document.getElementById('serviceModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('serviceModal').classList.remove('active');
+        }
+
+        function openLightbox(src) {
+            document.getElementById('lightboxImg').src = src;
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        /* ==========================================
+           5. TESTIMONIAL CAROUSEL
+           ========================================== */
+        const testimonials = [
+            { text: '"Tempat sangat bersih dan kucing saya balik dalam keadaan wangi dan kemas! Groomer sangat peramah."', author: '— Aina, Muar' },
+            { text: '"Sangat recommended! Boarding hotel berhawa dingin dan kemas. Update video selalu dihantar."', author: '— Shafiq, Tangkak' },
+            { text: '"Layanan terbaik untuk si manja. Kucing saya tidak berasa takut langsung semasa grooming!"', author: '— Mei Ling, Bakri' }
+        ];
+
+        let testiIndex = 0;
+        function setTestimonial(index) {
+            testiIndex = index;
+            const textEl = document.getElementById('testiText');
+            const authorEl = document.getElementById('testiAuthor');
+            const dots = document.querySelectorAll('.dot');
+
+            textEl.style.opacity = '0';
+            authorEl.style.opacity = '0';
+
+            setTimeout(() => {
+                textEl.innerText = testimonials[index].text;
+                authorEl.innerText = testimonials[index].author;
+                textEl.style.opacity = '1';
+                authorEl.style.opacity = '1';
+
+                dots.forEach((d, i) => d.classList.toggle('active', i === index));
+            }, 200);
+        }
+
+        setInterval(() => {
+            testiIndex = (testiIndex + 1) % testimonials.length;
+            setTestimonial(testiIndex);
+        }, 5000);
+
+        /* ==========================================
+           6. INTERACTIVE CAT ANIMATION
+           ========================================== */
+        const catContainer = document.getElementById('walkingCat');
+        let catPos = -100;
+        let catSpeed = 1.2;
+
+        function moveCat() {
+            catPos += catSpeed;
+            if (catPos > window.innerWidth + 50) {
+                catPos = -100;
+            }
+            catContainer.style.left = `${catPos}px`;
+            requestAnimationFrame(moveCat);
+        }
+        moveCat();
+
+        /* ==========================================
+           7. FORM VALIDATION & WHATSAPP
+           ========================================== */
+        function validateBooking() {
+            let isValid = true;
+
+            const fields = [
+                { id: 'nama', group: 'group-nama' },
+                { id: 'phone', group: 'group-phone' },
+                { id: 'catName', group: 'group-catName' },
+                { id: 'serviceSelect', group: 'group-service' },
+                { id: 'bookingDate', group: 'group-date' }
+            ];
+
+            fields.forEach(f => {
+                const el = document.getElementById(f.id);
+                const grp = document.getElementById(f.group);
+                if (!el.value.trim()) {
+                    grp.classList.add('error');
+                    isValid = false;
+                } else {
+                    grp.classList.remove('error');
+                }
+            });
+
+            return isValid;
+        }
+
+        function handleBookingSubmit(e) {
+            e.preventDefault();
+            if (validateBooking()) {
+                const btn = document.getElementById('btnSubmitForm');
+                btn.innerText = 'Mengirim...';
+                btn.disabled = true;
+
+                setTimeout(() => {
+                    document.getElementById('bookingForm').style.display = 'none';
+                    document.getElementById('successMsg').style.display = 'block';
+                    lucide.createIcons();
+                }, 1000);
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('bookingForm').reset();
+            document.getElementById('bookingForm').style.display = 'grid';
+            document.getElementById('successMsg').style.display = 'none';
+            document.getElementById('btnSubmitForm').innerText = 'TEMPAH SEKARANG';
+            document.getElementById('btnSubmitForm').disabled = false;
+        }
+
+        function bookViaWhatsapp() {
+            const nama = document.getElementById('nama').value || 'Pelanggan';
+            const catName = document.getElementById('catName').value || 'Kucing Saya';
+            const service = document.getElementById('serviceSelect').value || 'Grooming/Boarding';
+            const date = document.getElementById('bookingDate').value || 'Segera';
+
+            const msg = `Hi Kitty Homestay, saya ingin menempah perkhidmatan.\n\nNama: ${nama}\nNama Kucing: ${catName}\nServis: ${service}\nTarikh: ${date}`;
+            const url = `https://wa.me/60123456789?text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
