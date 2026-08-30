@@ -1,698 +1,1785 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ms">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>PFMSB Project Portfolio Dashboard</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
-<script src="https://unpkg.com/react-is@18.2.0/umd/react-is.production.min.js"></script>
-<script src="https://unpkg.com/recharts@2.10.3/umd/Recharts.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-<style>
-  :root{
-    --navy-950:#0a1628;
-    --navy-900:#0e1f38;
-    --navy-800:#132a4a;
-    --navy-700:#1c3a63;
-    --navy-600:#284d80;
-    --gold-500:#c9a227;
-    --gold-400:#dab945;
-    --gold-300:#e8cd6f;
-    --ink-100:#f4f6fa;
-    --ink-300:#c3ccdb;
-    --ink-500:#8393ad;
-    --red-500:#e2574c;
-    --amber-500:#1faae2;
-    --green-500:#3fae6a;
-    --blue-400:#5c9be0;
-  }
-  *{box-sizing:border-box;}
-  body{margin:0;background:var(--navy-950);font-family:'Poppins',sans-serif;color:var(--ink-100);}
-  #root{min-height:100vh;}
-  .app{max-width:1360px;margin:0 auto;padding:28px 32px 64px;}
-  .header{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;border-bottom:1px solid var(--navy-700);padding-bottom:20px;margin-bottom:24px;}
-  .header .eyebrow{color:var(--gold-400);font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;margin:0 0 6px;}
-  .header h1{margin:0;font-size:28px;font-weight:700;letter-spacing:-.01em;}
-  .header .sub{color:var(--ink-500);font-size:13.5px;margin-top:6px;}
-  .cutoff-badge{background:var(--navy-800);border:1px solid var(--navy-600);color:var(--gold-300);padding:8px 16px;border-radius:999px;font-size:13px;font-weight:500;white-space:nowrap;}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitty Homestay Muar | Grooming & Boarding Kucing Premium</title>
 
-  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
-  .kpi-card{background:linear-gradient(155deg,var(--navy-800),var(--navy-900));border:1px solid var(--navy-700);border-radius:14px;padding:20px 22px;position:relative;overflow:hidden;}
-  .kpi-card::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%;background:var(--gold-500);}
-  .kpi-label{font-size:12px;color:var(--ink-500);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:10px;}
-  .kpi-value{font-size:28px;font-weight:700;color:var(--ink-100);line-height:1;}
-  .kpi-sub{font-size:12.5px;margin-top:8px;font-weight:500;color:var(--ink-500);}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  .grid-2{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:16px;}
-  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;}
-  .panel{background:var(--navy-900);border:1px solid var(--navy-700);border-radius:14px;padding:20px 22px 12px;}
-  .panel h3{margin:0 0 2px;font-size:15px;font-weight:600;color:var(--ink-100);}
-  .panel .panel-sub{font-size:12px;color:var(--ink-500);margin-bottom:14px;}
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-  .legend-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;}
+    <style>
+        /* ==========================================
+           1. CSS VARIABLES & RESET
+           ========================================== */
+        :root {
+            --bg-cream: #FAF7F2;
+            --bg-card: #FFFFFF;
+            --primary-beige: #F3EBE1;
+            --accent-warm: #8C6A5A;
+            --accent-brown-dark: #5A4035;
+            --pink-soft: #F7DCD9;
+            --pink-accent: #E0A9A3;
+            --text-dark: #2C221E;
+            --text-muted: #6E625A;
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --shadow-soft: 0 10px 30px rgba(90, 64, 53, 0.05);
+            --shadow-hover: 0 20px 40px rgba(90, 64, 53, 0.12);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 8px;
+            --transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
 
-  table{width:100%;border-collapse:collapse;font-size:12.5px;}
-  th{text-align:left;color:var(--ink-500);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:8px 10px;border-bottom:1px solid var(--navy-700);position:sticky;top:0;background:var(--navy-900);cursor:pointer;user-select:none;}
-  td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.04);color:var(--ink-300);}
-  tr:hover td{background:rgba(255,255,255,.02);}
-  .status-pill{padding:3px 9px;border-radius:999px;font-size:10.5px;font-weight:600;letter-spacing:.03em;white-space:nowrap;}
-  .status-active{background:rgba(31,170,226,.15);color:var(--amber-500);}
-  .status-end{background:rgba(63,174,106,.15);color:var(--green-500);}
-  .pill-landed{background:rgba(92,155,224,.15);color:var(--blue-400);}
-  .pill-highrise{background:rgba(201,162,39,.15);color:var(--gold-300);}
-  .pill-mc{background:rgba(63,174,106,.15);color:var(--green-500);}
-  .pill-jmb{background:rgba(92,155,224,.15);color:var(--blue-400);}
-  .pill-ra{background:rgba(31,170,226,.15);color:var(--amber-500);}
-  .pill-pr1ma{background:rgba(226,87,76,.12);color:var(--red-500);}
-  .bar-cell{display:flex;align-items:center;gap:8px;}
-  .bar-track{flex:1;height:6px;background:var(--navy-700);border-radius:3px;overflow:hidden;}
-  .bar-fill{height:100%;border-radius:3px;}
-  .table-scroll{max-height:440px;overflow-y:auto;}
-  .search-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
-  input[type=text]{background:var(--navy-800);border:1px solid var(--navy-600);color:var(--ink-100);padding:8px 14px;border-radius:8px;font-family:'Poppins';font-size:13px;flex:1;min-width:200px;}
-  input[type=text]::placeholder{color:var(--ink-500);}
-  select{background:var(--navy-800);border:1px solid var(--navy-600);color:var(--ink-100);padding:8px 12px;border-radius:8px;font-family:'Poppins';font-size:13px;}
-  .footer-note{color:var(--ink-500);font-size:11.5px;margin-top:26px;text-align:center;line-height:1.6;}
-  .tooltip-box{background:var(--navy-800);border:1px solid var(--navy-600);border-radius:8px;padding:10px 14px;font-size:12.5px;color:var(--ink-100);}
-  .risk-name{color:var(--ink-100);font-weight:500;}
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-  .update-panel{background:var(--navy-900);border:1px dashed var(--navy-600);border-radius:14px;padding:18px 22px;margin-bottom:24px;}
-  .update-head{display:flex;justify-content:space-between;align-items:center;cursor:pointer;}
-  .update-head h3{margin:0;font-size:14px;}
-  .update-head .chev{color:var(--gold-400);font-size:13px;transition:transform .15s;}
-  .update-body{margin-top:16px;}
-  .drop-zone{border:1.5px dashed var(--navy-600);border-radius:10px;padding:24px;text-align:center;color:var(--ink-500);font-size:13px;cursor:pointer;transition:border-color .15s,background .15s;}
-  .drop-zone:hover, .drop-zone.dragover{border-color:var(--gold-500);background:rgba(201,162,39,.05);}
-  .drop-zone b{color:var(--gold-300);}
-  .update-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:14px;}
-  .btn{background:var(--gold-500);color:var(--navy-950);border:none;padding:9px 18px;border-radius:8px;font-family:'Poppins';font-weight:600;font-size:13px;cursor:pointer;}
-  .btn:hover{background:var(--gold-400);}
-  .btn.secondary{background:transparent;border:1px solid var(--navy-600);color:var(--ink-300);}
-  .btn.secondary:hover{border-color:var(--gold-500);color:var(--gold-300);}
-  .status-msg{font-size:12.5px;margin-top:10px;padding:8px 12px;border-radius:8px;}
-  .status-msg.ok{background:rgba(63,174,106,.12);color:var(--green-500);}
-  .status-msg.err{background:rgba(226,87,76,.12);color:var(--red-500);}
-  .field-label{font-size:11.5px;color:var(--ink-500);display:block;margin-bottom:5px;}
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
 
-  @media(max-width:900px){
-    .kpi-grid{grid-template-columns:repeat(2,1fr);}
-    .grid-2,.grid-3{grid-template-columns:1fr;}
-  }
-</style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Fredoka', cursive;
+            letter-spacing: 0.5px;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* ==========================================
+           2. LIGHTING & CUSTOM CURSOR
+           ========================================== */
+        #spotlight {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            background: radial-gradient(600px circle at var(--x, 50%) var(--y, 50%), rgba(247, 220, 217, 0.25), transparent 80%);
+            z-index: 99;
+            transition: opacity 0.3s ease;
+        }
+
+        .custom-cursor {
+            width: 12px;
+            height: 12px;
+            background: var(--accent-warm);
+            border-radius: 50%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
+        }
+
+        .custom-cursor-follower {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--pink-accent);
+            border-radius: 50%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: transform 0.15s ease-out, width 0.2s ease, height 0.2s ease;
+        }
+
+        body.hovered .custom-cursor {
+            width: 20px;
+            height: 20px;
+            background: var(--pink-accent);
+        }
+
+        body.hovered .custom-cursor-follower {
+            width: 50px;
+            height: 50px;
+            border-color: var(--accent-warm);
+        }
+
+        /* ==========================================
+           3. NAVBAR
+           ========================================== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            padding: 12px 8%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-brown-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-warm);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .btn-cta {
+            background: var(--accent-brown-dark);
+            color: #FFF;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(90, 64, 53, 0.2);
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-2px) scale(1.03);
+            background: var(--accent-warm);
+            box-shadow: 0 6px 20px rgba(90, 64, 53, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--pink-soft);
+            color: var(--accent-brown-dark);
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid var(--pink-accent);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            background: #F0C9C5;
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: var(--accent-brown-dark);
+        }
+
+        /* ==========================================
+           4. HERO SECTION
+           ========================================== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 120px 8% 60px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--bg-cream) 0%, var(--primary-beige) 100%);
+        }
+
+        .hero-container {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            align-items: center;
+            gap: 4rem;
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-size: 3.8rem;
+            line-height: 1.15;
+            color: var(--accent-brown-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            max-width: 500px;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .hero-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-img-wrapper {
+            position: relative;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: var(--pink-soft);
+            padding: 15px;
+            box-shadow: var(--shadow-soft);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            transition: transform 0.3s ease-out;
+        }
+
+        .floating-badge {
+            position: absolute;
+            bottom: 20px;
+            left: -20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(1deg); }
+        }
+
+        .paw-print {
+            position: absolute;
+            opacity: 0.08;
+            color: var(--accent-brown-dark);
+            pointer-events: none;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        /* ==========================================
+           5. SECTION GENERAL STYLES
+           ========================================== */
+        section {
+            padding: 100px 8%;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 60px;
+        }
+
+        .section-subtitle {
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            color: var(--pink-accent);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--accent-brown-dark);
+        }
+
+        /* ==========================================
+           6. KENAPA KITTY HOMESTAY?
+           ========================================== */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            padding: 35px 25px;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(0,0,0,0.03);
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-beige);
+            color: var(--accent-warm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .feature-card:hover .feature-icon {
+            background: var(--pink-soft);
+            color: var(--accent-brown-dark);
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            color: var(--accent-brown-dark);
+            margin-bottom: 10px;
+        }
+
+        .feature-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .features-grid:hover .feature-card:not(:hover) {
+            opacity: 0.7;
+        }
+
+        /* ==========================================
+           7. PERKHIDMATAN & MODAL
+           ========================================== */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--primary-beige);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: var(--transition);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--pink-accent);
+        }
+
+        .service-header {
+            margin-bottom: 20px;
+        }
+
+        .service-title {
+            font-size: 1.5rem;
+            color: var(--accent-brown-dark);
+            margin-bottom: 15px;
+        }
+
+        .service-list {
+            margin-bottom: 25px;
+        }
+
+        .service-list li {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .service-list li i {
+            color: var(--pink-accent);
+            width: 16px;
+            height: 16px;
+        }
+
+        .btn-details {
+            background: transparent;
+            border: none;
+            color: var(--accent-warm);
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            padding: 0;
+            transition: var(--transition);
+        }
+
+        .btn-details:hover {
+            color: var(--accent-brown-dark);
+            gap: 10px;
+        }
+
+        /* Modal Details */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(44, 34, 30, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            transform: translateY(20px);
+            transition: var(--transition);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--primary-beige);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-brown-dark);
+        }
+
+        /* ==========================================
+           8. PRICING SECTION & TOGGLE
+           ========================================== */
+        .pricing-toggle-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .pricing-toggle {
+            background: var(--primary-beige);
+            padding: 6px;
+            border-radius: 50px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .toggle-btn {
+            padding: 10px 28px;
+            border-radius: 50px;
+            border: none;
+            background: transparent;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-btn.active {
+            background: var(--bg-card);
+            color: var(--accent-brown-dark);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .price-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid transparent;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .price-card.featured {
+            border-color: var(--pink-accent);
+            transform: scale(1.03);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .price-card.featured::before {
+            content: 'POPULAR';
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--pink-accent);
+            color: #FFF;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 16px;
+            border-radius: 50px;
+            letter-spacing: 1px;
+        }
+
+        .price-title {
+            font-size: 1.4rem;
+            color: var(--accent-brown-dark);
+            margin-bottom: 10px;
+        }
+
+        .price-val {
+            font-size: 2.8rem;
+            font-family: 'Fredoka', cursive;
+            color: var(--accent-brown-dark);
+            margin-bottom: 20px;
+        }
+
+        .price-val span {
+            font-size: 1rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-muted);
+        }
+
+        /* ==========================================
+           9. HOW IT WORKS
+           ========================================== */
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline-step {
+            background: var(--bg-card);
+            padding: 30px 20px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-soft);
+            text-align: center;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .timeline-step:hover {
+            transform: translateY(-5px);
+        }
+
+        .step-num {
+            font-family: 'Fredoka', cursive;
+            font-size: 2.5rem;
+            color: var(--pink-accent);
+            opacity: 0.6;
+            margin-bottom: 10px;
+        }
+
+        .step-title {
+            font-size: 1.2rem;
+            color: var(--accent-brown-dark);
+            margin-bottom: 8px;
+        }
+
+        /* ==========================================
+           10. GALLERY & LIGHTBOX
+           ========================================== */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            height: 250px;
+            cursor: pointer;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(44,34,30,0.7), transparent);
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.08);
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-cat {
+            color: #FFF;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* ==========================================
+           11. TESTIMONIALS
+           ========================================== */
+        .testimonial-container {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+            text-align: center;
+        }
+
+        .stars {
+            color: #FFB800;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .testimonial-text {
+            font-size: 1.15rem;
+            font-style: italic;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .testimonial-author {
+            font-weight: 700;
+            color: var(--accent-brown-dark);
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary-beige);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .dot.active {
+            background: var(--pink-accent);
+            width: 24px;
+            border-radius: 10px;
+        }
+
+        /* ==========================================
+           12. INTERACTIVE CAT WALK
+           ========================================== */
+        .interactive-cat-container {
+            position: fixed;
+            bottom: 20px;
+            left: -100px;
+            z-index: 900;
+            pointer-events: auto;
+            transition: left 0.1s linear;
+        }
+
+        .cat-sprite {
+            font-size: 2.2rem;
+            cursor: pointer;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            user-select: none;
+        }
+
+        /* ==========================================
+           13. BOOKING SECTION
+           ========================================== */
+        .booking-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            padding: 50px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--primary-beige);
+        }
+
+        .booking-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-brown-dark);
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid #E0D7CE;
+            background: var(--bg-cream);
+            font-family: inherit;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            transition: var(--transition);
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--pink-accent);
+            background: #FFF;
+            box-shadow: 0 0 0 3px rgba(224, 169, 163, 0.2);
+        }
+
+        .error-msg {
+            color: #D9534F;
+            font-size: 0.75rem;
+            display: none;
+        }
+
+        .form-group.error input, .form-group.error select {
+            border-color: #D9534F;
+        }
+
+        .form-group.error .error-msg {
+            display: block;
+        }
+
+        .booking-actions {
+            grid-column: span 2;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 10px;
+        }
+
+        .btn-whatsapp-booking {
+            background: #25D366;
+            color: #FFF;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .btn-whatsapp-booking:hover {
+            background: #1EBE5D;
+            transform: translateY(-2px);
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .success-message i {
+            color: #25D366;
+            width: 48px;
+            height: 48px;
+            margin-bottom: 15px;
+        }
+
+        /* ==========================================
+           14. FLOATING WHATSAPP
+           ========================================== */
+        .floating-wa {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #25D366;
+            color: #FFF;
+            padding: 14px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.3);
+            z-index: 999;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .floating-wa span {
+            max-width: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: max-width 0.4s ease, padding 0.3s ease;
+        }
+
+        .floating-wa:hover {
+            padding: 14px 22px;
+            transform: translateY(-3px);
+        }
+
+        .floating-wa:hover span {
+            max-width: 150px;
+            margin-left: 4px;
+        }
+
+        /* ==========================================
+           15. FOOTER
+           ========================================== */
+        footer {
+            background: var(--accent-brown-dark);
+            color: #FFF;
+            padding: 70px 8% 30px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1.5fr 1fr;
+            gap: 3rem;
+            max-width: 1300px;
+            margin: 0 auto 50px;
+        }
+
+        .footer-brand h3 {
+            font-size: 1.6rem;
+            margin-bottom: 12px;
+        }
+
+        .footer-brand p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.95rem;
+        }
+
+        .footer-links h4, .footer-contact h4, .footer-social h4 {
+            font-size: 1.1rem;
+            margin-bottom: 18px;
+            color: var(--pink-soft);
+        }
+
+        .footer-links ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links ul li a {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+        }
+
+        .footer-links ul li a:hover {
+            color: #FFF;
+            padding-left: 4px;
+        }
+
+        .footer-contact p {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFF;
+            transition: var(--transition);
+        }
+
+        .social-btn:hover {
+            background: var(--pink-accent);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+        }
+
+        /* ==========================================
+           16. RESPONSIVE DESIGN
+           ========================================== */
+        @media (max-width: 992px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-subtitle {
+                margin: 0 auto 2.5rem;
+            }
+
+            .hero-btns {
+                justify-content: center;
+            }
+
+            .hero-img-wrapper {
+                width: 300px;
+                height: 300px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .custom-cursor, .custom-cursor-follower {
+                display: none !important;
+            }
+
+            .navbar {
+                padding: 15px 5%;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: var(--bg-card);
+                flex-direction: column;
+                padding: 30px;
+                gap: 1.5rem;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+                transform: translateY(-150%);
+                transition: var(--transition);
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+            }
+
+            .hero-title {
+                font-size: 2.8rem;
+            }
+
+            .booking-form {
+                grid-template-columns: 1fr;
+            }
+
+            .booking-form .form-group {
+                grid-column: span 1;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
 </head>
 <body>
-<div id="root"></div>
 
-<script id="project-data" type="application/json">
-[{"name": "A'Famosa 1 (A'Famosa Phase 2)", "typology": "Landed", "title": "Stratified", "state": "Melaka", "totalUnits": 280, "developer": "Tanjung Ratna Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 64, "completionYear": 2021, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 279, "movedIn": 104, "khoPct": 99.6, "movedInPct": 37.3, "unsold": 1, "salesExecuted": null, "vpIssued": 279}, {"name": "A'Famosa 2 (A'Famosa Phase 1)", "typology": "High-Rise", "title": "Stratified", "state": "Melaka", "totalUnits": 475, "developer": "Tanjung Ratna Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 80, "completionYear": 2022, "dlpStatusOwner": "END", "managementStatus": "JMB", "keyHandedOver": 448, "movedIn": 290, "khoPct": 94.3, "movedInPct": 64.7, "unsold": 8, "salesExecuted": null, "vpIssued": 467}, {"name": "Alam Damai", "typology": "High-Rise", "title": "Stratified", "state": "WPKL", "totalUnits": 2074, "developer": "Transgreen Structure Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": null, "completionYear": 2017, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 2055, "movedIn": 1832, "khoPct": 99.1, "movedInPct": 89.1, "unsold": 19, "salesExecuted": null, "vpIssued": 2055}, {"name": "Bagan Serai Phase 1", "typology": "Landed", "title": "Individual", "state": "Perak", "totalUnits": 704, "developer": "Sepakat Ehsan Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 72, "completionYear": 2017, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 698, "movedIn": 390, "khoPct": 99.1, "movedInPct": 55.9, "unsold": 6, "salesExecuted": null, "vpIssued": 698}, {"name": "Bagan Serai Phase 2", "typology": "Landed", "title": "Individual", "state": "Perak", "totalUnits": 544, "developer": "Sepakat Ehsan Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": null, "completionYear": 2017, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 542, "movedIn": 370, "khoPct": 99.6, "movedInPct": 68.3, "unsold": 2, "salesExecuted": null, "vpIssued": 542}, {"name": "Bandar Baru Setia Awan Perdana (Sitiawan Phase 1)", "typology": "Landed", "title": "Stratified", "state": "Perak", "totalUnits": 836, "developer": "Taraf Nusantara Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 75, "completionYear": 2021, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 745, "movedIn": 215, "khoPct": 89.1, "movedInPct": 28.9, "unsold": 68, "salesExecuted": null, "vpIssued": 768}, {"name": "Bandar Baru Setia Awan Perdana (Sitiawan Phase 2)", "typology": "Landed", "title": "Stratified", "state": "Perak", "totalUnits": 432, "developer": "Taraf Nusantara Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 75, "completionYear": 2023, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 62, "movedIn": 15, "khoPct": 14.4, "movedInPct": 24.2, "unsold": 350, "salesExecuted": null, "vpIssued": 82}, {"name": "Bandar Bukit Mahkota", "typology": "High-Rise", "title": "Stratified", "state": "Selangor", "totalUnits": 650, "developer": "Citra Hartamas Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 67, "completionYear": 2023, "dlpStatusOwner": "END", "managementStatus": "PR1MA", "keyHandedOver": 575, "movedIn": 222, "khoPct": 88.5, "movedInPct": 38.6, "unsold": 62, "salesExecuted": null, "vpIssued": 588}, {"name": "Bandar Ekar (Rantau Phase 1)", "typology": "Landed", "title": "Individual", "state": "Negeri Sembilan", "totalUnits": 766, "developer": "Bina Terbit Sdn Bhd (former) / \nZikay Sunergy Sdn Bhd (current)", "deliverablePhase": "PR1MA 2.0", "qlassic": 67, "completionYear": 2025, "dlpStatusOwner": "ACTIVE", "managementStatus": "RA", "keyHandedOver": 693, "movedIn": 97, "khoPct": 90.5, "movedInPct": 14.0, "unsold": 12, "salesExecuted": null, "vpIssued": 754}, {"name": "Bandar Layangkasa", "typology": "Landed", "title": "Individual", "state": "Johor", "totalUnits": 475, "developer": "Cahaya Bumimas Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": null, "completionYear": 2017, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 472, "movedIn": 380, "khoPct": 99.4, "movedInPct": 80.5, "unsold": 3, "salesExecuted": null, "vpIssued": 472}, {"name": "Bandar Puteri Jaya 1 (Sungai Petani 2 Phase 1)", "typology": "Landed", "title": "Individual", "state": "Kedah", "totalUnits": 449, "developer": "OSK Properties Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 65, "completionYear": 2016, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 446, "movedIn": 312, "khoPct": 99.3, "movedInPct": 70.0, "unsold": 3, "salesExecuted": null, "vpIssued": 446}, {"name": "Bandar Puteri Jaya 2 (Sungai Petani 2 Phase 2)", "typology": "Landed", "title": "Individual", "state": "Kedah", "totalUnits": 975, "developer": "OSK Properties Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": null, "completionYear": 2017, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 974, "movedIn": 600, "khoPct": 99.9, "movedInPct": 61.6, "unsold": 1, "salesExecuted": null, "vpIssued": 974}, {"name": "Bandar Putra Height (Padang Siding)", "typology": "Landed", "title": "Individual", "state": "Perlis", "totalUnits": 231, "developer": "Optima Hartanah Sdn Bhd (former) / Z&J Bina Sdn Bhd (curremt)", "deliverablePhase": "PR1MA 2.0", "qlassic": 63, "completionYear": 2020, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 229, "movedIn": 201, "khoPct": 99.1, "movedInPct": 87.8, "unsold": 0, "salesExecuted": null, "vpIssued": 231}, {"name": "Bintawa Riverfront", "typology": "High-Rise", "title": "Stratified", "state": "Sarawak", "totalUnits": 1320, "developer": "Hong Seng Construction (E.M.) Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 73, "completionYear": 2020, "dlpStatusOwner": "END", "managementStatus": "JMB", "keyHandedOver": 1317, "movedIn": 1316, "khoPct": 99.8, "movedInPct": 99.9, "unsold": 3, "salesExecuted": null, "vpIssued": 1317}, {"name": "Borneo Cove", "typology": "High-Rise", "title": "Stratified", "state": "Sabah", "totalUnits": 999, "developer": "Sabakekal Sdn Bhd (former) / Akas Permai Sdn Bhd (current)", "deliverablePhase": "PR1MA 2.0", "qlassic": 66, "completionYear": 2021, "dlpStatusOwner": "END", "managementStatus": "PR1MA", "keyHandedOver": 924, "movedIn": 900, "khoPct": 92.5, "movedInPct": 97.4, "unsold": 36, "salesExecuted": null, "vpIssued": 963}, {"name": "Brickfields", "typology": "High-Rise", "title": "Stratified", "state": "WPKL", "totalUnits": 920, "developer": "MRCB Bhd (former) / Breaks Construction Sdn Bhd (current)", "deliverablePhase": "PR1MA 2.0", "qlassic": 82, "completionYear": 2024, "dlpStatusOwner": "END", "managementStatus": "PR1MA", "keyHandedOver": 891, "movedIn": 219, "khoPct": 96.8, "movedInPct": 24.6, "unsold": 4, "salesExecuted": null, "vpIssued": 916}, {"name": "Bukit Katil", "typology": "High-Rise", "title": "Stratified", "state": "Melaka", "totalUnits": 407, "developer": "AG Bumi Hartanah Sdn Bhd", "deliverablePhase": "", "qlassic": null, "completionYear": null, "dlpStatusOwner": "ACTIVE", "managementStatus": "PR1MA", "keyHandedOver": 0, "movedIn": 0, "khoPct": 0, "movedInPct": null, "unsold": 407, "salesExecuted": null, "vpIssued": null}, {"name": "Desa Aman (Padang Meha)", "typology": "Landed", "title": "Individual", "state": "Kedah", "totalUnits": 244, "developer": "Golden Cignet Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 71, "completionYear": 2017, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 241, "movedIn": 215, "khoPct": 98.8, "movedInPct": 89.2, "unsold": 2, "salesExecuted": null, "vpIssued": 242}, {"name": "D'Marina @ Pinggiran Putra 2", "typology": "Landed", "title": "Individual", "state": "Pahang", "totalUnits": 523, "developer": "Sinergi Dayang Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 72, "completionYear": 2023, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 520, "movedIn": 145, "khoPct": 99.4, "movedInPct": 27.9, "unsold": 2, "salesExecuted": null, "vpIssued": 521}, {"name": "Falim", "typology": "High-Rise", "title": "Stratified", "state": "Perak", "totalUnits": 616, "developer": "Amber Synergy Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 74, "completionYear": 2018, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 590, "movedIn": 330, "khoPct": 95.8, "movedInPct": 55.9, "unsold": 22, "salesExecuted": null, "vpIssued": 594}, {"name": "Gambang Baru 1 (Gambang 3 Phase 1)", "typology": "Landed", "title": "Individual", "state": "Pahang", "totalUnits": 500, "developer": "Franky Construction Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 61, "completionYear": 2022, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 498, "movedIn": 300, "khoPct": 99.6, "movedInPct": 60.2, "unsold": 2, "salesExecuted": null, "vpIssued": 498}, {"name": "Jalan Jubilee", "typology": "High-Rise", "title": "Stratified", "state": "WPKL", "totalUnits": 543, "developer": "Southern Score Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 69, "completionYear": 2019, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 530, "movedIn": 506, "khoPct": 97.6, "movedInPct": 95.5, "unsold": 10, "salesExecuted": null, "vpIssued": 533}, {"name": "Junjong Phase 1", "typology": "Landed", "title": "Individual", "state": "Kedah", "totalUnits": 580, "developer": "Bumita SB", "deliverablePhase": "PR1MA 2.0", "qlassic": 79, "completionYear": 2024, "dlpStatusOwner": "ACTIVE", "managementStatus": "RA", "keyHandedOver": 567, "movedIn": 122, "khoPct": 97.8, "movedInPct": 21.5, "unsold": 1, "salesExecuted": null, "vpIssued": 579}, {"name": "Kajang Utama", "typology": "High-Rise", "title": "Stratified", "state": "Selangor", "totalUnits": 566, "developer": "MRCB Utama Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 68, "completionYear": 2020, "dlpStatusOwner": "END", "managementStatus": "PR1MA", "keyHandedOver": 397, "movedIn": 352, "khoPct": 70.1, "movedInPct": 88.7, "unsold": 167, "salesExecuted": null, "vpIssued": 399}, {"name": "Kampar", "typology": "Landed", "title": "Individual", "state": "Perak", "totalUnits": 609, "developer": "Meru Excel Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 68, "completionYear": 2018, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 594, "movedIn": 305, "khoPct": 97.5, "movedInPct": 51.3, "unsold": 13, "salesExecuted": null, "vpIssued": 596}, {"name": "Kampung Paloh", "typology": "High-Rise", "title": "Stratified", "state": "Perak", "totalUnits": 456, "developer": "Seri Perwira Logistic Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 74, "completionYear": 2018, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 434, "movedIn": 325, "khoPct": 95.2, "movedInPct": 74.9, "unsold": 21, "salesExecuted": null, "vpIssued": 435}, {"name": "Kamunting Phase 1", "typology": "Landed", "title": "Individual", "state": "Perak", "totalUnits": 229, "developer": "Antaraya Sdn Bhd", "deliverablePhase": "ta", "qlassic": 62, "completionYear": 2016, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 226, "movedIn": 221, "khoPct": 98.7, "movedInPct": 97.8, "unsold": 1, "salesExecuted": null, "vpIssued": 228}, {"name": "Kamunting Phase 2", "typology": "Landed", "title": "Individual", "state": "Perak", "totalUnits": 296, "developer": "Antaraya Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": null, "completionYear": 2017, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 292, "movedIn": 280, "khoPct": 98.6, "movedInPct": 95.9, "unsold": 3, "salesExecuted": null, "vpIssued": 293}, {"name": "Kepayang (Fairpark)", "typology": "High-Rise", "title": "Stratified", "state": "Perak", "totalUnits": 252, "developer": "SSL Land Sdn Bhd (former) Vertex Central Industries Sdn Bhd ", "deliverablePhase": "PR1MA 2.0", "qlassic": 75, "completionYear": 2022, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 137, "movedIn": 110, "khoPct": 54.4, "movedInPct": 80.3, "unsold": 109, "salesExecuted": null, "vpIssued": 143}, {"name": "Klebang 2", "typology": "High-Rise", "title": "Stratified", "state": "Melaka", "totalUnits": 800, "developer": "Kesuma Sdn Bhd", "deliverablePhase": "", "qlassic": null, "completionYear": null, "dlpStatusOwner": "ACTIVE", "managementStatus": "PR1MA", "keyHandedOver": null, "movedIn": null, "khoPct": 0, "movedInPct": null, "unsold": 800, "salesExecuted": null, "vpIssued": null}, {"name": "Kota Marudu", "typology": "High-Rise", "title": "Stratified", "state": "Sabah", "totalUnits": 360, "developer": "WK Maju Jaya Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 64, "completionYear": 2019, "dlpStatusOwner": "END", "managementStatus": "PR1MA", "keyHandedOver": 359, "movedIn": 191, "khoPct": 99.7, "movedInPct": 53.2, "unsold": 1, "salesExecuted": null, "vpIssued": 359}, {"name": "Kota Tinggi", "typology": "Landed", "title": "Individual", "state": "Johor", "totalUnits": 625, "developer": "Pesaka Persada Sdn Bhd (former) / Majidee (Holdings) Sdn Bhd (current)", "deliverablePhase": "PR1MA 2.0", "qlassic": 77, "completionYear": 2023, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 616, "movedIn": 250, "khoPct": 98.6, "movedInPct": 40.6, "unsold": 1, "salesExecuted": null, "vpIssued": 624}, {"name": "Kuala Ketil", "typology": "Landed", "title": "Individual", "state": "Kedah", "totalUnits": 323, "developer": "Darulaman Realty Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 60, "completionYear": 2015, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 321, "movedIn": 321, "khoPct": 99.4, "movedInPct": 100, "unsold": 2, "salesExecuted": null, "vpIssued": 321}, {"name": "Larkin Indah", "typology": "High-Rise", "title": "Stratified", "state": "Johor", "totalUnits": 1174, "developer": "Alfa Lagenda Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 80, "completionYear": 2024, "dlpStatusOwner": "END", "managementStatus": "JMB", "keyHandedOver": 1128, "movedIn": 287, "khoPct": 96.1, "movedInPct": 25.4, "unsold": 6, "salesExecuted": null, "vpIssued": 1168}, {"name": "Lubok Jong Phase 1", "typology": "Landed", "title": "Individual", "state": "Kelantan", "totalUnits": 965, "developer": "Firalex Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 62, "completionYear": 2020, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 636, "movedIn": 250, "khoPct": 65.9, "movedInPct": 39.3, "unsold": 277, "salesExecuted": null, "vpIssued": 688}, {"name": "Matang Homes", "typology": "High-Rise", "title": "Stratified", "state": "Sarawak", "totalUnits": 912, "developer": "Lee Ling Construction & Development Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 65, "completionYear": 2019, "dlpStatusOwner": "END", "managementStatus": "JMB", "keyHandedOver": 910, "movedIn": 910, "khoPct": 99.8, "movedInPct": 100, "unsold": 2, "salesExecuted": null, "vpIssued": 910}, {"name": "Matang Premier", "typology": "High-Rise", "title": "Stratified", "state": "Sarawak", "totalUnits": 448, "developer": "Lee Ling Construction & Development Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": null, "completionYear": 2019, "dlpStatusOwner": "END", "managementStatus": "JMB", "keyHandedOver": 445, "movedIn": 443, "khoPct": 99.3, "movedInPct": 99.6, "unsold": 3, "salesExecuted": null, "vpIssued": 445}, {"name": "Melaka Tengah 2 (Pokok Mangga)", "typology": "High-Rise", "title": "Stratified", "state": "Melaka", "totalUnits": 980, "developer": "Jeram Anggun Sdn Bhd (former / Consolidated Legend (M) Sdn Bhd (current)", "deliverablePhase": "PR1MA 2.0", "qlassic": 79, "completionYear": 2024, "dlpStatusOwner": "ACTIVE", "managementStatus": "JMB", "keyHandedOver": 731, "movedIn": 295, "khoPct": 74.6, "movedInPct": null, "unsold": null, "salesExecuted": null, "vpIssued": null}, {"name": "Menggatal Phase 1A", "typology": "High-Rise", "title": "Stratified", "state": "Sabah", "totalUnits": 816, "developer": "Puncak Deras Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 82, "completionYear": 2025, "dlpStatusOwner": "ACTIVE", "managementStatus": "PR1MA", "keyHandedOver": 628, "movedIn": 114, "khoPct": 77.0, "movedInPct": 18.2, "unsold": 28, "salesExecuted": null, "vpIssued": 788}, {"name": "Meru (Bandar Meru Raya)", "typology": "High-Rise", "title": "Stratified", "state": "Perak", "totalUnits": 1011, "developer": "Meru Properties Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 71, "completionYear": 2017, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 941, "movedIn": 673, "khoPct": 93.1, "movedInPct": 71.5, "unsold": 65, "salesExecuted": null, "vpIssued": 946}, {"name": "Pauh Permai (Permatang Pauh)", "typology": "High-Rise", "title": "Stratified", "state": "Pulau Pinang", "totalUnits": 1017, "developer": "Excel Focus Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 74, "completionYear": 2021, "dlpStatusOwner": "END", "managementStatus": "JMB", "keyHandedOver": 1017, "movedIn": 989, "khoPct": 100, "movedInPct": 97.2, "unsold": 0, "salesExecuted": null, "vpIssued": 1017}, {"name": "Pelangi Indah", "typology": "High-Rise", "title": "Stratified", "state": "Johor", "totalUnits": 720, "developer": "MJK Group Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 80, "completionYear": 2023, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 714, "movedIn": 600, "khoPct": 99.2, "movedInPct": 84.0, "unsold": 0, "salesExecuted": null, "vpIssued": 720}, {"name": "Port Dickson", "typology": "Landed", "title": "Individual", "state": "Negeri Sembilan", "totalUnits": 659, "developer": "Knowledge Estate Sdn Bhd (former) / Vertex Central Industries Sdn Bhd (current)", "deliverablePhase": "PR1MA 2.0", "qlassic": 79, "completionYear": 2024, "dlpStatusOwner": "END", "managementStatus": "PR1MA", "keyHandedOver": 642, "movedIn": 128, "khoPct": 97.4, "movedInPct": 19.9, "unsold": 8, "salesExecuted": null, "vpIssued": 651}, {"name": "Pulau Sebang", "typology": "Landed", "title": "Stratified", "state": "Melaka", "totalUnits": 972, "developer": "Wintarijaya Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 63, "completionYear": 2021, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 967, "movedIn": 838, "khoPct": 99.5, "movedInPct": 86.7, "unsold": 2, "salesExecuted": null, "vpIssued": 970}, {"name": "Ranggu", "typology": "Landed", "title": "Individual", "state": "Sabah", "totalUnits": 1300, "developer": "Prinsip Hasil Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 72, "completionYear": 2023, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 1280, "movedIn": 900, "khoPct": 98.5, "movedInPct": 70.3, "unsold": 3, "salesExecuted": null, "vpIssued": 1297}, {"name": "Rumpun Bahagia (Melaka Tengah 1)", "typology": "High-Rise", "title": "Stratified", "state": "Melaka", "totalUnits": 600, "developer": "WESB Realty Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 66, "completionYear": 2020, "dlpStatusOwner": "END", "managementStatus": "MC", "keyHandedOver": 589, "movedIn": 499, "khoPct": 98.2, "movedInPct": 84.7, "unsold": 10, "salesExecuted": null, "vpIssued": 590}, {"name": "Segari (Lumut Phase 1)", "typology": "Landed", "title": "Individual", "state": "Perak", "totalUnits": 285, "developer": "Visi Arif Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 63, "completionYear": 2019, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 278, "movedIn": 250, "khoPct": 97.5, "movedInPct": 89.9, "unsold": 6, "salesExecuted": null, "vpIssued": 279}, {"name": "Segari (Lumut Phase 2)", "typology": "Landed", "title": "Individual", "state": "Perak", "totalUnits": 338, "developer": "Visi Arif Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 76, "completionYear": 2021, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 337, "movedIn": 230, "khoPct": 99.7, "movedInPct": 68.2, "unsold": 0, "salesExecuted": null, "vpIssued": 338}, {"name": "Selatan Kinarut (Kinarut South Phase 1)", "typology": "High-Rise", "title": "Stratified", "state": "Sabah", "totalUnits": 232, "developer": "Visaland Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 68, "completionYear": 2021, "dlpStatusOwner": "END", "managementStatus": "PR1MA", "keyHandedOver": 230, "movedIn": 183, "khoPct": 99.1, "movedInPct": 79.6, "unsold": 2, "salesExecuted": null, "vpIssued": 230}, {"name": "Selatan Kinarut (Kinarut South Phase 2)", "typology": "High-Rise", "title": "Stratified", "state": "Sabah", "totalUnits": 270, "developer": "Visaland Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 66, "completionYear": 2021, "dlpStatusOwner": "END", "managementStatus": "PR1MA", "keyHandedOver": 262, "movedIn": 118, "khoPct": 97.0, "movedInPct": 45.0, "unsold": 4, "salesExecuted": null, "vpIssued": 266}, {"name": "Semenggoh Phase 1", "typology": "Landed", "title": "Individual", "state": "Sarawak", "totalUnits": 558, "developer": "Sri Datai Properties (Sarawak) Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 65, "completionYear": 2021, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 553, "movedIn": 553, "khoPct": 99.1, "movedInPct": 100, "unsold": 4, "salesExecuted": null, "vpIssued": 554}, {"name": "Seremban Sentral", "typology": "High-Rise", "title": "Stratified", "state": "Negeri Sembilan", "totalUnits": 1504, "developer": "PR1MA Seremban Sentral Sdn Bhd (former) / Brunsfield Engineering Sdn Bhd (current)", "deliverablePhase": "PR1MA 2.0", "qlassic": null, "completionYear": 2023, "dlpStatusOwner": "END", "managementStatus": "PR1MA", "keyHandedOver": 901, "movedIn": 500, "khoPct": 59.9, "movedInPct": 55.5, "unsold": 548, "salesExecuted": null, "vpIssued": 956}, {"name": "Seri Mahkota (Sungai Ular)", "typology": "Landed", "title": "Individual", "state": "Kedah", "totalUnits": 499, "developer": "Bina Maju Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 73, "completionYear": 2023, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 486, "movedIn": 433, "khoPct": 97.4, "movedInPct": 89.1, "unsold": 2, "salesExecuted": null, "vpIssued": 497}, {"name": "Seri Mahkota Maju (Gambang 1 Phase 1A)", "typology": "Landed", "title": "Individual", "state": "Pahang", "totalUnits": 317, "developer": "Nova Terrace Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 67, "completionYear": 2020, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 311, "movedIn": 290, "khoPct": 98.1, "movedInPct": 93.2, "unsold": 2, "salesExecuted": null, "vpIssued": 315}, {"name": "Simpang Empat 2 Phase 1", "typology": "Landed", "title": "Stratified", "state": "Kedah", "totalUnits": 432, "developer": "Bina Conso Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 78, "completionYear": 2025, "dlpStatusOwner": "ACTIVE", "managementStatus": "PR1MA", "keyHandedOver": 216, "movedIn": 1, "khoPct": 50.0, "movedInPct": 0.5, "unsold": 4, "salesExecuted": null, "vpIssued": 428}, {"name": "Taman Raia Sentosa (Sungai Raia)", "typology": "Landed", "title": "Individual", "state": "Perak", "totalUnits": 376, "developer": "Proaktif Development Sdn Bhd (former) / Pembinaan Bumiasia Sdn Bhd (current)", "deliverablePhase": "PR1MA 2.0", "qlassic": 67, "completionYear": 2023, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 366, "movedIn": 169, "khoPct": 97.3, "movedInPct": 46.2, "unsold": 6, "salesExecuted": null, "vpIssued": 370}, {"name": "Tapah", "typology": "Landed", "title": "Individual", "state": "Perak", "totalUnits": 647, "developer": "Meranti Tiga Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 73, "completionYear": 2018, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 643, "movedIn": 319, "khoPct": 99.4, "movedInPct": 49.6, "unsold": 4, "salesExecuted": null, "vpIssued": 643}, {"name": "Tebrau", "typology": "High-Rise", "title": "Stratified", "state": "Johor", "totalUnits": 1284, "developer": "Tentu Canggih Holdings Sdn Bhd (former) Aturan Prisma Sdn Bhd (current)", "deliverablePhase": "PR1MA 2.0", "qlassic": 63, "completionYear": 2021, "dlpStatusOwner": "END", "managementStatus": "PR1MA", "keyHandedOver": 1280, "movedIn": 1200, "khoPct": 99.7, "movedInPct": 93.8, "unsold": 3, "salesExecuted": null, "vpIssued": 1281}, {"name": "Tok Bali Phase 1", "typology": "Landed", "title": "Individual", "state": "Kelantan", "totalUnits": 193, "developer": "BBGM Tok Bali Developmenrt Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 76, "completionYear": 2025, "dlpStatusOwner": "ACTIVE", "managementStatus": "RA", "keyHandedOver": 165, "movedIn": 3, "khoPct": 85.5, "movedInPct": 1.8, "unsold": 4, "salesExecuted": null, "vpIssued": 189}, {"name": "Utama (Sungai Petani 1)", "typology": "Landed", "title": "Individual", "state": "Kedah", "totalUnits": 1349, "developer": "SP Baiduri Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 68, "completionYear": 2017, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 1345, "movedIn": 874, "khoPct": 99.7, "movedInPct": 65.0, "unsold": 4, "salesExecuted": null, "vpIssued": 1345}, {"name": "Woodford Estate Phase 1", "typology": "Landed", "title": "Individual", "state": "Sabah", "totalUnits": 300, "developer": "Gaya Belian Sdn Bhd", "deliverablePhase": "PR1MA 2.0", "qlassic": 75, "completionYear": 2023, "dlpStatusOwner": "END", "managementStatus": "RA", "keyHandedOver": 299, "movedIn": 200, "khoPct": 99.7, "movedInPct": 66.9, "unsold": 0, "salesExecuted": null, "vpIssued": 300}]
-</script>
+    <div id="spotlight"></div>
+    <div class="custom-cursor"></div>
+    <div class="custom-cursor-follower"></div>
 
-<script type="text/babel">
-const { useState, useMemo, useRef } = React;
-
-if (typeof Recharts === "undefined") {
-  document.getElementById('root').innerHTML =
-    '<div style="padding:40px;color:#e2574c;font-family:sans-serif;text-align:center">' +
-    'Chart library failed to load from CDN. Please check your internet connection and refresh the page.' +
-    '</div>';
-  throw new Error("Recharts failed to load");
-}
-
-const {
-  ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis,
-  CartesianGrid, Tooltip, Legend, RadialBarChart, RadialBar
-} = Recharts;
-
-const SEED_PROJECTS = JSON.parse(document.getElementById('project-data').textContent);
-const LOGO_SRC = "data:image/png;base64,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";
-const STORAGE_KEY = "pfmsb_project_dashboard_v1";
-
-const GOLD = "#c9a227";
-const GOLD_LIGHT = "#e8cd6f";
-const RED = "#e2574c";
-const AMBER = "#1faae2";
-const GREEN = "#3fae6a";
-const BLUE = "#5c9be0";
-const NAVY_LINE = "#1c3a63";
-
-function fmt(n){ return (n || 0).toLocaleString(); }
-function num(v){ return typeof v === "number" && !isNaN(v) ? v : 0; }
-function pct1(n){ return (n || 0).toFixed(1) + "%"; }
-
-// ---------- persistence ----------
-function loadStoredProjects() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return null;
-    return parsed;
-  } catch (e) { return null; }
-}
-function saveStoredProjects(projects) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(projects)); } catch (e) {}
-}
-
-// ---------- Excel parsing: merges "PFMSB Master Project Data" + a monthly sales sheet ----------
-function findHeaderRowByLabel(rows, label, withinFirstN) {
-  const limit = withinFirstN ? Math.min(rows.length, withinFirstN) : rows.length;
-  for (let i = 0; i < limit; i++) {
-    if (rows[i] && rows[i].some(c => typeof c === "string" && c.trim() === label)) return i;
-  }
-  return -1;
-}
-function findStopRow(rows, startIdx, marker) {
-  for (let i = startIdx; i < rows.length; i++) {
-    const c0 = rows[i] && rows[i][0];
-    if (typeof c0 === "string" && c0.includes(marker)) return i;
-  }
-  return rows.length;
-}
-
-function parseMasterSheet(workbook, sheetName) {
-  const ws = workbook.Sheets[sheetName];
-  if (!ws) throw new Error("Sheet not found: " + sheetName);
-  const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: null, raw: true });
-  const headerIdx = findHeaderRowByLabel(rows, "Reporting Project Name", 6);
-  if (headerIdx === -1) throw new Error('Could not find "Reporting Project Name" header row.');
-  const headerRow = rows[headerIdx];
-  const colIndex = {};
-  headerRow.forEach((h, i) => { if (h != null) colIndex[String(h).trim()] = i; });
-
-  const required = ["Reporting Project Name","Typology","Title","Total Units","State","Management Status","Key Handed Over","Moved In"];
-  const missing = required.filter(h => !(h in colIndex));
-  if (missing.length) throw new Error("Master sheet missing columns: " + missing.join(", "));
-
-  const dlpKey = Object.keys(colIndex).find(k => k.replace(/\s+/g," ").includes("DLP Status") && k.includes("Owner")) || null;
-
-  const out = {};
-  for (let i = headerIdx + 1; i < rows.length; i++) {
-    const row = rows[i];
-    if (!row) continue;
-    const name = row[colIndex["Reporting Project Name"]];
-    if (!name || typeof name !== "string" || !name.trim()) continue;
-    const kho = num(row[colIndex["Key Handed Over"]]);
-    const moved = num(row[colIndex["Moved In"]]);
-    const totalUnits = num(row[colIndex["Total Units"]]);
-    out[name.trim()] = {
-      name: name.replace(/^Residensi\s+/, ""),
-      typology: row[colIndex["Typology"]] || "",
-      title: row[colIndex["Title"]] || "",
-      state: row[colIndex["State"]] || "",
-      totalUnits,
-      developer: row[colIndex["Developer"]] || "",
-      deliverablePhase: row[colIndex["Deliverable Phase"]] || "",
-      qlassic: typeof row[colIndex["QLASSIC Score"]] === "number" ? row[colIndex["QLASSIC Score"]] : null,
-      completionYear: row[colIndex["Completion Year"]] || null,
-      dlpStatusOwner: dlpKey ? (row[colIndex[dlpKey]] || "") : "",
-      managementStatus: row[colIndex["Management Status"]] || "",
-      keyHandedOver: kho,
-      movedIn: moved,
-      khoPct: totalUnits ? Math.round((kho / totalUnits) * 1000) / 10 : null,
-      movedInPct: totalUnits ? Math.round((moved / totalUnits) * 1000) / 10 : null,
-      unsold: null,
-      salesExecuted: null,
-      vpIssued: null,
-    };
-  }
-  return out;
-}
-
-function parseSalesSheet(workbook, sheetName) {
-  const ws = workbook.Sheets[sheetName];
-  if (!ws) throw new Error("Sheet not found: " + sheetName);
-  const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: null, raw: true });
-  const headerIdx = findHeaderRowByLabel(rows, "Project Name");
-  if (headerIdx === -1) throw new Error('Could not find "Project Name" header row in the monthly sheet.');
-  const headerRow = rows[headerIdx];
-  const colIndex = {};
-  headerRow.forEach((h, i) => { if (h != null) colIndex[String(h).trim()] = i; });
-  if (!("Unsold (Not VP)" in colIndex)) throw new Error('Monthly sheet missing "Unsold (Not VP)" column.');
-
-  const stopIdx = findStopRow(rows, headerIdx + 1, "Project DLP Status");
-  const out = {};
-  for (let i = headerIdx + 1; i < stopIdx; i++) {
-    const row = rows[i];
-    if (!row) continue;
-    const name = row[colIndex["Project Name"]];
-    if (!name || typeof name !== "string" || !name.trim()) continue;
-    out[name.trim()] = {
-      unsold: row[colIndex["Unsold (Not VP)"]],
-      salesExecuted: row[colIndex["Sales Executed"]],
-      vpIssued: row[colIndex["VP issued"]],
-    };
-  }
-  return out;
-}
-
-function mergeProjects(master, sales) {
-  return Object.keys(master).map(key => {
-    const m = master[key];
-    const s = sales[key];
-    return {
-      ...m,
-      unsold: s && typeof s.unsold === "number" ? s.unsold : m.unsold,
-      salesExecuted: s && typeof s.salesExecuted === "number" ? s.salesExecuted : m.salesExecuted,
-      vpIssued: s && typeof s.vpIssued === "number" ? s.vpIssued : m.vpIssued,
-    };
-  });
-}
-
-// ---------- UI atoms ----------
-function KpiCard({ label, value, sub }) {
-  return (
-    <div className="kpi-card">
-      <div className="kpi-label">{label}</div>
-      <div className="kpi-value">{value}</div>
-      {sub && <div className="kpi-sub">{sub}</div>}
-    </div>
-  );
-}
-
-function CustomTooltip({active, payload, label}) {
-  if (!active || !payload || !payload.length) return null;
-  return (
-    <div className="tooltip-box">
-      {label && <div style={{color:GOLD_LIGHT, fontWeight:600, marginBottom:4}}>{label}</div>}
-      {payload.map((p,i) => (
-        <div key={i} style={{color:p.color || p.fill}}>{p.name}: <b>{fmt(p.value)}</b></div>
-      ))}
-    </div>
-  );
-}
-
-function TypologyChart({ projects }) {
-  const landed = projects.filter(p => p.typology === "Landed").reduce((s,p)=>s+num(p.totalUnits),0);
-  const highrise = projects.filter(p => p.typology === "High-Rise").reduce((s,p)=>s+num(p.totalUnits),0);
-  const data = [
-    { name: "Landed", value: landed, color: BLUE },
-    { name: "High-Rise", value: highrise, color: GOLD },
-  ];
-  return (
-    <ResponsiveContainer width="100%" height={220}>
-      <PieChart>
-        <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={55} outerRadius={80} paddingAngle={3}>
-          {data.map((d,i) => <Cell key={i} fill={d.color} stroke="none" />)}
-        </Pie>
-        <Tooltip content={<CustomTooltip />} />
-      </PieChart>
-    </ResponsiveContainer>
-  );
-}
-
-function ManagementChart({ projects }) {
-  const counts = {};
-  projects.forEach(p => { const k = p.managementStatus || "Unknown"; counts[k] = (counts[k]||0)+1; });
-  const colors = { MC: GREEN, JMB: BLUE, RA: AMBER, PR1MA: RED, Unknown: "#5c7ba8" };
-  const data = Object.entries(counts).map(([name,value]) => ({ name, value, color: colors[name] || "#5c7ba8" }));
-  return (
-    <ResponsiveContainer width="100%" height={200}>
-      <BarChart data={data} layout="vertical" margin={{left:10,right:20}}>
-        <CartesianGrid strokeDasharray="3 3" stroke={NAVY_LINE} horizontal={false} />
-        <XAxis type="number" stroke="#8393ad" fontSize={11} tickLine={false} axisLine={false} allowDecimals={false} />
-        <YAxis type="category" dataKey="name" stroke="#c3ccdb" fontSize={12} width={70} tickLine={false} axisLine={false} />
-        <Tooltip content={<CustomTooltip />} />
-        <Bar dataKey="value" radius={[0,4,4,0]} barSize={20} name="Projects">
-          {data.map((d,i) => <Cell key={i} fill={d.color} />)}
-        </Bar>
-      </BarChart>
-    </ResponsiveContainer>
-  );
-}
-
-function StateChart({ projects }) {
-  const counts = {};
-  projects.forEach(p => { const k = p.state || "Unknown"; counts[k] = (counts[k]||0)+num(p.totalUnits); });
-  const data = Object.entries(counts).map(([name,value]) => ({ name, value })).sort((a,b)=>b.value-a.value);
-  return (
-    <ResponsiveContainer width="100%" height={280}>
-      <BarChart data={data} margin={{top:5,right:10,left:-10,bottom:40}}>
-        <CartesianGrid strokeDasharray="3 3" stroke={NAVY_LINE} vertical={false} />
-        <XAxis dataKey="name" stroke="#8393ad" fontSize={11} angle={-40} textAnchor="end" interval={0} tickLine={false} axisLine={{stroke:NAVY_LINE}} height={70} />
-        <YAxis stroke="#8393ad" fontSize={11} tickLine={false} axisLine={false} tickFormatter={v=>fmt(v)} />
-        <Tooltip content={<CustomTooltip />} />
-        <Bar dataKey="value" fill={GOLD} radius={[4,4,0,0]} barSize={22} name="Units" />
-      </BarChart>
-    </ResponsiveContainer>
-  );
-}
-
-function HandoverGauge({ label, pct, count, total, color }) {
-  const data = [{ name: label, value: pct, fill: color }];
-  return (
-    <div style={{textAlign:"center"}}>
-      <div style={{position:"relative", width:"100%", height:140}}>
-        <ResponsiveContainer width="100%" height={140}>
-          <RadialBarChart innerRadius="70%" outerRadius="100%" data={data} startAngle={90} endAngle={-270}>
-            <RadialBar dataKey="value" cornerRadius={8} background={{fill:"var(--navy-700)"}} max={100} />
-          </RadialBarChart>
-        </ResponsiveContainer>
-        <div style={{
-          position:"absolute", top:0, left:0, right:0, bottom:0,
-          display:"flex", alignItems:"center", justifyContent:"center",
-          fontSize:19, fontWeight:700, color:"var(--ink-100)", pointerEvents:"none"
-        }}>{pct1(pct)}</div>
-      </div>
-      <div style={{fontSize:12.5, color:"var(--ink-500)", marginTop:4}}>{label}</div>
-      <div style={{fontSize:11, color:"var(--ink-500)"}}>{fmt(count)} of {fmt(total)} units</div>
-    </div>
-  );
-}
-
-function UnsoldRiskList({ projects }) {
-  const risky = [...projects].filter(p => (p.unsold||0) > 0).sort((a,b)=>(b.unsold||0)-(a.unsold||0)).slice(0,8);
-  if (!risky.length) return <div style={{color:"var(--ink-500)", fontSize:13}}>No unsold-unit data available.</div>;
-  return (
-    <div>
-      {risky.map((p,i) => (
-        <div key={i} style={{display:"flex", alignItems:"center", gap:10, padding:"9px 0", borderBottom: i<risky.length-1 ? "1px solid rgba(255,255,255,.05)" : "none"}}>
-          <div style={{width:20, fontSize:12, color:"var(--ink-500)", fontWeight:600}}>{i+1}</div>
-          <div style={{flex:1}}>
-            <div className="risk-name" style={{fontSize:13}}>{p.name}</div>
-            <div style={{fontSize:11, color:"var(--ink-500)"}}>{p.state} &middot; {p.typology} &middot; {fmt(p.totalUnits)} total units</div>
-          </div>
-          <div style={{textAlign:"right"}}>
-            <div style={{color:AMBER, fontWeight:700, fontSize:14}}>{fmt(p.unsold)}</div>
-            <div style={{fontSize:10, color:"var(--ink-500)"}}>unsold</div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function ProjectTable({ projects }) {
-  const [query, setQuery] = useState("");
-  const [typologyFilter, setTypologyFilter] = useState("All");
-  const [mgmtFilter, setMgmtFilter] = useState("All");
-  const [sortKey, setSortKey] = useState("totalUnits");
-  const [sortDir, setSortDir] = useState("desc");
-
-  const filtered = useMemo(() => {
-    let rows = [...projects];
-    if (query) rows = rows.filter(p => p.name.toLowerCase().includes(query.toLowerCase()) || (p.state||"").toLowerCase().includes(query.toLowerCase()));
-    if (typologyFilter !== "All") rows = rows.filter(p => p.typology === typologyFilter);
-    if (mgmtFilter !== "All") rows = rows.filter(p => p.managementStatus === mgmtFilter);
-    rows.sort((a,b) => {
-      const av = a[sortKey] ?? 0, bv = b[sortKey] ?? 0;
-      if (typeof av === "string") return sortDir === "asc" ? av.localeCompare(bv) : bv.localeCompare(av);
-      return sortDir === "asc" ? av - bv : bv - av;
-    });
-    return rows;
-  }, [projects, query, typologyFilter, mgmtFilter, sortKey, sortDir]);
-
-  const toggleSort = (key) => {
-    if (sortKey === key) setSortDir(d => d === "asc" ? "desc" : "asc");
-    else { setSortKey(key); setSortDir("desc"); }
-  };
-  const arrow = (key) => sortKey === key ? (sortDir === "asc" ? " \u2191" : " \u2193") : "";
-
-  const mgmtOptions = [...new Set(projects.map(p=>p.managementStatus).filter(Boolean))];
-
-  return (
-    <div className="panel" style={{gridColumn:"1 / -1"}}>
-      <h3>All Projects — Status &amp; Handover</h3>
-      <div className="panel-sub">Click column headers to sort. Search by project name or state.</div>
-      <div className="search-row">
-        <input type="text" placeholder="Search project or state..." value={query} onChange={e=>setQuery(e.target.value)} />
-        <select value={typologyFilter} onChange={e=>setTypologyFilter(e.target.value)}>
-          <option value="All">All typologies</option>
-          <option value="Landed">Landed</option>
-          <option value="High-Rise">High-Rise</option>
-        </select>
-        <select value={mgmtFilter} onChange={e=>setMgmtFilter(e.target.value)}>
-          <option value="All">All management</option>
-          {mgmtOptions.map(m => <option key={m} value={m}>{m}</option>)}
-        </select>
-      </div>
-      <div className="table-scroll">
-        <table>
-          <thead>
-            <tr>
-              <th onClick={()=>toggleSort("name")}>Project{arrow("name")}</th>
-              <th onClick={()=>toggleSort("state")}>State{arrow("state")}</th>
-              <th onClick={()=>toggleSort("typology")}>Typology{arrow("typology")}</th>
-              <th onClick={()=>toggleSort("dlpStatusOwner")}>DLP{arrow("dlpStatusOwner")}</th>
-              <th onClick={()=>toggleSort("managementStatus")}>Mgmt{arrow("managementStatus")}</th>
-              <th onClick={()=>toggleSort("totalUnits")}>Total Units{arrow("totalUnits")}</th>
-              <th onClick={()=>toggleSort("khoPct")}>Handed Over %{arrow("khoPct")}</th>
-              <th onClick={()=>toggleSort("unsold")}>Unsold{arrow("unsold")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((p,i) => (
-              <tr key={i}>
-                <td style={{color:"var(--ink-100)", fontWeight:500}}>{p.name}</td>
-                <td>{p.state}</td>
-                <td><span className={"status-pill " + (p.typology === "Landed" ? "pill-landed" : "pill-highrise")}>{p.typology || "—"}</span></td>
-                <td><span className={"status-pill " + (p.dlpStatusOwner === "ACTIVE" ? "status-active" : "status-end")}>{p.dlpStatusOwner === "ACTIVE" ? "Active" : "Ended"}</span></td>
-                <td>
-                  <span className={"status-pill " + (p.managementStatus==="MC"?"pill-mc":p.managementStatus==="JMB"?"pill-jmb":p.managementStatus==="RA"?"pill-ra":"pill-pr1ma")}>
-                    {p.managementStatus || "—"}
-                  </span>
-                </td>
-                <td>{fmt(p.totalUnits)}</td>
-                <td>
-                  {p.khoPct != null ? (
-                    <div className="bar-cell">
-                      <div className="bar-track"><div className="bar-fill" style={{width:Math.min(p.khoPct,100)+"%", background:GREEN}}></div></div>
-                      <span style={{width:40, textAlign:"right", fontVariantNumeric:"tabular-nums"}}>{p.khoPct}%</span>
-                    </div>
-                  ) : "—"}
-                </td>
-                <td style={{color: (p.unsold||0) > 0 ? AMBER : "var(--ink-300)", fontWeight: (p.unsold||0) > 0 ? 600 : 400}}>
-                  {p.unsold != null ? fmt(p.unsold) : "—"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-function UpdatePanel({ onImport, onReset, onExport }) {
-  const [open, setOpen] = useState(false);
-  const [file, setFile] = useState(null);
-  const [workbook, setWorkbook] = useState(null);
-  const [masterSheet, setMasterSheet] = useState("");
-  const [salesSheet, setSalesSheet] = useState("");
-  const [status, setStatus] = useState(null);
-  const fileInputRef = useRef(null);
-
-  const handleFile = (f) => {
-    if (!f) return;
-    setStatus(null);
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const wb = XLSX.read(e.target.result, { type: "array", cellDates: false });
-        setWorkbook(wb);
-        setFile(f);
-        const mGuess = wb.SheetNames.find(n => /master/i.test(n)) || wb.SheetNames[0];
-        const sGuess = wb.SheetNames.find(n => /\d{4}/.test(n) && !/master/i.test(n)) || wb.SheetNames[0];
-        setMasterSheet(mGuess);
-        setSalesSheet(sGuess);
-      } catch (err) {
-        setStatus({ type: "err", text: "Could not read file: " + err.message });
-      }
-    };
-    reader.readAsArrayBuffer(f);
-  };
-
-  const handleImport = () => {
-    if (!workbook || !masterSheet) {
-      setStatus({ type: "err", text: "Pick a file and the master project sheet first." });
-      return;
-    }
-    try {
-      const master = parseMasterSheet(workbook, masterSheet);
-      const sales = salesSheet ? parseSalesSheet(workbook, salesSheet) : {};
-      const merged = mergeProjects(master, sales);
-      onImport(merged);
-      setStatus({ type: "ok", text: `Imported ${merged.length} projects from "${masterSheet}"` + (salesSheet ? ` + sales data from "${salesSheet}".` : " (no sales sheet selected — unsold/handover from master only).") });
-      setFile(null); setWorkbook(null);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    } catch (err) {
-      setStatus({ type: "err", text: err.message });
-    }
-  };
-
-  return (
-    <div className={"update-panel" + (open ? "" : "")}>
-      <div className="update-head" onClick={() => setOpen(o => !o)}>
-        <h3>&#128260; Update Project Data</h3>
-        <span className="chev" style={{transform: open ? "none" : "rotate(-90deg)"}}>&#9660;</span>
-      </div>
-      {open && (
-        <div className="update-body">
-          <div className="panel-sub" style={{marginBottom:12}}>
-            Import a refreshed workbook to update project details and unsold/handover figures — parsing happens entirely in your browser.
-          </div>
-          <div
-            className="drop-zone"
-            onClick={() => fileInputRef.current && fileInputRef.current.click()}
-            onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add("dragover"); }}
-            onDragLeave={(e) => e.currentTarget.classList.remove("dragover")}
-            onDrop={(e) => { e.preventDefault(); e.currentTarget.classList.remove("dragover"); handleFile(e.dataTransfer.files[0]); }}
-          >
-            {file ? <span><b>{file.name}</b> selected — choose the sheets below</span>
-                  : <span>Drag a file here, or <b>click to browse</b> (.xlsx, .xlsm)</span>}
-            <input ref={fileInputRef} type="file" accept=".xlsx,.xls,.xlsm" style={{display:"none"}}
-              onChange={(e) => handleFile(e.target.files[0])} />
-          </div>
-
-          {workbook && (
-            <div className="update-row">
-              <div>
-                <label className="field-label">Master project sheet (Typology, Total Units, Handed Over...)</label>
-                <select value={masterSheet} onChange={(e) => setMasterSheet(e.target.value)}>
-                  {workbook.SheetNames.map(n => <option key={n} value={n}>{n}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="field-label">Sales/monthly sheet for Unsold units (optional)</label>
-                <select value={salesSheet} onChange={(e) => setSalesSheet(e.target.value)}>
-                  <option value="">— none —</option>
-                  {workbook.SheetNames.map(n => <option key={n} value={n}>{n}</option>)}
-                </select>
-              </div>
-              <button className="btn" onClick={handleImport}>Import</button>
-            </div>
-          )}
-
-          {status && <div className={"status-msg " + status.type}>{status.text}</div>}
-
-          <div className="update-row" style={{marginTop:18, borderTop:"1px solid var(--navy-700)", paddingTop:14}}>
-            <button className="btn secondary" onClick={onExport}>Export current dataset (.json)</button>
-            <button className="btn secondary" onClick={() => { if (confirm("Reset to the originally bundled data? This clears anything imported in this browser.")) onReset(); }}>
-              Reset to bundled data
+    <nav class="navbar" id="navbar">
+        <a href="#" class="logo">
+            <i data-lucide="paw-print"></i> KITTY HOMESTAY
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#utama" class="active">Utama</a></li>
+            <li><a href="#kenapa">Tentang Kami</a></li>
+            <li><a href="#perkhidmatan">Perkhidmatan</a></li>
+            <li><a href="#harga">Harga</a></li>
+            <li><a href="#galeri">Galeri</a></li>
+            <li><a href="#booking">Tempah</a></li>
+        </ul>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <a href="#booking" class="btn-cta" style="display: none; display: md:inline-flex;">TEMPAH SEKARANG</a>
+            <button class="hamburger" id="hamburger" aria-label="Buka Menu">
+                <i data-lucide="menu"></i>
             </button>
-          </div>
         </div>
-      )}
+    </nav>
+
+    <section class="hero" id="utama">
+        <i data-lucide="paw-print" class="paw-print" style="top: 15%; left: 10%; font-size: 2rem;"></i>
+        <i data-lucide="paw-print" class="paw-print" style="top: 70%; left: 5%; font-size: 3rem;"></i>
+        <i data-lucide="paw-print" class="paw-print" style="top: 20%; right: 12%; font-size: 2.5rem;"></i>
+
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Tempat Kedua Untuk Si Manja Anda.</h1>
+                <p class="hero-subtitle">Grooming & Boarding Kucing Dengan Penjagaan Yang Penuh Kasih Sayang Di Muar.</p>
+                <div class="hero-btns">
+                    <a href="#booking" class="btn-cta">TEMPAH SEKARANG</a>
+                    <a href="#perkhidmatan" class="btn-secondary">LIHAT PERKHIDMATAN</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-img-wrapper" id="heroImgWrapper">
+                    <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=800&q=80" alt="Kucing Comel Kitty Homestay" class="hero-img">
+                    <div class="floating-badge">
+                        <i data-lucide="heart" style="color: var(--pink-accent); fill: var(--pink-accent);"></i>
+                        <span>100% Kasih Sayang</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="kenapa">
+        <div class="section-header">
+            <span class="section-subtitle">Keutamaan Kami</span>
+            <h2 class="section-title">Si Manja Anda, Keutamaan Kami.</h2>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i data-lucide="bath"></i></div>
+                <h3 class="feature-title">Grooming Profesional</h3>
+                <p class="feature-desc">Penjagaan kebersihan dan penampilan kucing oleh pet groomer berpengalaman.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i data-lucide="home"></i></div>
+                <h3 class="feature-title">Boarding Selesa</h3>
+                <p class="feature-desc">Ruang penginapan yang bersih, selamat, luas dan berhawa dingin selesa.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i data-lucide="heart"></i></div>
+                <h3 class="feature-title">Penjagaan Penuh Kasih</h3>
+                <p class="feature-desc">Kami menjaga kucing anda seperti haiwan kesayangan sendiri dengan belaian mesra.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i data-lucide="shield-check"></i></div>
+                <h3 class="feature-title">Selamat & Bersih</h3>
+                <p class="feature-desc">Persekitaran sentiasa dinyahkuman dan dipantau rapi sepanjang masa.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="perkhidmatan" style="background: var(--primary-beige);">
+        <div class="section-header">
+            <span class="section-subtitle">Pilihan Servis</span>
+            <h2 class="section-title">Semua Keperluan Si Manja, Di Satu Tempat.</h2>
+        </div>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-header">
+                    <h3 class="service-title">Grooming Basic</h3>
+                    <ul class="service-list">
+                        <li><i data-lucide="check"></i> Mandi Selesa</li>
+                        <li><i data-lucide="check"></i> Blow Dry Kemas</li>
+                        <li><i data-lucide="check"></i> Potong Kuku</li>
+                        <li><i data-lucide="check"></i> Membersihkan Telinga</li>
+                    </ul>
+                </div>
+                <button class="btn-details" onclick="openModal('Grooming Basic', 'Servis asas untuk memastikan kucing anda sentiasa bersih, harum dan selesa. Menggunakan syampu khas yang selamat untuk kulit kucing.')">LIHAT BUTIRAN <i data-lucide="arrow-right"></i></button>
+            </div>
+            <div class="service-card">
+                <div class="service-header">
+                    <h3 class="service-title">Full Grooming</h3>
+                    <ul class="service-list">
+                        <li><i data-lucide="check"></i> Semua servis Basic Grooming</li>
+                        <li><i data-lucide="check"></i> Potong / Cukur Bulu Style</li>
+                        <li><i data-lucide="check"></i> Rawatan Bulu Halus</li>
+                        <li><i data-lucide="check"></i> Grooming Finishing Parfum</li>
+                    </ul>
+                </div>
+                <button class="btn-details" onclick="openModal('Full Grooming', 'Pakej lengkap merangkumi penggayaan bulu mengikut citarasa pawrent, sangat sesuai untuk kucing bulu panjang atau yang memerlukan potongan rapi.')">LIHAT BUTIRAN <i data-lucide="arrow-right"></i></button>
+            </div>
+            <div class="service-card">
+                <div class="service-header">
+                    <h3 class="service-title">Boarding Hotel</h3>
+                    <ul class="service-list">
+                        <li><i data-lucide="check"></i> Bilik Penginapan Selesa</li>
+                        <li><i data-lucide="check"></i> Makanan & Minuman Terjaga</li>
+                        <li><i data-lucide="check"></i> Pemantauan Harian</li>
+                        <li><i data-lucide="check"></i> Masa Playtime Bebas</li>
+                    </ul>
+                </div>
+                <button class="btn-details" onclick="openModal('Boarding Hotel', 'Hotel kucing eksklusif berhawa dingin. Kami memastikan rutin harian si manja tidak terganggu dan memberikan update video harian kepada anda.')">LIHAT BUTIRAN <i data-lucide="arrow-right"></i></button>
+            </div>
+            <div class="service-card">
+                <div class="service-header">
+                    <h3 class="service-title">Daycare</h3>
+                    <ul class="service-list">
+                        <li><i data-lucide="check"></i> Penjagaan Harian (Satu Hari)</li>
+                        <li><i data-lucide="check"></i> Aktiviti Bermain Mesra</li>
+                        <li><i data-lucide="check"></i> Pemantauan Rapi</li>
+                        <li><i data-lucide="check"></i> Ruang Rehat Mandiri</li>
+                    </ul>
+                </div>
+                <button class="btn-details" onclick="openModal('Daycare', 'Sesuai untuk anda yang sibuk bekerja seharian. Tinggalkan si manja bersama kami dari pagi hingga petang dengan selamat.')">LIHAT BUTIRAN <i data-lucide="arrow-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <div class="modal-overlay" id="serviceModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()"><i data-lucide="x"></i></button>
+            <h3 class="modal-title" id="modalTitle" style="font-size: 1.8rem; color: var(--accent-brown-dark); margin-bottom: 15px;"></h3>
+            <p id="modalBody" style="color: var(--text-muted); line-height: 1.7; margin-bottom: 20px;"></p>
+            <a href="#booking" class="btn-cta" onclick="closeModal()">TEMPAH SEKARANG</a>
+        </div>
     </div>
-  );
-}
 
-function App() {
-  const [projects, setProjects] = useState(() => loadStoredProjects() || SEED_PROJECTS);
-
-  const totals = useMemo(() => {
-    const totalUnits = projects.reduce((s,p)=>s+num(p.totalUnits),0);
-    const totalKho = projects.reduce((s,p)=>s+num(p.keyHandedOver),0);
-    const totalMoved = projects.reduce((s,p)=>s+num(p.movedIn),0);
-    const totalUnsold = projects.reduce((s,p)=>s+num(p.unsold),0);
-    const activeDlp = projects.filter(p=>p.dlpStatusOwner==="ACTIVE").length;
-    const endDlp = projects.filter(p=>p.dlpStatusOwner==="END").length;
-    return { totalUnits, totalKho, totalMoved, totalUnsold, activeDlp, endDlp,
-      khoPct: totalUnits ? (totalKho/totalUnits)*100 : 0,
-      movedPct: totalUnits ? (totalMoved/totalUnits)*100 : 0,
-      unsoldPct: totalUnits ? (totalUnsold/totalUnits)*100 : 0 };
-  }, [projects]);
-
-  const handleImport = (merged) => {
-    setProjects(merged);
-    saveStoredProjects(merged);
-  };
-  const handleReset = () => {
-    localStorage.removeItem(STORAGE_KEY);
-    setProjects(SEED_PROJECTS);
-  };
-  const handleExport = () => {
-    const blob = new Blob([JSON.stringify(projects, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "pfmsb_project_dashboard_data.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  return (
-    <div className="app">
-      <div className="header">
-        <div style={{display:"flex", alignItems:"center", gap:16}}>
-          <img src={LOGO_SRC} alt="PFMSB" style={{height:44, width:"auto", flexShrink:0}} />
-          <div>
-            <p className="eyebrow">PFMSB &middot; Portfolio Reporting</p>
-            <h1>Project Information Dashboard</h1>
-            <div className="sub">Status, typology &amp; handover progress across {projects.length} PR1MA / PPR projects</div>
-          </div>
+    <section id="harga">
+        <div class="section-header">
+            <span class="section-subtitle">Harga Berpatutan</span>
+            <h2 class="section-title">Pilih Penjagaan Yang Sesuai Untuk Si Manja.</h2>
         </div>
-        <div className="cutoff-badge">{fmt(totals.totalUnits)} total units in portfolio</div>
-      </div>
 
-      <UpdatePanel onImport={handleImport} onReset={handleReset} onExport={handleExport} />
-
-      <div className="kpi-grid">
-        <KpiCard label="Total Projects" value={projects.length}
-          sub={totals.activeDlp + " active DLP · " + totals.endDlp + " DLP ended"} />
-        <KpiCard label="Total Units" value={fmt(totals.totalUnits)}
-          sub={projects.filter(p=>p.typology==="Landed").length + " landed · " + projects.filter(p=>p.typology==="High-Rise").length + " high-rise projects"} />
-        <KpiCard label="Units Handed Over" value={pct1(totals.khoPct)}
-          sub={fmt(totals.totalKho) + " of " + fmt(totals.totalUnits) + " units"} />
-        <KpiCard label="Unsold Units" value={fmt(totals.totalUnsold)}
-          sub={pct1(totals.unsoldPct) + " of total portfolio"} />
-      </div>
-
-      <div className="grid-2">
-        <div className="panel">
-          <h3>Units by State</h3>
-          <div className="panel-sub">Total unit count per state across the portfolio</div>
-          <StateChart projects={projects} />
+        <div class="pricing-toggle-container">
+            <div class="pricing-toggle">
+                <button class="toggle-btn active" id="btnGrooming" onclick="switchPricing('grooming')">GROOMING</button>
+                <button class="toggle-btn" id="btnBoarding" onclick="switchPricing('boarding')">BOARDING</button>
+            </div>
         </div>
-        <div className="panel">
-          <h3>Top Unsold Projects</h3>
-          <div className="panel-sub">Projects with the most unsold units</div>
-          <UnsoldRiskList projects={projects} />
-        </div>
-      </div>
 
-      <div className="grid-3">
-        <div className="panel">
-          <h3>Typology Mix</h3>
-          <div className="panel-sub">Units by Landed vs High-Rise</div>
-          <TypologyChart projects={projects} />
-          <div style={{display:"flex", justifyContent:"center", gap:16, fontSize:12, marginTop:-6}}>
-            <span><span className="legend-dot" style={{background:BLUE}}></span>Landed</span>
-            <span><span className="legend-dot" style={{background:GOLD}}></span>High-Rise</span>
-          </div>
-        </div>
-        <div className="panel">
-          <h3>Management Status</h3>
-          <div className="panel-sub">Projects by handover body</div>
-          <ManagementChart projects={projects} />
-        </div>
-        <div className="panel">
-          <h3>Handover Progress</h3>
-          <div className="panel-sub">Portfolio-wide, cumulative</div>
-          <div style={{display:"flex", justifyContent:"space-around"}}>
-            <HandoverGauge label="Key Handed Over" pct={totals.khoPct} count={totals.totalKho} total={totals.totalUnits} color={GREEN} />
-          </div>
-          <div style={{display:"flex", justifyContent:"space-around", marginTop:-10}}>
-            <HandoverGauge label="Moved In" pct={totals.movedPct} count={totals.totalMoved} total={totals.totalUnits} color={BLUE} />
-          </div>
-        </div>
-      </div>
+        <div class="pricing-grid" id="pricingGrid">
+            </div>
+    </section>
 
-      <ProjectTable projects={projects} />
+    <section style="background: var(--primary-beige);">
+        <div class="section-header">
+            <span class="section-subtitle">Proses Mudah</span>
+            <h2 class="section-title">Langkah Tempahan Mudah.</h2>
+        </div>
+        <div class="timeline">
+            <div class="timeline-step">
+                <div class="step-num">01</div>
+                <h3 class="step-title">Tempah</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Pilih tarikh dan perkhidmatan pilihan anda menerusi borang dalam talian.</p>
+            </div>
+            <div class="timeline-step">
+                <div class="step-num">02</div>
+                <h3 class="step-title">Hantar Si Manja</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Datang ke Kitty Homestay Muar mengikut waktu slot yang dipilih.</p>
+            </div>
+            <div class="timeline-step">
+                <div class="step-num">03</div>
+                <h3 class="step-title">Kami Jaga</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Proses grooming atau boarding dilaksanakan penuh dengan cermat & kasih sayang.</p>
+            </div>
+            <div class="timeline-step">
+                <div class="step-num">04</div>
+                <h3 class="step-title">Si Manja Pulang</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Kucing anda pulang ke rumah dalam keadaan bersih, wangi dan ceria!</p>
+            </div>
+        </div>
+    </section>
 
-      <div className="footer-note">
-        Source: PFMSB Operation Report 2026 — "PFMSB Master Project Data" merged with the latest monthly sales/handover sheet.<br/>
-        Imported data is stored only in this browser (localStorage). Use "Export current dataset" to back it up or move it to another device.
-      </div>
+    <section id="galeri">
+        <div class="section-header">
+            <span class="section-subtitle">Galeri Comel</span>
+            <h2 class="section-title">Momen Comel Di Kitty Homestay.</h2>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=800&q=80')">
+                <img src="https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=800&q=80" alt="Kucing Grooming">
+                <div class="gallery-overlay"><span class="gallery-cat">Sesi Grooming</span></div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1533738363-b7f9aef128ce?auto=format&fit=crop&w=800&q=80')">
+                <img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?auto=format&fit=crop&w=800&q=80" alt="Kucing Bersedia Mandi">
+                <div class="gallery-overlay"><span class="gallery-cat">Mandi & Blow</span></div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?auto=format&fit=crop&w=800&q=80')">
+                <img src="https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?auto=format&fit=crop&w=800&q=80" alt="Kucing Berehat">
+                <div class="gallery-overlay"><span class="gallery-cat">Bilik Boarding</span></div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=800&q=80')">
+                <img src="https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=800&q=80" alt="Kucing Bermain">
+                <div class="gallery-overlay"><span class="gallery-cat">Masa Bermain</span></div>
+            </div>
+        </div>
+    </section>
+
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <img id="lightboxImg" src="" alt="Zoom Image">
     </div>
-  );
-}
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-</script>
+    <section style="background: var(--primary-beige);">
+        <div class="section-header">
+            <span class="section-subtitle">Maklum Balas</span>
+            <h2 class="section-title">Apa Kata Pawrent Kami?</h2>
+        </div>
+        <div class="testimonial-container" id="testimonialBox">
+            <div class="stars">
+                <i data-lucide="star" style="fill: #FFB800;"></i>
+                <i data-lucide="star" style="fill: #FFB800;"></i>
+                <i data-lucide="star" style="fill: #FFB800;"></i>
+                <i data-lucide="star" style="fill: #FFB800;"></i>
+                <i data-lucide="star" style="fill: #FFB800;"></i>
+            </div>
+            <p class="testimonial-text" id="testiText">"Tempat sangat bersih dan kucing saya balik dalam keadaan wangi dan kemas! Groomer sangat peramah."</p>
+            <div class="testimonial-author" id="testiAuthor">— Aina, Muar</div>
+            <div class="carousel-dots">
+                <div class="dot active" onclick="setTestimonial(0)"></div>
+                <div class="dot" onclick="setTestimonial(1)"></div>
+                <div class="dot" onclick="setTestimonial(2)"></div>
+            </div>
+        </div>
+    </section>
+
+    <div class="interactive-cat-container" id="walkingCat">
+        <div class="cat-sprite" title="Meow! Klik saya!">🐱🐾</div>
+    </div>
+
+    <section id="booking">
+        <div class="section-header">
+            <span class="section-subtitle">Borang Tempahan</span>
+            <h2 class="section-title">Jom Manjakan Si Manja Anda.</h2>
+        </div>
+        <div class="booking-container">
+            <form id="bookingForm" class="booking-form" onsubmit="handleBookingSubmit(event)">
+                <div class="form-group" id="group-nama">
+                    <label>Nama Anda *</label>
+                    <input type="text" id="nama" placeholder="Contoh: Nur Aisyah">
+                    <span class="error-msg">Sila isi nama anda.</span>
+                </div>
+                <div class="form-group" id="group-phone">
+                    <label>No. Telefon / WhatsApp *</label>
+                    <input type="tel" id="phone" placeholder="Contoh: 0123456789">
+                    <span class="error-msg">Sila isi no. telefon yang sah.</span>
+                </div>
+                <div class="form-group" id="group-catName">
+                    <label>Nama Kucing *</label>
+                    <input type="text" id="catName" placeholder="Contoh: Oyen">
+                    <span class="error-msg">Sila isi nama kucing.</span>
+                </div>
+                <div class="form-group">
+                    <label>Baka Kucing</label>
+                    <input type="text" id="catBreed" placeholder="Contoh: Domestic Short Hair / Persian">
+                </div>
+                <div class="form-group" id="group-service">
+                    <label>Pilih Perkhidmatan *</label>
+                    <select id="serviceSelect">
+                        <option value="">-- Pilih Servis --</option>
+                        <option value="Basic Grooming">Basic Grooming</option>
+                        <option value="Full Grooming">Full Grooming</option>
+                        <option value="Boarding Hotel">Boarding Hotel</option>
+                        <option value="Daycare">Daycare Harian</option>
+                    </select>
+                    <span class="error-msg">Sila pilih perkhidmatan.</span>
+                </div>
+                <div class="form-group" id="group-date">
+                    <label>Tarikh *</label>
+                    <input type="date" id="bookingDate">
+                    <span class="error-msg">Sila pilih tarikh.</span>
+                </div>
+                <div class="form-group full-width">
+                    <label>Nota Tambahan (Jika Ada)</label>
+                    <textarea id="notes" rows="3" placeholder="Sebutkan sebarang alahan atau keperluan khas kucing anda..."></textarea>
+                </div>
+                <div class="booking-actions">
+                    <button type="submit" class="btn-cta" style="width: 100%; border-radius: 8px; padding: 14px;" id="btnSubmitForm">
+                        TEMPAH SEKARANG
+                    </button>
+                    <button type="button" class="btn-whatsapp-booking" onclick="bookViaWhatsapp()">
+                        <i data-lucide="message-circle"></i> TEMPAH MELALUI WHATSAPP
+                    </button>
+                </div>
+            </form>
+
+            <div class="success-message" id="successMsg">
+                <i data-lucide="check-circle"></i>
+                <h3 style="font-size: 1.8rem; color: var(--accent-brown-dark); margin-bottom: 10px;">Tempahan Anda Berjaya!</h3>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Terima kasih! Kami akan menghubungi anda sebentar lagi menerusi WhatsApp untuk mengesahkan slot tempahan.</p>
+                <button class="btn-cta" onclick="resetForm()">Buat Tempahan Baru</button>
+            </div>
+        </div>
+    </section>
+
+    <a href="https://wa.me/60123456789?text=Hi%20Kitty%20Homestay,%20saya%20ingin%20bertanya%20tentang%20perkhidmatan%20grooming/boarding%20kucing." target="_blank" class="floating-wa" aria-label="Chat WhatsApp">
+        <i data-lucide="message-circle"></i>
+        <span>Chat Dengan Kami</span>
+    </a>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3 class="font-heading">🐾 KITTY HOMESTAY MUAR</h3>
+                <p>Tempat selesa, bersih dan mesra untuk perkhidmatan grooming dan boarding kucing kesayangan anda di Muar, Johor.</p>
+            </div>
+            <div class="footer-links">
+                <h4 class="font-heading">Pautan Pantas</h4>
+                <ul>
+                    <li><a href="#utama">Utama</a></li>
+                    <li><a href="#perkhidmatan">Perkhidmatan</a></li>
+                    <li><a href="#harga">Harga</a></li>
+                    <li><a href="#galeri">Galeri</a></li>
+                    <li><a href="#booking">Tempah</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4 class="font-heading">Hubungi Kami</h4>
+                <p><i data-lucide="phone" style="width:16px;"></i> +60 12-345 6789</p>
+                <p><i data-lucide="map-pin" style="width:16px;"></i> Jalan Pt Haji Baki, Muar, Johor</p>
+                <p><i data-lucide="clock" style="width:16px;"></i> Isnin - Ahad: 10.00 AM - 7.00 PM</p>
+            </div>
+            <div class="footer-social">
+                <h4 class="font-heading">Ikuti Kami</h4>
+                <div class="social-icons">
+                    <a href="#" class="social-btn" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+                    <a href="#" class="social-btn" aria-label="Facebook"><i data-lucide="facebook"></i></a>
+                    <a href="#" class="social-btn" aria-label="TikTok"><i data-lucide="video"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Kitty Homestay Muar. Semua Hak Terpelihara.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Init Lucide Icons
+        lucide.createIcons();
+
+        /* ==========================================
+           1. NAVBAR STICKY & MOBILE TOGGLE
+           ========================================== */
+        const navbar = document.getElementById('navbar');
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile nav on link click
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        /* ==========================================
+           2. CURSOR-CONTROLLED LIGHTING & CUSTOM CURSOR
+           ========================================== */
+        const spotlight = document.getElementById('spotlight');
+        const cursor = document.querySelector('.custom-cursor');
+        const follower = document.querySelector('.custom-cursor-follower');
+
+        let mouseX = 0, mouseY = 0;
+        let followerX = 0, followerY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            // Update Spotlight
+            spotlight.style.setProperty('--x', `${mouseX}px`);
+            spotlight.style.setProperty('--y', `${mouseY}px`);
+
+            // Update Pointer Cursor Directly
+            cursor.style.left = `${mouseX}px`;
+            cursor.style.top = `${mouseY}px`;
+        });
+
+        // Easing Follower Cursor
+        function animateCursor() {
+            followerX += (mouseX - followerX) * 0.15;
+            followerY += (mouseY - followerY) * 0.15;
+            follower.style.left = `${followerX}px`;
+            follower.style.top = `${followerY}px`;
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // Hover Effect on Interactive Elements
+        const interactiveElements = document.querySelectorAll('a, button, .feature-card, .service-card, .gallery-item, input, select');
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovered'));
+        });
+
+        /* ==========================================
+           3. PRICING TOGGLE DATA & RENDER
+           ========================================== */
+        const pricingData = {
+            grooming: [
+                { title: 'BASIC GROOMING', price: 'RM 35', unit: '/ sesi', featured: false, desc: 'Mandi, blow, potong kuku & bersihkan telinga.' },
+                { title: 'FULL GROOMING', price: 'RM 65', unit: '/ sesi', featured: true, desc: 'Termasuk potong bulu / cukur rapi + perfume.' },
+                { title: 'SPA & MEDIKATED', price: 'RM 80', unit: '/ sesi', featured: false, desc: 'Rawatan syampu khas kuman / kelemumur & mandian spa.' }
+            ],
+            boarding: [
+                { title: 'STANDARD SUITE', price: 'RM 25', unit: '/ malam', featured: false, desc: 'Bilik selesa, penyaman udara, pemantauan kebersihan.' },
+                { title: 'ROYAL SUITE', price: 'RM 40', unit: '/ malam', featured: true, desc: 'Ruang ekstra luas, kamera peribadi, waktu bermain khas.' },
+                { title: 'DAYCARE HARIAN', price: 'RM 15', unit: '/ hari', featured: false, desc: 'Penjagaan harian tanpa bermalam (10 pagi - 6 petang).' }
+            ]
+        };
+
+        function switchPricing(type) {
+            const grid = document.getElementById('pricingGrid');
+            const btnGrooming = document.getElementById('btnGrooming');
+            const btnBoarding = document.getElementById('btnBoarding');
+
+            if (type === 'grooming') {
+                btnGrooming.classList.add('active');
+                btnBoarding.classList.remove('active');
+            } else {
+                btnBoarding.classList.add('active');
+                btnGrooming.classList.remove('active');
+            }
+
+            grid.style.opacity = '0';
+            grid.style.transform = 'translateY(10px)';
+
+            setTimeout(() => {
+                grid.innerHTML = pricingData[type].map(item => `
+                    <div class="price-card ${item.featured ? 'featured' : ''}">
+                        <h3 class="price-title">${item.title}</h3>
+                        <div class="price-val">${item.price} <span>${item.unit}</span></div>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px;">${item.desc}</p>
+                        <a href="#booking" class="btn-cta" style="width: 100%;">PILIH PAKEJ</a>
+                    </div>
+                `).join('');
+
+                grid.style.opacity = '1';
+                grid.style.transform = 'translateY(0)';
+            }, 200);
+        }
+
+        // Init Pricing Grid
+        switchPricing('grooming');
+
+        /* ==========================================
+           4. MODAL & LIGHTBOX
+           ========================================== */
+        function openModal(title, text) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalBody').innerText = text;
+            document.getElementById('serviceModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('serviceModal').classList.remove('active');
+        }
+
+        function openLightbox(src) {
+            document.getElementById('lightboxImg').src = src;
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        /* ==========================================
+           5. TESTIMONIAL CAROUSEL
+           ========================================== */
+        const testimonials = [
+            { text: '"Tempat sangat bersih dan kucing saya balik dalam keadaan wangi dan kemas! Groomer sangat peramah."', author: '— Aina, Muar' },
+            { text: '"Sangat recommended! Boarding hotel berhawa dingin dan kemas. Update video selalu dihantar."', author: '— Shafiq, Tangkak' },
+            { text: '"Layanan terbaik untuk si manja. Kucing saya tidak berasa takut langsung semasa grooming!"', author: '— Mei Ling, Bakri' }
+        ];
+
+        let testiIndex = 0;
+        function setTestimonial(index) {
+            testiIndex = index;
+            const textEl = document.getElementById('testiText');
+            const authorEl = document.getElementById('testiAuthor');
+            const dots = document.querySelectorAll('.dot');
+
+            textEl.style.opacity = '0';
+            authorEl.style.opacity = '0';
+
+            setTimeout(() => {
+                textEl.innerText = testimonials[index].text;
+                authorEl.innerText = testimonials[index].author;
+                textEl.style.opacity = '1';
+                authorEl.style.opacity = '1';
+
+                dots.forEach((d, i) => d.classList.toggle('active', i === index));
+            }, 200);
+        }
+
+        setInterval(() => {
+            testiIndex = (testiIndex + 1) % testimonials.length;
+            setTestimonial(testiIndex);
+        }, 5000);
+
+        /* ==========================================
+           6. INTERACTIVE CAT ANIMATION
+           ========================================== */
+        const catContainer = document.getElementById('walkingCat');
+        let catPos = -100;
+        let catSpeed = 1.2;
+
+        function moveCat() {
+            catPos += catSpeed;
+            if (catPos > window.innerWidth + 50) {
+                catPos = -100;
+            }
+            catContainer.style.left = `${catPos}px`;
+            requestAnimationFrame(moveCat);
+        }
+        moveCat();
+
+        /* ==========================================
+           7. FORM VALIDATION & WHATSAPP
+           ========================================== */
+        function validateBooking() {
+            let isValid = true;
+
+            const fields = [
+                { id: 'nama', group: 'group-nama' },
+                { id: 'phone', group: 'group-phone' },
+                { id: 'catName', group: 'group-catName' },
+                { id: 'serviceSelect', group: 'group-service' },
+                { id: 'bookingDate', group: 'group-date' }
+            ];
+
+            fields.forEach(f => {
+                const el = document.getElementById(f.id);
+                const grp = document.getElementById(f.group);
+                if (!el.value.trim()) {
+                    grp.classList.add('error');
+                    isValid = false;
+                } else {
+                    grp.classList.remove('error');
+                }
+            });
+
+            return isValid;
+        }
+
+        function handleBookingSubmit(e) {
+            e.preventDefault();
+            if (validateBooking()) {
+                const btn = document.getElementById('btnSubmitForm');
+                btn.innerText = 'Mengirim...';
+                btn.disabled = true;
+
+                setTimeout(() => {
+                    document.getElementById('bookingForm').style.display = 'none';
+                    document.getElementById('successMsg').style.display = 'block';
+                    lucide.createIcons();
+                }, 1000);
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('bookingForm').reset();
+            document.getElementById('bookingForm').style.display = 'grid';
+            document.getElementById('successMsg').style.display = 'none';
+            document.getElementById('btnSubmitForm').innerText = 'TEMPAH SEKARANG';
+            document.getElementById('btnSubmitForm').disabled = false;
+        }
+
+        function bookViaWhatsapp() {
+            const nama = document.getElementById('nama').value || 'Pelanggan';
+            const catName = document.getElementById('catName').value || 'Kucing Saya';
+            const service = document.getElementById('serviceSelect').value || 'Grooming/Boarding';
+            const date = document.getElementById('bookingDate').value || 'Segera';
+
+            const msg = `Hi Kitty Homestay, saya ingin menempah perkhidmatan.\n\nNama: ${nama}\nNama Kucing: ${catName}\nServis: ${service}\nTarikh: ${date}`;
+            const url = `https://wa.me/60123456789?text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
+        }
+    </script>
 </body>
 </html>
