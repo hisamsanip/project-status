@@ -63,32 +63,101 @@
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #F4F1EA; }
         ::-webkit-scrollbar-thumb { background: #1B3022; }
+
+        /* ============ MOTION SYSTEM ============ */
+        :root {
+            --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-smooth: cubic-bezier(0.65, 0, 0.35, 1);
+        }
+        html { scroll-behavior: smooth; }
+
+        /* Preloader */
+        #preloader {
+            transition: opacity 700ms var(--ease-smooth), visibility 700ms var(--ease-smooth);
+        }
+        #preloader.preloader-hide { opacity: 0; visibility: hidden; pointer-events: none; }
+        .preloader-mark { opacity: 0; transform: scale(0.94); animation: preloaderIn 1000ms var(--ease-cinematic) 150ms forwards; }
+        @keyframes preloaderIn { to { opacity: 1; transform: scale(1); } }
+        .preloader-dot { animation: dotPulse 1.4s ease-in-out infinite; }
+        @keyframes dotPulse { 0%, 100% { opacity: .4; transform: scale(1); } 50% { opacity: 1; transform: scale(1.5); } }
+
+        /* Scroll progress */
+        #scroll-progress { transform: scaleX(0); transform-origin: left; will-change: transform; }
+
+        /* Generic scroll-triggered reveal system */
+        .reveal, .reveal-scale {
+            transition: opacity 900ms var(--ease-cinematic), transform 900ms var(--ease-cinematic);
+            transition-delay: calc(var(--stagger, 0) * 90ms);
+        }
+        .reveal { opacity: 0; transform: translateY(28px); }
+        .reveal.is-visible { opacity: 1; transform: translateY(0); }
+        .reveal-scale { opacity: 0; transform: scale(0.95) translateY(16px); }
+        .reveal-scale.is-visible { opacity: 1; transform: scale(1) translateY(0); }
+
+        /* Hero entrance choreography (triggered by .hero-active, not scroll) */
+        .hero-reveal { opacity: 0; transform: translateY(26px); transition: opacity 1000ms var(--ease-cinematic), transform 1000ms var(--ease-cinematic); transition-delay: calc(var(--stagger, 0) * 110ms); }
+        .hero-active .hero-reveal { opacity: 1; transform: translateY(0); }
+        .hero-word { display: inline-block; opacity: 0; transform: translateY(0.4em); transition: opacity 900ms var(--ease-cinematic), transform 900ms var(--ease-cinematic); transition-delay: calc(var(--stagger, 0) * 140ms); }
+        .hero-active .hero-word { opacity: 1; transform: translateY(0); }
+        .hero-bg-zoom { transform: scale(1.12); transition: transform 2200ms var(--ease-cinematic); }
+        .hero-active .hero-bg-zoom { transform: scale(1); }
+
+        /* Nav */
+        #site-nav { transition: background-color 400ms var(--ease-smooth), box-shadow 400ms var(--ease-smooth); }
+        .nav-link { position: relative; }
+        .nav-link::after { content: ''; position: absolute; left: 0; right: 100%; bottom: -4px; height: 2px; background: currentColor; transition: right 400ms var(--ease-smooth); }
+        .nav-link:hover::after, .nav-link.active::after { right: 0; }
+
+        /* Magnetic buttons */
+        .magnetic { transition: transform 350ms var(--ease-smooth); will-change: transform; }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            #preloader { display: none !important; }
+            .reveal, .reveal-scale, .hero-reveal, .hero-word, .hero-bg-zoom, .magnetic {
+                animation: none !important; transition: none !important;
+                opacity: 1 !important; transform: none !important;
+            }
+        }
     </style>
 </head>
-<body class="bg-brand-cream text-brand-charcoal font-sans antialiased selection:bg-brand-orange selection:text-white relative editorial-grid" x-data="{ mobileMenu: false }">
+<body class="bg-brand-cream text-brand-charcoal font-sans antialiased selection:bg-brand-orange selection:text-white relative editorial-grid" x-data="{ mobileMenu: false, scrolled: false }" @scroll.window.throttle.150ms="scrolled = window.scrollY > 40">
+
+    <!-- Cinematic Preloader -->
+    <div id="preloader" class="fixed inset-0 z-[10000] bg-brand-forest flex items-center justify-center" aria-hidden="true">
+        <div class="flex flex-col items-center gap-4 preloader-mark">
+            <span class="w-2.5 h-2.5 rounded-full bg-brand-orange preloader-dot"></span>
+            <span class="font-display text-2xl md:text-3xl tracking-[0.35em] text-brand-cream uppercase pl-1">PFM RETREAT</span>
+        </div>
+    </div>
+
+    <!-- Scroll Progress -->
+    <div class="fixed top-0 left-0 right-0 h-[2px] z-[60] bg-brand-forest/10">
+        <div id="scroll-progress" class="h-full bg-brand-orange"></div>
+    </div>
 
     <!-- Grain Texture Overlay -->
     <div class="grain-overlay"></div>
 
     <!-- FLOATING NAVIGATION -->
     <header class="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 transition-all duration-300">
-        <nav class="max-w-7xl mx-auto bg-brand-cream/80 backdrop-blur-md border-2 border-brand-forest/10 rounded-full px-6 py-3 flex items-center justify-between shadow-sm">
+        <nav id="site-nav" :class="scrolled ? 'bg-brand-cream/95 shadow-md' : 'bg-brand-cream/80 shadow-sm'" class="max-w-7xl mx-auto backdrop-blur-md border-2 border-brand-forest/10 rounded-full px-6 py-3 flex items-center justify-between">
             <a href="#" class="flex items-center gap-2 group">
                 <span class="w-3 h-3 rounded-full bg-brand-orange animate-pulse"></span>
                 <span class="font-display font-bold text-xl tracking-wider text-brand-forest">PFM <span class="text-brand-orange">RETREAT '26</span></span>
             </a>
 
             <div class="hidden lg:flex items-center gap-8 font-semibold text-xs tracking-widest uppercase text-brand-forest/80">
-                <a href="#retreat" class="hover:text-brand-orange transition-colors">The Retreat</a>
-                <a href="#why" class="hover:text-brand-orange transition-colors">Why We Retreat</a>
-                <a href="#map" class="hover:text-brand-orange transition-colors">Adventure</a>
-                <a href="#itinerary" class="hover:text-brand-orange transition-colors">Itinerary</a>
-                <a href="#experience" class="hover:text-brand-orange transition-colors">Experience</a>
-                <a href="#challenge" class="hover:text-brand-orange transition-colors">Challenge</a>
+                <a href="#retreat" class="nav-link hover:text-brand-orange transition-colors">The Retreat</a>
+                <a href="#why" class="nav-link hover:text-brand-orange transition-colors">Why We Retreat</a>
+                <a href="#map" class="nav-link hover:text-brand-orange transition-colors">Adventure</a>
+                <a href="#itinerary" class="nav-link hover:text-brand-orange transition-colors">Itinerary</a>
+                <a href="#experience" class="nav-link hover:text-brand-orange transition-colors">Experience</a>
+                <a href="#challenge" class="nav-link hover:text-brand-orange transition-colors">Challenge</a>
             </div>
 
             <div class="hidden sm:flex items-center gap-4">
-                <a href="#challenge" class="bg-brand-forest hover:bg-brand-orange text-brand-cream font-bold text-xs uppercase tracking-widest px-5 py-2.5 rounded-full transition-all duration-300">
+                <a href="#challenge" class="magnetic bg-brand-forest hover:bg-brand-orange text-brand-cream font-bold text-xs uppercase tracking-widest px-5 py-2.5 rounded-full transition-colors duration-300">
                     Join The Adventure
                 </a>
             </div>
@@ -112,48 +181,48 @@
     </header>
 
     <!-- HERO SECTION -->
-    <section class="relative min-h-screen flex flex-col justify-between pt-28 pb-10 px-4 md:px-8 bg-brand-forest text-brand-cream overflow-hidden">
-        <div class="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#E05A2B_1px,transparent_1px)] [background-size:16px_16px]"></div>
+    <section id="hero" class="relative min-h-screen flex flex-col justify-between pt-28 pb-10 px-4 md:px-8 bg-brand-forest text-brand-cream overflow-hidden">
+        <div class="hero-bg-zoom absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#E05A2B_1px,transparent_1px)] [background-size:16px_16px]"></div>
 
-        <div class="absolute top-24 left-8 text-xs font-mono opacity-50 hidden md:block">
+        <div class="hero-parallax hero-reveal absolute top-24 left-8 text-xs font-mono opacity-50 hidden md:block" style="--stagger:5">
             LAT: 4.4722° N, LONG: 101.1628° E<br>
             ELEVATION: 68M ASTL<br>
             EXPEDITION REF: PFM-2026-GPG
         </div>
-        <div class="absolute top-24 right-8 text-xs font-mono text-right opacity-50 hidden md:block">
+        <div class="hero-parallax hero-reveal absolute top-24 right-8 text-xs font-mono text-right opacity-50 hidden md:block" style="--stagger:5">
             STAGE 01 // OUTDOOR RETREAT<br>
             GOPENG GLAMPING PARK<br>
             OCT 03 - OCT 04, 2026
         </div>
 
         <div class="max-w-7xl mx-auto w-full my-auto py-12 relative z-10 flex flex-col items-center text-center">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-brand-cream/20 bg-brand-olive/50 backdrop-blur-sm text-xs uppercase tracking-widest text-brand-mustard mb-6">
+            <div class="hero-reveal inline-flex items-center gap-2 px-3 py-1 rounded-full border border-brand-cream/20 bg-brand-olive/50 backdrop-blur-sm text-xs uppercase tracking-widest text-brand-mustard mb-6" style="--stagger:0">
                 <i data-lucide="compass" class="w-4 h-4"></i> Official Corporate Outdoor Retreat
             </div>
 
             <h1 class="font-display text-7xl sm:text-9xl md:text-[13rem] font-extrabold leading-none tracking-tighter uppercase mb-2 select-none">
-                PFM <span class="text-brand-orange">2026</span>
+                <span class="hero-word" style="--stagger:1">PFM</span> <span class="hero-word text-brand-orange" style="--stagger:2">2026</span>
             </h1>
             <p class="font-display text-3xl md:text-5xl tracking-widest text-brand-cream/90 uppercase mb-8">
-                RETREAT
+                <span class="hero-word" style="--stagger:3">RETREAT</span>
             </p>
 
             <div class="relative max-w-2xl mx-auto mb-10">
-                <span class="font-hand text-brand-mustard text-2xl md:text-3xl absolute -top-8 -left-8 -rotate-6 hidden sm:block">Step away & connect!</span>
-                <p class="font-syne text-xl md:text-3xl font-bold tracking-tight text-brand-cream">
+                <span class="hero-reveal font-hand text-brand-mustard text-2xl md:text-3xl absolute -top-8 -left-8 -rotate-6 hidden sm:block" style="--stagger:4">Step away & connect!</span>
+                <p class="hero-reveal font-syne text-xl md:text-3xl font-bold tracking-tight text-brand-cream" style="--stagger:3">
                     ESCAPE <span class="text-brand-orange">→</span> CONNECT <span class="text-brand-orange">→</span> EXPLORE <span class="text-brand-orange">→</span> GROW
                 </p>
-                <span class="font-hand text-brand-pink text-2xl md:text-3xl absolute -bottom-8 -right-8 rotate-6 hidden sm:block">2 Days, 1 Night</span>
+                <span class="hero-reveal font-hand text-brand-pink text-2xl md:text-3xl absolute -bottom-8 -right-8 rotate-6 hidden sm:block" style="--stagger:5">2 Days, 1 Night</span>
             </div>
 
-            <div class="flex flex-wrap justify-center gap-4 md:gap-8 text-xs md:text-sm font-semibold tracking-wider uppercase border-y border-brand-cream/20 py-4 px-8 mb-10 bg-brand-forest/40">
+            <div class="hero-reveal flex flex-wrap justify-center gap-4 md:gap-8 text-xs md:text-sm font-semibold tracking-wider uppercase border-y border-brand-cream/20 py-4 px-8 mb-10 bg-brand-forest/40" style="--stagger:4">
                 <span class="flex items-center gap-2"><i data-lucide="calendar" class="w-4 h-4 text-brand-orange"></i> 3–4 OCTOBER 2026</span>
                 <span class="text-brand-cream/30">•</span>
                 <span class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-brand-orange"></i> GOPENG GLAMPING PARK, MALAYSIA</span>
             </div>
 
-            <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                <a href="#retreat" class="bg-brand-orange hover:bg-brand-coral text-white font-bold text-sm uppercase tracking-widest px-8 py-4 rounded-full transition-all flex items-center justify-center gap-2 group">
+            <div class="hero-reveal flex flex-col sm:flex-row gap-4 w-full sm:w-auto" style="--stagger:5">
+                <a href="#retreat" class="magnetic bg-brand-orange hover:bg-brand-coral text-white font-bold text-sm uppercase tracking-widest px-8 py-4 rounded-full transition-colors flex items-center justify-center gap-2 group">
                     EXPLORE THE RETREAT <i data-lucide="arrow-down" class="w-4 h-4 group-hover:translate-y-1 transition-transform"></i>
                 </a>
                 <a href="#itinerary" class="border border-brand-cream/30 hover:bg-brand-cream hover:text-brand-forest text-brand-cream font-bold text-sm uppercase tracking-widest px-8 py-4 rounded-full transition-all flex items-center justify-center">
@@ -162,7 +231,7 @@
             </div>
         </div>
 
-        <div class="max-w-7xl mx-auto w-full flex justify-between items-end border-t border-brand-cream/10 pt-4 text-xs font-mono text-brand-cream/60">
+        <div class="hero-reveal max-w-7xl mx-auto w-full flex justify-between items-end border-t border-brand-cream/10 pt-4 text-xs font-mono text-brand-cream/60" style="--stagger:6">
             <div>[ SCROLL TO DISCOVER ]</div>
             <div class="animate-bounce"><i data-lucide="chevron-down" class="w-5 h-5 text-brand-orange"></i></div>
             <div>01 // 09</div>
@@ -171,16 +240,15 @@
 
     <!-- SECTION 01 — THE RETREAT -->
     <section id="retreat" class="py-24 px-4 md:px-8 max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row gap-4 items-baseline mb-12">
+        <div class="reveal flex flex-col md:flex-row gap-4 items-baseline mb-12">
             <span class="font-display text-4xl md:text-6xl text-brand-orange font-bold">01</span>
             <span class="font-mono text-xs uppercase tracking-widest text-brand-forest/60">// THE CONCEPT</span>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div class="lg:col-span-7 relative">
+            <div class="reveal-scale lg:col-span-7 relative">
                 <div class="relative z-10 rounded-2xl overflow-hidden border-2 border-brand-forest shadow-2xl">
-                    <!-- Replace with src="Alef Tote Bag.jpeg" for your local file -->
-                    <img src="images/pfm-retreat-kit.jpg" alt="PFM Retreat Official Tote Bag & Kit" class="w-full h-[450px] md:h-[550px] object-cover hover:scale-105 transition-transform duration-700">
+                    <img src="images/pfm-retreat-kit.jpg" alt="PFM Retreat Official Tote Bag & Kit" loading="lazy" decoding="async" class="w-full h-[450px] md:h-[550px] object-cover hover:scale-105 transition-transform duration-700">
                     <div class="absolute inset-0 bg-gradient-to-t from-brand-forest/80 via-transparent to-transparent"></div>
                     <div class="absolute bottom-6 left-6 right-6 text-brand-cream">
                         <span class="bg-brand-orange text-white text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md mb-2 inline-block">Official Kit</span>
@@ -188,13 +256,13 @@
                     </div>
                 </div>
 
-                <div class="absolute -bottom-6 -right-6 z-20 bg-brand-mustard text-brand-forest p-6 rounded-2xl border-2 border-brand-forest hidden sm:block rotate-3 shadow-xl">
+                <div class="reveal absolute -bottom-6 -right-6 z-20 bg-brand-mustard text-brand-forest p-6 rounded-2xl border-2 border-brand-forest hidden sm:block rotate-3 shadow-xl" style="--stagger:2">
                     <p class="font-display font-bold text-2xl uppercase leading-none">REAL TALK.</p>
                     <p class="font-display font-bold text-2xl uppercase leading-none text-brand-orange">REAL BONDS.</p>
                 </div>
             </div>
 
-            <div class="lg:col-span-5 space-y-6">
+            <div class="reveal lg:col-span-5 space-y-6" style="--stagger:1">
                 <h2 class="font-display text-5xl md:text-6xl font-bold tracking-tight text-brand-forest leading-none">
                     MORE THAN A TRIP.
                 </h2>
@@ -208,7 +276,7 @@
                     It’s an intentional invitation to disconnect from deadlines, trade Slack messages for real conversations, and build authentic trust while navigating the outdoors together.
                 </p>
 
-                <div class="grid grid-cols-2 gap-4 pt-6 border-t-2 border-brand-forest/10">
+                <div class="reveal grid grid-cols-2 gap-4 pt-6 border-t-2 border-brand-forest/10" style="--stagger:2">
                     <div class="bg-brand-creamDark/50 p-4 rounded-xl border border-brand-forest/10">
                         <span class="font-display text-4xl font-extrabold text-brand-forest block">02 <span class="text-brand-orange text-xl">DAYS</span></span>
                         <span class="text-xs uppercase font-bold tracking-wider text-brand-forest/60">Immersion</span>
@@ -233,7 +301,7 @@
     <!-- SECTION 02 — WHY WE RETREAT -->
     <section id="why" class="py-24 bg-brand-olive text-brand-cream relative overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b border-brand-cream/10 pb-8">
+            <div class="reveal flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b border-brand-cream/10 pb-8">
                 <div>
                     <span class="font-mono text-xs text-brand-mustard uppercase tracking-widest block mb-2">// PURPOSE & INTENT</span>
                     <h2 class="font-display text-5xl md:text-7xl font-bold tracking-tight">WHY WE RETREAT</h2>
@@ -244,7 +312,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
-                <div class="bg-brand-forest p-6 rounded-2xl border border-brand-cream/10 hover:border-brand-orange transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group">
+                <div style="--stagger:0" class="reveal-scale bg-brand-forest p-6 rounded-2xl border border-brand-cream/10 hover:border-brand-orange transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group">
                     <div>
                         <span class="font-display text-3xl font-extrabold text-brand-orange block mb-4">01</span>
                         <h3 class="font-display text-xl font-bold uppercase mb-3 text-brand-cream group-hover:text-brand-orange transition-colors">STRENGTHEN TEAM BONDING</h3>
@@ -253,7 +321,7 @@
                     <div class="mt-8 pt-4 border-t border-brand-cream/10 text-brand-mustard"><i data-lucide="users" class="w-6 h-6"></i></div>
                 </div>
 
-                <div class="bg-brand-forest p-6 rounded-2xl border border-brand-cream/10 hover:border-brand-sky transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group">
+                <div style="--stagger:1" class="reveal-scale bg-brand-forest p-6 rounded-2xl border border-brand-cream/10 hover:border-brand-sky transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group">
                     <div>
                         <span class="font-display text-3xl font-extrabold text-brand-sky block mb-4">02</span>
                         <h3 class="font-display text-xl font-bold uppercase mb-3 text-brand-cream group-hover:text-brand-sky transition-colors">BUILD TRUST & COLLABORATION</h3>
@@ -262,7 +330,7 @@
                     <div class="mt-8 pt-4 border-t border-brand-cream/10 text-brand-sky"><i data-lucide="shield-check" class="w-6 h-6"></i></div>
                 </div>
 
-                <div class="bg-brand-forest p-6 rounded-2xl border border-brand-cream/10 hover:border-brand-mustard transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group">
+                <div style="--stagger:2" class="reveal-scale bg-brand-forest p-6 rounded-2xl border border-brand-cream/10 hover:border-brand-mustard transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group">
                     <div>
                         <span class="font-display text-3xl font-extrabold text-brand-mustard block mb-4">03</span>
                         <h3 class="font-display text-xl font-bold uppercase mb-3 text-brand-cream group-hover:text-brand-mustard transition-colors">RECHARGE & RECONNECT</h3>
@@ -271,7 +339,7 @@
                     <div class="mt-8 pt-4 border-t border-brand-cream/10 text-brand-mustard"><i data-lucide="zap" class="w-6 h-6"></i></div>
                 </div>
 
-                <div class="bg-brand-forest p-6 rounded-2xl border border-brand-cream/10 hover:border-brand-pink transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group">
+                <div style="--stagger:3" class="reveal-scale bg-brand-forest p-6 rounded-2xl border border-brand-cream/10 hover:border-brand-pink transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group">
                     <div>
                         <span class="font-display text-3xl font-extrabold text-brand-pink block mb-4">04</span>
                         <h3 class="font-display text-xl font-bold uppercase mb-3 text-brand-cream group-hover:text-brand-pink transition-colors">ENCOURAGE COMMUNICATION</h3>
@@ -280,7 +348,7 @@
                     <div class="mt-8 pt-4 border-t border-brand-cream/10 text-brand-pink"><i data-lucide="message-square" class="w-6 h-6"></i></div>
                 </div>
 
-                <div class="bg-brand-forest p-6 rounded-2xl border border-brand-cream/10 hover:border-brand-orange transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group">
+                <div style="--stagger:4" class="reveal-scale bg-brand-forest p-6 rounded-2xl border border-brand-cream/10 hover:border-brand-orange transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group">
                     <div>
                         <span class="font-display text-3xl font-extrabold text-brand-orange block mb-4">05</span>
                         <h3 class="font-display text-xl font-bold uppercase mb-3 text-brand-cream group-hover:text-brand-orange transition-colors">MEANINGFUL MEMORIES</h3>
@@ -294,7 +362,7 @@
 
     <!-- SECTION 03 — THE ADVENTURE MAP -->
     <section id="map" class="py-24 px-4 md:px-8 max-w-7xl mx-auto" x-data="{ activePin: 'rafting' }">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12">
+        <div class="reveal flex flex-col md:flex-row justify-between items-start md:items-end mb-12">
             <div>
                 <span class="font-mono text-xs text-brand-orange uppercase tracking-widest block mb-2">// EXPEDITION MAP</span>
                 <h2 class="font-display text-5xl md:text-6xl font-bold text-brand-forest">GOPENG TERRAIN</h2>
@@ -302,7 +370,7 @@
             <p class="text-sm text-brand-charcoal/70 max-w-md">Click or hover interactive hotspots on the expedition map below to explore activity locations.</p>
         </div>
 
-        <div class="relative bg-brand-creamDark rounded-3xl border-2 border-brand-forest overflow-hidden p-6 md:p-12 min-h-[450px] flex flex-col justify-between">
+        <div class="reveal-scale relative bg-brand-creamDark rounded-3xl border-2 border-brand-forest overflow-hidden p-6 md:p-12 min-h-[450px] flex flex-col justify-between">
             <div class="relative z-10 grid grid-cols-2 md:grid-cols-5 gap-4 my-auto">
                 <button @click="activePin = 'glamping'" :class="activePin === 'glamping' ? 'bg-brand-forest text-brand-cream scale-105' : 'bg-brand-cream text-brand-forest'" class="p-4 rounded-2xl border-2 border-brand-forest shadow-lg transition-all text-left flex flex-col justify-between h-36">
                     <div class="flex justify-between items-start">
@@ -421,14 +489,14 @@
 
     <!-- SECTION 04 — EXPERIENCE CARDS -->
     <section id="experience" class="py-24 px-4 md:px-8 max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row gap-4 items-baseline mb-12">
+        <div class="reveal flex flex-col md:flex-row gap-4 items-baseline mb-12">
             <span class="font-display text-4xl md:text-6xl text-brand-orange font-bold">04</span>
             <span class="font-mono text-xs uppercase tracking-widest text-brand-forest/60">// FOUR PILLARS OF RETREAT</span>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="relative h-[400px] rounded-3xl overflow-hidden border-2 border-brand-forest group shadow-xl">
-                <img src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1000&q=80" alt="Trailhead & Camping Signboard" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+            <div style="--stagger:0" class="reveal-scale relative h-[400px] rounded-3xl overflow-hidden border-2 border-brand-forest group shadow-xl">
+                <img src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1000&q=80" alt="Trailhead & Camping Signboard" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-forest via-brand-forest/40 to-transparent"></div>
                 <div class="absolute bottom-8 left-8 right-8 text-brand-cream">
                     <span class="text-brand-mustard font-mono text-xs uppercase tracking-widest block mb-1">01 // ACCOMMODATION</span>
@@ -437,8 +505,8 @@
                 </div>
             </div>
 
-            <div class="relative h-[400px] rounded-3xl overflow-hidden border-2 border-brand-forest group shadow-xl">
-                <img src="images/pfm-retreat-rafting-closeup.jpg" alt="Whitewater Rafting Team" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+            <div style="--stagger:1" class="reveal-scale relative h-[400px] rounded-3xl overflow-hidden border-2 border-brand-forest group shadow-xl">
+                <img src="images/pfm-retreat-rafting-closeup.jpg" alt="Whitewater Rafting Team" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-forest via-brand-forest/40 to-transparent"></div>
                 <div class="absolute bottom-8 left-8 right-8 text-brand-cream">
                     <span class="text-brand-sky font-mono text-xs uppercase tracking-widest block mb-1">02 // ADRENALINE</span>
@@ -447,8 +515,8 @@
                 </div>
             </div>
 
-            <div class="relative h-[400px] rounded-3xl overflow-hidden border-2 border-brand-forest group shadow-xl">
-                <img src="images/pfm-retreat-group.jpg" alt="Campfire Evening Gathering" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+            <div style="--stagger:2" class="reveal-scale relative h-[400px] rounded-3xl overflow-hidden border-2 border-brand-forest group shadow-xl">
+                <img src="images/pfm-retreat-group.jpg" alt="Campfire Evening Gathering" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-forest via-brand-forest/40 to-transparent"></div>
                 <div class="absolute bottom-8 left-8 right-8 text-brand-cream">
                     <span class="text-brand-pink font-mono text-xs uppercase tracking-widest block mb-1">03 // CULTURE</span>
@@ -457,8 +525,8 @@
                 </div>
             </div>
 
-            <div class="relative h-[400px] rounded-3xl overflow-hidden border-2 border-brand-forest group shadow-xl">
-                <img src="images/pfm-retreat-teambuilding.jpg" alt="Team Building Challenge" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+            <div style="--stagger:3" class="reveal-scale relative h-[400px] rounded-3xl overflow-hidden border-2 border-brand-forest group shadow-xl">
+                <img src="images/pfm-retreat-teambuilding.jpg" alt="Team Building Challenge" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                 <div class="absolute inset-0 bg-gradient-to-t from-brand-forest via-brand-forest/40 to-transparent"></div>
                 <div class="absolute bottom-8 left-8 right-8 text-brand-cream">
                     <span class="text-brand-orange font-mono text-xs uppercase tracking-widest block mb-1">04 // CHALLENGE</span>
@@ -472,13 +540,13 @@
     <!-- SECTION 05 — ITINERARY TIMELINE -->
     <section id="itinerary" class="py-24 bg-brand-creamDark border-y-2 border-brand-forest">
         <div class="max-w-7xl mx-auto px-4 md:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
+            <div class="reveal text-center max-w-3xl mx-auto mb-16">
                 <span class="font-mono text-xs text-brand-orange uppercase tracking-widest block mb-2">// EXPEDITION TIMELINE</span>
                 <h2 class="font-display text-5xl md:text-7xl font-bold text-brand-forest">TWO DAYS. MANY STORIES.</h2>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <div class="bg-brand-cream p-8 rounded-3xl border-2 border-brand-forest shadow-lg">
+                <div style="--stagger:0" class="reveal-scale bg-brand-cream p-8 rounded-3xl border-2 border-brand-forest shadow-lg">
                     <div class="flex justify-between items-center border-b-2 border-brand-forest/10 pb-6 mb-8">
                         <div>
                             <span class="bg-brand-orange text-white text-xs font-bold uppercase px-3 py-1 rounded-full">DAY 01</span>
@@ -488,7 +556,7 @@
                     </div>
 
                     <div class="space-y-6 relative before:absolute before:inset-0 before:left-3.5 before:w-0.5 before:bg-brand-forest/20">
-                        <div class="flex gap-6 relative">
+                        <div style="--stagger:0" class="reveal flex gap-6 relative">
                             <div class="w-7 h-7 rounded-full bg-brand-orange text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">1</div>
                             <div>
                                 <span class="font-mono text-xs font-bold text-brand-orange">2.00 PM</span>
@@ -497,7 +565,7 @@
                             </div>
                         </div>
 
-                        <div class="flex gap-6 relative">
+                        <div style="--stagger:1" class="reveal flex gap-6 relative">
                             <div class="w-7 h-7 rounded-full bg-brand-forest text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">2</div>
                             <div>
                                 <span class="font-mono text-xs font-bold text-brand-forest">2.30 PM</span>
@@ -506,7 +574,7 @@
                             </div>
                         </div>
 
-                        <div class="flex gap-6 relative">
+                        <div style="--stagger:2" class="reveal flex gap-6 relative">
                             <div class="w-7 h-7 rounded-full bg-brand-forest text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">3</div>
                             <div>
                                 <span class="font-mono text-xs font-bold text-brand-forest">3.00 PM</span>
@@ -515,7 +583,7 @@
                             </div>
                         </div>
 
-                        <div class="flex gap-6 relative">
+                        <div style="--stagger:3" class="reveal flex gap-6 relative">
                             <div class="w-7 h-7 rounded-full bg-brand-mustard text-brand-forest flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">4</div>
                             <div>
                                 <span class="font-mono text-xs font-bold text-brand-forest">4.30 PM</span>
@@ -524,7 +592,7 @@
                             </div>
                         </div>
 
-                        <div class="flex gap-6 relative">
+                        <div style="--stagger:4" class="reveal flex gap-6 relative">
                             <div class="w-7 h-7 rounded-full bg-brand-orange text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">5</div>
                             <div>
                                 <span class="font-mono text-xs font-bold text-brand-orange">5.30 PM – 8.00 PM</span>
@@ -533,7 +601,7 @@
                             </div>
                         </div>
 
-                        <div class="flex gap-6 relative">
+                        <div style="--stagger:5" class="reveal flex gap-6 relative">
                             <div class="w-7 h-7 rounded-full bg-brand-forest text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">6</div>
                             <div>
                                 <span class="font-mono text-xs font-bold text-brand-forest">8.00 PM – 10.00 PM</span>
@@ -542,7 +610,7 @@
                             </div>
                         </div>
 
-                        <div class="flex gap-6 relative">
+                        <div style="--stagger:6" class="reveal flex gap-6 relative">
                             <div class="w-7 h-7 rounded-full bg-brand-pink text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">7</div>
                             <div>
                                 <span class="font-mono text-xs font-bold text-brand-pink">9.30 PM</span>
@@ -553,7 +621,7 @@
                     </div>
                 </div>
 
-                <div class="bg-brand-cream p-8 rounded-3xl border-2 border-brand-forest shadow-lg flex flex-col justify-between">
+                <div style="--stagger:1" class="reveal-scale bg-brand-cream p-8 rounded-3xl border-2 border-brand-forest shadow-lg flex flex-col justify-between">
                     <div>
                         <div class="flex justify-between items-center border-b-2 border-brand-forest/10 pb-6 mb-8">
                             <div>
@@ -564,7 +632,7 @@
                         </div>
 
                         <div class="space-y-6 relative before:absolute before:inset-0 before:left-3.5 before:w-0.5 before:bg-brand-forest/20">
-                            <div class="flex gap-6 relative">
+                            <div style="--stagger:0" class="reveal flex gap-6 relative">
                                 <div class="w-7 h-7 rounded-full bg-brand-mustard text-brand-forest flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">1</div>
                                 <div>
                                     <span class="font-mono text-xs font-bold text-brand-forest">8.00 AM</span>
@@ -573,7 +641,7 @@
                                 </div>
                             </div>
 
-                            <div class="flex gap-6 relative">
+                            <div style="--stagger:1" class="reveal flex gap-6 relative">
                                 <div class="w-7 h-7 rounded-full bg-brand-forest text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">2</div>
                                 <div>
                                     <span class="font-mono text-xs font-bold text-brand-forest">9.00 AM</span>
@@ -582,7 +650,7 @@
                                 </div>
                             </div>
 
-                            <div class="flex gap-6 relative">
+                            <div style="--stagger:2" class="reveal flex gap-6 relative">
                                 <div class="w-7 h-7 rounded-full bg-brand-sky text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">3</div>
                                 <div>
                                     <span class="font-mono text-xs font-bold text-brand-sky">9.30 AM – 12.30 PM</span>
@@ -591,7 +659,7 @@
                                 </div>
                             </div>
 
-                            <div class="flex gap-6 relative">
+                            <div style="--stagger:3" class="reveal flex gap-6 relative">
                                 <div class="w-7 h-7 rounded-full bg-brand-forest text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">4</div>
                                 <div>
                                     <span class="font-mono text-xs font-bold text-brand-forest">12.30 PM – 1.30 PM</span>
@@ -600,7 +668,7 @@
                                 </div>
                             </div>
 
-                            <div class="flex gap-6 relative">
+                            <div style="--stagger:4" class="reveal flex gap-6 relative">
                                 <div class="w-7 h-7 rounded-full bg-brand-orange text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">5</div>
                                 <div>
                                     <span class="font-mono text-xs font-bold text-brand-orange">1.30 PM – 2.00 PM</span>
@@ -621,7 +689,7 @@
 
     <!-- SECTION 06 — ACTIVITY SPOTLIGHT -->
     <section class="py-24 px-4 md:px-8 max-w-7xl mx-auto space-y-16">
-        <div class="bg-brand-forest text-brand-cream rounded-3xl p-8 md:p-12 border-2 border-brand-forest overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-2xl">
+        <div style="--stagger:0" class="reveal-scale bg-brand-forest text-brand-cream rounded-3xl p-8 md:p-12 border-2 border-brand-forest overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-2xl">
             <div class="lg:col-span-7 space-y-6">
                 <span class="bg-brand-orange text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">ACTIVITY SPOTLIGHT 01</span>
                 <h3 class="font-display text-5xl font-bold">TEAM BUILDING GAMES</h3>
@@ -647,14 +715,14 @@
                     </ul>
                 </div>
             </div>
-            <div class="lg:col-span-5">
-                <img src="images/pfm-retreat-teambuilding.jpg" alt="Team Building Challenge" class="rounded-2xl border-2 border-brand-cream/20 object-cover h-72 w-full">
+            <div class="lg:col-span-5 group overflow-hidden rounded-2xl">
+                <img src="images/pfm-retreat-teambuilding.jpg" alt="Team Building Challenge" loading="lazy" decoding="async" class="rounded-2xl border-2 border-brand-cream/20 object-cover h-72 w-full group-hover:scale-105 transition-transform duration-700">
             </div>
         </div>
 
-        <div class="bg-brand-olive text-brand-cream rounded-3xl p-8 md:p-12 border-2 border-brand-forest overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-2xl">
-            <div class="lg:col-span-5 order-2 lg:order-1">
-                <img src="images/pfm-retreat-rafting.jpg" alt="Whitewater Rafting Expedition" class="rounded-2xl border-2 border-brand-cream/20 object-cover h-72 w-full">
+        <div style="--stagger:1" class="reveal-scale bg-brand-olive text-brand-cream rounded-3xl p-8 md:p-12 border-2 border-brand-forest overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-2xl">
+            <div class="lg:col-span-5 order-2 lg:order-1 group overflow-hidden rounded-2xl">
+                <img src="images/pfm-retreat-rafting.jpg" alt="Whitewater Rafting Expedition" loading="lazy" decoding="async" class="rounded-2xl border-2 border-brand-cream/20 object-cover h-72 w-full group-hover:scale-105 transition-transform duration-700">
             </div>
             <div class="lg:col-span-7 space-y-6 order-1 lg:order-2">
                 <span class="bg-brand-sky text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">ACTIVITY SPOTLIGHT 02</span>
@@ -686,16 +754,16 @@
 
     <!-- SECTION 07 — BONDING / HUMAN EMOTION -->
     <section class="py-24 bg-brand-cream text-brand-forest border-t-2 border-brand-forest">
-        <div class="max-w-7xl mx-auto px-4 md:px-8 text-center mb-16">
+        <div class="reveal max-w-7xl mx-auto px-4 md:px-8 text-center mb-16">
             <h2 class="font-display text-6xl md:text-9xl font-extrabold tracking-tighter uppercase leading-none">
                 TOGETHER<br>WE GO <span class="text-brand-orange">FURTHER.</span>
             </h2>
             <p class="font-hand text-3xl text-brand-olive mt-4">Support • Communicate • Collaborate • Celebrate</p>
         </div>
 
-        <div class="max-w-7xl mx-auto px-4 md:px-8">
+        <div class="reveal-scale max-w-7xl mx-auto px-4 md:px-8" style="--stagger:1">
             <div class="rounded-3xl overflow-hidden border-2 border-brand-forest shadow-xl">
-                <img src="images/pfm-retreat-bonding-shoulders.jpg" alt="Team Bonding at Sunset" class="w-full h-[320px] md:h-[480px] object-cover hover:scale-105 transition-transform duration-700">
+                <img src="images/pfm-retreat-bonding-shoulders.jpg" alt="Team Bonding at Sunset" loading="lazy" decoding="async" class="w-full h-[320px] md:h-[480px] object-cover hover:scale-105 transition-transform duration-700">
             </div>
         </div>
     </section>
@@ -704,7 +772,7 @@
     <section class="py-24 bg-brand-forest text-brand-cream relative">
         <div class="max-w-7xl mx-auto px-4 md:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                <div class="lg:col-span-6 space-y-6">
+                <div class="reveal lg:col-span-6 space-y-6">
                     <span class="font-mono text-xs text-brand-mustard uppercase tracking-widest">// NIGHT EXPERIENCE</span>
                     <h2 class="font-display text-5xl md:text-7xl font-bold">SLEEP UNDER THE TREES.</h2>
                     <p class="text-brand-cream/80 leading-relaxed">
@@ -712,22 +780,22 @@
                     </p>
 
                     <div class="grid grid-cols-2 gap-4 pt-4">
-                        <div class="p-4 rounded-xl bg-brand-olive border border-brand-cream/10">
+                        <div style="--stagger:1" class="reveal p-4 rounded-xl bg-brand-olive border border-brand-cream/10">
                             <span class="text-2xl block mb-1">🛌</span>
                             <span class="font-display font-bold uppercase text-brand-cream">COMFORT</span>
                             <p class="text-xs text-brand-cream/60">Beds & Air-Con</p>
                         </div>
-                        <div class="p-4 rounded-xl bg-brand-olive border border-brand-cream/10">
+                        <div style="--stagger:2" class="reveal p-4 rounded-xl bg-brand-olive border border-brand-cream/10">
                             <span class="text-2xl block mb-1">🌿</span>
                             <span class="font-display font-bold uppercase text-brand-cream">NATURE</span>
                             <p class="text-xs text-brand-cream/60">Riverside Location</p>
                         </div>
-                        <div class="p-4 rounded-xl bg-brand-olive border border-brand-cream/10">
+                        <div style="--stagger:3" class="reveal p-4 rounded-xl bg-brand-olive border border-brand-cream/10">
                             <span class="text-2xl block mb-1">🍢</span>
                             <span class="font-display font-bold uppercase text-brand-cream">GOOD FOOD</span>
                             <p class="text-xs text-brand-cream/60">BBQ & Local Buffets</p>
                         </div>
-                        <div class="p-4 rounded-xl bg-brand-olive border border-brand-cream/10">
+                        <div style="--stagger:4" class="reveal p-4 rounded-xl bg-brand-olive border border-brand-cream/10">
                             <span class="text-2xl block mb-1">✨</span>
                             <span class="font-display font-bold uppercase text-brand-cream">RELAX</span>
                             <p class="text-xs text-brand-cream/60">Campfire Vibes</p>
@@ -735,9 +803,9 @@
                     </div>
                 </div>
 
-                <div class="lg:col-span-6">
+                <div class="reveal-scale lg:col-span-6" style="--stagger:1">
                     <div class="rounded-3xl overflow-hidden border-2 border-brand-cream/20 shadow-2xl">
-                        <img src="images/pfm-retreat-campfire-circle.jpg" alt="Glamping & Campfire Atmosphere" class="w-full h-[450px] object-cover">
+                        <img src="images/pfm-retreat-campfire-circle.jpg" alt="Glamping & Campfire Atmosphere" loading="lazy" decoding="async" class="w-full h-[450px] object-cover">
                     </div>
                 </div>
             </div>
@@ -758,7 +826,7 @@
         ],
         get completedCount() { return this.items.filter(i => i.done).length }
     }">
-        <div class="bg-brand-cream border-2 border-brand-forest rounded-3xl p-8 md:p-12 shadow-2xl relative">
+        <div class="reveal-scale bg-brand-cream border-2 border-brand-forest rounded-3xl p-8 md:p-12 shadow-2xl relative">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 border-b-2 border-brand-forest/10 pb-6">
                 <div>
                     <span class="font-mono text-xs text-brand-orange uppercase tracking-widest block mb-1">// INTERACTIVE QUEST</span>
@@ -804,23 +872,23 @@
         }
     }">
         <div class="max-w-7xl mx-auto px-4 md:px-8 text-center">
-            <span class="font-mono text-xs text-brand-mustard uppercase tracking-widest block mb-4">// COUNTDOWN TO LAUNCH</span>
-            <h2 class="font-display text-3xl md:text-5xl font-bold uppercase mb-12">THE ADVENTURE STARTS IN</h2>
+            <span class="reveal font-mono text-xs text-brand-mustard uppercase tracking-widest block mb-4">// COUNTDOWN TO LAUNCH</span>
+            <h2 class="reveal font-display text-3xl md:text-5xl font-bold uppercase mb-12">THE ADVENTURE STARTS IN</h2>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-                <div class="bg-brand-olive p-6 rounded-2xl border border-brand-cream/10">
+                <div style="--stagger:0" class="reveal-scale bg-brand-olive p-6 rounded-2xl border border-brand-cream/10">
                     <span class="font-display text-6xl md:text-8xl font-extrabold text-brand-orange block" x-text="days">00</span>
                     <span class="font-mono text-xs text-brand-cream/60 uppercase">DAYS</span>
                 </div>
-                <div class="bg-brand-olive p-6 rounded-2xl border border-brand-cream/10">
+                <div style="--stagger:1" class="reveal-scale bg-brand-olive p-6 rounded-2xl border border-brand-cream/10">
                     <span class="font-display text-6xl md:text-8xl font-extrabold text-brand-cream block" x-text="hours">00</span>
                     <span class="font-mono text-xs text-brand-cream/60 uppercase">HOURS</span>
                 </div>
-                <div class="bg-brand-olive p-6 rounded-2xl border border-brand-cream/10">
+                <div style="--stagger:2" class="reveal-scale bg-brand-olive p-6 rounded-2xl border border-brand-cream/10">
                     <span class="font-display text-6xl md:text-8xl font-extrabold text-brand-cream block" x-text="minutes">00</span>
                     <span class="font-mono text-xs text-brand-cream/60 uppercase">MINUTES</span>
                 </div>
-                <div class="bg-brand-olive p-6 rounded-2xl border border-brand-cream/10">
+                <div style="--stagger:3" class="reveal-scale bg-brand-olive p-6 rounded-2xl border border-brand-cream/10">
                     <span class="font-display text-6xl md:text-8xl font-extrabold text-brand-mustard block" x-text="seconds">00</span>
                     <span class="font-mono text-xs text-brand-cream/60 uppercase">SECONDS</span>
                 </div>
@@ -831,17 +899,17 @@
     <!-- FINAL CTA -->
     <section class="py-28 px-4 md:px-8 max-w-7xl mx-auto text-center relative">
         <div class="max-w-4xl mx-auto space-y-8">
-            <h2 class="font-display text-6xl sm:text-8xl md:text-9xl font-extrabold tracking-tight uppercase text-brand-forest leading-none">
+            <h2 class="reveal-scale font-display text-6xl sm:text-8xl md:text-9xl font-extrabold tracking-tight uppercase text-brand-forest leading-none">
                 THE BEST ADVENTURES ARE THE ONES WE SHARE.
             </h2>
 
-            <p class="font-syne text-xl text-brand-orange font-bold uppercase">
+            <p style="--stagger:1" class="reveal font-syne text-xl text-brand-orange font-bold uppercase">
                 PFM RETREAT 2026 • 3–4 OCTOBER 2026 • GOPENG GLAMPING PARK
             </p>
 
-            <div class="pt-4">
-                <a href="#challenge" class="inline-flex items-center gap-3 bg-brand-orange hover:bg-brand-coral text-white font-bold text-base uppercase tracking-widest px-10 py-5 rounded-full transition-all duration-300 transform hover:scale-105 shadow-xl">
-                    LET'S MAKE IT MEMORABLE <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            <div style="--stagger:2" class="reveal pt-4">
+                <a href="#challenge" class="magnetic group inline-flex items-center gap-3 bg-brand-orange hover:bg-brand-coral text-white font-bold text-base uppercase tracking-widest px-10 py-5 rounded-full transition-colors duration-300 shadow-xl">
+                    LET'S MAKE IT MEMORABLE <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
                 </a>
             </div>
         </div>
@@ -871,6 +939,111 @@
     <!-- Initialize Lucide Icons -->
     <script>
         lucide.createIcons();
+    </script>
+
+    <!-- Cinematic Motion Engine -->
+    <script>
+        (function () {
+            var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var desktop = window.matchMedia('(min-width: 768px)').matches && window.matchMedia('(pointer: fine)').matches;
+
+            /* ---- Preloader → Hero handoff ---- */
+            var preloader = document.getElementById('preloader');
+            var hero = document.getElementById('hero');
+            function revealHero() {
+                if (hero) hero.classList.add('hero-active');
+                document.documentElement.style.overflow = '';
+            }
+            if (reduced) {
+                if (preloader) preloader.style.display = 'none';
+                revealHero();
+            } else {
+                document.documentElement.style.overflow = 'hidden';
+                var dismissed = false;
+                function dismissPreloader() {
+                    if (dismissed) return;
+                    dismissed = true;
+                    if (preloader) preloader.classList.add('preloader-hide');
+                    setTimeout(revealHero, 250);
+                }
+                window.addEventListener('load', function () { setTimeout(dismissPreloader, 500); });
+                setTimeout(dismissPreloader, 1600); // never make users wait unnecessarily
+            }
+
+            /* ---- Scroll-triggered reveals ---- */
+            var revealEls = document.querySelectorAll('.reveal, .reveal-scale');
+            if (reduced) {
+                revealEls.forEach(function (el) { el.classList.add('is-visible'); });
+            } else if ('IntersectionObserver' in window) {
+                var io = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            io.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+                revealEls.forEach(function (el) { io.observe(el); });
+            } else {
+                revealEls.forEach(function (el) { el.classList.add('is-visible'); });
+            }
+
+            /* ---- Active nav-link tracking ---- */
+            var navLinks = document.querySelectorAll('.nav-link');
+            var sections = Array.prototype.slice.call(navLinks)
+                .map(function (a) { return document.querySelector(a.getAttribute('href')); })
+                .filter(Boolean);
+            if (sections.length && 'IntersectionObserver' in window) {
+                var navIo = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        var link = document.querySelector('.nav-link[href="#' + entry.target.id + '"]');
+                        if (!link) return;
+                        if (entry.isIntersecting) {
+                            navLinks.forEach(function (l) { l.classList.remove('active'); });
+                            link.classList.add('active');
+                        }
+                    });
+                }, { rootMargin: '-45% 0px -45% 0px' });
+                sections.forEach(function (s) { navIo.observe(s); });
+            }
+
+            /* ---- Scroll progress + subtle hero parallax (single rAF loop) ---- */
+            var progressBar = document.getElementById('scroll-progress');
+            var parallaxEls = document.querySelectorAll('.hero-parallax');
+            var ticking = false;
+            function onScrollFrame() {
+                ticking = false;
+                var doc = document.documentElement;
+                var scrollTop = window.scrollY || doc.scrollTop;
+                var max = (doc.scrollHeight - doc.clientHeight) || 1;
+                if (progressBar) progressBar.style.transform = 'scaleX(' + Math.min(scrollTop / max, 1) + ')';
+                if (desktop && !reduced && scrollTop < window.innerHeight * 1.2) {
+                    parallaxEls.forEach(function (el, i) {
+                        var speed = i === 0 ? 0.12 : 0.08;
+                        el.style.transform = 'translateY(' + (scrollTop * speed) + 'px)';
+                    });
+                }
+            }
+            window.addEventListener('scroll', function () {
+                if (!ticking) { window.requestAnimationFrame(onScrollFrame); ticking = true; }
+            }, { passive: true });
+            onScrollFrame();
+
+            /* ---- Magnetic buttons (desktop only) ---- */
+            if (desktop && !reduced) {
+                document.querySelectorAll('.magnetic').forEach(function (btn) {
+                    btn.addEventListener('mousemove', function (e) {
+                        var rect = btn.getBoundingClientRect();
+                        var x = (e.clientX - rect.left - rect.width / 2) * 0.25;
+                        var y = (e.clientY - rect.top - rect.height / 2) * 0.35;
+                        btn.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+                    });
+                    btn.addEventListener('mouseleave', function () {
+                        btn.style.transform = 'translate(0,0)';
+                    });
+                });
+            }
+        })();
     </script>
 </body>
 </html>
