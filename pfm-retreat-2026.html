@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PFM RETREAT 2026 — CONNECT. EXPLORE. GROW.</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Syne:wght@700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- AlpineJS & Lucide Icons -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            forest: '#1B3022',
+                            olive: '#2C3E2E',
+                            charcoal: '#1A1D1A',
+                            cream: '#F4F1EA',
+                            creamDark: '#E8E2D5',
+                            orange: '#E05A2B',
+                            coral: '#EE6C4D',
+                            mustard: '#E0A96D',
+                            sky: '#709CA7',
+                            pink: '#E892A0',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['Oswald', 'sans-serif'],
+                        syne: ['Syne', 'sans-serif'],
+                        hand: ['Caveat', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .editorial-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(27, 48, 34, 0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(27, 48, 34, 0.05) 1px, transparent 1px);
+        }
+        .grain-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.035;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #F4F1EA; }
+        ::-webkit-scrollbar-thumb { background: #1B3022; }
+    </style>
+</head>
+<body class="bg-brand-cream text-brand-charcoal font-sans antialiased selection:bg-brand-orange selection:text-white relative editorial-grid" x-data="{ mobileMenu: false }">
+
+    <!-- Grain Texture Overlay -->
+    <div class="grain-overlay"></div>
+
+    <!-- FLOATING NAVIGATION -->
+    <header class="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-4 transition-all duration-300">
+        <nav class="max-w-7xl mx-auto bg-brand-cream/80 backdrop-blur-md border-2 border-brand-forest/10 rounded-full px-6 py-3 flex items-center justify-between shadow-sm">
+            <a href="#" class="flex items-center gap-2 group">
+                <span class="w-3 h-3 rounded-full bg-brand-orange animate-pulse"></span>
+                <span class="font-display font-bold text-xl tracking-wider text-brand-forest">PFM <span class="text-brand-orange">RETREAT '26</span></span>
+            </a>
+
+            <div class="hidden lg:flex items-center gap-8 font-semibold text-xs tracking-widest uppercase text-brand-forest/80">
+                <a href="#retreat" class="hover:text-brand-orange transition-colors">The Retreat</a>
+                <a href="#why" class="hover:text-brand-orange transition-colors">Why We Retreat</a>
+                <a href="#map" class="hover:text-brand-orange transition-colors">Adventure</a>
+                <a href="#itinerary" class="hover:text-brand-orange transition-colors">Itinerary</a>
+                <a href="#experience" class="hover:text-brand-orange transition-colors">Experience</a>
+                <a href="#challenge" class="hover:text-brand-orange transition-colors">Challenge</a>
+            </div>
+
+            <div class="hidden sm:flex items-center gap-4">
+                <a href="#challenge" class="bg-brand-forest hover:bg-brand-orange text-brand-cream font-bold text-xs uppercase tracking-widest px-5 py-2.5 rounded-full transition-all duration-300">
+                    Join The Adventure
+                </a>
+            </div>
+
+            <button @click="mobileMenu = !mobileMenu" class="lg:hidden text-brand-forest p-1">
+                <i data-lucide="menu" x-show="!mobileMenu"></i>
+                <i data-lucide="x" x-show="mobileMenu"></i>
+            </button>
+        </nav>
+
+        <!-- Mobile Drawer -->
+        <div x-show="mobileMenu" x-transition class="lg:hidden absolute top-20 left-4 right-4 bg-brand-cream border-2 border-brand-forest rounded-2xl p-6 shadow-2xl flex flex-col gap-4 font-display text-lg uppercase tracking-wider text-brand-forest">
+            <a @click="mobileMenu = false" href="#retreat" class="hover:text-brand-orange">The Retreat</a>
+            <a @click="mobileMenu = false" href="#why" class="hover:text-brand-orange">Why We Retreat</a>
+            <a @click="mobileMenu = false" href="#map" class="hover:text-brand-orange">Adventure Map</a>
+            <a @click="mobileMenu = false" href="#itinerary" class="hover:text-brand-orange">Itinerary</a>
+            <a @click="mobileMenu = false" href="#experience" class="hover:text-brand-orange">Experience</a>
+            <a @click="mobileMenu = false" href="#challenge" class="hover:text-brand-orange">Retreat Challenge</a>
+            <a @click="mobileMenu = false" href="#challenge" class="bg-brand-orange text-white text-center py-3 rounded-xl font-sans text-sm font-bold mt-2">JOIN THE ADVENTURE</a>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative min-h-screen flex flex-col justify-between pt-28 pb-10 px-4 md:px-8 bg-brand-forest text-brand-cream overflow-hidden">
+        <div class="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#E05A2B_1px,transparent_1px)] [background-size:16px_16px]"></div>
+
+        <div class="absolute top-24 left-8 text-xs font-mono opacity-50 hidden md:block">
+            LAT: 4.4722° N, LONG: 101.1628° E<br>
+            ELEVATION: 68M ASTL<br>
+            EXPEDITION REF: PFM-2026-GPG
+        </div>
+        <div class="absolute top-24 right-8 text-xs font-mono text-right opacity-50 hidden md:block">
+            STAGE 01 // OUTDOOR RETREAT<br>
+            GOPENG GLAMPING PARK<br>
+            OCT 03 - OCT 04, 2026
+        </div>
+
+        <div class="max-w-7xl mx-auto w-full my-auto py-12 relative z-10 flex flex-col items-center text-center">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-brand-cream/20 bg-brand-olive/50 backdrop-blur-sm text-xs uppercase tracking-widest text-brand-mustard mb-6">
+                <i data-lucide="compass" class="w-4 h-4"></i> Official Corporate Outdoor Retreat
+            </div>
+
+            <h1 class="font-display text-7xl sm:text-9xl md:text-[13rem] font-extrabold leading-none tracking-tighter uppercase mb-2 select-none">
+                PFM <span class="text-brand-orange">2026</span>
+            </h1>
+            <p class="font-display text-3xl md:text-5xl tracking-widest text-brand-cream/90 uppercase mb-8">
+                RETREAT
+            </p>
+
+            <div class="relative max-w-2xl mx-auto mb-10">
+                <span class="font-hand text-brand-mustard text-2xl md:text-3xl absolute -top-8 -left-8 -rotate-6 hidden sm:block">Step away & connect!</span>
+                <p class="font-syne text-xl md:text-3xl font-bold tracking-tight text-brand-cream">
+                    ESCAPE <span class="text-brand-orange">→</span> CONNECT <span class="text-brand-orange">→</span> EXPLORE <span class="text-brand-orange">→</span> GROW
+                </p>
+                <span class="font-hand text-brand-pink text-2xl md:text-3xl absolute -bottom-8 -right-8 rotate-6 hidden sm:block">2 Days, 1 Night</span>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-4 md:gap-8 text-xs md:text-sm font-semibold tracking-wider uppercase border-y border-brand-cream/20 py-4 px-8 mb-10 bg-brand-forest/40">
+                <span class="flex items-center gap-2"><i data-lucide="calendar" class="w-4 h-4 text-brand-orange"></i> 3–4 OCTOBER 2026</span>
+                <span class="text-brand-cream/30">•</span>
+                <span class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-brand-orange"></i> GOPENG GLAMPING PARK, MALAYSIA</span>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                <a href="#retreat" class="bg-brand-orange hover:bg-brand-coral text-white font-bold text-sm uppercase tracking-widest px-8 py-4 rounded-full transition-all flex items-center justify-center gap-2 group">
+                    EXPLORE THE RETREAT <i data-lucide="arrow-down" class="w-4 h-4 group-hover:translate-y-1 transition-transform"></i>
+                </a>
+                <a href="#itinerary" class="border border-brand-cream/30 hover:bg-brand-cream hover:text-brand-forest text-brand-cream font-bold text-sm uppercase tracking-widest px-8 py-4 rounded-full transition-all flex items-center justify-center">
+                    VIEW ITINERARY
+                </a>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto w-full flex justify-between items-end border-t border-brand-cream/10 pt-4 text-xs font-mono text-brand-cream/60">
+            <div>[ SCROLL TO DISCOVER ]</div>
+            <div class="animate-bounce"><i data-lucide="chevron-down" class="w-5 h-5 text-brand-orange"></i></div>
+            <div>01 // 09</div>
+        </div>
+    </section>
+
+    <!-- SECTION 01 — THE RETREAT -->
+    <section id="retreat" class="py-24 px-4 md:px-8 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row gap-4 items-baseline mb-12">
+            <span class="font-display text-4xl md:text-6xl text-brand-orange font-bold">01</span>
+            <span class="font-mono text-xs uppercase tracking-widest text-brand-forest/60">// THE CONCEPT</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-7 relative">
+                <div class="relative z-10 rounded-2xl overflow-hidden border-2 border-brand-forest shadow-2xl">
+                    <!-- Replace with src="Alef Tote Bag.jpeg" for your local file -->
+                    <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1200&q=80" alt="PFM Retreat Official Tote Bag & Kit" class="w-full h-[450px] md:h-[550px] object-cover hover:scale-105 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-brand-forest/80 via-transparent to-transparent"></div>
+                    <div class="absolute bottom-6 left-6 right-6 text-brand-cream">
+                        <span class="bg-brand-orange text-white text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md mb-2 inline-block">Official Kit</span>
+                        <p class="font-syne text-lg font-bold">PFM Retreat 2026 Merchandise & Expedition Kit.</p>
+                    </div>
+                </div>
+
+                <div class="absolute -bottom-6 -right-6 z-20 bg-brand-mustard text-brand-forest p-6 rounded-2xl border-2 border-brand-forest hidden sm:block rotate-3 shadow-xl">
+                    <p class="font-display font-bold text-2xl uppercase leading-none">REAL TALK.</p>
+                    <p class="font-display font-bold text-2xl uppercase leading-none text-brand-orange">REAL BONDS.</p>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 space-y-6">
+                <h2 class="font-display text-5xl md:text-6xl font-bold tracking-tight text-brand-forest leading-none">
+                    MORE THAN A TRIP.
+                </h2>
+                <p class="font-syne text-xl text-brand-orange font-bold">
+                    A stronger team starts with shared experiences.
+                </p>
+                <p class="text-brand-charcoal/80 leading-relaxed">
+                    The PFM Retreat 2026 isn’t your average corporate away-day with awkward icebreakers. We are taking the entire team into the lush jungle and roaring rapids of Gopeng Glamping Park.
+                </p>
+                <p class="text-brand-charcoal/80 leading-relaxed">
+                    It’s an intentional invitation to disconnect from deadlines, trade Slack messages for real conversations, and build authentic trust while navigating the outdoors together.
+                </p>
+
+                <div class="grid grid-cols-2 gap-4 pt-6 border-t-2 border-brand-forest/10">
+                    <div class="bg-brand-creamDark/50 p-4 rounded-xl border border-brand-forest/10">
+                        <span class="font-display text-4xl font-extrabold text-brand-forest block">02 <span class="text-brand-orange text-xl">DAYS</span></span>
+                        <span class="text-xs uppercase font-bold tracking-wider text-brand-forest/60">Immersion</span>
+                    </div>
+                    <div class="bg-brand-creamDark/50 p-4 rounded-xl border border-brand-forest/10">
+                        <span class="font-display text-4xl font-extrabold text-brand-forest block">01 <span class="text-brand-orange text-xl">NIGHT</span></span>
+                        <span class="text-xs uppercase font-bold tracking-wider text-brand-forest/60">Under Stars</span>
+                    </div>
+                    <div class="bg-brand-creamDark/50 p-4 rounded-xl border border-brand-forest/10">
+                        <span class="font-display text-4xl font-extrabold text-brand-forest block">04 <span class="text-brand-orange text-xl">PILLARS</span></span>
+                        <span class="text-xs uppercase font-bold tracking-wider text-brand-forest/60">Core Experiences</span>
+                    </div>
+                    <div class="bg-brand-creamDark/50 p-4 rounded-xl border border-brand-forest/10">
+                        <span class="font-display text-4xl font-extrabold text-brand-forest block">01 <span class="text-brand-orange text-xl">TEAM</span></span>
+                        <span class="text-xs uppercase font-bold tracking-wider text-brand-forest/60">Unstoppable</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 02 — WHY WE RETREAT -->
+    <section id="why" class="py-24 bg-brand-olive text-brand-cream relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b border-brand-cream/10 pb-8">
+                <div>
+                    <span class="font-mono text-xs text-brand-mustard uppercase tracking-widest block mb-2">// PURPOSE & INTENT</span>
+                    <h2 class="font-display text-5xl md:text-7xl font-bold tracking-tight">WHY WE RETREAT</h2>
+                </div>
+                <p class="font-hand text-2xl text-brand-mustard max-w-xs mt-4 md:mt-0">
+                    "Great things in business are never done by one person."
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                <div class="bg-brand-forest p-6 rounded-2xl border border-brand-cream/10 hover:border-brand-orange transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group">
+                    <div>
+                        <span class="font-display text-3xl font-extrabold text-brand-orange block mb-4">01</span>
+                        <h3 class="font-display text-xl font-bold uppercase mb-3 text-brand-cream group-hover:text-brand-orange transition-colors">STRENGTHEN TEAM BONDING</h3>
+                        <p class="text-sm text-brand-cream/70 leading-relaxed">Build authentic relationships beyond screens, Zoom links, and everyday work tasks.</p>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-brand-cream/10 text-brand-mustard"><i data-lucide="users" class="w-6 h-6"></i></div>
+                </div>
+
+                <div class="bg-brand-forest p-6 rounded-2xl border border-brand-cream/10 hover:border-brand-sky transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group">
+                    <div>
+                        <span class="font-display text-3xl font-extrabold text-brand-sky block mb-4">02</span>
+                        <h3 class="font-display text-xl font-bold uppercase mb-3 text-brand-cream group-hover:text-brand-sky transition-colors">BUILD TRUST & COLLABORATION</h3>
+                        <p class="text-sm text-brand-cream/70 leading-relaxed">Learn to rely on one another while navigating thrilling wild outdoor challenges.</p>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-brand-cream/10 text-brand-sky"><i data-lucide="shield-check" class="w-6 h-6"></i></div>
+                </div>
+
+                <div class="bg-brand-forest p-6 rounded-2xl border border-brand-cream/10 hover:border-brand-mustard transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group">
+                    <div>
+                        <span class="font-display text-3xl font-extrabold text-brand-mustard block mb-4">03</span>
+                        <h3 class="font-display text-xl font-bold uppercase mb-3 text-brand-cream group-hover:text-brand-mustard transition-colors">RECHARGE & RECONNECT</h3>
+                        <p class="text-sm text-brand-cream/70 leading-relaxed">Step away from routine, breathe in nature, and hit the mental reset button together.</p>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-brand-cream/10 text-brand-mustard"><i data-lucide="zap" class="w-6 h-6"></i></div>
+                </div>
+
+                <div class="bg-brand-forest p-6 rounded-2xl border border-brand-cream/10 hover:border-brand-pink transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group">
+                    <div>
+                        <span class="font-display text-3xl font-extrabold text-brand-pink block mb-4">04</span>
+                        <h3 class="font-display text-xl font-bold uppercase mb-3 text-brand-cream group-hover:text-brand-pink transition-colors">ENCOURAGE COMMUNICATION</h3>
+                        <p class="text-sm text-brand-cream/70 leading-relaxed">Listen better. Communicate clearly under pressure. Work seamless as one unit.</p>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-brand-cream/10 text-brand-pink"><i data-lucide="message-square" class="w-6 h-6"></i></div>
+                </div>
+
+                <div class="bg-brand-forest p-6 rounded-2xl border border-brand-cream/10 hover:border-brand-orange transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between group">
+                    <div>
+                        <span class="font-display text-3xl font-extrabold text-brand-orange block mb-4">05</span>
+                        <h3 class="font-display text-xl font-bold uppercase mb-3 text-brand-cream group-hover:text-brand-orange transition-colors">MEANINGFUL MEMORIES</h3>
+                        <p class="text-sm text-brand-cream/70 leading-relaxed">Create legendary stories around the campfire that stay long after the retreat ends.</p>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-brand-cream/10 text-brand-orange"><i data-lucide="heart" class="w-6 h-6"></i></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 03 — THE ADVENTURE MAP -->
+    <section id="map" class="py-24 px-4 md:px-8 max-w-7xl mx-auto" x-data="{ activePin: 'rafting' }">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12">
+            <div>
+                <span class="font-mono text-xs text-brand-orange uppercase tracking-widest block mb-2">// EXPEDITION MAP</span>
+                <h2 class="font-display text-5xl md:text-6xl font-bold text-brand-forest">GOPENG TERRAIN</h2>
+            </div>
+            <p class="text-sm text-brand-charcoal/70 max-w-md">Click or hover interactive hotspots on the expedition map below to explore activity locations.</p>
+        </div>
+
+        <div class="relative bg-brand-creamDark rounded-3xl border-2 border-brand-forest overflow-hidden p-6 md:p-12 min-h-[450px] flex flex-col justify-between">
+            <div class="relative z-10 grid grid-cols-2 md:grid-cols-5 gap-4 my-auto">
+                <button @click="activePin = 'glamping'" :class="activePin === 'glamping' ? 'bg-brand-forest text-brand-cream scale-105' : 'bg-brand-cream text-brand-forest'" class="p-4 rounded-2xl border-2 border-brand-forest shadow-lg transition-all text-left flex flex-col justify-between h-36">
+                    <div class="flex justify-between items-start">
+                        <span class="text-2xl">🏕️</span>
+                        <span class="font-mono text-[10px] opacity-60">BASE 01</span>
+                    </div>
+                    <div>
+                        <p class="font-display font-bold uppercase text-lg leading-tight">Glamping Village</p>
+                        <p class="text-[10px] opacity-70">Gopeng Glamping Park</p>
+                    </div>
+                </button>
+
+                <button @click="activePin = 'rafting'" :class="activePin === 'rafting' ? 'bg-brand-forest text-brand-cream scale-105' : 'bg-brand-cream text-brand-forest'" class="p-4 rounded-2xl border-2 border-brand-forest shadow-lg transition-all text-left flex flex-col justify-between h-36">
+                    <div class="flex justify-between items-start">
+                        <span class="text-2xl">🌊</span>
+                        <span class="font-mono text-[10px] opacity-60">RIVER 02</span>
+                    </div>
+                    <div>
+                        <p class="font-display font-bold uppercase text-lg leading-tight">Kampar River</p>
+                        <p class="text-[10px] opacity-70">Whitewater Rafting</p>
+                    </div>
+                </button>
+
+                <button @click="activePin = 'bonding'" :class="activePin === 'bonding' ? 'bg-brand-forest text-brand-cream scale-105' : 'bg-brand-cream text-brand-forest'" class="p-4 rounded-2xl border-2 border-brand-forest shadow-lg transition-all text-left flex flex-col justify-between h-36">
+                    <div class="flex justify-between items-start">
+                        <span class="text-2xl">🤝</span>
+                        <span class="font-mono text-[10px] opacity-60">ZONE 03</span>
+                    </div>
+                    <div>
+                        <p class="font-display font-bold uppercase text-lg leading-tight">Bonding Grounds</p>
+                        <p class="text-[10px] opacity-70">Team Workshops</p>
+                    </div>
+                </button>
+
+                <button @click="activePin = 'teambuilding'" :class="activePin === 'teambuilding' ? 'bg-brand-forest text-brand-cream scale-105' : 'bg-brand-cream text-brand-forest'" class="p-4 rounded-2xl border-2 border-brand-forest shadow-lg transition-all text-left flex flex-col justify-between h-36">
+                    <div class="flex justify-between items-start">
+                        <span class="text-2xl">🏆</span>
+                        <span class="font-mono text-[10px] opacity-60">ARENA 04</span>
+                    </div>
+                    <div>
+                        <p class="font-display font-bold uppercase text-lg leading-tight">Challenge Arena</p>
+                        <p class="text-[10px] opacity-70">Outdoor Games</p>
+                    </div>
+                </button>
+
+                <button @click="activePin = 'campfire'" :class="activePin === 'campfire' ? 'bg-brand-forest text-brand-cream scale-105' : 'bg-brand-cream text-brand-forest'" class="p-4 rounded-2xl border-2 border-brand-forest shadow-lg transition-all text-left flex flex-col justify-between h-36">
+                    <div class="flex justify-between items-start">
+                        <span class="text-2xl">🔥</span>
+                        <span class="font-mono text-[10px] opacity-60">NIGHT 05</span>
+                    </div>
+                    <div>
+                        <p class="font-display font-bold uppercase text-lg leading-tight">Fireshow Circle</p>
+                        <p class="text-[10px] opacity-70">BBQ & Campfire</p>
+                    </div>
+                </button>
+            </div>
+
+            <div class="relative z-10 bg-brand-cream border-2 border-brand-forest rounded-2xl p-6 mt-6 shadow-xl">
+                <template x-if="activePin === 'glamping'">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <span class="bg-brand-orange text-white text-[10px] font-bold uppercase px-2 py-0.5 rounded">Accommodations</span>
+                            <h4 class="font-display text-2xl font-bold text-brand-forest mt-1">Lush Glamping Sanctuary</h4>
+                            <p class="text-sm text-brand-charcoal/80">Sleep comfortably in luxury canvas tents surrounded by rainforest trees, flowing streams, and cool mountain breezes.</p>
+                        </div>
+                        <span class="font-mono text-xs bg-brand-forest/10 px-3 py-1 rounded-full text-brand-forest font-bold">Location: Central Meadow</span>
+                    </div>
+                </template>
+
+                <template x-if="activePin === 'rafting'">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <span class="bg-brand-sky text-white text-[10px] font-bold uppercase px-2 py-0.5 rounded">High Energy</span>
+                            <h4 class="font-display text-2xl font-bold text-brand-forest mt-1">Kampar River Whitewater Rafting</h4>
+                            <p class="text-sm text-brand-charcoal/80">Navigate Class I–III rapids together. Synchronization, quick decision making, and pure adrenaline guaranteed.</p>
+                        </div>
+                        <span class="font-mono text-xs bg-brand-forest/10 px-3 py-1 rounded-full text-brand-forest font-bold">Location: Kampar River</span>
+                    </div>
+                </template>
+
+                <template x-if="activePin === 'bonding'">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <span class="bg-brand-mustard text-brand-forest text-[10px] font-bold uppercase px-2 py-0.5 rounded">Connection</span>
+                            <h4 class="font-display text-2xl font-bold text-brand-forest mt-1">Open-Air Bonding Sessions</h4>
+                            <p class="text-sm text-brand-charcoal/80">Facilitated team dialogues, shared reflection, and informal storytelling under the river canopy.</p>
+                        </div>
+                        <span class="font-mono text-xs bg-brand-forest/10 px-3 py-1 rounded-full text-brand-forest font-bold">Location: Riverside Deck</span>
+                    </div>
+                </template>
+
+                <template x-if="activePin === 'teambuilding'">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <span class="bg-brand-pink text-white text-[10px] font-bold uppercase px-2 py-0.5 rounded">Strategy</span>
+                            <h4 class="font-display text-2xl font-bold text-brand-forest mt-1">The Great Outdoor Challenge</h4>
+                            <p class="text-sm text-brand-charcoal/80">Tactical team games testing trust, problem solving, creative leadership, and seamless collaboration.</p>
+                        </div>
+                        <span class="font-mono text-xs bg-brand-forest/10 px-3 py-1 rounded-full text-brand-forest font-bold">Location: Main Lawn</span>
+                    </div>
+                </template>
+
+                <template x-if="activePin === 'campfire'">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <span class="bg-brand-orange text-white text-[10px] font-bold uppercase px-2 py-0.5 rounded">Celebration</span>
+                            <h4 class="font-display text-2xl font-bold text-brand-forest mt-1">BBQ Buffet & Fireshow Experience</h4>
+                            <p class="text-sm text-brand-charcoal/80">Evening celebration with grilled feast, live fireshow performance, and acoustic campfire vibes.</p>
+                        </div>
+                        <span class="font-mono text-xs bg-brand-forest/10 px-3 py-1 rounded-full text-brand-forest font-bold">Location: Campfire Pit</span>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 04 — EXPERIENCE CARDS -->
+    <section id="experience" class="py-24 px-4 md:px-8 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row gap-4 items-baseline mb-12">
+            <span class="font-display text-4xl md:text-6xl text-brand-orange font-bold">04</span>
+            <span class="font-mono text-xs uppercase tracking-widest text-brand-forest/60">// FOUR PILLARS OF RETREAT</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="relative h-[400px] rounded-3xl overflow-hidden border-2 border-brand-forest group shadow-xl">
+                <img src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1000&q=80" alt="Trailhead & Camping Signboard" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-brand-forest via-brand-forest/40 to-transparent"></div>
+                <div class="absolute bottom-8 left-8 right-8 text-brand-cream">
+                    <span class="text-brand-mustard font-mono text-xs uppercase tracking-widest block mb-1">01 // ACCOMMODATION</span>
+                    <h3 class="font-display text-4xl font-bold uppercase">GLAMPING</h3>
+                    <p class="font-syne text-lg text-brand-cream/80">Sleep closer to nature with premium comfort.</p>
+                </div>
+            </div>
+
+            <div class="relative h-[400px] rounded-3xl overflow-hidden border-2 border-brand-forest group shadow-xl">
+                <img src="https://images.unsplash.com/photo-1530866495561-507c9faab2ed?auto=format&fit=crop&w=1000&q=80" alt="Whitewater Rafting Team" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-brand-forest via-brand-forest/40 to-transparent"></div>
+                <div class="absolute bottom-8 left-8 right-8 text-brand-cream">
+                    <span class="text-brand-sky font-mono text-xs uppercase tracking-widest block mb-1">02 // ADRENALINE</span>
+                    <h3 class="font-display text-4xl font-bold uppercase">RAFTING</h3>
+                    <p class="font-syne text-lg text-brand-cream/80">Ride the rapids. Move as one synchronized unit.</p>
+                </div>
+            </div>
+
+            <div class="relative h-[400px] rounded-3xl overflow-hidden border-2 border-brand-forest group shadow-xl">
+                <img src="https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=1000&q=80" alt="Campfire Evening Gathering" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-brand-forest via-brand-forest/40 to-transparent"></div>
+                <div class="absolute bottom-8 left-8 right-8 text-brand-cream">
+                    <span class="text-brand-pink font-mono text-xs uppercase tracking-widest block mb-1">03 // CULTURE</span>
+                    <h3 class="font-display text-4xl font-bold uppercase">BONDING</h3>
+                    <p class="font-syne text-lg text-brand-cream/80">Different roles. Different minds. One cohesive team.</p>
+                </div>
+            </div>
+
+            <div class="relative h-[400px] rounded-3xl overflow-hidden border-2 border-brand-forest group shadow-xl">
+                <img src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1000&q=80" alt="Team Building Challenge" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-brand-forest via-brand-forest/40 to-transparent"></div>
+                <div class="absolute bottom-8 left-8 right-8 text-brand-cream">
+                    <span class="text-brand-orange font-mono text-xs uppercase tracking-widest block mb-1">04 // CHALLENGE</span>
+                    <h3 class="font-display text-4xl font-bold uppercase">TEAM BUILDING</h3>
+                    <p class="font-syne text-lg text-brand-cream/80">Solve complex outdoor obstacles together.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 05 — ITINERARY TIMELINE -->
+    <section id="itinerary" class="py-24 bg-brand-creamDark border-y-2 border-brand-forest">
+        <div class="max-w-7xl mx-auto px-4 md:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="font-mono text-xs text-brand-orange uppercase tracking-widest block mb-2">// EXPEDITION TIMELINE</span>
+                <h2 class="font-display text-5xl md:text-7xl font-bold text-brand-forest">TWO DAYS. MANY STORIES.</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="bg-brand-cream p-8 rounded-3xl border-2 border-brand-forest shadow-lg">
+                    <div class="flex justify-between items-center border-b-2 border-brand-forest/10 pb-6 mb-8">
+                        <div>
+                            <span class="bg-brand-orange text-white text-xs font-bold uppercase px-3 py-1 rounded-full">DAY 01</span>
+                            <h3 class="font-display text-3xl font-bold text-brand-forest mt-2">SATURDAY, 3 OCT 2026</h3>
+                        </div>
+                        <i data-lucide="sun" class="w-8 h-8 text-brand-orange"></i>
+                    </div>
+
+                    <div class="space-y-6 relative before:absolute before:inset-0 before:left-3.5 before:w-0.5 before:bg-brand-forest/20">
+                        <div class="flex gap-6 relative">
+                            <div class="w-7 h-7 rounded-full bg-brand-orange text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">1</div>
+                            <div>
+                                <span class="font-mono text-xs font-bold text-brand-orange">2.00 PM</span>
+                                <h4 class="font-display text-xl font-bold text-brand-forest">Arrival at Gopeng Glamping Park</h4>
+                                <p class="text-xs text-brand-charcoal/70">Welcome drinks and check-in greeting at the main lounge.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-6 relative">
+                            <div class="w-7 h-7 rounded-full bg-brand-forest text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">2</div>
+                            <div>
+                                <span class="font-mono text-xs font-bold text-brand-forest">2.30 PM</span>
+                                <h4 class="font-display text-xl font-bold text-brand-forest">Registration & Briefing</h4>
+                                <p class="text-xs text-brand-charcoal/70">Receive expedition gear, team badge, and safety orientation.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-6 relative">
+                            <div class="w-7 h-7 rounded-full bg-brand-forest text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">3</div>
+                            <div>
+                                <span class="font-mono text-xs font-bold text-brand-forest">3.00 PM</span>
+                                <h4 class="font-display text-xl font-bold text-brand-forest">Glamping Tent Settle-In</h4>
+                                <p class="text-xs text-brand-charcoal/70">Unpack and explore your luxury glamping accommodations.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-6 relative">
+                            <div class="w-7 h-7 rounded-full bg-brand-mustard text-brand-forest flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">4</div>
+                            <div>
+                                <span class="font-mono text-xs font-bold text-brand-forest">4.30 PM</span>
+                                <h4 class="font-display text-xl font-bold text-brand-forest">Hi-Tea Buffet Refreshment</h4>
+                                <p class="text-xs text-brand-charcoal/70">Local delicacies, coffee, and tea at the open-air pavilion.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-6 relative">
+                            <div class="w-7 h-7 rounded-full bg-brand-orange text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">5</div>
+                            <div>
+                                <span class="font-mono text-xs font-bold text-brand-orange">5.30 PM – 8.00 PM</span>
+                                <h4 class="font-display text-xl font-bold text-brand-forest">Team Building Challenge Games</h4>
+                                <p class="text-xs text-brand-charcoal/70">High-energy team obstacles and bonding exercises on the field.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-6 relative">
+                            <div class="w-7 h-7 rounded-full bg-brand-forest text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">6</div>
+                            <div>
+                                <span class="font-mono text-xs font-bold text-brand-forest">8.00 PM – 10.00 PM</span>
+                                <h4 class="font-display text-xl font-bold text-brand-forest">BBQ Feast & Evening Celebration</h4>
+                                <p class="text-xs text-brand-charcoal/70">Sumptuous outdoor BBQ dinner buffet under the canopy.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-6 relative">
+                            <div class="w-7 h-7 rounded-full bg-brand-pink text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">7</div>
+                            <div>
+                                <span class="font-mono text-xs font-bold text-brand-pink">9.30 PM</span>
+                                <h4 class="font-display text-xl font-bold text-brand-forest">Fireshow & Campfire Acoustic Night</h4>
+                                <p class="text-xs text-brand-charcoal/70">Thrilling live fireshow followed by marshmallow roasting & stories.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-brand-cream p-8 rounded-3xl border-2 border-brand-forest shadow-lg flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-center border-b-2 border-brand-forest/10 pb-6 mb-8">
+                            <div>
+                                <span class="bg-brand-sky text-white text-xs font-bold uppercase px-3 py-1 rounded-full">DAY 02</span>
+                                <h3 class="font-display text-3xl font-bold text-brand-forest mt-2">SUNDAY, 4 OCT 2026</h3>
+                            </div>
+                            <i data-lucide="waves" class="w-8 h-8 text-brand-sky"></i>
+                        </div>
+
+                        <div class="space-y-6 relative before:absolute before:inset-0 before:left-3.5 before:w-0.5 before:bg-brand-forest/20">
+                            <div class="flex gap-6 relative">
+                                <div class="w-7 h-7 rounded-full bg-brand-mustard text-brand-forest flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">1</div>
+                                <div>
+                                    <span class="font-mono text-xs font-bold text-brand-forest">8.00 AM</span>
+                                    <h4 class="font-display text-xl font-bold text-brand-forest">Morning Breakfast Buffet</h4>
+                                    <p class="text-xs text-brand-charcoal/70">Hearty breakfast spread to fuel up for the river adventure.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-6 relative">
+                                <div class="w-7 h-7 rounded-full bg-brand-forest text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">2</div>
+                                <div>
+                                    <span class="font-mono text-xs font-bold text-brand-forest">9.00 AM</span>
+                                    <h4 class="font-display text-xl font-bold text-brand-forest">Check-Out & Gear Up</h4>
+                                    <p class="text-xs text-brand-charcoal/70">Tent check-out and river gear distribution (helmets/life vests).</p>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-6 relative">
+                                <div class="w-7 h-7 rounded-full bg-brand-sky text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">3</div>
+                                <div>
+                                    <span class="font-mono text-xs font-bold text-brand-sky">9.30 AM – 12.30 PM</span>
+                                    <h4 class="font-display text-xl font-bold text-brand-forest">Whitewater Rafting @ Kampar River</h4>
+                                    <p class="text-xs text-brand-charcoal/70">3-hour thrilling river expedition tackling 22 rapids together.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-6 relative">
+                                <div class="w-7 h-7 rounded-full bg-brand-forest text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">4</div>
+                                <div>
+                                    <span class="font-mono text-xs font-bold text-brand-forest">12.30 PM – 1.30 PM</span>
+                                    <h4 class="font-display text-xl font-bold text-brand-forest">Victory Lunch Buffet</h4>
+                                    <p class="text-xs text-brand-charcoal/70">Post-rafting celebration lunch and photo swap.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-6 relative">
+                                <div class="w-7 h-7 rounded-full bg-brand-orange text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 z-10">5</div>
+                                <div>
+                                    <span class="font-mono text-xs font-bold text-brand-orange">1.30 PM – 2.00 PM</span>
+                                    <h4 class="font-display text-xl font-bold text-brand-forest">Self Preparation & Departure</h4>
+                                    <p class="text-xs text-brand-charcoal/70">Final group photo, farewell hugs, and bus departure back home.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 pt-6 border-t border-brand-forest/10 bg-brand-forest text-brand-cream p-4 rounded-xl">
+                        <p class="font-hand text-xl text-brand-mustard">"You leave as colleagues, you return as a tribe."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 06 — ACTIVITY SPOTLIGHT -->
+    <section class="py-24 px-4 md:px-8 max-w-7xl mx-auto space-y-16">
+        <div class="bg-brand-forest text-brand-cream rounded-3xl p-8 md:p-12 border-2 border-brand-forest overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-2xl">
+            <div class="lg:col-span-7 space-y-6">
+                <span class="bg-brand-orange text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">ACTIVITY SPOTLIGHT 01</span>
+                <h3 class="font-display text-5xl font-bold">TEAM BUILDING GAMES</h3>
+
+                <div class="flex items-center gap-6 font-mono text-xs">
+                    <div>
+                        <span class="opacity-60 block">DIFFICULTY</span>
+                        <span class="text-brand-mustard">●●○○○</span>
+                    </div>
+                    <div>
+                        <span class="opacity-60 block">ENERGY LEVEL</span>
+                        <span class="text-brand-orange">●●●●○</span>
+                    </div>
+                </div>
+
+                <div class="border-t border-brand-cream/10 pt-4">
+                    <p class="font-bold text-sm uppercase tracking-wider text-brand-mustard mb-2">WHAT TO EXPECT:</p>
+                    <ul class="grid grid-cols-2 gap-2 text-sm text-brand-cream/80">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-orange"></i> Team Challenges</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-orange"></i> Problem Solving</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-orange"></i> Communication</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-orange"></i> Friendly Competition</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="lg:col-span-5">
+                <img src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=800&q=80" alt="Team Building Challenge" class="rounded-2xl border-2 border-brand-cream/20 object-cover h-72 w-full">
+            </div>
+        </div>
+
+        <div class="bg-brand-olive text-brand-cream rounded-3xl p-8 md:p-12 border-2 border-brand-forest overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-2xl">
+            <div class="lg:col-span-5 order-2 lg:order-1">
+                <img src="https://images.unsplash.com/photo-1530866495561-507c9faab2ed?auto=format&fit=crop&w=800&q=80" alt="Whitewater Rafting Expedition" class="rounded-2xl border-2 border-brand-cream/20 object-cover h-72 w-full">
+            </div>
+            <div class="lg:col-span-7 space-y-6 order-1 lg:order-2">
+                <span class="bg-brand-sky text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">ACTIVITY SPOTLIGHT 02</span>
+                <h3 class="font-display text-5xl font-bold">WHITEWATER RAFTING</h3>
+
+                <div class="flex items-center gap-6 font-mono text-xs">
+                    <div>
+                        <span class="opacity-60 block">LOCATION</span>
+                        <span class="text-brand-cream font-bold">KAMPAR RIVER</span>
+                    </div>
+                    <div>
+                        <span class="opacity-60 block">DIFFICULTY</span>
+                        <span class="text-brand-mustard">●●●○○</span>
+                    </div>
+                </div>
+
+                <div class="border-t border-brand-cream/10 pt-4">
+                    <p class="font-bold text-sm uppercase tracking-wider text-brand-sky mb-2">WHAT TO EXPECT:</p>
+                    <ul class="grid grid-cols-2 gap-2 text-sm text-brand-cream/80">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-sky"></i> 22 Wild River Rapids</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-sky"></i> Paddle Coordination</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-sky"></i> Certified River Guides</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-sky"></i> Unforgettable Rush</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 07 — BONDING / HUMAN EMOTION -->
+    <section class="py-24 bg-brand-cream text-brand-forest border-t-2 border-brand-forest">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 text-center mb-16">
+            <h2 class="font-display text-6xl md:text-9xl font-extrabold tracking-tighter uppercase leading-none">
+                TOGETHER<br>WE GO <span class="text-brand-orange">FURTHER.</span>
+            </h2>
+            <p class="font-hand text-3xl text-brand-olive mt-4">Support • Communicate • Collaborate • Celebrate</p>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="rounded-2xl overflow-hidden border-2 border-brand-forest h-64">
+                <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=600&q=80" alt="Mountain View Summit Group" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+            </div>
+            <div class="rounded-2xl overflow-hidden border-2 border-brand-forest h-64 md:translate-y-6">
+                <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=600&q=80" alt="Campfire Circle Night" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+            </div>
+            <div class="rounded-2xl overflow-hidden border-2 border-brand-forest h-64">
+                <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=600&q=80" alt="Trekking Together" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+            </div>
+            <div class="rounded-2xl overflow-hidden border-2 border-brand-forest h-64 md:translate-y-6">
+                <img src="https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=600&q=80" alt="Team Standing Together" class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 08 — GLAMPING EXPERIENCE -->
+    <section class="py-24 bg-brand-forest text-brand-cream relative">
+        <div class="max-w-7xl mx-auto px-4 md:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-6 space-y-6">
+                    <span class="font-mono text-xs text-brand-mustard uppercase tracking-widest">// NIGHT EXPERIENCE</span>
+                    <h2 class="font-display text-5xl md:text-7xl font-bold">SLEEP UNDER THE TREES.</h2>
+                    <p class="text-brand-cream/80 leading-relaxed">
+                        Unwind in boutique glamping tents complete with cozy beds, air conditioning, and full outdoor amenities. Wake up to fresh rainforest mist and local coffee.
+                    </p>
+
+                    <div class="grid grid-cols-2 gap-4 pt-4">
+                        <div class="p-4 rounded-xl bg-brand-olive border border-brand-cream/10">
+                            <span class="text-2xl block mb-1">🛌</span>
+                            <span class="font-display font-bold uppercase text-brand-cream">COMFORT</span>
+                            <p class="text-xs text-brand-cream/60">Beds & Air-Con</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-brand-olive border border-brand-cream/10">
+                            <span class="text-2xl block mb-1">🌿</span>
+                            <span class="font-display font-bold uppercase text-brand-cream">NATURE</span>
+                            <p class="text-xs text-brand-cream/60">Riverside Location</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-brand-olive border border-brand-cream/10">
+                            <span class="text-2xl block mb-1">🍢</span>
+                            <span class="font-display font-bold uppercase text-brand-cream">GOOD FOOD</span>
+                            <p class="text-xs text-brand-cream/60">BBQ & Local Buffets</p>
+                        </div>
+                        <div class="p-4 rounded-xl bg-brand-olive border border-brand-cream/10">
+                            <span class="text-2xl block mb-1">✨</span>
+                            <span class="font-display font-bold uppercase text-brand-cream">RELAX</span>
+                            <p class="text-xs text-brand-cream/60">Campfire Vibes</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6">
+                    <div class="rounded-3xl overflow-hidden border-2 border-brand-cream/20 shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1000&q=80" alt="Glamping & Campfire Atmosphere" class="w-full h-[450px] object-cover">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 09 — RETREAT CHALLENGE CHECKLIST -->
+    <section id="challenge" class="py-24 px-4 md:px-8 max-w-4xl mx-auto" x-data="{
+        items: [
+            { id: 1, text: 'Meet someone from another team', done: false },
+            { id: 2, text: 'Complete the whitewater raft run', done: false },
+            { id: 3, text: 'Try something outside your comfort zone', done: false },
+            { id: 4, text: 'Capture an epic group photo', done: false },
+            { id: 5, text: 'Help a teammate through an obstacle', done: false },
+            { id: 6, text: 'Learn a fun new fact about a colleague', done: false },
+            { id: 7, text: 'Disconnect fully from work emails', done: false },
+            { id: 8, text: 'Make a memory worth keeping', done: false }
+        ],
+        get completedCount() { return this.items.filter(i => i.done).length }
+    }">
+        <div class="bg-brand-cream border-2 border-brand-forest rounded-3xl p-8 md:p-12 shadow-2xl relative">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 border-b-2 border-brand-forest/10 pb-6">
+                <div>
+                    <span class="font-mono text-xs text-brand-orange uppercase tracking-widest block mb-1">// INTERACTIVE QUEST</span>
+                    <h2 class="font-display text-4xl md:text-5xl font-bold text-brand-forest">YOUR RETREAT CHALLENGE</h2>
+                </div>
+                <div class="bg-brand-forest text-brand-cream px-5 py-3 rounded-2xl font-mono text-sm font-bold">
+                    PROGRESS: <span class="text-brand-orange" x-text="completedCount"></span> / 8 COMPLETE
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <template x-for="item in items" :key="item.id">
+                    <div @click="item.done = !item.done" :class="item.done ? 'bg-brand-orange/10 border-brand-orange' : 'bg-brand-creamDark/40 border-brand-forest/20'" class="p-4 rounded-xl border-2 flex items-center justify-between cursor-pointer transition-all hover:border-brand-orange">
+                        <span class="font-syne font-bold text-lg text-brand-forest" :class="{ 'line-through opacity-60': item.done }" x-text="item.text"></span>
+                        <div class="w-7 h-7 rounded-lg border-2 border-brand-forest flex items-center justify-center" :class="{ 'bg-brand-orange border-brand-orange text-white': item.done }">
+                            <i data-lucide="check" x-show="item.done" class="w-4 h-4"></i>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <div x-show="completedCount === 8" class="mt-6 p-4 bg-brand-mustard text-brand-forest font-bold rounded-xl text-center font-display text-xl animate-bounce">
+                🎉 LEGENDARY STATUS UNLOCKED! YOU ARE RETREAT READY!
+            </div>
+        </div>
+    </section>
+
+    <!-- COUNTDOWN TIMER -->
+    <section class="py-20 bg-brand-forest text-brand-cream border-y-2 border-brand-forest relative" x-data="{
+        targetDate: new Date('October 3, 2026 00:00:00').getTime(),
+        days: '00', hours: '00', minutes: '00', seconds: '00',
+        init() {
+            setInterval(() => {
+                const now = new Date().getTime();
+                const distance = this.targetDate - now;
+                if (distance > 0) {
+                    this.days = String(Math.floor(distance / (1000 * 60 * 60 * 24))).padStart(2, '0');
+                    this.hours = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+                    this.minutes = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+                    this.seconds = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, '0');
+                }
+            }, 1000);
+        }
+    }">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 text-center">
+            <span class="font-mono text-xs text-brand-mustard uppercase tracking-widest block mb-4">// COUNTDOWN TO LAUNCH</span>
+            <h2 class="font-display text-3xl md:text-5xl font-bold uppercase mb-12">THE ADVENTURE STARTS IN</h2>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                <div class="bg-brand-olive p-6 rounded-2xl border border-brand-cream/10">
+                    <span class="font-display text-6xl md:text-8xl font-extrabold text-brand-orange block" x-text="days">00</span>
+                    <span class="font-mono text-xs text-brand-cream/60 uppercase">DAYS</span>
+                </div>
+                <div class="bg-brand-olive p-6 rounded-2xl border border-brand-cream/10">
+                    <span class="font-display text-6xl md:text-8xl font-extrabold text-brand-cream block" x-text="hours">00</span>
+                    <span class="font-mono text-xs text-brand-cream/60 uppercase">HOURS</span>
+                </div>
+                <div class="bg-brand-olive p-6 rounded-2xl border border-brand-cream/10">
+                    <span class="font-display text-6xl md:text-8xl font-extrabold text-brand-cream block" x-text="minutes">00</span>
+                    <span class="font-mono text-xs text-brand-cream/60 uppercase">MINUTES</span>
+                </div>
+                <div class="bg-brand-olive p-6 rounded-2xl border border-brand-cream/10">
+                    <span class="font-display text-6xl md:text-8xl font-extrabold text-brand-mustard block" x-text="seconds">00</span>
+                    <span class="font-mono text-xs text-brand-cream/60 uppercase">SECONDS</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="py-28 px-4 md:px-8 max-w-7xl mx-auto text-center relative">
+        <div class="max-w-4xl mx-auto space-y-8">
+            <h2 class="font-display text-6xl sm:text-8xl md:text-9xl font-extrabold tracking-tight uppercase text-brand-forest leading-none">
+                THE BEST ADVENTURES ARE THE ONES WE SHARE.
+            </h2>
+
+            <p class="font-syne text-xl text-brand-orange font-bold uppercase">
+                PFM RETREAT 2026 • 3–4 OCTOBER 2026 • GOPENG GLAMPING PARK
+            </p>
+
+            <div class="pt-4">
+                <a href="#challenge" class="inline-flex items-center gap-3 bg-brand-orange hover:bg-brand-coral text-white font-bold text-base uppercase tracking-widest px-10 py-5 rounded-full transition-all duration-300 transform hover:scale-105 shadow-xl">
+                    LET'S MAKE IT MEMORABLE <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-brand-forest text-brand-cream border-t-2 border-brand-forest py-12 px-4 md:px-8">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div>
+                <span class="font-display font-bold text-2xl tracking-wider text-brand-cream block">PFM RETREAT 2026</span>
+                <p class="text-xs font-mono text-brand-cream/60">GOPENG GLAMPING PARK, MALAYSIA • 3–4 OCT 2026</p>
+            </div>
+
+            <div class="flex items-center gap-6 text-sm font-mono text-brand-mustard">
+                <span>🏕️ GLAMPING</span>
+                <span>🌊 RAFTING</span>
+                <span>🤝 BONDING</span>
+                <span>🏆 TEAM BUILDING</span>
+            </div>
+
+            <div class="font-syne font-bold text-brand-orange tracking-widest uppercase text-sm">
+                CONNECT. EXPLORE. GROW.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Initialize Lucide Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
