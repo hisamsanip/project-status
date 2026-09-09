@@ -45,6 +45,8 @@
                         denim: '#6C8CA0',
                         plum: '#93728C',
                         brown: '#8A6650',
+                        maroon: '#7A241A',
+                        maroonDeep: '#5A1A12',
                     },
                     fontFamily: {
                         sans: ['"Work Sans"', 'sans-serif'],
@@ -146,13 +148,22 @@
         .js .reveal-word.is-visible { opacity: 1; filter: blur(0); transform: translateY(0); }
 
         /* ---------------------------------------------------------------- */
-        /* HERO — layered parallax + curtain rise handled via GSAP inline    */
+        /* HERO — vintage poster mark as the visual anchor, curtain rise     */
+        /* handled via GSAP inline; poster gets a slow load-in zoom +        */
+        /* scroll parallax so the "background" reads as depth, not a static */
+        /* image dropped in flat.                                           */
         /* ---------------------------------------------------------------- */
-        #hero { will-change: auto; }
-        .hero-layer { will-change: transform; }
-        .float-slow { animation: floatSlow 7s ease-in-out infinite; }
-        .float-slower { animation: floatSlow 10s ease-in-out infinite; }
-        @keyframes floatSlow { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-14px) rotate(2deg); } }
+        #hero { will-change: auto; background: #000; }
+        .hero-poster {
+            aspect-ratio: 1448 / 1086;
+            background-image: url('images/sanips-family-day-logo.jpg');
+            background-size: cover;
+            background-position: center;
+            background-color: #000;
+            border: 1px solid rgba(217,164,65,.28);
+            box-shadow: 0 40px 80px -30px rgba(0,0,0,.7);
+            will-change: transform;
+        }
         #curtain {
             border-radius: 40px 40px 0 0;
             box-shadow: 0 -30px 60px -20px rgba(56,47,38,.25);
@@ -211,7 +222,7 @@
             html { scroll-behavior: auto; }
             .js #preloader { display: none !important; }
             .js .reveal, .js .reveal-scale, .js .reveal-word,
-            .hero-layer, .float-slow, .float-slower, .magnetic, .tilt-card,
+            .hero-poster, .magnetic, .tilt-card,
             .timeline-line, #gallery-track, .family-card, #curtain {
                 animation: none !important;
                 transition: none !important;
@@ -296,64 +307,46 @@
 
     <main id="main">
     <!-- HERO -->
-    <section id="hero" class="relative min-h-screen flex flex-col justify-between pt-28 pb-10 px-4 md:px-8 overflow-hidden bg-paperDark">
+    <section id="hero" class="relative flex flex-col pt-28 pb-14 px-4 md:px-8 overflow-hidden">
 
-        <!-- Decorative depth layers (inline SVG, no external assets) -->
-        <svg class="hero-layer absolute inset-0 w-full h-full" data-speed="0.15" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-            <circle cx="1180" cy="180" r="150" fill="#D9A441" opacity="0.25"/>
-        </svg>
-        <svg class="hero-layer absolute inset-0 w-full h-full" data-speed="0.35" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-            <path d="M0,620 C 240,560 380,660 620,610 C 900,555 1080,650 1440,600 L1440,900 L0,900 Z" fill="#C1663F" opacity="0.14"/>
-        </svg>
-        <svg class="hero-layer absolute inset-0 w-full h-full" data-speed="0.6" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-            <path d="M0,700 C 260,650 420,730 700,690 C 980,650 1140,720 1440,680 L1440,900 L0,900 Z" fill="#7C8A6B" opacity="0.16"/>
-        </svg>
-        <svg class="hero-layer absolute inset-0 w-full h-full" data-speed="0.85" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-            <path d="M0,780 C 300,740 480,800 760,760 C 1040,720 1200,790 1440,750 L1440,900 L0,900 Z" fill="#9C5030" opacity="0.18"/>
-        </svg>
+        <h1 class="sr-only">Hari Keluarga Hj Sanip &amp; Hjh Azizah — A Family Rooted in Muar</h1>
 
-        <span class="float-slow absolute top-32 left-[8%] text-3xl select-none hidden md:inline" aria-hidden="true">🐚</span>
-        <span class="float-slower absolute top-[38%] right-[10%] text-3xl select-none hidden md:inline" aria-hidden="true">☀️</span>
-        <span class="float-slow absolute bottom-[30%] left-[16%] text-2xl select-none hidden md:inline" aria-hidden="true">🌊</span>
-
-        <div class="relative z-10 reveal max-w-6xl mx-auto w-full flex justify-between items-start text-[11px] font-semibold tracking-widest uppercase text-inkSoft/70">
+        <div class="relative z-10 reveal max-w-6xl mx-auto w-full flex justify-between items-start text-[11px] font-semibold tracking-widest uppercase text-paper/60 mb-8">
             <span>Chalet Teluk Belanga, Melaka</span>
             <span>26–27 Sept 2026</span>
         </div>
 
-        <div class="relative z-10 max-w-4xl mx-auto w-full my-auto py-12 flex flex-col items-center text-center">
-            <div class="reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-dashed border-terracotta/50 bg-paper/70 text-[11px] uppercase tracking-widest text-terracottaDeep mb-8" style="--stagger:0">
+        <!-- The family's own poster mark: full clarity, aspect-locked so it is never cropped -->
+        <div class="reveal-scale hero-poster w-full max-w-3xl mx-auto rounded-2xl" style="--stagger:0"></div>
+
+        <div class="relative z-10 max-w-3xl mx-auto w-full flex flex-col items-center text-center gap-6 mt-10">
+            <div class="reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-dashed border-mustard/50 bg-black/30 text-[11px] uppercase tracking-widest text-mustard" style="--stagger:1">
                 <i data-lucide="sun" class="w-3.5 h-3.5"></i> Program Hari Keluarga
             </div>
 
-            <h1 class="font-display font-medium leading-[1.02] mb-4" style="font-size: clamp(2.5rem, 7vw, 5.5rem);">
-                <span class="reveal-word" style="--stagger:1">Hari</span> <span class="reveal-word" style="--stagger:2">Keluarga</span><br>
-                <span class="reveal-word text-terracotta italic" style="--stagger:3">Hj&nbsp;Sanip</span> <span class="reveal-word" style="--stagger:4">&amp;</span> <span class="reveal-word text-terracotta italic" style="--stagger:5">Hjh&nbsp;Azizah</span>
-            </h1>
+            <p class="reveal font-hand text-3xl md:text-4xl text-mustard" style="--stagger:2">"Bersama Eratkan Kasih Sayang"</p>
 
-            <p class="reveal font-hand text-3xl md:text-4xl text-sageDeep mb-10" style="--stagger:6">"Bersama Eratkan Kasih Sayang"</p>
-
-            <div class="reveal flex flex-wrap justify-center gap-x-8 gap-y-3 text-xs md:text-sm font-semibold tracking-wide uppercase border-y border-dashed border-ink/20 py-4 px-8 mb-10 bg-paper/50" style="--stagger:7">
-                <span class="flex items-center gap-2"><i data-lucide="calendar-heart" class="w-4 h-4 text-terracotta"></i> 26–27 September 2026</span>
-                <span class="text-ink/25">•</span>
-                <span class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-terracotta"></i> Chalet Teluk Belanga, Kuala Sungai Baru</span>
-                <span class="text-ink/25">•</span>
-                <span class="flex items-center gap-2"><i data-lucide="users" class="w-4 h-4 text-terracotta"></i> 9 Keluarga · 46 Orang</span>
+            <div class="reveal flex flex-wrap justify-center gap-x-8 gap-y-3 text-xs md:text-sm font-semibold tracking-wide uppercase border-y border-dashed border-paper/15 py-4 px-8 bg-black/20" style="--stagger:3">
+                <span class="flex items-center gap-2 text-paper"><i data-lucide="calendar-heart" class="w-4 h-4 text-mustard"></i> 26–27 September 2026</span>
+                <span class="text-paper/25">•</span>
+                <span class="flex items-center gap-2 text-paper"><i data-lucide="map-pin" class="w-4 h-4 text-mustard"></i> Chalet Teluk Belanga, Kuala Sungai Baru</span>
+                <span class="text-paper/25">•</span>
+                <span class="flex items-center gap-2 text-paper"><i data-lucide="users" class="w-4 h-4 text-mustard"></i> 9 Keluarga · 46 Orang</span>
             </div>
 
-            <div class="reveal flex flex-col sm:flex-row gap-4" style="--stagger:8">
-                <a href="#tentatif" class="magnetic bg-terracotta hover:bg-terracottaDeep text-paper font-bold text-sm uppercase tracking-widest px-8 py-4 rounded-full inline-flex items-center justify-center gap-2 group" data-cursor-text="Klik">
+            <div class="reveal flex flex-col sm:flex-row gap-4" style="--stagger:4">
+                <a href="#tentatif" class="magnetic bg-maroon hover:bg-mustard hover:text-ink text-paper font-bold text-sm uppercase tracking-widest px-8 py-4 rounded-full inline-flex items-center justify-center gap-2 group" data-cursor-text="Klik">
                     Lihat Tentatif Program <i data-lucide="arrow-down" class="w-4 h-4 group-hover:translate-y-1 transition-transform"></i>
                 </a>
-                <a href="#keluarga" class="border border-ink/25 hover:bg-ink hover:text-paper text-ink font-bold text-sm uppercase tracking-widest px-8 py-4 rounded-full transition-colors" data-cursor-text="Klik">
+                <a href="#keluarga" class="border border-paper/25 hover:bg-paper hover:text-ink text-paper font-bold text-sm uppercase tracking-widest px-8 py-4 rounded-full transition-colors" data-cursor-text="Klik">
                     Senarai Keluarga
                 </a>
             </div>
         </div>
 
-        <div class="relative z-10 reveal max-w-6xl mx-auto w-full flex justify-between items-end text-xs font-semibold uppercase tracking-widest text-inkSoft/70" style="--stagger:9">
+        <div class="relative z-10 reveal max-w-6xl mx-auto w-full flex justify-between items-end text-xs font-semibold uppercase tracking-widest text-paper/60 mt-12" style="--stagger:5">
             <span>Gulung untuk teroka</span>
-            <span class="animate-bounce text-terracotta"><i data-lucide="chevron-down" class="w-5 h-5"></i></span>
+            <span class="animate-bounce text-mustard"><i data-lucide="chevron-down" class="w-5 h-5"></i></span>
             <span>Sabtu &amp; Ahad</span>
         </div>
     </section>
@@ -704,7 +697,7 @@
             setTimeout(hidePreloader, 3500); // hard fallback
 
             function triggerHero() {
-                document.querySelectorAll('#hero .reveal, #hero .reveal-word').forEach(function (el) {
+                document.querySelectorAll('#hero .reveal, #hero .reveal-word, #hero .reveal-scale').forEach(function (el) {
                     el.classList.add('is-visible');
                 });
             }
@@ -784,15 +777,15 @@
             /* ------------------------------------------------------------ */
             if (hasGSAP && !prefersReduced) {
 
-                // Hero depth layers
-                gsap.utils.toArray('.hero-layer').forEach(function (layer) {
-                    var speed = parseFloat(layer.dataset.speed || '0.3');
-                    gsap.to(layer, {
-                        yPercent: speed * 30,
+                // Hero poster depth: drifts slower than the page as it scrolls past
+                var heroPoster = document.querySelector('.hero-poster');
+                if (heroPoster) {
+                    gsap.to(heroPoster, {
+                        yPercent: -12,
                         ease: 'none',
                         scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
                     });
-                });
+                }
 
                 // Curtain rise: next content lifts over the hero like a page turning up
                 if (isDesktop) {
