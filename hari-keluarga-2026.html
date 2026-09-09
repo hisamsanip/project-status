@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="ms">
+<script>document.documentElement.classList.add('js');</script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hari Keluarga Hj Sanip & Hjh Azizah 2026 — Bersama Eratkan Kasih Sayang. 26–27 September 2026, Chalet Teluk Belanga, Kuala Sungai Baru, Melaka.">
+    <meta name="theme-color" content="#F7F0E3">
+    <title>Hari Keluarga 2026 — Hj Sanip & Hjh Azizah</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Caveat:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Motion engine: GSAP + ScrollTrigger (scroll choreography, parallax, pinning) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <!-- Lenis: buttery smooth-scroll interpolation -->
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+    <!-- AlpineJS: lightweight state (nav, checklist, gallery index) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Lucide icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        paper: '#F7F0E3',
+                        paperDark: '#EDE1C6',
+                        paperDeep: '#E3D5B4',
+                        ink: '#382F26',
+                        inkSoft: '#6B5F4F',
+                        terracotta: '#C1663F',
+                        terracottaDeep: '#9C5030',
+                        sage: '#7C8A6B',
+                        sageDeep: '#5D6B4E',
+                        rose: '#C4726C',
+                        mustard: '#D9A441',
+                        denim: '#6C8CA0',
+                        plum: '#93728C',
+                        brown: '#8A6650',
+                    },
+                    fontFamily: {
+                        sans: ['"Work Sans"', 'sans-serif'],
+                        display: ['Fraunces', 'serif'],
+                        hand: ['Caveat', 'cursive'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* ==========================================================================
+           HARI KELUARGA 2026 — MOTION SYSTEM
+           A vintage, soft, cinematic scroll experience. Every rule below is scoped
+           to one job: loading, reveal, parallax/depth, pin choreography, cursor,
+           hover, or the reduced-motion kill-switch at the very bottom.
+
+           Principles:
+           1. Usability   — motion never gates content; pins never trap scroll.
+           2. Accessibility — reduced-motion strips everything to instant fades;
+                               native focus rings preserved; real <button>/<a>.
+           3. Responsiveness — pin/parallax/cursor disabled below lg or on touch.
+           4. Performance  — transform/opacity only, IO + ScrollTrigger batch
+                              reads, cursor runs on gsap.quickTo (rAF-coalesced).
+           5. Progressive enhancement — without JS (.js class absent) everything
+                              is simply visible; nothing depends on script to render.
+           ========================================================================== */
+
+        :root {
+            --ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
+            --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+            --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+            --dur-fast: 260ms;
+            --dur-base: 640ms;
+            --dur-slow: 1100ms;
+        }
+
+        html { scroll-behavior: auto; } /* Lenis / native fallback owns smoothing */
+        body { overflow-x: clip; }
+
+        ::selection { background: #C1663F; color: #F7F0E3; }
+        ::-webkit-scrollbar { width: 9px; }
+        ::-webkit-scrollbar-track { background: #F7F0E3; }
+        ::-webkit-scrollbar-thumb { background: #C1663F; border-radius: 999px; }
+
+        :focus-visible {
+            outline: 2.5px solid #C1663F;
+            outline-offset: 3px;
+            border-radius: 2px;
+        }
+
+        .skip-link {
+            position: absolute; left: 1rem; top: -4rem; z-index: 10001;
+            background: #382F26; color: #F7F0E3; padding: .75rem 1.25rem;
+            border-radius: 999px; font-weight: 600; transition: top var(--dur-fast) var(--ease-soft);
+        }
+        .skip-link:focus { top: 1rem; }
+
+        /* Paper grain — decorative, aria-hidden */
+        .grain-overlay {
+            position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: .05; mix-blend-mode: multiply;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        /* ---------------------------------------------------------------- */
+        /* PRELOADER — vintage wax-stamp seal, min-display handled in JS     */
+        /* ---------------------------------------------------------------- */
+        #preloader { display: none; }
+        .js #preloader {
+            display: flex;
+            transition: opacity 800ms var(--ease-soft), visibility 800ms var(--ease-soft);
+        }
+        .js #preloader.preloader-hide { opacity: 0; visibility: hidden; pointer-events: none; }
+        .seal-ring { stroke-dasharray: 320; stroke-dashoffset: 320; animation: sealDraw 1300ms var(--ease-cinematic) 150ms forwards; }
+        @keyframes sealDraw { to { stroke-dashoffset: 0; } }
+        .seal-mark { opacity: 0; transform: scale(.85); animation: sealMark 900ms var(--ease-cinematic) 700ms forwards; }
+        @keyframes sealMark { to { opacity: 1; transform: scale(1); } }
+        .preloader-caption { opacity: 0; animation: fadeUp 700ms var(--ease-soft) 1000ms forwards; }
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+        /* ---------------------------------------------------------------- */
+        /* SCROLL PROGRESS                                                   */
+        /* ---------------------------------------------------------------- */
+        #scroll-progress { transform: scaleX(0); transform-origin: left; will-change: transform; }
+
+        /* ---------------------------------------------------------------- */
+        /* REVEAL SYSTEM — gated behind .js so no-JS visitors see content     */
+        /* ---------------------------------------------------------------- */
+        .js .reveal, .js .reveal-scale, .js .reveal-word {
+            transition: opacity var(--dur-slow) var(--ease-cinematic), transform var(--dur-slow) var(--ease-cinematic), filter var(--dur-slow) var(--ease-cinematic);
+            transition-delay: calc(var(--stagger, 0) * 90ms);
+        }
+        .js .reveal { opacity: 0; transform: translateY(30px); }
+        .js .reveal.is-visible { opacity: 1; transform: translateY(0); }
+        .js .reveal-scale { opacity: 0; transform: scale(.94) translateY(18px); }
+        .js .reveal-scale.is-visible { opacity: 1; transform: scale(1) translateY(0); }
+        .js .reveal-word { display: inline-block; opacity: 0; filter: blur(6px); transform: translateY(.35em); }
+        .js .reveal-word.is-visible { opacity: 1; filter: blur(0); transform: translateY(0); }
+
+        /* ---------------------------------------------------------------- */
+        /* HERO — layered parallax + curtain rise handled via GSAP inline    */
+        /* ---------------------------------------------------------------- */
+        #hero { will-change: auto; }
+        .hero-layer { will-change: transform; }
+        .float-slow { animation: floatSlow 7s ease-in-out infinite; }
+        .float-slower { animation: floatSlow 10s ease-in-out infinite; }
+        @keyframes floatSlow { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-14px) rotate(2deg); } }
+        #curtain {
+            border-radius: 40px 40px 0 0;
+            box-shadow: 0 -30px 60px -20px rgba(56,47,38,.25);
+        }
+
+        /* ---------------------------------------------------------------- */
+        /* NAV                                                                */
+        /* ---------------------------------------------------------------- */
+        #site-nav { transition: background-color var(--dur-base) var(--ease-soft), box-shadow var(--dur-base) var(--ease-soft), border-color var(--dur-base) var(--ease-soft); }
+        .nav-link { position: relative; }
+        .nav-link::after { content: ''; position: absolute; left: 0; right: 100%; bottom: -4px; height: 2px; background: currentColor; transition: right var(--dur-base) var(--ease-soft); }
+        .nav-link:hover::after, .nav-link.active::after { right: 0; }
+
+        /* ---------------------------------------------------------------- */
+        /* MAGNETIC BUTTONS + TILT CARDS (JS drives transform via gsap)      */
+        /* ---------------------------------------------------------------- */
+        .magnetic { transition: background-color var(--dur-base) var(--ease-soft), color var(--dur-base) var(--ease-soft); will-change: transform; }
+        .tilt-card { transform-style: preserve-3d; will-change: transform; transition: box-shadow var(--dur-base) var(--ease-soft); }
+        .tilt-card:hover, .tilt-card:focus-within { box-shadow: 0 26px 40px -18px rgba(56,47,38,.35); }
+
+        /* ---------------------------------------------------------------- */
+        /* TIMELINE LINE-DRAW (Tentatif Program)                             */
+        /* ---------------------------------------------------------------- */
+        .timeline-track { position: relative; }
+        .timeline-line { transform: scaleY(0); transform-origin: top; will-change: transform; }
+
+        /* ---------------------------------------------------------------- */
+        /* FAMILY GALLERY — pinned horizontal scroll on desktop only         */
+        /* ---------------------------------------------------------------- */
+        #gallery-track { will-change: transform; }
+        .family-card { transform: rotate(var(--tilt, 0deg)); transition: transform var(--dur-base) var(--ease-soft), box-shadow var(--dur-base) var(--ease-soft); }
+        .family-card:hover, .family-card:focus-within { transform: rotate(0deg) translateY(-6px); box-shadow: 0 30px 45px -20px rgba(56,47,38,.4); }
+        .gallery-dot { transition: background-color var(--dur-fast) var(--ease-soft), transform var(--dur-fast) var(--ease-soft); }
+        .gallery-dot.is-active { transform: scale(1.4); }
+
+        /* ---------------------------------------------------------------- */
+        /* CUSTOM CURSOR — desktop, fine pointer, motion-enabled only        */
+        /* ---------------------------------------------------------------- */
+        #cursor-dot, #cursor-ring { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 10000; border-radius: 999px; transform: translate(-50%, -50%); mix-blend-mode: multiply; }
+        #cursor-dot { width: 7px; height: 7px; background: #C1663F; opacity: 0; }
+        #cursor-ring { width: 44px; height: 44px; border: 1.5px solid #9C5030; opacity: 0; display: flex; align-items: center; justify-content: center; }
+        #cursor-ring span { font-family: 'Caveat', cursive; font-size: 15px; color: #9C5030; opacity: 0; transition: opacity var(--dur-fast) var(--ease-soft); white-space: nowrap; }
+        .cursor-ready #cursor-dot, .cursor-ready #cursor-ring { opacity: 1; }
+        .cursor-hover #cursor-ring { width: 76px; height: 76px; background: rgba(193,102,63,.08); border-color: #C1663F; }
+        .cursor-hover #cursor-ring span { opacity: 1; }
+        .cursor-hide-native, .cursor-hide-native a, .cursor-hide-native button { cursor: none !important; }
+
+        /* checklist checkmark draw */
+        .check-path { stroke-dasharray: 24; stroke-dashoffset: 24; transition: stroke-dashoffset var(--dur-base) var(--ease-cinematic); }
+        [aria-pressed="true"] .check-path { stroke-dashoffset: 0; }
+
+        /* ---------------------------------------------------------------- */
+        /* REDUCED MOTION — the kill-switch. Every effect above collapses.   */
+        /* ---------------------------------------------------------------- */
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .js #preloader { display: none !important; }
+            .js .reveal, .js .reveal-scale, .js .reveal-word,
+            .hero-layer, .float-slow, .float-slower, .magnetic, .tilt-card,
+            .timeline-line, #gallery-track, .family-card, #curtain {
+                animation: none !important;
+                transition: none !important;
+                transform: none !important;
+                filter: none !important;
+                opacity: 1 !important;
+            }
+            #cursor-dot, #cursor-ring { display: none !important; }
+        }
+
+        @media (max-width: 1023px) {
+            #cursor-dot, #cursor-ring { display: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-paper text-ink font-sans antialiased selection:bg-terracotta selection:text-paper" x-data="{ mobileMenu: false, scrolled: false }" @scroll.window.throttle.150ms="scrolled = window.scrollY > 40">
+
+    <a href="#main" class="skip-link">Langkau ke kandungan utama</a>
+
+    <!-- Preloader -->
+    <div id="preloader" class="fixed inset-0 z-[10000] bg-ink items-center justify-center" aria-hidden="true">
+        <div class="flex flex-col items-center gap-5">
+            <svg width="96" height="96" viewBox="0 0 96 96" class="overflow-visible">
+                <circle class="seal-ring" cx="48" cy="48" r="42" fill="none" stroke="#D9A441" stroke-width="1.5"/>
+                <g class="seal-mark">
+                    <circle cx="48" cy="48" r="30" fill="none" stroke="#F7F0E3" stroke-width="1"/>
+                    <text x="48" y="54" text-anchor="middle" font-family="Caveat, cursive" font-size="22" fill="#F7F0E3">HK</text>
+                </g>
+            </svg>
+            <p class="preloader-caption translate-y-2 font-hand text-2xl text-paper/80 tracking-wide">Menyediakan kenangan...</p>
+        </div>
+    </div>
+    <span class="sr-only" role="status" aria-live="polite" id="loading-status"></span>
+
+    <!-- Scroll progress -->
+    <div class="fixed top-0 left-0 right-0 h-[2px] z-[60] bg-ink/10" aria-hidden="true">
+        <div id="scroll-progress" class="h-full bg-terracotta"></div>
+    </div>
+
+    <div class="grain-overlay" aria-hidden="true"></div>
+
+    <!-- Custom cursor -->
+    <div id="cursor-dot" aria-hidden="true"></div>
+    <div id="cursor-ring" aria-hidden="true"><span id="cursor-text"></span></div>
+
+    <!-- NAV -->
+    <header class="fixed top-0 left-0 right-0 z-50 px-4 md:px-6 py-4">
+        <nav id="site-nav" :class="scrolled ? 'bg-paper/95 shadow-md border-ink/15' : 'bg-paper/75 shadow-sm border-ink/10'" class="max-w-6xl mx-auto backdrop-blur-md border-2 border-dashed rounded-full px-6 py-3 flex items-center justify-between">
+            <a href="#hero" class="flex items-center gap-2" data-cursor-text="Atas">
+                <span class="w-2.5 h-2.5 rounded-full bg-terracotta"></span>
+                <span class="font-display font-semibold text-lg tracking-tight text-ink">Hari Keluarga <span class="text-terracotta">'26</span></span>
+            </a>
+
+            <div class="hidden lg:flex items-center gap-7 font-semibold text-xs tracking-widest uppercase text-inkSoft">
+                <a href="#program" class="nav-link hover:text-terracotta transition-colors">Program</a>
+                <a href="#tentatif" class="nav-link hover:text-terracotta transition-colors">Tentatif</a>
+                <a href="#keluarga" class="nav-link hover:text-terracotta transition-colors">Keluarga</a>
+                <a href="#aktiviti" class="nav-link hover:text-terracotta transition-colors">Aktiviti</a>
+                <a href="#penginapan" class="nav-link hover:text-terracotta transition-colors">Penginapan</a>
+                <a href="#keperluan" class="nav-link hover:text-terracotta transition-colors">Keperluan</a>
+            </div>
+
+            <a href="#tentatif" class="magnetic hidden sm:inline-flex bg-ink hover:bg-terracotta text-paper font-bold text-xs uppercase tracking-widest px-5 py-2.5 rounded-full" data-cursor-text="Klik">
+                Lihat Tentatif
+            </a>
+
+            <button @click="mobileMenu = !mobileMenu" class="lg:hidden text-ink p-1" :aria-expanded="mobileMenu" aria-controls="mobile-drawer" aria-label="Buka menu">
+                <i data-lucide="menu" x-show="!mobileMenu"></i>
+                <i data-lucide="x" x-show="mobileMenu"></i>
+            </button>
+        </nav>
+
+        <div id="mobile-drawer" x-show="mobileMenu" x-transition x-cloak class="lg:hidden absolute top-20 left-4 right-4 bg-paper border-2 border-dashed border-ink rounded-3xl p-6 shadow-2xl flex flex-col gap-4 font-display text-lg text-ink">
+            <a @click="mobileMenu=false" href="#program" class="hover:text-terracotta">Program</a>
+            <a @click="mobileMenu=false" href="#tentatif" class="hover:text-terracotta">Tentatif</a>
+            <a @click="mobileMenu=false" href="#keluarga" class="hover:text-terracotta">Keluarga</a>
+            <a @click="mobileMenu=false" href="#aktiviti" class="hover:text-terracotta">Aktiviti</a>
+            <a @click="mobileMenu=false" href="#penginapan" class="hover:text-terracotta">Penginapan</a>
+            <a @click="mobileMenu=false" href="#keperluan" class="hover:text-terracotta">Keperluan</a>
+        </div>
+    </header>
+
+    <main id="main">
+    <!-- HERO -->
+    <section id="hero" class="relative min-h-screen flex flex-col justify-between pt-28 pb-10 px-4 md:px-8 overflow-hidden bg-paperDark">
+
+        <!-- Decorative depth layers (inline SVG, no external assets) -->
+        <svg class="hero-layer absolute inset-0 w-full h-full" data-speed="0.15" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+            <circle cx="1180" cy="180" r="150" fill="#D9A441" opacity="0.25"/>
+        </svg>
+        <svg class="hero-layer absolute inset-0 w-full h-full" data-speed="0.35" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+            <path d="M0,620 C 240,560 380,660 620,610 C 900,555 1080,650 1440,600 L1440,900 L0,900 Z" fill="#C1663F" opacity="0.14"/>
+        </svg>
+        <svg class="hero-layer absolute inset-0 w-full h-full" data-speed="0.6" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+            <path d="M0,700 C 260,650 420,730 700,690 C 980,650 1140,720 1440,680 L1440,900 L0,900 Z" fill="#7C8A6B" opacity="0.16"/>
+        </svg>
+        <svg class="hero-layer absolute inset-0 w-full h-full" data-speed="0.85" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+            <path d="M0,780 C 300,740 480,800 760,760 C 1040,720 1200,790 1440,750 L1440,900 L0,900 Z" fill="#9C5030" opacity="0.18"/>
+        </svg>
+
+        <span class="float-slow absolute top-32 left-[8%] text-3xl select-none hidden md:inline" aria-hidden="true">🐚</span>
+        <span class="float-slower absolute top-[38%] right-[10%] text-3xl select-none hidden md:inline" aria-hidden="true">☀️</span>
+        <span class="float-slow absolute bottom-[30%] left-[16%] text-2xl select-none hidden md:inline" aria-hidden="true">🌊</span>
+
+        <div class="relative z-10 reveal max-w-6xl mx-auto w-full flex justify-between items-start text-[11px] font-semibold tracking-widest uppercase text-inkSoft/70">
+            <span>Chalet Teluk Belanga, Melaka</span>
+            <span>26–27 Sept 2026</span>
+        </div>
+
+        <div class="relative z-10 max-w-4xl mx-auto w-full my-auto py-12 flex flex-col items-center text-center">
+            <div class="reveal inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-dashed border-terracotta/50 bg-paper/70 text-[11px] uppercase tracking-widest text-terracottaDeep mb-8" style="--stagger:0">
+                <i data-lucide="sun" class="w-3.5 h-3.5"></i> Program Hari Keluarga
+            </div>
+
+            <h1 class="font-display font-medium leading-[1.02] mb-4" style="font-size: clamp(2.5rem, 7vw, 5.5rem);">
+                <span class="reveal-word" style="--stagger:1">Hari</span> <span class="reveal-word" style="--stagger:2">Keluarga</span><br>
+                <span class="reveal-word text-terracotta italic" style="--stagger:3">Hj&nbsp;Sanip</span> <span class="reveal-word" style="--stagger:4">&amp;</span> <span class="reveal-word text-terracotta italic" style="--stagger:5">Hjh&nbsp;Azizah</span>
+            </h1>
+
+            <p class="reveal font-hand text-3xl md:text-4xl text-sageDeep mb-10" style="--stagger:6">"Bersama Eratkan Kasih Sayang"</p>
+
+            <div class="reveal flex flex-wrap justify-center gap-x-8 gap-y-3 text-xs md:text-sm font-semibold tracking-wide uppercase border-y border-dashed border-ink/20 py-4 px-8 mb-10 bg-paper/50" style="--stagger:7">
+                <span class="flex items-center gap-2"><i data-lucide="calendar-heart" class="w-4 h-4 text-terracotta"></i> 26–27 September 2026</span>
+                <span class="text-ink/25">•</span>
+                <span class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-terracotta"></i> Chalet Teluk Belanga, Kuala Sungai Baru</span>
+                <span class="text-ink/25">•</span>
+                <span class="flex items-center gap-2"><i data-lucide="users" class="w-4 h-4 text-terracotta"></i> 9 Keluarga · 46 Orang</span>
+            </div>
+
+            <div class="reveal flex flex-col sm:flex-row gap-4" style="--stagger:8">
+                <a href="#tentatif" class="magnetic bg-terracotta hover:bg-terracottaDeep text-paper font-bold text-sm uppercase tracking-widest px-8 py-4 rounded-full inline-flex items-center justify-center gap-2 group" data-cursor-text="Klik">
+                    Lihat Tentatif Program <i data-lucide="arrow-down" class="w-4 h-4 group-hover:translate-y-1 transition-transform"></i>
+                </a>
+                <a href="#keluarga" class="border border-ink/25 hover:bg-ink hover:text-paper text-ink font-bold text-sm uppercase tracking-widest px-8 py-4 rounded-full transition-colors" data-cursor-text="Klik">
+                    Senarai Keluarga
+                </a>
+            </div>
+        </div>
+
+        <div class="relative z-10 reveal max-w-6xl mx-auto w-full flex justify-between items-end text-xs font-semibold uppercase tracking-widest text-inkSoft/70" style="--stagger:9">
+            <span>Gulung untuk teroka</span>
+            <span class="animate-bounce text-terracotta"><i data-lucide="chevron-down" class="w-5 h-5"></i></span>
+            <span>Sabtu &amp; Ahad</span>
+        </div>
+    </section>
+
+    <!-- Curtain wrapper: soft page-rise scene transition out of the hero -->
+    <div id="curtain" class="relative z-10 bg-paper -mt-10">
+
+    <!-- SECTION — PENGENALAN & OBJEKTIF -->
+    <section id="program" class="py-24 px-4 md:px-8 max-w-6xl mx-auto scroll-mt-24">
+        <div class="reveal flex flex-col md:flex-row gap-4 items-baseline mb-14">
+            <span class="font-display text-4xl md:text-5xl text-terracotta italic">01</span>
+            <span class="font-mono text-xs uppercase tracking-widest text-inkSoft">// Maklumat Program &amp; Objektif</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <div class="reveal lg:col-span-6 space-y-6" style="--stagger:1">
+                <h2 class="font-display text-4xl md:text-5xl leading-tight text-ink">Satu hujung minggu, sembilan keluarga, satu ikatan.</h2>
+                <p class="text-inkSoft leading-relaxed text-lg">
+                    Program ini menghimpunkan 9 buah keluarga dalam satu aktiviti santai dan riadah di tepi pantai bagi memberi ruang kepada semua ahli keluarga meluangkan masa berkualiti bersama.
+                </p>
+
+                <div class="reveal-scale grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4" style="--stagger:2">
+                    <div class="tilt-card bg-paperDark/70 border border-dashed border-ink/20 rounded-2xl p-4 text-center">
+                        <span class="font-display text-3xl font-semibold text-ink block js-count" data-target="9">0</span>
+                        <span class="text-[11px] uppercase tracking-wider text-inkSoft font-semibold">Keluarga</span>
+                    </div>
+                    <div class="tilt-card bg-paperDark/70 border border-dashed border-ink/20 rounded-2xl p-4 text-center">
+                        <span class="font-display text-3xl font-semibold text-ink block js-count" data-target="28">0</span>
+                        <span class="text-[11px] uppercase tracking-wider text-inkSoft font-semibold">Dewasa</span>
+                    </div>
+                    <div class="tilt-card bg-paperDark/70 border border-dashed border-ink/20 rounded-2xl p-4 text-center">
+                        <span class="font-display text-3xl font-semibold text-ink block js-count" data-target="18">0</span>
+                        <span class="text-[11px] uppercase tracking-wider text-inkSoft font-semibold">Kanak-Kanak</span>
+                    </div>
+                    <div class="tilt-card bg-terracotta text-paper rounded-2xl p-4 text-center">
+                        <span class="font-display text-3xl font-semibold block js-count" data-target="46">0</span>
+                        <span class="text-[11px] uppercase tracking-wider font-semibold opacity-90">Jumlah Orang</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reveal lg:col-span-6" style="--stagger:2">
+                <div class="bg-ink text-paper rounded-3xl p-8 md:p-10">
+                    <h3 class="font-display text-2xl mb-6 text-mustard">Objektif Utama</h3>
+                    <ul class="space-y-4">
+                        <li class="reveal flex gap-4 items-start" style="--stagger:0"><i data-lucide="heart-handshake" class="w-5 h-5 text-terracotta shrink-0 mt-1"></i><span class="text-paper/85 leading-relaxed">Mengeratkan hubungan silaturahim antara adik-beradik dan ahli keluarga.</span></li>
+                        <li class="reveal flex gap-4 items-start" style="--stagger:1"><i data-lucide="users-round" class="w-5 h-5 text-terracotta shrink-0 mt-1"></i><span class="text-paper/85 leading-relaxed">Memupuk semangat kerjasama dan toleransi dalam keluarga.</span></li>
+                        <li class="reveal flex gap-4 items-start" style="--stagger:2"><i data-lucide="palmtree" class="w-5 h-5 text-terracotta shrink-0 mt-1"></i><span class="text-paper/85 leading-relaxed">Memberi peluang kepada ahli keluarga berehat dan beriadah bersama.</span></li>
+                        <li class="reveal flex gap-4 items-start" style="--stagger:3"><i data-lucide="camera" class="w-5 h-5 text-terracotta shrink-0 mt-1"></i><span class="text-paper/85 leading-relaxed">Mewujudkan kenangan manis melalui aktiviti santai dan sukaneka keluarga.</span></li>
+                        <li class="reveal flex gap-4 items-start" style="--stagger:4"><i data-lucide="sparkles" class="w-5 h-5 text-terracotta shrink-0 mt-1"></i><span class="text-paper/85 leading-relaxed">Menyemai nilai kasih sayang dan kebersamaan antara generasi.</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION — TENTATIF PROGRAM (scrubbed line-draw timeline) -->
+    <section id="tentatif" class="py-24 px-4 md:px-8 max-w-6xl mx-auto scroll-mt-24">
+        <div class="reveal flex flex-col md:flex-row gap-4 items-baseline mb-14">
+            <span class="font-display text-4xl md:text-5xl text-terracotta italic">02</span>
+            <span class="font-mono text-xs uppercase tracking-widest text-inkSoft">// Tentatif Program</span>
+        </div>
+        <h2 class="reveal font-display text-4xl md:text-6xl text-ink mb-16 max-w-2xl" style="--stagger:1">Dua hari penuh kenangan.</h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            <!-- DAY 1 -->
+            <div>
+                <div class="reveal flex items-center gap-3 mb-8">
+                    <span class="bg-terracotta text-paper text-xs font-bold uppercase px-3 py-1.5 rounded-full">Hari Pertama</span>
+                    <span class="font-display text-xl text-ink">Sabtu, 26 September</span>
+                </div>
+                <div class="timeline-track pl-9 relative">
+                    <div class="timeline-line absolute left-[7px] top-1 bottom-1 w-[2px] bg-terracotta/40" data-timeline aria-hidden="true"></div>
+                    <div class="space-y-8">
+                        <div class="reveal timeline-stop relative" style="--stagger:0"><span class="absolute -left-9 top-0.5 w-4 h-4 rounded-full bg-terracotta border-2 border-paper"></span><span class="font-mono text-xs font-bold text-terracottaDeep">2.00 ptg</span><p class="font-display text-lg text-ink">Pendaftaran &amp; Check-in</p></div>
+                        <div class="reveal timeline-stop relative" style="--stagger:1"><span class="absolute -left-9 top-0.5 w-4 h-4 rounded-full bg-terracotta/70 border-2 border-paper"></span><span class="font-mono text-xs font-bold text-terracottaDeep">3.00 ptg</span><p class="font-display text-lg text-ink">Minum petang</p></div>
+                        <div class="reveal timeline-stop relative" style="--stagger:2"><span class="absolute -left-9 top-0.5 w-4 h-4 rounded-full bg-denim border-2 border-paper"></span><span class="font-mono text-xs font-bold text-terracottaDeep">4.00 ptg</span><p class="font-display text-lg text-ink">Mandi kolam</p></div>
+                        <div class="reveal timeline-stop relative" style="--stagger:3"><span class="absolute -left-9 top-0.5 w-4 h-4 rounded-full bg-sage border-2 border-paper"></span><span class="font-mono text-xs font-bold text-terracottaDeep">4.30 ptg</span><p class="font-display text-lg text-ink">Aktiviti pantai / Sukaneka</p></div>
+                        <div class="reveal timeline-stop relative" style="--stagger:4"><span class="absolute -left-9 top-0.5 w-4 h-4 rounded-full bg-terracotta/70 border-2 border-paper"></span><span class="font-mono text-xs font-bold text-terracottaDeep">6.30 ptg</span><p class="font-display text-lg text-ink">Persiapan diri</p></div>
+                        <div class="reveal timeline-stop relative" style="--stagger:5"><span class="absolute -left-9 top-0.5 w-4 h-4 rounded-full bg-plum border-2 border-paper"></span><span class="font-mono text-xs font-bold text-terracottaDeep">7.15 mlm</span><p class="font-display text-lg text-ink">Solat Maghrib, Tahlil, Isyak</p></div>
+                        <div class="reveal timeline-stop relative" style="--stagger:6"><span class="absolute -left-9 top-0.5 w-4 h-4 rounded-full bg-terracotta border-2 border-paper"></span><span class="font-mono text-xs font-bold text-terracottaDeep">8.40 mlm</span><p class="font-display text-lg text-ink">BBQ &amp; Makan malam</p></div>
+                        <div class="reveal timeline-stop relative" style="--stagger:7"><span class="absolute -left-9 top-0.5 w-4 h-4 rounded-full bg-mustard border-2 border-paper"></span><span class="font-mono text-xs font-bold text-terracottaDeep">9.00 mlm</span><p class="font-display text-lg text-ink">Malam santai keluarga</p></div>
+                        <div class="reveal timeline-stop relative" style="--stagger:8"><span class="absolute -left-9 top-0.5 w-4 h-4 rounded-full bg-rose border-2 border-paper"></span><span class="font-mono text-xs font-bold text-terracottaDeep">9.30 mlm</span><p class="font-display text-lg text-ink">Hadiah bertema warna</p></div>
+                        <div class="reveal timeline-stop relative" style="--stagger:9"><span class="absolute -left-9 top-0.5 w-4 h-4 rounded-full bg-ink/60 border-2 border-paper"></span><span class="font-mono text-xs font-bold text-terracottaDeep">11.00 mlm</span><p class="font-display text-lg text-ink">Rehat / Tidur</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DAY 2 -->
+            <div>
+                <div class="reveal flex items-center gap-3 mb-8">
+                    <span class="bg-sageDeep text-paper text-xs font-bold uppercase px-3 py-1.5 rounded-full">Hari Kedua</span>
+                    <span class="font-display text-xl text-ink">Ahad, 27 September</span>
+                </div>
+                <div class="timeline-track pl-9 relative">
+                    <div class="timeline-line absolute left-[7px] top-1 bottom-1 w-[2px] bg-sage/40" data-timeline aria-hidden="true"></div>
+                    <div class="space-y-8">
+                        <div class="reveal timeline-stop relative" style="--stagger:0"><span class="absolute -left-9 top-0.5 w-4 h-4 rounded-full bg-sage border-2 border-paper"></span><span class="font-mono text-xs font-bold text-sageDeep">7.00 pagi</span><p class="font-display text-lg text-ink">Pemeriksaan kesihatan</p><p class="text-xs text-inkSoft">Dr Amirudin, Dr Farhana, Nurse Syakirah</p></div>
+                        <div class="reveal timeline-stop relative" style="--stagger:1"><span class="absolute -left-9 top-0.5 w-4 h-4 rounded-full bg-terracotta/70 border-2 border-paper"></span><span class="font-mono text-xs font-bold text-sageDeep">8.00 pagi</span><p class="font-display text-lg text-ink">Senamrobik / Jalan pagi</p></div>
+                        <div class="reveal timeline-stop relative" style="--stagger:2"><span class="absolute -left-9 top-0.5 w-4 h-4 rounded-full bg-mustard border-2 border-paper"></span><span class="font-mono text-xs font-bold text-sageDeep">9.00 pagi</span><p class="font-display text-lg text-ink">Sarapan pagi</p></div>
+                        <div class="reveal timeline-stop relative" style="--stagger:3"><span class="absolute -left-9 top-0.5 w-4 h-4 rounded-full bg-denim border-2 border-paper"></span><span class="font-mono text-xs font-bold text-sageDeep">9.30 pagi</span><p class="font-display text-lg text-ink">Santai dan mandi kolam</p></div>
+                        <div class="reveal timeline-stop relative" style="--stagger:4"><span class="absolute -left-9 top-0.5 w-4 h-4 rounded-full bg-terracotta border-2 border-paper"></span><span class="font-mono text-xs font-bold text-sageDeep">10.30 pagi</span><p class="font-display text-lg text-ink">Makan tengah hari</p></div>
+                        <div class="reveal timeline-stop relative" style="--stagger:5"><span class="absolute -left-9 top-0.5 w-4 h-4 rounded-full bg-brown border-2 border-paper"></span><span class="font-mono text-xs font-bold text-sageDeep">11.30 pagi</span><p class="font-display text-lg text-ink">Berkemas</p></div>
+                        <div class="reveal timeline-stop relative" style="--stagger:6"><span class="absolute -left-9 top-0.5 w-4 h-4 rounded-full bg-rose border-2 border-paper"></span><span class="font-mono text-xs font-bold text-sageDeep">12.00 tgh</span><p class="font-display text-lg text-ink">Sesi bergambar &amp; Checkout</p></div>
+                    </div>
+                </div>
+
+                <div class="reveal-scale mt-10 bg-sageDeep text-paper rounded-3xl p-6" style="--stagger:1">
+                    <p class="font-hand text-2xl text-mustard">"Bersama eratkan kasih sayang, sehingga bertemu lagi tahun depan."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION — SENARAI KELUARGA (pinned horizontal gallery) -->
+    <section id="keluarga" class="py-24 scroll-mt-24">
+        <div class="px-4 md:px-8 max-w-6xl mx-auto">
+            <div class="reveal flex flex-col md:flex-row gap-4 items-baseline mb-6">
+                <span class="font-display text-4xl md:text-5xl text-terracotta italic">03</span>
+                <span class="font-mono text-xs uppercase tracking-widest text-inkSoft">// Senarai Keluarga &amp; Agihan Bilik</span>
+            </div>
+            <h2 class="reveal font-display text-4xl md:text-6xl text-ink mb-4" style="--stagger:1">9 keluarga, 9 warna.</h2>
+            <p class="reveal text-inkSoft max-w-xl mb-4" style="--stagger:2">Setiap keluarga membawa temanya sendiri. <span class="hidden lg:inline">Gulung untuk menatal galeri.</span></p>
+        </div>
+
+        <div id="gallery-wrapper" class="relative">
+            <div id="gallery-viewport" class="overflow-hidden lg:overflow-visible px-4 md:px-8">
+                <div id="gallery-track" class="flex gap-6 lg:gap-8 overflow-x-auto lg:overflow-visible snap-x snap-mandatory pb-6 lg:pb-0 max-w-6xl mx-auto lg:max-w-none lg:w-max">
+
+                    <article class="family-card snap-center shrink-0 w-64 md:w-72 bg-paper border-2 border-ink/15 rounded-3xl p-6 shadow-lg" style="--tilt:-2deg" tabindex="0" data-cursor-text="Lihat">
+                        <div class="w-10 h-10 rounded-full mb-6 border-2 border-ink/10" style="background:#B8564B"></div>
+                        <h3 class="font-display text-2xl text-ink mb-1">Kakak</h3>
+                        <p class="text-sm text-inkSoft mb-4">6 Orang · Bilik 3 (Bawah)</p>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-terracottaDeep">Tema: Merah</span>
+                    </article>
+
+                    <article class="family-card snap-center shrink-0 w-64 md:w-72 bg-paper border-2 border-ink/15 rounded-3xl p-6 shadow-lg" style="--tilt:1.5deg" tabindex="0" data-cursor-text="Lihat">
+                        <div class="w-10 h-10 rounded-full mb-6 border-2 border-ink/10" style="background:#6C8CA0"></div>
+                        <h3 class="font-display text-2xl text-ink mb-1">Hisam</h3>
+                        <p class="text-sm text-inkSoft mb-4">6 Orang · Bilik 9 (Atas)</p>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-terracottaDeep">Tema: Biru</span>
+                    </article>
+
+                    <article class="family-card snap-center shrink-0 w-64 md:w-72 bg-paper border-2 border-ink/15 rounded-3xl p-6 shadow-lg" style="--tilt:-1deg" tabindex="0" data-cursor-text="Lihat">
+                        <div class="w-10 h-10 rounded-full mb-6 border-2 border-ink/10" style="background:#7C8A6B"></div>
+                        <h3 class="font-display text-2xl text-ink mb-1">Nain</h3>
+                        <p class="text-sm text-inkSoft mb-4">5 Orang · Bilik 8 (Atas)</p>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-terracottaDeep">Tema: Hijau</span>
+                    </article>
+
+                    <article class="family-card snap-center shrink-0 w-64 md:w-72 bg-paper border-2 border-ink/15 rounded-3xl p-6 shadow-lg" style="--tilt:2deg" tabindex="0" data-cursor-text="Lihat">
+                        <div class="w-10 h-10 rounded-full mb-6 border-2 border-ink/10" style="background:#D9A441"></div>
+                        <h3 class="font-display text-2xl text-ink mb-1">Akim</h3>
+                        <p class="text-sm text-inkSoft mb-4">6 Orang · Bilik 6 (Atas)</p>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-terracottaDeep">Tema: Kuning</span>
+                    </article>
+
+                    <article class="family-card snap-center shrink-0 w-64 md:w-72 bg-paper border-2 border-ink/15 rounded-3xl p-6 shadow-lg" style="--tilt:-1.5deg" tabindex="0" data-cursor-text="Lihat">
+                        <div class="w-10 h-10 rounded-full mb-6 border-2 border-ink/20" style="background:#F7F0E3"></div>
+                        <h3 class="font-display text-2xl text-ink mb-1">Ayun</h3>
+                        <p class="text-sm text-inkSoft mb-4">5 Orang · Bilik 7 (Atas)</p>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-terracottaDeep">Tema: Putih</span>
+                    </article>
+
+                    <article class="family-card snap-center shrink-0 w-64 md:w-72 bg-paper border-2 border-ink/15 rounded-3xl p-6 shadow-lg" style="--tilt:1deg" tabindex="0" data-cursor-text="Lihat">
+                        <div class="w-10 h-10 rounded-full mb-6 border-2 border-ink/10" style="background:#3A322A"></div>
+                        <h3 class="font-display text-2xl text-ink mb-1">Pian</h3>
+                        <p class="text-sm text-inkSoft mb-4">4 Orang · Bilik 4 (Bawah)</p>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-terracottaDeep">Tema: Hitam</span>
+                    </article>
+
+                    <article class="family-card snap-center shrink-0 w-64 md:w-72 bg-paper border-2 border-ink/15 rounded-3xl p-6 shadow-lg" style="--tilt:-2.5deg" tabindex="0" data-cursor-text="Lihat">
+                        <div class="w-10 h-10 rounded-full mb-6 border-2 border-ink/10" style="background:#93728C"></div>
+                        <h3 class="font-display text-2xl text-ink mb-1">Intan</h3>
+                        <p class="text-sm text-inkSoft mb-4">5 Orang · Bilik 2 (Bawah)</p>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-terracottaDeep">Tema: Ungu</span>
+                    </article>
+
+                    <article class="family-card snap-center shrink-0 w-64 md:w-72 bg-paper border-2 border-ink/15 rounded-3xl p-6 shadow-lg" style="--tilt:2deg" tabindex="0" data-cursor-text="Lihat">
+                        <div class="w-10 h-10 rounded-full mb-6 border-2 border-ink/10" style="background:#C1663F"></div>
+                        <h3 class="font-display text-2xl text-ink mb-1">Ezai</h3>
+                        <p class="text-sm text-inkSoft mb-4">4 Orang · Bilik 1 (Bawah)</p>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-terracottaDeep">Tema: Oren</span>
+                    </article>
+
+                    <article class="family-card snap-center shrink-0 w-64 md:w-72 bg-paper border-2 border-ink/15 rounded-3xl p-6 shadow-lg" style="--tilt:-1deg" tabindex="0" data-cursor-text="Lihat">
+                        <div class="w-10 h-10 rounded-full mb-6 border-2 border-ink/10" style="background:#8A6650"></div>
+                        <h3 class="font-display text-2xl text-ink mb-1">Adin</h3>
+                        <p class="text-sm text-inkSoft mb-4">6 Orang · Bilik 5 (Bawah)</p>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-terracottaDeep">Tema: Coklat</span>
+                    </article>
+
+                </div>
+            </div>
+
+            <div id="gallery-dots" class="hidden lg:flex justify-center gap-2 mt-10" role="tablist" aria-label="Kedudukan galeri keluarga">
+                <!-- populated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION — AKTIVITI UTAMA -->
+    <section id="aktiviti" class="py-24 px-4 md:px-8 max-w-6xl mx-auto scroll-mt-24">
+        <div class="reveal flex flex-col md:flex-row gap-4 items-baseline mb-14">
+            <span class="font-display text-4xl md:text-5xl text-terracotta italic">04</span>
+            <span class="font-mono text-xs uppercase tracking-widest text-inkSoft">// Aktiviti Utama</span>
+        </div>
+        <h2 class="reveal font-display text-4xl md:text-5xl text-ink mb-10" style="--stagger:1">Sesuatu untuk semua orang.</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="tilt-card reveal-scale bg-denim/10 border-2 border-dashed border-denim/40 rounded-3xl p-8" style="--stagger:0" tabindex="0">
+                <i data-lucide="waves" class="w-8 h-8 text-denim mb-4"></i>
+                <h3 class="font-display text-2xl text-ink mb-3">Dewasa</h3>
+                <ul class="space-y-2 text-inkSoft text-sm">
+                    <li>Bola tampar pantai</li>
+                    <li>Memancing</li>
+                    <li>Sembang santai</li>
+                </ul>
+            </div>
+            <div class="tilt-card reveal-scale bg-mustard/10 border-2 border-dashed border-mustard/50 rounded-3xl p-8" style="--stagger:1" tabindex="0">
+                <i data-lucide="party-popper" class="w-8 h-8 text-mustard mb-4"></i>
+                <h3 class="font-display text-2xl text-ink mb-3">Kanak-Kanak</h3>
+                <ul class="space-y-2 text-inkSoft text-sm">
+                    <li>Cari gula-gula dalam tepung</li>
+                    <li>Baling belon air</li>
+                    <li>Musical chair</li>
+                </ul>
+            </div>
+            <div class="tilt-card reveal-scale bg-terracotta/10 border-2 border-dashed border-terracotta/50 rounded-3xl p-8" style="--stagger:2" tabindex="0">
+                <i data-lucide="flame" class="w-8 h-8 text-terracotta mb-4"></i>
+                <h3 class="font-display text-2xl text-ink mb-3">Santai</h3>
+                <ul class="space-y-2 text-inkSoft text-sm">
+                    <li>BBQ keluarga</li>
+                    <li>Hadiah bertema warna</li>
+                    <li>TikTok / video kenangan</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION — INFO PENGINAPAN -->
+    <section id="penginapan" class="py-24 px-4 md:px-8 max-w-6xl mx-auto scroll-mt-24">
+        <div class="reveal flex flex-col md:flex-row gap-4 items-baseline mb-14">
+            <span class="font-display text-4xl md:text-5xl text-terracotta italic">05</span>
+            <span class="font-mono text-xs uppercase tracking-widest text-inkSoft">// Info Penginapan</span>
+        </div>
+        <h2 class="reveal font-display text-4xl md:text-5xl text-ink mb-10" style="--stagger:1">Rumah kita untuk dua hari.</h2>
+
+        <div class="reveal-scale relative bg-paperDark border-2 border-dashed border-ink/30 rounded-[2rem] p-8 md:p-12 max-w-3xl mx-auto" style="--stagger:0">
+            <span class="absolute -top-5 -right-5 w-16 h-16 rounded-full bg-terracotta text-paper flex items-center justify-center rotate-12 shadow-lg" aria-hidden="true">
+                <i data-lucide="stamp" class="w-7 h-7"></i>
+            </span>
+            <h3 class="font-display text-3xl text-ink mb-1">Chalet Teluk Belanga</h3>
+            <p class="text-inkSoft mb-6">Lot 1905, Jalan Teluk Gong, Pantai Teluk Belanga, 78200 Kuala Sungai Baru, Melaka.</p>
+
+            <div class="grid sm:grid-cols-2 gap-4 text-sm">
+                <div class="bg-paper/70 rounded-xl p-4 border border-ink/10">
+                    <span class="font-semibold text-ink flex items-center gap-2"><i data-lucide="wifi" class="w-4 h-4 text-terracotta"></i> WiFi</span>
+                    <p class="text-inkSoft mt-1">Free WiFi — Pass: 0126248567</p>
+                </div>
+                <div class="bg-paper/70 rounded-xl p-4 border border-ink/10">
+                    <span class="font-semibold text-ink flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4 text-terracotta"></i> Staf (Halim)</span>
+                    <p class="text-inkSoft mt-1">013-9772116</p>
+                </div>
+            </div>
+            <p class="text-xs text-inkSoft/80 italic mt-6">* Password kotak kunci ikut no bilik. Contoh: Bilik 1 (0001)</p>
+        </div>
+    </section>
+
+    <!-- SECTION — KEPERLUAN BBQ & MAKANAN (interactive checklist) -->
+    <section id="keperluan" class="py-24 px-4 md:px-8 max-w-6xl mx-auto scroll-mt-24" x-data="{}">
+        <div class="reveal flex flex-col md:flex-row gap-4 items-baseline mb-14">
+            <span class="font-display text-4xl md:text-5xl text-terracotta italic">06</span>
+            <span class="font-mono text-xs uppercase tracking-widest text-inkSoft">// Keperluan BBQ &amp; Makanan</span>
+        </div>
+        <h2 class="reveal font-display text-4xl md:text-5xl text-ink mb-4" style="--stagger:1">Senarai keperluan.</h2>
+        <p class="reveal text-inkSoft max-w-xl mb-12" style="--stagger:2">Tandakan apabila sudah disediakan.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" data-checklist>
+            <div class="reveal-scale bg-paperDark/60 border border-ink/10 rounded-2xl p-6" style="--stagger:0">
+                <h3 class="font-display text-lg text-terracottaDeep mb-3">Minum Petang</h3>
+                <div class="flex flex-col gap-1"><button type="button" class="check-item" aria-pressed="false">Nugget (2 peket)</button><button type="button" class="check-item" aria-pressed="false">French Fries (1 peket)</button></div>
+            </div>
+            <div class="reveal-scale bg-paperDark/60 border border-ink/10 rounded-2xl p-6" style="--stagger:1">
+                <h3 class="font-display text-lg text-terracottaDeep mb-3">Bahan Mentah BBQ</h3>
+                <div class="flex flex-col gap-1"><button type="button" class="check-item" aria-pressed="false">Ayam 6 ekor (potong 18)</button><button type="button" class="check-item" aria-pressed="false">Ikan caru 15–20 ekor</button><button type="button" class="check-item" aria-pressed="false">Udang 2 kg</button><button type="button" class="check-item" aria-pressed="false">Sosej 5 peket</button></div>
+            </div>
+            <div class="reveal-scale bg-paperDark/60 border border-ink/10 rounded-2xl p-6" style="--stagger:2">
+                <h3 class="font-display text-lg text-terracottaDeep mb-3">Steamboat &amp; Lain-lain</h3>
+                <div class="flex flex-col gap-1"><button type="button" class="check-item" aria-pressed="false">Steamboat Mix (2 peket)</button><button type="button" class="check-item" aria-pressed="false">Inoki (4 pack)</button><button type="button" class="check-item" aria-pressed="false">Megi kosong (1 pax)</button></div>
+            </div>
+            <div class="reveal-scale bg-paperDark/60 border border-ink/10 rounded-2xl p-6" style="--stagger:3">
+                <h3 class="font-display text-lg text-terracottaDeep mb-3">Asas</h3>
+                <div class="flex flex-col gap-1"><button type="button" class="check-item" aria-pressed="false">Beras (5kg)</button><button type="button" class="check-item" aria-pressed="false">Minyak (3kg)</button><button type="button" class="check-item" aria-pressed="false">Tepung (2kg)</button><button type="button" class="check-item" aria-pressed="false">Santan</button><button type="button" class="check-item" aria-pressed="false">Arang (1 bag)</button></div>
+            </div>
+            <div class="reveal-scale bg-paperDark/60 border border-ink/10 rounded-2xl p-6" style="--stagger:4">
+                <h3 class="font-display text-lg text-terracottaDeep mb-3">Sos &amp; Perasa</h3>
+                <div class="flex flex-col gap-1"><button type="button" class="check-item" aria-pressed="false">Sos Cili</button><button type="button" class="check-item" aria-pressed="false">Sos Kewpie</button><button type="button" class="check-item" aria-pressed="false">Kicap</button></div>
+            </div>
+            <div class="reveal-scale bg-paperDark/60 border border-ink/10 rounded-2xl p-6" style="--stagger:5">
+                <h3 class="font-display text-lg text-terracottaDeep mb-3">Sarapan &amp; Minuman</h3>
+                <div class="flex flex-col gap-1"><button type="button" class="check-item" aria-pressed="false">Roti (2 buku panjang)</button><button type="button" class="check-item" aria-pressed="false">Kaya &amp; Butter, Coklat paste</button><button type="button" class="check-item" aria-pressed="false">Sirap (1 botol)</button><button type="button" class="check-item" aria-pressed="false">Teh &amp; Kopi, Gula, Ais</button></div>
+            </div>
+        </div>
+    </section>
+
+    </div><!-- /#curtain -->
+
+    <!-- FOOTER -->
+    <footer class="bg-ink text-paper py-16 px-4 md:px-8">
+        <div class="reveal max-w-4xl mx-auto text-center" style="--stagger:0">
+            <p class="font-hand text-4xl text-mustard mb-4">"Bersama Eratkan Kasih Sayang"</p>
+            <p class="text-paper/60 text-sm">Disediakan untuk Program Hari Keluarga Adik-Beradik 2026</p>
+            <p class="text-paper/40 text-xs mt-2">Hj Sanip &amp; Hjh Azizah · 26–27 September 2026 · Chalet Teluk Belanga, Kuala Sungai Baru, Melaka</p>
+        </div>
+    </footer>
+
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        (function () {
+            var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var hasFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+            var isDesktop = window.matchMedia('(min-width: 1024px)').matches;
+
+            /* ------------------------------------------------------------ */
+            /* 1. PRELOADER — min display time + hard fallback timeout       */
+            /* ------------------------------------------------------------ */
+            var preloader = document.getElementById('preloader');
+            var loadingStatus = document.getElementById('loading-status');
+            if (loadingStatus) loadingStatus.textContent = 'Memuatkan halaman';
+            var started = Date.now();
+            var MIN_DISPLAY = prefersReduced ? 0 : 900;
+
+            function hidePreloader() {
+                if (!preloader) return;
+                var elapsed = Date.now() - started;
+                var wait = Math.max(0, MIN_DISPLAY - elapsed);
+                setTimeout(function () {
+                    preloader.classList.add('preloader-hide');
+                    if (loadingStatus) loadingStatus.textContent = '';
+                    triggerHero();
+                }, wait);
+            }
+            window.addEventListener('load', hidePreloader);
+            setTimeout(hidePreloader, 3500); // hard fallback
+
+            function triggerHero() {
+                document.querySelectorAll('#hero .reveal, #hero .reveal-word').forEach(function (el) {
+                    el.classList.add('is-visible');
+                });
+            }
+
+            /* ------------------------------------------------------------ */
+            /* 2. GSAP / ScrollTrigger presence check — progressive enhance  */
+            /* ------------------------------------------------------------ */
+            var hasGSAP = window.gsap && window.ScrollTrigger;
+            if (hasGSAP) gsap.registerPlugin(ScrollTrigger);
+
+            /* ------------------------------------------------------------ */
+            /* 3. Lenis smooth scroll (skipped under reduced motion)         */
+            /* ------------------------------------------------------------ */
+            if (!prefersReduced && window.Lenis && hasGSAP) {
+                var lenis = new Lenis({ duration: 1.05, easing: function (t) { return 1 - Math.pow(1 - t, 3); } });
+                lenis.on('scroll', ScrollTrigger.update);
+                gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
+                gsap.ticker.lagSmoothing(0);
+            }
+
+            /* ------------------------------------------------------------ */
+            /* 4. Reveal system — IntersectionObserver fallback, GSAP-eased  */
+            /*    where GSAP is present for nicer stagger/scrub control.     */
+            /* ------------------------------------------------------------ */
+            var revealEls = document.querySelectorAll('.reveal, .reveal-scale, .reveal-word');
+            if (prefersReduced) {
+                revealEls.forEach(function (el) { el.classList.add('is-visible'); });
+                document.querySelectorAll('#hero .reveal, #hero .reveal-word').forEach(function (el) { el.classList.add('is-visible'); });
+            } else if ('IntersectionObserver' in window) {
+                var io = new IntersectionObserver(function (entries, obs) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            obs.unobserve(entry.target);
+                        }
+                    });
+                }, { rootMargin: '0px 0px -10% 0px', threshold: 0.15 });
+                revealEls.forEach(function (el) {
+                    if (el.closest('#hero')) return; // hero handled by preloader sequence
+                    io.observe(el);
+                });
+            } else {
+                revealEls.forEach(function (el) { el.classList.add('is-visible'); });
+            }
+
+            /* ------------------------------------------------------------ */
+            /* 5. Count-up stats                                              */
+            /* ------------------------------------------------------------ */
+            var counters = document.querySelectorAll('.js-count');
+            if (prefersReduced || !('IntersectionObserver' in window)) {
+                counters.forEach(function (el) { el.textContent = el.dataset.target; });
+            } else {
+                var countIO = new IntersectionObserver(function (entries, obs) {
+                    entries.forEach(function (entry) {
+                        if (!entry.isIntersecting) return;
+                        var el = entry.target;
+                        var target = parseInt(el.dataset.target, 10);
+                        var start = performance.now();
+                        var dur = 900;
+                        function step(now) {
+                            var p = Math.min(1, (now - start) / dur);
+                            var eased = 1 - Math.pow(1 - p, 3);
+                            el.textContent = Math.round(eased * target);
+                            if (p < 1) requestAnimationFrame(step);
+                        }
+                        requestAnimationFrame(step);
+                        obs.unobserve(el);
+                    });
+                }, { threshold: 0.5 });
+                counters.forEach(function (el) { countIO.observe(el); });
+            }
+
+            /* ------------------------------------------------------------ */
+            /* 6. GSAP-driven: parallax layers, curtain rise, timeline draw,  */
+            /*    pinned family gallery. All skipped under reduced motion    */
+            /*    and gracefully degrade if GSAP failed to load.             */
+            /* ------------------------------------------------------------ */
+            if (hasGSAP && !prefersReduced) {
+
+                // Hero depth layers
+                gsap.utils.toArray('.hero-layer').forEach(function (layer) {
+                    var speed = parseFloat(layer.dataset.speed || '0.3');
+                    gsap.to(layer, {
+                        yPercent: speed * 30,
+                        ease: 'none',
+                        scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
+                    });
+                });
+
+                // Curtain rise: next content lifts over the hero like a page turning up
+                if (isDesktop) {
+                    gsap.fromTo('#curtain',
+                        { y: 80 },
+                        { y: 0, ease: 'none', scrollTrigger: { trigger: '#hero', start: 'bottom bottom', end: 'bottom top', scrub: true } }
+                    );
+                }
+
+                // Timeline line-draw per column
+                gsap.utils.toArray('[data-timeline]').forEach(function (line) {
+                    gsap.to(line, {
+                        scaleY: 1,
+                        ease: 'none',
+                        scrollTrigger: { trigger: line, start: 'top 75%', end: 'bottom 85%', scrub: 0.6 }
+                    });
+                });
+
+                // Pinned horizontal family gallery — desktop only
+                if (isDesktop) {
+                    var track = document.getElementById('gallery-track');
+                    var wrapper = document.getElementById('gallery-wrapper');
+                    var dotsHost = document.getElementById('gallery-dots');
+                    var cards = track ? track.querySelectorAll('.family-card') : [];
+
+                    if (track && wrapper && cards.length) {
+                        cards.forEach(function (_, i) {
+                            var dot = document.createElement('button');
+                            dot.type = 'button';
+                            dot.className = 'gallery-dot w-2 h-2 rounded-full bg-ink/20' + (i === 0 ? ' is-active bg-terracotta' : '');
+                            dot.setAttribute('aria-label', 'Keluarga ' + (i + 1));
+                            dotsHost.appendChild(dot);
+                        });
+                        var dots = dotsHost.querySelectorAll('.gallery-dot');
+
+                        var getScrollDistance = function () { return Math.max(0, track.scrollWidth - window.innerWidth + 64); };
+
+                        var galleryTween = gsap.to(track, {
+                            x: function () { return -getScrollDistance(); },
+                            ease: 'none',
+                            scrollTrigger: {
+                                trigger: wrapper,
+                                start: 'top top',
+                                end: function () { return '+=' + getScrollDistance(); },
+                                scrub: 1,
+                                pin: true,
+                                invalidateOnRefresh: true,
+                                onUpdate: function (self) {
+                                    var idx = Math.min(dots.length - 1, Math.floor(self.progress * dots.length));
+                                    dots.forEach(function (d, i) {
+                                        d.classList.toggle('is-active', i === idx);
+                                        d.classList.toggle('bg-terracotta', i === idx);
+                                        d.classList.toggle('bg-ink/20', i !== idx);
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }
+            } else {
+                // No-GSAP / reduced-motion fallback: reveal counts already handled above.
+                var dotsHost2 = document.getElementById('gallery-dots');
+                if (dotsHost2) dotsHost2.remove();
+            }
+
+            /* ------------------------------------------------------------ */
+            /* 7. Scroll progress bar (rAF-light, IO-free)                   */
+            /* ------------------------------------------------------------ */
+            var progressBar = document.getElementById('scroll-progress');
+            if (progressBar) {
+                var ticking = false;
+                function updateProgress() {
+                    var h = document.documentElement;
+                    var scrollTop = h.scrollTop || document.body.scrollTop;
+                    var scrollHeight = (h.scrollHeight || document.body.scrollHeight) - h.clientHeight;
+                    var pct = scrollHeight > 0 ? scrollTop / scrollHeight : 0;
+                    progressBar.style.transform = 'scaleX(' + pct + ')';
+                    ticking = false;
+                }
+                window.addEventListener('scroll', function () {
+                    if (!ticking) { requestAnimationFrame(updateProgress); ticking = true; }
+                }, { passive: true });
+                updateProgress();
+            }
+
+            /* ------------------------------------------------------------ */
+            /* 8. Nav active-section highlighting                            */
+            /* ------------------------------------------------------------ */
+            if ('IntersectionObserver' in window) {
+                var navLinks = document.querySelectorAll('.nav-link');
+                var sections = Array.prototype.slice.call(navLinks).map(function (l) {
+                    return document.querySelector(l.getAttribute('href'));
+                }).filter(Boolean);
+                var navIO = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        var id = '#' + entry.target.id;
+                        var link = document.querySelector('.nav-link[href="' + id + '"]');
+                        if (!link) return;
+                        if (entry.isIntersecting) {
+                            navLinks.forEach(function (l) { l.classList.remove('active'); });
+                            link.classList.add('active');
+                        }
+                    });
+                }, { rootMargin: '-45% 0px -50% 0px' });
+                sections.forEach(function (s) { navIO.observe(s); });
+            }
+
+            /* ------------------------------------------------------------ */
+            /* 9. Magnetic buttons + tilt cards — fine pointer & motion only */
+            /* ------------------------------------------------------------ */
+            if (hasGSAP && hasFinePointer && !prefersReduced) {
+                document.querySelectorAll('.magnetic').forEach(function (btn) {
+                    var xTo = gsap.quickTo(btn, 'x', { duration: 0.5, ease: 'power3' });
+                    var yTo = gsap.quickTo(btn, 'y', { duration: 0.5, ease: 'power3' });
+                    btn.addEventListener('mousemove', function (e) {
+                        var r = btn.getBoundingClientRect();
+                        xTo((e.clientX - r.left - r.width / 2) * 0.3);
+                        yTo((e.clientY - r.top - r.height / 2) * 0.3);
+                    });
+                    btn.addEventListener('mouseleave', function () { xTo(0); yTo(0); });
+                });
+
+                document.querySelectorAll('.tilt-card').forEach(function (card) {
+                    var rxTo = gsap.quickTo(card, 'rotationX', { duration: 0.4, ease: 'power3' });
+                    var ryTo = gsap.quickTo(card, 'rotationY', { duration: 0.4, ease: 'power3' });
+                    card.addEventListener('mousemove', function (e) {
+                        var r = card.getBoundingClientRect();
+                        var px = (e.clientX - r.left) / r.width - 0.5;
+                        var py = (e.clientY - r.top) / r.height - 0.5;
+                        rxTo(py * -6);
+                        ryTo(px * 6);
+                    });
+                    card.addEventListener('mouseleave', function () { rxTo(0); ryTo(0); });
+                });
+            }
+
+            /* ------------------------------------------------------------ */
+            /* 10. Custom cursor — fine pointer, motion-enabled only          */
+            /* ------------------------------------------------------------ */
+            if (hasGSAP && hasFinePointer && !prefersReduced) {
+                var dot = document.getElementById('cursor-dot');
+                var ring = document.getElementById('cursor-ring');
+                var ringText = document.getElementById('cursor-text');
+                document.documentElement.classList.add('cursor-ready', 'cursor-hide-native');
+
+                var dotX = gsap.quickTo(dot, 'x', { duration: 0.08, ease: 'power3' });
+                var dotY = gsap.quickTo(dot, 'y', { duration: 0.08, ease: 'power3' });
+                var ringX = gsap.quickTo(ring, 'x', { duration: 0.45, ease: 'power3' });
+                var ringY = gsap.quickTo(ring, 'y', { duration: 0.45, ease: 'power3' });
+
+                window.addEventListener('mousemove', function (e) {
+                    dotX(e.clientX); dotY(e.clientY);
+                    ringX(e.clientX); ringY(e.clientY);
+                }, { passive: true });
+
+                document.querySelectorAll('[data-cursor-text]').forEach(function (el) {
+                    el.addEventListener('mouseenter', function () {
+                        document.documentElement.classList.add('cursor-hover');
+                        ringText.textContent = el.dataset.cursorText || '';
+                    });
+                    el.addEventListener('mouseleave', function () {
+                        document.documentElement.classList.remove('cursor-hover');
+                        ringText.textContent = '';
+                    });
+                });
+            }
+
+            /* ------------------------------------------------------------ */
+            /* 11. Checklist micro-interaction (accessible toggle buttons)   */
+            /* ------------------------------------------------------------ */
+            document.querySelectorAll('.check-item').forEach(function (btn) {
+                btn.classList.add('flex', 'items-center', 'gap-3', 'text-left', 'text-sm', 'text-inkSoft', 'py-1', 'group');
+                var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('width', '18'); svg.setAttribute('height', '18'); svg.setAttribute('viewBox', '0 0 18 18');
+                svg.innerHTML = '<circle cx="9" cy="9" r="8" fill="none" stroke="currentColor" stroke-width="1.4" class="text-ink/25"/><path class="check-path" d="M5 9.5 L7.8 12 L13 6" fill="none" stroke="#C1663F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+                svg.classList.add('shrink-0');
+                btn.prepend(svg);
+                btn.addEventListener('click', function () {
+                    var pressed = btn.getAttribute('aria-pressed') === 'true';
+                    btn.setAttribute('aria-pressed', String(!pressed));
+                    btn.classList.toggle('line-through', !pressed);
+                    btn.classList.toggle('opacity-50', !pressed);
+                });
+            });
+
+            /* ------------------------------------------------------------ */
+            /* 12. Respect live changes to reduced-motion preference          */
+            /* ------------------------------------------------------------ */
+            window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', function (e) {
+                if (e.matches) location.reload();
+            });
+        })();
+    </script>
+</body>
+</html>
