@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Sandbox Prompt Vault</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Caveat:wght@700&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0b0d12;
@@ -17,6 +17,8 @@
     --accent: #7c5cff;
     --accent-2: #22d3ee;
     --ok: #34d399;
+    --warn: #fbbf24;
+    --bad: #f87171;
     --star: #fbbf24;
     --radius: 14px;
   }
@@ -30,6 +32,8 @@
     --accent: #6a46f5;
     --accent-2: #0891b2;
     --ok: #059669;
+    --warn: #b45309;
+    --bad: #dc2626;
     --star: #d97706;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -193,6 +197,49 @@
   .style-opt small { font-size: 11px; color: var(--muted); line-height: 1.35; }
   .style-opt .num { color: var(--muted); font-weight: 500; font-variant-numeric: tabular-nums; margin-right: 4px; }
 
+  .style-opt .thumb { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; border-radius: 6px; }
+  .style-preview { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 14px; align-items: center;
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 10px; margin-bottom: 10px; }
+  .style-preview svg { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; border-radius: 8px; }
+  .style-preview b { font-size: 15px; }
+  .style-preview p { font-size: 13px; margin-top: 4px; }
+  .muted { color: var(--muted); }
+
+  /* Create tiles */
+  .create { padding-bottom: 8px; }
+  .create h2 { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .create-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .create-tile {
+    display: flex; gap: 14px; align-items: center; text-align: left; cursor: pointer;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; color: var(--text); font: inherit;
+  }
+  .create-tile:hover, .create-tile.active { border-color: var(--accent); }
+  .create-tile.active { box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent); }
+  .create-tile svg { flex: 0 0 auto; width: 44px; height: 44px; color: var(--accent); }
+  .create-tile b { display: block; font-size: 17px; }
+  .create-tile small { display: block; color: var(--muted); font-size: 13px; }
+  .create-tile .n { color: var(--accent-2); font-size: 12px; font-weight: 600; margin-top: 2px; }
+
+  /* Engines */
+  .engine-bar { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; align-items: center; margin-bottom: 6px; justify-content: safe center; }
+  .engine-bar::-webkit-scrollbar { display: none; }
+  .bar-label { flex: 0 0 auto; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-right: 2px; }
+  .chip.eng.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .engine-note { text-align: center; font-size: 12.5px; color: var(--muted); margin-bottom: 10px; min-height: 1.5em; }
+  .engine-box { background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-bottom: 16px; }
+  .engine-box h4 { font-size: 13px; font-weight: 600; margin-bottom: 8px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .engine-box h4 span { color: var(--muted); font-weight: 400; }
+  .engine-box .chip { background: var(--surface); }
+  .engine-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .engine-info { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; font-size: 13.5px; }
+  .engine-info p.muted { font-size: 12px; }
+  .lvl { display: inline-block; font-size: 11.5px; font-weight: 600; padding: 2px 9px; border-radius: 999px; border: 1px solid; width: fit-content; }
+  .lvl-native { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 50%, transparent); background: color-mix(in srgb, var(--ok) 12%, transparent); }
+  .lvl-file, .lvl-code { color: var(--accent-2); border-color: color-mix(in srgb, var(--accent-2) 50%, transparent); background: color-mix(in srgb, var(--accent-2) 12%, transparent); }
+  .lvl-workaround { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 50%, transparent); background: color-mix(in srgb, var(--warn) 12%, transparent); }
+  .lvl-none { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 50%, transparent); background: color-mix(in srgb, var(--bad) 12%, transparent); }
+  .engine-add { color: var(--accent-2); }
+
   /* Toast */
   .toast {
     position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
@@ -208,7 +255,12 @@
     .grid { grid-template-columns: 1fr; }
     .hero { padding-top: 36px; }
     .search kbd, .hide-sm { display: none; }
-    .cats { justify-content: flex-start; }
+    .cats, .engine-bar { justify-content: flex-start; }
+    .controls { position: static; }
+    .create-grid { grid-template-columns: 1fr; gap: 8px; }
+    .create-tile { padding: 12px 14px; }
+    .create-tile svg { width: 36px; height: 36px; }
+    .style-preview { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -227,11 +279,22 @@
 <section class="hero wrap">
   <div class="pill">AI Sandbox Project</div>
   <h1>Ready-to-use prompts for <span>every AI experiment</span></h1>
-  <p>A curated library of tested prompts for the AI Sandbox. Search, fill in the blanks, pick from 20 visual styles for images, infographics and slides, then copy into ChatGPT, Claude, Gemini or NotebookLM.</p>
+  <p>A curated library of tested prompts for the AI Sandbox. Choose what to create, pick one of 20 visual styles and the AI engine you use, fill in the blanks, then copy. Works with ChatGPT, Claude, Gemini, NotebookLM and Copilot.</p>
   <div class="stats">
     <div class="stat"><b id="statPrompts">0</b><small>Prompts</small></div>
     <div class="stat"><b id="statCats">0</b><small>Categories</small></div>
+    <div class="stat"><b>20</b><small>Visual styles</small></div>
+    <div class="stat"><b>5</b><small>AI engines</small></div>
     <div class="stat"><b id="statFavs">0</b><small>Your favourites</small></div>
+  </div>
+</section>
+
+<section class="wrap create" aria-label="What do you want to create?">
+  <h2>What do you want to create?</h2>
+  <div class="create-grid" id="createGrid">
+    <button type="button" class="create-tile" data-jump="Slides"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="5" y="8" width="34" height="23" rx="3"/><path d="M22 31v6M15 37h14M11 24l7-7l5 5l8-8"/></svg><span><b>Slides</b><small>Presentations and pitch decks</small><span class="n"></span></span></button>
+    <button type="button" class="create-tile" data-jump="Infographic"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="9" y="5" width="26" height="34" rx="3"/><circle cx="17" cy="14" r="4"/><path d="M24 12h6M24 16h4M15 32v-6M22 32v-10M29 32v-8"/></svg><span><b>Infographic</b><small>Data, processes and comparisons</small><span class="n"></span></span></button>
+    <button type="button" class="create-tile" data-jump="Visual"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="5" y="8" width="34" height="28" rx="3"/><circle cx="15" cy="17" r="3.5"/><path d="M5 31l10-9l8 7l6-5l10 8"/></svg><span><b>Visual</b><small>Images, posters and social graphics</small><span class="n"></span></span></button>
   </div>
 </section>
 
@@ -242,6 +305,8 @@
       <input id="q" type="search" placeholder="Search prompts, tags, use cases…" autocomplete="off">
       <kbd>/</kbd>
     </div>
+    <div class="engine-bar" id="engineBar"></div>
+    <p class="engine-note" id="engineNote"></p>
     <div class="cats" id="cats"></div>
   </div>
 </div>
@@ -268,7 +333,13 @@
     <div class="vars" id="mVars"></div>
     <div class="style-picker" id="mStyles" hidden>
       <h4>Choose a visual style <span id="mStyleName">None selected</span></h4>
+      <div class="style-preview" id="mStylePreview" hidden></div>
       <div class="style-grid" id="mStyleGrid"></div>
+    </div>
+    <div class="engine-box" id="mEngine">
+      <h4>AI engine <span>Steps and output adapt to the tool you choose</span></h4>
+      <div class="engine-row" id="mEngineRow"></div>
+      <div class="engine-info" id="mEngineInfo"></div>
     </div>
     <div class="prompt-box" id="mPrompt"></div>
     <div class="tip" id="mTip"></div>
@@ -283,6 +354,117 @@
 
 <script>
 const PROMPTS = [
+  // ---------- Slides ----------
+  { id: "create-slides", cat: "Slides", kind: "slides", title: "Create Slides",
+    desc: "Plan and design a full slide deck in a consistent visual style.",
+    tags: ["slides", "presentation", "style"],
+    prompt: `Create a {{slide_count}}-slide presentation on {{topic}} for {{audience}}.
+Goal of the deck: {{goal}}
+Visual style: {{style}}.
+Apply the style consistently to every slide: backgrounds, colour palette, typography, icons, charts and imagery.
+
+For each slide give:
+- Slide title
+- On-slide content (max 6 short bullets, or one key visual)
+- Suggested visual, chart or image (described in the chosen style)
+- Speaker notes (2–3 sentences)
+
+Include a title slide, an agenda slide, and a closing slide with a clear call to action.` },
+  { id: "slides-from-doc", cat: "Slides", kind: "slides", title: "Slides from a Document",
+    desc: "Turn a report, paper or meeting notes into a presentation.",
+    tags: ["slides", "summary", "style"],
+    prompt: `Turn the document below (or the attached file) into a {{slide_count}}-slide presentation for {{audience}}.
+Visual style: {{style}}.
+Keep the key messages and numbers accurate. One idea per slide, max 5 bullets, and suggest a chart or visual wherever data appears.
+Add speaker notes for each slide and end with a summary slide of 3 takeaways.
+
+Document:
+"""
+{{document}}
+"""` },
+  { id: "pitch-deck", cat: "Slides", kind: "slides", title: "Pitch / Proposal Deck",
+    desc: "A persuasive 10-slide deck to win approval or budget.",
+    tags: ["slides", "pitch", "style"],
+    prompt: `Create a 10-slide pitch deck to convince {{audience}} to approve {{proposal}}.
+Visual style: {{style}}.
+Slide order: 1) Title 2) The problem 3) Why now 4) Proposed solution 5) How it works 6) Benefits and impact, with numbers 7) Cost and timeline 8) Risks and mitigation 9) The ask 10) Next steps.
+Write each slide headline as a full-sentence key message, keep on-slide text minimal, and add speaker notes.` },
+
+  // ---------- Infographic ----------
+  { id: "create-infographic", cat: "Infographic", kind: "infographic", title: "Create Infographic",
+    desc: "Turn facts or data into a styled, easy-to-scan infographic.",
+    tags: ["infographic", "style", "data"],
+    prompt: `Design an infographic about {{topic}} for {{audience}}.
+Visual style: {{style}}.
+Format: {{format}} (e.g. A4 portrait, 1080x1350 Instagram post, 16:9 slide).
+Key points and data to include:
+{{key_points}}
+
+Structure: a bold title, a one-line key takeaway, 4–6 sections with icons or simple charts, and a footer with the source.
+Use a clear visual hierarchy, at most 2 typefaces, and keep each text block under 25 words.
+Make the key numbers the visual heroes, and make sure all text is spelled correctly and readable.` },
+  { id: "process-infographic", cat: "Infographic", kind: "infographic", title: "Process / Timeline Infographic",
+    desc: "Show steps or milestones as a clear visual flow.",
+    tags: ["infographic", "process", "timeline", "style"],
+    prompt: `Design a step-by-step infographic showing {{process}} for {{audience}}.
+Visual style: {{style}}.
+Format: {{format}}.
+Steps or milestones:
+{{steps}}
+
+Show them as a numbered flow or timeline with an icon and a one-line description for each.
+Add a title, a short intro line, and a tip or warning box at the end. Keep all text short and spelled exactly as written.` },
+  { id: "comparison-infographic", cat: "Infographic", kind: "infographic", title: "Comparison Infographic",
+    desc: "Side-by-side visual comparison of two options.",
+    tags: ["infographic", "comparison", "style"],
+    prompt: `Design a comparison infographic: {{option_a}} vs {{option_b}}, for {{audience}}.
+Visual style: {{style}}.
+Format: {{format}}.
+Compare on these points: {{criteria}}
+
+Use a two-column layout with a matching icon on each row, highlight the better option on each point, and end with a one-line verdict.
+Keep every label under 8 words.` },
+
+  // ---------- Visual ----------
+  { id: "create-image", cat: "Visual", kind: "image", title: "Create Image",
+    desc: "Generate an image in one of 20 graphic design styles.",
+    tags: ["image", "style", "design"],
+    prompt: `Create an image of {{subject}}.
+Visual style: {{style}}.
+Purpose: {{purpose}}. Aspect ratio: {{aspect_ratio}}.
+Text to include in the image (spell exactly as written, keep it legible): {{text_in_image}}
+Apply the style consistently to composition, colour palette, lighting, texture and typography.
+Avoid watermarks, distorted hands or faces, and cluttered backgrounds.` },
+  { id: "poster", cat: "Visual", kind: "image", title: "Poster / Event Flyer",
+    desc: "A print-ready poster or flyer for an event or campaign.",
+    tags: ["poster", "event", "style"],
+    prompt: `Design a poster for {{event_name}}.
+Visual style: {{style}}.
+Format: {{format}}.
+Details to show (spell exactly as written):
+- Date and time: {{date_time}}
+- Venue: {{venue}}
+- Tagline: {{tagline}}
+
+Make the event name the dominant element, keep a clear reading order (name, date, venue, details), and leave margins for printing.` },
+  { id: "social-graphic", cat: "Visual", kind: "image", title: "Social Media Graphic",
+    desc: "Scroll-stopping post or story graphic for any platform.",
+    tags: ["social", "image", "style"],
+    prompt: `Create a {{platform}} post graphic announcing {{message}}.
+Visual style: {{style}}.
+Size: {{size}} (e.g. 1080x1080 square, 1080x1920 story).
+Headline on the graphic: "{{headline}}"
+Brand colours, if any: {{brand_colours}}
+
+Keep the headline large and readable on a phone, use at most 12 words of text, and leave space for a logo in one corner.` },
+  { id: "image-prompt", cat: "Visual", title: "Image Generation Prompt",
+    desc: "Write detailed prompts to paste into Midjourney, Firefly, Imagen or DALL·E.",
+    tags: ["image", "prompt", "design"], tip: "Useful with Claude or NotebookLM, which don't paint images: let them write the prompt, then paste it into an image tool.",
+    prompt: `Write 3 detailed image-generation prompts for: {{subject}}.
+Style: {{style}}. Aspect ratio: {{aspect_ratio}}.
+Each prompt should specify subject, setting, composition, lighting, colour palette, camera/lens or medium, and mood.
+Also give a negative prompt listing what to avoid.` },
+
   // ---------- Getting Started ----------
   { id: "role-setup", cat: "Getting Started", title: "Expert Role Setup",
     desc: "Prime the AI to act as a domain expert before you start a session.",
@@ -317,44 +499,6 @@ Structure:
 4. A real-world example relevant to {{industry}}
 5. Common misconceptions
 Keep it under 300 words.` },
-
-  // ---------- Visual Creation ----------
-  { id: "create-image", cat: "Visual Creation", title: "Create Image",
-    desc: "Generate an image in one of 20 graphic design styles.",
-    tags: ["image", "style", "design"], tip: "Pick a style below. It fills {{style}} with a full style description. Works in ChatGPT, Gemini, Midjourney, Firefly and Canva.",
-    prompt: `Create an image of {{subject}}.
-Visual style: {{style}}.
-Purpose: {{purpose}}. Aspect ratio: {{aspect_ratio}}.
-Text to include in the image (spell exactly as written, keep it legible): {{text_in_image}}
-Apply the style consistently to composition, colour palette, lighting, texture and typography.
-Avoid watermarks, distorted hands or faces, and cluttered backgrounds.` },
-  { id: "create-infographic", cat: "Visual Creation", title: "Create Infographic",
-    desc: "Turn facts or data into a styled, easy-to-scan infographic.",
-    tags: ["infographic", "style", "data"], tip: "Pick a style below. For an image model, paste the result directly; for a chat model, ask it to also write the layout as HTML or a Canva brief.",
-    prompt: `Design an infographic about {{topic}} for {{audience}}.
-Visual style: {{style}}.
-Format: {{format}} (e.g. A4 portrait, 1080x1350 Instagram post, 16:9 slide).
-Key points and data to include:
-{{key_points}}
-
-Structure: a bold title, a one-line key takeaway, 4–6 sections with icons or simple charts, and a footer with the source.
-Use a clear visual hierarchy, at most 2 typefaces, and keep each text block under 25 words.
-Make the key numbers the visual heroes, and make sure all text is spelled correctly and readable.` },
-  { id: "create-slides", cat: "Visual Creation", title: "Create Slides",
-    desc: "Plan and design a full slide deck in a consistent visual style.",
-    tags: ["slides", "presentation", "style"], tip: "Pick a style below. Works with Gemini in Slides, Canva, Gamma, Copilot in PowerPoint, ChatGPT and Claude.",
-    prompt: `Create a {{slide_count}}-slide presentation on {{topic}} for {{audience}}.
-Goal of the deck: {{goal}}
-Visual style: {{style}}.
-Apply the style consistently to every slide: backgrounds, colour palette, typography, icons, charts and imagery.
-
-For each slide give:
-- Slide title
-- On-slide content (max 6 short bullets, or one key visual)
-- Suggested visual, chart or image (described in the chosen style)
-- Speaker notes (2–3 sentences)
-
-Include a title slide, an agenda slide, and a closing slide with a clear call to action.` },
 
   // ---------- Research ----------
   { id: "deep-research", cat: "Research", title: "Structured Research Brief",
@@ -582,21 +726,14 @@ Finish with the 3 highest-priority actions.` },
 For each: name, definition, formula, data source, target, frequency, and whether it's leading or lagging.
 Warn me about any KPI that could be gamed.` },
 
-  // ---------- Creative & Image ----------
-  { id: "image-prompt", cat: "Creative & Image", title: "Image Generation Prompt",
-    desc: "Detailed prompts for Midjourney, DALL·E, Imagen or Firefly.",
-    tags: ["image", "design"],
-    prompt: `Write 3 detailed image-generation prompts for: {{subject}}.
-Style: {{style}}. Aspect ratio: {{aspect_ratio}}.
-Each prompt should specify subject, setting, composition, lighting, colour palette, camera/lens or medium, and mood.
-Also give a negative prompt listing what to avoid.` },
-  { id: "brainstorm", cat: "Creative & Image", title: "Idea Brainstorm",
+  // ---------- Creative ----------
+  { id: "brainstorm", cat: "Creative", title: "Idea Brainstorm",
     desc: "Generate many diverse ideas, then rank the best.",
     tags: ["ideas", "brainstorm"],
     prompt: `Brainstorm 20 ideas for {{challenge}}.
 Mix safe, bold and wildcard ideas. Then pick the top 5 using impact vs feasibility and explain why.
 Constraints: {{constraints}}` },
-  { id: "video-script", cat: "Creative & Image", title: "Short Video Script",
+  { id: "video-script", cat: "Creative", title: "Short Video Script",
     desc: "Script for a 30–60s reel, TikTok or explainer.",
     tags: ["video", "script", "social"],
     prompt: `Write a {{duration}} video script about {{topic}} for {{platform}}.
@@ -632,31 +769,114 @@ Output:
 """` },
 ];
 
-// ---------- Visual styles ----------
+// ---------- Visual styles (with drawn sample images) ----------
+const star4 = (x, y, r, fill) => `<path d="M${x} ${y - r}Q${x} ${y} ${x + r} ${y}Q${x} ${y} ${x} ${y + r}Q${x} ${y} ${x - r} ${y}Q${x} ${y} ${x} ${y - r}Z" fill="${fill}"/>`;
+const pixels = (rows, pal) => rows.map((r, y) => [...r].map((ch, x) => pal[ch] ? `<rect x="${x * 10}" y="${y * 10}" width="10" height="10" fill="${pal[ch]}"/>` : "").join("")).join("");
+const lines = (x, y0, y1, step, w, fill) => { let s = ""; for (let y = y0; y <= y1; y += step) s += `<rect x="${x}" y="${y}" width="${w}" height="2" fill="${fill}"/>`; return s; };
+
 const STYLES = [
-  { name: "Minimalism", desc: "clean layout, generous white space, 2–3 colour palette, simple sans-serif type, only essential elements", c: ["#f5f5f2", "#1d1d1f", "#d9d9d6"] },
-  { name: "Maximalism", desc: "bold clashing colours, dense layered patterns, abundant decoration, mixed typefaces, rich textures", c: ["#e6007e", "#ffcc00", "#00a19a", "#5b2a86"] },
-  { name: "Futuristic", desc: "sleek metallic surfaces, neon accents, clean geometric shapes, HUD-like tech details, dark background", c: ["#0a0f1e", "#9aa7b8", "#00e5ff"] },
-  { name: "Vector Art", desc: "flat vector illustration, crisp edges, solid colour fills, simple geometric shapes, minimal gradients", c: ["#2b59c3", "#f5b700", "#ff6b6b", "#ffffff"] },
-  { name: "Collage Art", desc: "cut-out photos and paper, torn edges, mixed-media layers, tape and paper textures, scrapbook composition", c: ["#e8dcc4", "#b5523b", "#3a3a3a", "#7a9e9f"] },
-  { name: "Retro", desc: "1970s palette of mustard, orange and brown, rounded bold type, film grain, vintage print feel", c: ["#e1a32a", "#d4572a", "#6b3e26", "#f2e3c6"] },
-  { name: "Cyberpunk", desc: "neon pink and cyan on a dark rainy city at night, glitch effects, futuristic signage, high contrast", c: ["#0d0221", "#ff2a6d", "#05d9e8"] },
-  { name: "Pop Art", desc: "bold primary colours, Ben-Day halftone dots, thick black outlines, comic-book look inspired by Warhol and Lichtenstein", c: ["#ffde00", "#e4002b", "#0057b8", "#111111"] },
-  { name: "Glassmorphism", desc: "frosted translucent glass panels, background blur, soft vibrant gradients, subtle light borders and reflections", c: ["#a18cd1", "#fbc2eb", "#e0f2ff"] },
-  { name: "Clay Style", desc: "soft 3D claymorphism, rounded puffy shapes, matte pastel colours, soft shadows, playful toy-like feel", c: ["#ffb4a2", "#b5e2fa", "#f7d6e0", "#c3f0ca"] },
-  { name: "Pixel Art", desc: "8-bit / 16-bit pixel grid, limited palette, retro video game aesthetic, crisp blocky edges", c: ["#1a1c2c", "#5d275d", "#ef7d57", "#a7f070"] },
-  { name: "Editorial", desc: "magazine layout, strong typographic hierarchy, elegant serif headlines, column grid, refined photography", c: ["#fbfaf7", "#151515", "#b8323a"] },
-  { name: "Y2K", desc: "early-2000s chrome and iridescent surfaces, bubbly shapes, holographic gradients, pink, baby blue and silver", c: ["#ff9de2", "#9ad7ff", "#c0c0c8", "#e8e8ff"] },
-  { name: "Swiss Design", desc: "strict modular grid, bold Helvetica-style sans-serif, asymmetric layout, flat colour blocks, objective clarity", c: ["#ffffff", "#e30613", "#111111"] },
-  { name: "Surreal", desc: "dreamlike impossible scenes, unexpected scale, floating objects, soft surreal lighting, inspired by Dalí and Magritte", c: ["#87a8d0", "#f2c3a0", "#3f4a6b", "#e9dfc9"] },
-  { name: "Bohemian", desc: "earthy warm tones, natural textures, hand-drawn botanical motifs, woven patterns, relaxed free-spirited feel", c: ["#c97b4a", "#e9c46a", "#6b8f71", "#f4e9d8"] },
-  { name: "Victorian Style", desc: "ornate filigree borders, engraved illustrations, decorative serif and script lettering, sepia, burgundy and gold", c: ["#3b1e1e", "#7a1f2b", "#c9a14a", "#efe3c8"] },
-  { name: "Graffiti", desc: "spray-paint street art, paint drips, bold wildstyle lettering, brick wall texture, vivid saturated colours", c: ["#222222", "#ff3d00", "#76ff03", "#2979ff"] },
-  { name: "Aurora", desc: "flowing luminous gradients of green, teal, purple and pink, soft glow, dark sky background, ethereal mood", c: ["#0b1026", "#2de2a6", "#7b5cff", "#ff6ec7"] },
-  { name: "Handwritten", desc: "hand-drawn marker and crayon lettering, sketchy scribbles, organic imperfect lines, warm personal feel", c: ["#faf6ee", "#e63b2e", "#111111"] },
+  { name: "Minimalism", desc: "clean layout, generous white space, 2–3 colour palette, simple sans-serif type, only essential elements",
+    svg: u => `<rect width="160" height="100" fill="#f5f5f2"/><line x1="18" y1="20" x2="40" y2="20" stroke="#1d1d1f"/><circle cx="112" cy="42" r="20" fill="#1d1d1f"/><rect x="18" y="70" width="46" height="5" fill="#1d1d1f"/><rect x="18" y="80" width="28" height="2.5" fill="#a3a39e"/>` },
+  { name: "Maximalism", desc: "bold clashing colours, dense layered patterns, abundant decoration, mixed typefaces, rich textures",
+    svg: u => `<defs><pattern id="mx${u}" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="10" fill="#e6007e"/></pattern></defs><rect width="160" height="100" fill="#5b2a86"/><rect width="80" height="100" fill="url(#mx${u})"/><circle cx="58" cy="50" r="30" fill="#ffcc00"/><circle cx="58" cy="50" r="12" fill="#e6007e"/><path d="M95 98L130 20L160 98Z" fill="#00a19a"/><circle cx="125" cy="30" r="14" fill="#ff6a13"/><circle cx="125" cy="30" r="6" fill="#ffcc00"/><path d="M8 88l10-10l10 10l10-10l10 10l10-10l10 10" fill="none" stroke="#111" stroke-width="4"/><text x="100" y="66" font-family="Georgia,serif" font-style="italic" font-weight="700" font-size="16" fill="#fff">More!</text>` },
+  { name: "Futuristic", desc: "sleek metallic surfaces, neon accents, clean geometric shapes, HUD-like tech details, dark background",
+    svg: u => `<defs><linearGradient id="fu${u}" x1="0" x2="1"><stop offset="0" stop-color="#5d6b7d"/><stop offset=".5" stop-color="#e6edf5"/><stop offset="1" stop-color="#5d6b7d"/></linearGradient></defs><rect width="160" height="100" fill="#0a0f1e"/><path d="M0 72H160M0 80H160M0 90H160M80 64L0 100M80 64L40 100M80 64L120 100M80 64L160 100" stroke="#00e5ff" stroke-opacity=".35" stroke-width=".6"/><circle cx="80" cy="36" r="20" fill="none" stroke="#00e5ff" stroke-width="1.5"/><circle cx="80" cy="36" r="13" fill="none" stroke="#00e5ff" stroke-width=".8" stroke-dasharray="3 3"/><rect x="50" y="60" width="60" height="4" rx="2" fill="url(#fu${u})"/><rect x="12" y="12" width="22" height="2" fill="#00e5ff"/><rect x="12" y="17" width="14" height="2" fill="#9aa7b8"/><rect x="128" y="12" width="20" height="10" fill="none" stroke="#9aa7b8" stroke-width=".6"/>` },
+  { name: "Vector Art", desc: "flat vector illustration, crisp edges, solid colour fills, simple geometric shapes, minimal gradients",
+    svg: u => `<rect width="160" height="100" fill="#9fd3f5"/><circle cx="120" cy="28" r="13" fill="#f5b700"/><path d="M95 30l8-4l8 4" fill="none" stroke="#fff" stroke-width="2"/><path d="M0 70Q40 40 80 65T160 60V100H0Z" fill="#2b59c3"/><path d="M0 82Q50 62 100 80T160 78V100H0Z" fill="#3fa34d"/><rect x="38" y="60" width="4" height="16" fill="#6b3e26"/><circle cx="40" cy="56" r="10" fill="#2f7d32"/><path d="M118 82l6-14l6 14Z" fill="#ff6b6b"/>` },
+  { name: "Collage Art", desc: "cut-out photos and paper, torn edges, mixed-media layers, tape and paper textures, scrapbook composition",
+    svg: u => `<rect width="160" height="100" fill="#e8dcc4"/><g transform="rotate(-6 50 45)"><rect x="18" y="16" width="58" height="46" fill="#fff"/><rect x="22" y="20" width="50" height="34" fill="#7a9e9f"/><circle cx="40" cy="34" r="7" fill="#f2e3c6"/><path d="M22 54l16-14l12 10l8-6l14 10Z" fill="#4f6d6e"/></g><g transform="rotate(5 112 55)"><path d="M86 28L140 24L143 80L122 77L112 83L88 78Z" fill="#b5523b"/><text x="96" y="60" font-family="Georgia,serif" font-size="16" font-weight="700" fill="#e8dcc4">CUT</text></g><rect x="62" y="10" width="28" height="9" fill="#f7f2a8" fill-opacity=".85" transform="rotate(-12 76 14)"/><g transform="rotate(2 55 82)"><rect x="18" y="76" width="74" height="12" fill="#3a3a3a"/><text x="23" y="85" font-family="'Courier New',monospace" font-size="8" fill="#e8dcc4">paper + glue</text></g>` },
+  { name: "Retro", desc: "1970s palette of mustard, orange and brown, rounded bold type, film grain, vintage print feel",
+    svg: u => `<rect width="160" height="100" fill="#f2e3c6"/><circle cx="80" cy="104" r="72" fill="#6b3e26"/><circle cx="80" cy="104" r="60" fill="#d4572a"/><circle cx="80" cy="104" r="48" fill="#e1a32a"/><circle cx="80" cy="104" r="36" fill="#f2e3c6"/><text x="80" y="24" text-anchor="middle" font-family="Georgia,serif" font-weight="900" font-style="italic" font-size="17" fill="#6b3e26">groovy</text>` },
+  { name: "Cyberpunk", desc: "neon pink and cyan on a dark rainy city at night, glitch effects, futuristic signage, high contrast",
+    svg: u => `<rect width="160" height="100" fill="#0d0221"/><path d="M20 0l-14 40M60 0l-14 40M110 0l-14 40M150 0l-14 40" stroke="#05d9e8" stroke-opacity=".25"/><path d="M0 100V60h14V40h12v20h10V30h16v70ZM60 100V50h20V22h14v78ZM100 100V44h12V36h10v64ZM126 100V58h20V48h14v52Z" fill="#1b0b3a"/><rect x="70" y="30" width="5" height="22" fill="#ff2a6d"/><rect x="40" y="40" width="9" height="3" fill="#05d9e8"/><rect x="104" y="52" width="6" height="3" fill="#05d9e8"/><rect x="132" y="64" width="8" height="3" fill="#ff2a6d"/><path d="M0 93H160" stroke="#ff2a6d" stroke-width="1.5"/><rect x="96" y="12" width="48" height="13" fill="none" stroke="#05d9e8"/><text x="101.5" y="22" font-family="monospace" font-size="8" fill="#ff2a6d">NEON_24</text><text x="100" y="21.5" font-family="monospace" font-size="8" fill="#05d9e8">NEON_24</text>` },
+  { name: "Pop Art", desc: "bold primary colours, Ben-Day halftone dots, thick black outlines, comic-book look inspired by Warhol and Lichtenstein",
+    svg: u => `<defs><pattern id="pd${u}" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.6" fill="#e4002b"/></pattern></defs><rect width="160" height="100" fill="#ffde00"/><rect width="160" height="100" fill="url(#pd${u})"/><path d="M36 20L124 14L132 62L94 66L80 88L76 67L44 70Z" fill="#fff" stroke="#111" stroke-width="3" stroke-linejoin="round"/><text x="86" y="52" text-anchor="middle" font-family="Impact,'Arial Black',sans-serif" font-size="26" fill="#0057b8" stroke="#111" stroke-width="1.2">POW!</text>` },
+  { name: "Glassmorphism", desc: "frosted translucent glass panels, background blur, soft vibrant gradients, subtle light borders and reflections",
+    svg: u => { const bg = `<rect width="160" height="100" fill="url(#gb${u})"/><circle cx="50" cy="32" r="22" fill="#ff7eb3"/><circle cx="118" cy="72" r="20" fill="#7afcff"/>`;
+      return `<defs><linearGradient id="gb${u}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a18cd1"/><stop offset="1" stop-color="#fbc2eb"/></linearGradient><filter id="gf${u}" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4"/></filter><clipPath id="gc${u}"><rect x="34" y="22" width="92" height="56" rx="10"/></clipPath></defs>${bg}<g clip-path="url(#gc${u})"><g filter="url(#gf${u})">${bg}</g></g><rect x="34" y="22" width="92" height="56" rx="10" fill="#fff" fill-opacity=".28" stroke="#fff" stroke-opacity=".75"/><rect x="46" y="34" width="40" height="5" rx="2.5" fill="#fff"/><rect x="46" y="44" width="60" height="3" rx="1.5" fill="#fff" fill-opacity=".75"/><rect x="46" y="60" width="26" height="9" rx="4.5" fill="#fff" fill-opacity=".6"/>`; } },
+  { name: "Clay Style", desc: "soft 3D claymorphism, rounded puffy shapes, matte pastel colours, soft shadows, playful toy-like feel",
+    svg: u => `<defs><radialGradient id="c1${u}" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#ffe1d6"/><stop offset="1" stop-color="#ff9a85"/></radialGradient><radialGradient id="c2${u}" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#e3f4ff"/><stop offset="1" stop-color="#8fcdf2"/></radialGradient><radialGradient id="c3${u}" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#e9ffe9"/><stop offset="1" stop-color="#9ee0a8"/></radialGradient><filter id="cs${u}" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#b48a9a" flood-opacity=".45"/></filter></defs><rect width="160" height="100" fill="#f7e6ee"/><g filter="url(#cs${u})"><rect x="20" y="42" width="46" height="40" rx="16" fill="url(#c2${u})"/><circle cx="94" cy="48" r="24" fill="url(#c1${u})"/><rect x="112" y="62" width="32" height="24" rx="12" fill="url(#c3${u})"/></g><circle cx="86" cy="44" r="2.5" fill="#5a3a3a"/><circle cx="102" cy="44" r="2.5" fill="#5a3a3a"/><path d="M88 54Q94 59 100 54" fill="none" stroke="#5a3a3a" stroke-width="2" stroke-linecap="round"/>` },
+  { name: "Pixel Art", desc: "8-bit / 16-bit pixel grid, limited palette, retro video game aesthetic, crisp blocky edges",
+    svg: u => `<g shape-rendering="crispEdges"><rect width="160" height="100" fill="#5fcde4"/>${pixels([
+      "................", "..ww.......ss...", ".wwww......ss...", "......rr.rr.....", ".....hrrrrrr....",
+      ".....rrrrrrr....", "......rrrrr.....", ".......rrr......", "........r.......", "gggggggggggggggg"],
+      { w: "#ffffff", s: "#ffd23f", r: "#d82a4a", h: "#ffffff", g: "#4caf50" })}</g>` },
+  { name: "Editorial", desc: "magazine layout, strong typographic hierarchy, elegant serif headlines, column grid, refined photography",
+    svg: u => `<rect width="160" height="100" fill="#fbfaf7"/><text x="12" y="40" font-family="'Playfair Display',Georgia,serif" font-size="30" font-weight="700" fill="#151515">The</text><text x="12" y="62" font-family="'Playfair Display',Georgia,serif" font-size="22" font-style="italic" fill="#b8323a">Issue</text><rect x="12" y="72" width="62" height="1.5" fill="#151515"/>${lines(12, 78, 88, 5, 62, "#b9b6ae")}<rect x="90" y="12" width="58" height="30" fill="#d8d3c8"/><circle cx="108" cy="27" r="7" fill="#b9b2a4"/>${lines(90, 48, 88, 5, 27, "#b9b6ae")}${lines(121, 48, 88, 5, 27, "#b9b6ae")}` },
+  { name: "Y2K", desc: "early-2000s chrome and iridescent surfaces, bubbly shapes, holographic gradients, pink, baby blue and silver",
+    svg: u => `<defs><linearGradient id="yb${u}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9de2"/><stop offset="1" stop-color="#9ad7ff"/></linearGradient><linearGradient id="yc${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#b9bcc8"/><stop offset=".55" stop-color="#6f7385"/><stop offset="1" stop-color="#e8e8ff"/></linearGradient></defs><rect width="160" height="100" fill="url(#yb${u})"/><path d="M40 50C40 25 75 20 85 38C95 20 128 28 122 52C118 78 85 80 80 66C70 82 40 76 40 50Z" fill="url(#yc${u})" stroke="#fff" stroke-width="1.5"/><text x="81" y="57" text-anchor="middle" font-family="'Trebuchet MS',sans-serif" font-weight="700" font-style="italic" font-size="16" fill="#ff5fc8">y2k</text>${star4(26, 22, 7, "#fff")}${star4(138, 24, 9, "#fff")}${star4(132, 82, 5, "#fff")}` },
+  { name: "Swiss Design", desc: "strict modular grid, bold Helvetica-style sans-serif, asymmetric layout, flat colour blocks, objective clarity",
+    svg: u => `<rect width="160" height="100" fill="#ffffff"/><circle cx="118" cy="38" r="30" fill="#e30613"/><rect x="12" y="14" width="3" height="40" fill="#111"/><text x="20" y="22" font-family="Helvetica,Arial,sans-serif" font-size="6" fill="#111">Neue</text><text x="20" y="30" font-family="Helvetica,Arial,sans-serif" font-size="6" fill="#111">Grafik</text><rect x="0" y="64" width="160" height="2" fill="#111"/><text x="12" y="90" font-family="Helvetica,Arial,sans-serif" font-weight="700" font-size="22" letter-spacing="-1" fill="#111">Grid.</text><rect x="100" y="74" width="48" height="2" fill="#111"/><rect x="100" y="80" width="34" height="2" fill="#111"/>` },
+  { name: "Surreal", desc: "dreamlike impossible scenes, unexpected scale, floating objects, soft surreal lighting, inspired by Dalí and Magritte",
+    svg: u => `<defs><linearGradient id="sk${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#87a8d0"/><stop offset="1" stop-color="#f2c3a0"/></linearGradient></defs><rect width="160" height="100" fill="url(#sk${u})"/><rect y="76" width="160" height="24" fill="#e9dfc9"/><path d="M60 78L92 90H66L34 78Z" fill="#3f4a6b" opacity=".25"/><rect x="34" y="34" width="26" height="44" fill="#3f4a6b"/><rect x="37" y="37" width="20" height="41" fill="#5c86c4"/><ellipse cx="47" cy="50" rx="7" ry="3" fill="#fff"/><circle cx="112" cy="36" r="14" fill="#5a9e4b"/><path d="M112 22q2-6 6-7" stroke="#3f4a6b" stroke-width="1.5" fill="none"/><ellipse cx="112" cy="86" rx="12" ry="2.5" fill="#3f4a6b" opacity=".35"/><g fill="#fff" opacity=".9"><ellipse cx="128" cy="64" rx="10" ry="4"/><ellipse cx="136" cy="61" rx="7" ry="4"/></g>` },
+  { name: "Bohemian", desc: "earthy warm tones, natural textures, hand-drawn botanical motifs, woven patterns, relaxed free-spirited feel",
+    svg: u => `<rect width="160" height="100" fill="#f4e9d8"/><path d="M50 100V50A30 30 0 0 1 110 50V100Z" fill="#c97b4a"/><g stroke="#e9c46a" stroke-width="2" stroke-linecap="round">${[0, 45, 90, 135, 180, 225, 270, 315].map(a => `<line x1="80" y1="40" x2="80" y2="35" transform="rotate(${a} 80 56)"/>`).join("")}</g><circle cx="80" cy="56" r="11" fill="#e9c46a"/><path d="M54 88H106" stroke="#f4e9d8" stroke-dasharray="2 4" stroke-width="2"/><g stroke="#6b8f71" stroke-width="1.5" fill="none"><path d="M22 100Q24 60 34 30"/><path d="M138 100Q136 60 126 30"/></g><g fill="#6b8f71"><ellipse cx="28" cy="70" rx="7" ry="3" transform="rotate(-40 28 70)"/><ellipse cx="20" cy="54" rx="7" ry="3" transform="rotate(30 20 54)"/><ellipse cx="34" cy="44" rx="6" ry="2.5" transform="rotate(-50 34 44)"/><ellipse cx="132" cy="70" rx="7" ry="3" transform="rotate(40 132 70)"/><ellipse cx="140" cy="54" rx="7" ry="3" transform="rotate(-30 140 54)"/><ellipse cx="126" cy="44" rx="6" ry="2.5" transform="rotate(50 126 44)"/></g>` },
+  { name: "Victorian Style", desc: "ornate filigree borders, engraved illustrations, decorative serif and script lettering, sepia, burgundy and gold",
+    svg: u => { const fl = `<path d="M0 0c12 0 16 7 11 11c-3 3-8 0-5-3M0 0c0 12 7 16 11 11" fill="none" stroke="#c9a14a" stroke-width=".9"/>`;
+      return `<rect width="160" height="100" fill="#3b1e1e"/><rect x="8" y="8" width="144" height="84" fill="none" stroke="#c9a14a" stroke-width="1.5"/><rect x="13" y="13" width="134" height="74" fill="none" stroke="#c9a14a" stroke-width=".6"/><g transform="translate(13 13)">${fl}</g><g transform="translate(147 13) scale(-1 1)">${fl}</g><g transform="translate(13 87) scale(1 -1)">${fl}</g><g transform="translate(147 87) scale(-1 -1)">${fl}</g><text x="80" y="50" text-anchor="middle" font-family="'Playfair Display',Georgia,serif" font-style="italic" font-size="19" fill="#efe3c8">Emporium</text><path d="M58 60H75M85 60H102" stroke="#c9a14a" stroke-width=".6"/><path d="M80 57l3 3l-3 3l-3-3Z" fill="#c9a14a"/><text x="80" y="74" text-anchor="middle" font-family="Georgia,serif" font-size="7" letter-spacing="2" fill="#c9a14a">EST. 1887</text>`; } },
+  { name: "Graffiti", desc: "spray-paint street art, paint drips, bold wildstyle lettering, brick wall texture, vivid saturated colours",
+    svg: u => `<defs><pattern id="br${u}" width="24" height="12" patternUnits="userSpaceOnUse"><rect width="24" height="12" fill="#4a4a4a"/><path d="M0 .5H24M0 6.5H24M12 0V6M.5 6V12M23.5 6V12" stroke="#2e2e2e"/></pattern></defs><rect width="160" height="100" fill="url(#br${u})"/><circle cx="30" cy="26" r="13" fill="#76ff03" opacity=".45"/><circle cx="30" cy="26" r="7" fill="#76ff03" opacity=".6"/><path d="M116 22l22 6l-15 11" stroke="#2979ff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><g fill="#ff3d00"><rect x="50" y="62" width="3" height="18" rx="1.5"/><rect x="84" y="60" width="3" height="24" rx="1.5"/><rect x="108" y="56" width="2.5" height="13" rx="1.2"/></g><text x="80" y="64" text-anchor="middle" font-family="'Permanent Marker',Impact,sans-serif" font-size="32" fill="#ff3d00" stroke="#111" stroke-width="2.2" paint-order="stroke" transform="rotate(-6 80 55)">WILD</text>` },
+  { name: "Aurora", desc: "flowing luminous gradients of green, teal, purple and pink, soft glow, dark sky background, ethereal mood",
+    svg: u => `<defs><filter id="ab${u}" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="5"/></filter></defs><rect width="160" height="100" fill="#0b1026"/><g fill="#fff"><circle cx="20" cy="14" r=".8"/><circle cx="62" cy="10" r=".7"/><circle cx="104" cy="16" r=".9"/><circle cx="140" cy="8" r=".7"/><circle cx="150" cy="30" r=".6"/></g><g filter="url(#ab${u})" fill="none"><path d="M-10 58C30 18 60 68 100 33S150 28 170 18" stroke="#2de2a6" stroke-width="14"/><path d="M-10 73C40 43 70 83 110 53S150 48 170 43" stroke="#7b5cff" stroke-width="12"/><path d="M-10 84C40 64 80 94 120 71S160 69 170 67" stroke="#ff6ec7" stroke-width="8"/></g><path d="M0 100L30 80L50 92L80 74L110 94L135 82L160 96V100Z" fill="#05081a"/>` },
+  { name: "Handwritten", desc: "hand-drawn marker and crayon lettering, sketchy scribbles, organic imperfect lines, warm personal feel",
+    svg: u => `<rect width="160" height="100" fill="#faf6ee"/><g fill="none" stroke="#e63b2e" stroke-width="1.6" stroke-opacity=".85">${Array.from({ length: 10 }, (_, i) => `<ellipse cx="92" cy="54" rx="${34 - i}" ry="${11 + (i % 3) * 3}" transform="rotate(${i * 18} 92 54)"/>`).join("")}</g><text x="84" y="64" text-anchor="middle" font-family="'Caveat','Comic Sans MS',cursive" font-size="34" font-weight="700" fill="#111" transform="rotate(-4 84 58)">Hello!</text><text x="12" y="18" font-family="'Caveat','Comic Sans MS',cursive" font-size="12" font-weight="700" fill="#e63b2e">sketch notes</text>` },
 ];
 const styleValue = st => `${st.name} (${st.desc})`;
+const styleSvg = (st, uid, cls = "") => `<svg class="${cls}" viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${esc(st.name)} sample">${st.svg(uid)}</svg>`;
 let currentStyle = null;
+
+// ---------- AI engines ----------
+// level: native = built in, file = creates a file, code = built as HTML/SVG, workaround = needs a workaround, none = not supported
+const LEVELS = {
+  native: "Built in", file: "Creates a file", code: "Builds HTML/SVG", workaround: "Workaround", none: "Not supported",
+};
+const ENGINES = {
+  chatgpt: { name: "ChatGPT",
+    note: "Strong all-rounder. Generates images natively and can build files such as .pptx with its built-in code tool.",
+    image: { level: "native", how: "Paste the prompt. ChatGPT generates the image in the chat; ask for changes in follow-up messages.",
+      add: "Generate the image directly in this chat." },
+    infographic: { level: "native", how: "ChatGPT renders the infographic as an image. If you need editable text or exact numbers, ask for a PowerPoint or PDF file instead.",
+      add: "Generate this as one finished infographic image. Check that every number and word in the image is spelled exactly as given." },
+    slides: { level: "file", how: "ChatGPT writes the slide content and builds a downloadable .pptx with its code tool. Open the file in PowerPoint or Google Slides to polish it.",
+      add: "After the outline, create a downloadable .pptx file that applies the chosen visual style (colours, fonts and layout) to every slide." },
+    text: { how: "Works with any prompt. Attach files, or turn on web search when the task needs current facts." } },
+  claude: { name: "Claude",
+    note: "Excellent for writing, analysis and code. It does not paint raster images; it builds visuals as HTML/SVG artifacts and creates files such as .pptx.",
+    image: { level: "workaround", how: "Claude can't generate photo-style images. It draws the design as an SVG/HTML artifact, and writes a text-to-image prompt you can paste into ChatGPT, Gemini or Copilot.",
+      add: "You can't generate raster images, so create this as a polished SVG illustration in an artifact. Also give me a detailed text-to-image prompt I can paste into an image generator." },
+    infographic: { level: "code", how: "Claude builds the infographic as an HTML/SVG artifact with exact text and numbers. Take a screenshot or download it.",
+      add: "Build this infographic as a single self-contained HTML/SVG artifact sized to the format above, with all text exactly as given." },
+    slides: { level: "file", how: "Claude creates a .pptx file when file creation is turned on, or an HTML slide deck artifact you can present in the browser.",
+      add: "Create the deck as a downloadable .pptx file that applies the chosen visual style. If you can't create files, build it as an HTML slide deck artifact with one slide per screen." },
+    text: { how: "Great for long documents and careful reasoning. Attach files or use a Project to give it background." } },
+  gemini: { name: "Gemini",
+    note: "Google's assistant. Generates images natively, and Canvas builds infographics and slide decks you can export to Google Slides.",
+    image: { level: "native", how: "Paste the prompt. Gemini generates the image directly, and you can ask it to edit parts of the image afterwards.",
+      add: "Generate the image directly." },
+    infographic: { level: "native", how: "Select Canvas in the prompt bar for an editable web infographic, or ask for an image version.",
+      add: "Create this infographic in Canvas as a single visual page." },
+    slides: { level: "native", how: "Select Canvas and paste the prompt. Gemini builds the deck, and you can export it to Google Slides. Inside Google Slides, Gemini's side panel can also add slides.",
+      add: "Create this presentation in Canvas so I can export it to Google Slides." },
+    text: { how: "Works well with Google Workspace. Connect Gmail, Drive or Docs to work from your own files." } },
+  notebooklm: { name: "NotebookLM",
+    note: "Works only from the sources you upload. Its Studio panel creates slide decks, infographics, audio and video overviews, mind maps and reports.",
+    image: { level: "none", how: "NotebookLM doesn't create standalone images. Use Studio › Infographic or Video Overview for visuals built from your sources, or switch to Gemini, ChatGPT or Copilot for images.",
+      add: "Base the visual only on the notebook sources." },
+    infographic: { level: "native", how: "Add your sources, open Studio › Infographic, click the edit (pencil) icon and paste this prompt as the customisation. The content comes from your sources; the prompt sets focus and style.",
+      add: "Use only facts from the notebook sources." },
+    slides: { level: "native", how: "Add your sources, open Studio › Slide Deck, click the edit (pencil) icon and paste this prompt as the customisation.",
+      add: "Use only content from the notebook sources." },
+    text: { how: "Upload your documents first. Answers come only from your sources, with citations." } },
+  copilot: { name: "Copilot",
+    note: "Microsoft Copilot. Creates images and works inside PowerPoint, Word and Excel with Microsoft 365.",
+    image: { level: "native", how: "Paste the prompt into Copilot. It generates the image with its built-in image creator.",
+      add: "Generate the image directly." },
+    infographic: { level: "native", how: "Ask Copilot to generate it as an image, or open PowerPoint and ask Copilot to build a one-slide infographic you can edit.",
+      add: "Generate this as a finished infographic image with all text spelled exactly as given." },
+    slides: { level: "native", how: "In PowerPoint, open Copilot, choose to create a presentation, and paste the prompt. You can also start from a Word file. Pick a Designer theme that matches the style.",
+      add: "Create this presentation in PowerPoint." },
+    text: { how: "Best inside Microsoft 365. Reference your Word, Excel or Outlook files to ground the answer." } },
+};
 
 // ---------- State ----------
 const $ = s => document.querySelector(s);
@@ -665,6 +885,7 @@ const store = {
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
 };
 let favs = new Set(store.get("aisb-favs", []));
+let engine = ENGINES[store.get("aisb-engine", "")] ? store.get("aisb-engine", "") : "";
 let activeCat = "All";
 let favOnly = false;
 let current = null;
@@ -674,6 +895,7 @@ const cats = ["All", ...new Set(PROMPTS.map(p => p.cat))];
 const varsOf = text => [...new Set([...text.matchAll(/\{\{(\w+)\}\}/g)].map(m => m[1]))];
 const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const label = v => v.replace(/_/g, " ");
+const engineFor = p => engine ? ENGINES[engine][p.kind || "text"] : null;
 
 // ---------- Theme ----------
 const savedTheme = store.get("aisb-theme", null);
@@ -692,6 +914,16 @@ function renderCats() {
     const n = c === "All" ? PROMPTS.length : PROMPTS.filter(p => p.cat === c).length;
     return `<button class="chip ${c === activeCat ? "active" : ""}" data-cat="${esc(c)}">${esc(c)}<span class="n">${n}</span></button>`;
   }).join("");
+  document.querySelectorAll("[data-jump]").forEach(b => b.classList.toggle("active", b.dataset.jump === activeCat));
+}
+
+function engineChips() {
+  return [["", "Any engine"], ...Object.entries(ENGINES).map(([k, e]) => [k, e.name])]
+    .map(([k, n]) => `<button type="button" class="chip eng ${k === engine ? "active" : ""}" data-engine="${k}" aria-pressed="${k === engine}">${esc(n)}</button>`).join("");
+}
+function renderEngines() {
+  $("#engineBar").innerHTML = `<span class="bar-label">AI engine</span>` + engineChips();
+  $("#engineNote").textContent = engine ? ENGINES[engine].note : "Pick the AI tool you'll paste into. Prompts and tips adapt to what it can do.";
 }
 
 function filtered() {
@@ -701,6 +933,12 @@ function filtered() {
     (!favOnly || favs.has(p.id)) &&
     (!q || [p.title, p.desc, p.cat, p.prompt, ...p.tags].join(" ").toLowerCase().includes(q))
   );
+}
+
+function statusPill(p) {
+  const e = engineFor(p);
+  if (!e || !e.level) return "";
+  return `<span class="lvl lvl-${e.level}">${esc(ENGINES[engine].name)} · ${LEVELS[e.level]}</span>`;
 }
 
 function renderGrid() {
@@ -714,6 +952,7 @@ function renderGrid() {
       </div>
       <h3>${esc(p.title)}</h3>
       <p class="desc">${esc(p.desc)}</p>
+      ${statusPill(p)}
       <div class="preview">${esc(p.prompt)}</div>
       <div class="card-foot">
         <div class="tags">${p.tags.map(t => `<span class="tag">#${esc(t)}</span>`).join("")}</div>
@@ -724,6 +963,9 @@ function renderGrid() {
   $("#statPrompts").textContent = PROMPTS.length;
   $("#statCats").textContent = cats.length - 1;
   $("#statFavs").textContent = favs.size;
+  document.querySelectorAll("[data-jump]").forEach(b => {
+    b.querySelector(".n").textContent = `${PROMPTS.filter(p => p.cat === b.dataset.jump).length} prompts`;
+  });
 }
 
 function fill(text, highlight) {
@@ -733,10 +975,22 @@ function fill(text, highlight) {
     return val ? `<mark class="filled">${esc(val)}</mark>` : `<mark>${esc(m)}</mark>`;
   });
 }
+const engineAdd = p => engineFor(p)?.add || "";
+const fullPrompt = p => fill(p.prompt, false) + (engineAdd(p) ? "\n\n" + engineAdd(p) : "");
 
 function renderModalPrompt() {
   const parts = current.prompt.split(/(\{\{\w+\}\})/);
-  $("#mPrompt").innerHTML = parts.map(s => /^\{\{\w+\}\}$/.test(s) ? fill(s, true) : esc(s)).join("");
+  const add = engineAdd(current);
+  $("#mPrompt").innerHTML = parts.map(s => /^\{\{\w+\}\}$/.test(s) ? fill(s, true) : esc(s)).join("")
+    + (add ? `<span class="engine-add">\n\n${esc(add)}</span>` : "");
+}
+
+function renderModalEngine() {
+  $("#mEngineRow").innerHTML = engineChips();
+  const e = engineFor(current);
+  if (!e) { $("#mEngineInfo").innerHTML = `<p>Choose an engine to get tool-specific steps and an instruction added to the end of your prompt.</p>`; return; }
+  $("#mEngineInfo").innerHTML = (e.level ? `<span class="lvl lvl-${e.level}">${LEVELS[e.level]}</span>` : "")
+    + `<p>${esc(e.how)}</p>${e.add ? `<p class="muted">Added to your prompt: shown in the box below.</p>` : ""}`;
 }
 
 function openModal(id) {
@@ -747,23 +1001,27 @@ function openModal(id) {
   $("#mDesc").textContent = current.desc;
   $("#mTip").textContent = current.tip ? "Tip: " + current.tip : "Tip: fill the fields above — the prompt updates live. Empty fields are copied as {{placeholders}}.";
   const vars = varsOf(current.prompt);
-  $("#mVars").innerHTML = vars.map(v => `<label>${esc(label(v))}<input data-var="${v}" placeholder="${esc(label(v))}"></label>`).join("");
+  $("#mVars").innerHTML = vars.map(v => `<label>${esc(label(v))}<input id="var-${v}" data-var="${v}" placeholder="${esc(label(v))}"></label>`).join("");
   $("#mVars").style.display = vars.length ? "" : "none";
   currentStyle = null;
   $("#mStyles").hidden = !vars.includes("style");
   renderStyles();
+  renderModalEngine();
   renderModalPrompt();
   $("#overlay").classList.add("open");
   document.body.style.overflow = "hidden";
   $("#mVars input")?.focus();
 }
 function renderStyles() {
-  $("#mStyleName").textContent = currentStyle === null ? "None selected" : STYLES[currentStyle].name;
-  $("#mStyleGrid").innerHTML = STYLES.map((st, i) => `
+  const st = STYLES[currentStyle];
+  $("#mStyleName").textContent = st ? st.name : "None selected";
+  $("#mStylePreview").hidden = !st;
+  if (st) $("#mStylePreview").innerHTML = `${styleSvg(st, "big")}<div><b>${currentStyle + 1}. ${esc(st.name)}</b><p>${esc(st.desc)}.</p><p class="muted">Sample drawn to show the look. Your AI engine creates the real result.</p></div>`;
+  $("#mStyleGrid").innerHTML = STYLES.map((s, i) => `
     <button type="button" class="style-opt ${i === currentStyle ? "active" : ""}" data-style="${i}" aria-pressed="${i === currentStyle}">
-      <span class="swatch">${st.c.map(c => `<i style="background:${c}"></i>`).join("")}</span>
-      <b><span class="num">${i + 1}.</span>${esc(st.name)}</b>
-      <small>${esc(st.desc.split(",")[0])}</small>
+      ${styleSvg(s, "t" + i, "thumb")}
+      <b><span class="num">${i + 1}.</span>${esc(s.name)}</b>
+      <small>${esc(s.desc.split(",")[0])}</small>
     </button>`).join("");
 }
 function closeModal() {
@@ -787,11 +1045,25 @@ async function copy(text, btn) {
   }
 }
 
+function setEngine(k) {
+  engine = k; store.set("aisb-engine", k);
+  renderEngines(); renderGrid();
+  if (current && $("#overlay").classList.contains("open")) { renderModalEngine(); renderModalPrompt(); }
+}
+
 // ---------- Events ----------
 $("#cats").onclick = e => {
   const b = e.target.closest("[data-cat]"); if (!b) return;
   activeCat = b.dataset.cat; renderCats(); renderGrid();
 };
+$("#createGrid").onclick = e => {
+  const b = e.target.closest("[data-jump]"); if (!b) return;
+  activeCat = activeCat === b.dataset.jump ? "All" : b.dataset.jump;
+  renderCats(); renderGrid();
+  $("main").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+};
+$("#engineBar").onclick = e => { const b = e.target.closest("[data-engine]"); if (b) setEngine(b.dataset.engine); };
+$("#mEngineRow").onclick = e => { const b = e.target.closest("[data-engine]"); if (b) setEngine(b.dataset.engine); };
 $("#q").oninput = renderGrid;
 $("#favToggle").onclick = () => {
   favOnly = !favOnly; $("#favToggle").classList.toggle("active", favOnly); renderGrid();
@@ -804,7 +1076,7 @@ $("#grid").onclick = e => {
     store.set("aisb-favs", [...favs]); renderGrid(); return;
   }
   const cp = e.target.closest("[data-copy]");
-  if (cp) { copy(PROMPTS.find(p => p.id === cp.dataset.copy).prompt, cp); return; }
+  if (cp) { values = {}; copy(fullPrompt(PROMPTS.find(p => p.id === cp.dataset.copy)), cp); return; }
   const card = e.target.closest(".card");
   if (card) openModal(card.dataset.id);
 };
@@ -821,7 +1093,7 @@ $("#mStyleGrid").onclick = e => {
   if (input) input.value = values.style;
   renderStyles(); renderModalPrompt();
 };
-$("#mCopy").onclick = e => copy(fill(current.prompt, false), e.currentTarget);
+$("#mCopy").onclick = e => copy(fullPrompt(current), e.currentTarget);
 $("#mReset").onclick = () => { values = {}; currentStyle = null; renderStyles(); $("#mVars").querySelectorAll("input").forEach(i => i.value = ""); renderModalPrompt(); };
 $("#mClose").onclick = closeModal;
 $("#overlay").onclick = e => { if (e.target.id === "overlay") closeModal(); };
@@ -831,6 +1103,7 @@ document.addEventListener("keydown", e => {
 });
 
 $("#themeToggle").textContent = document.documentElement.dataset.theme === "light" ? "☾" : "☀";
+renderEngines();
 renderCats();
 renderGrid();
 </script>
