@@ -170,6 +170,29 @@
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; flex-wrap: wrap; }
   .tip { font-size: 13px; color: var(--muted); margin-top: 14px; border-left: 3px solid var(--accent-2); padding-left: 10px; }
 
+  [hidden] { display: none !important; }
+  .badge {
+    font-size: 11px; font-weight: 600; color: var(--accent); white-space: nowrap;
+    border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border)); border-radius: 999px; padding: 1px 8px;
+  }
+  .card-top .right { display: flex; align-items: center; gap: 8px; }
+  .style-picker { margin-bottom: 16px; }
+  .style-picker h4 { font-size: 13px; font-weight: 600; margin-bottom: 8px; display: flex; justify-content: space-between; gap: 8px; }
+  .style-picker h4 span { color: var(--muted); font-weight: 400; }
+  .style-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 8px; }
+  .style-opt {
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 8px;
+    display: flex; flex-direction: column; gap: 6px; text-align: left; cursor: pointer; color: var(--text); font: inherit;
+  }
+  .style-opt:hover { border-color: var(--accent); }
+  .style-opt:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .style-opt.active { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent); }
+  .swatch { height: 34px; border-radius: 6px; display: flex; overflow: hidden; }
+  .swatch i { flex: 1; }
+  .style-opt b { font-size: 13px; font-weight: 600; }
+  .style-opt small { font-size: 11px; color: var(--muted); line-height: 1.35; }
+  .style-opt .num { color: var(--muted); font-weight: 500; font-variant-numeric: tabular-nums; margin-right: 4px; }
+
   /* Toast */
   .toast {
     position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
@@ -204,7 +227,7 @@
 <section class="hero wrap">
   <div class="pill">AI Sandbox Project</div>
   <h1>Ready-to-use prompts for <span>every AI experiment</span></h1>
-  <p>A curated library of tested prompts for the AI Sandbox. Search, fill in the blanks, copy, and paste into ChatGPT, Claude, Gemini or NotebookLM.</p>
+  <p>A curated library of tested prompts for the AI Sandbox. Search, fill in the blanks, pick from 20 visual styles for images, infographics and slides, then copy into ChatGPT, Claude, Gemini or NotebookLM.</p>
   <div class="stats">
     <div class="stat"><b id="statPrompts">0</b><small>Prompts</small></div>
     <div class="stat"><b id="statCats">0</b><small>Categories</small></div>
@@ -243,6 +266,10 @@
     </div>
     <p class="desc" id="mDesc"></p>
     <div class="vars" id="mVars"></div>
+    <div class="style-picker" id="mStyles" hidden>
+      <h4>Choose a visual style <span id="mStyleName">None selected</span></h4>
+      <div class="style-grid" id="mStyleGrid"></div>
+    </div>
     <div class="prompt-box" id="mPrompt"></div>
     <div class="tip" id="mTip"></div>
     <div class="modal-actions">
@@ -290,6 +317,44 @@ Structure:
 4. A real-world example relevant to {{industry}}
 5. Common misconceptions
 Keep it under 300 words.` },
+
+  // ---------- Visual Creation ----------
+  { id: "create-image", cat: "Visual Creation", title: "Create Image",
+    desc: "Generate an image in one of 20 graphic design styles.",
+    tags: ["image", "style", "design"], tip: "Pick a style below. It fills {{style}} with a full style description. Works in ChatGPT, Gemini, Midjourney, Firefly and Canva.",
+    prompt: `Create an image of {{subject}}.
+Visual style: {{style}}.
+Purpose: {{purpose}}. Aspect ratio: {{aspect_ratio}}.
+Text to include in the image (spell exactly as written, keep it legible): {{text_in_image}}
+Apply the style consistently to composition, colour palette, lighting, texture and typography.
+Avoid watermarks, distorted hands or faces, and cluttered backgrounds.` },
+  { id: "create-infographic", cat: "Visual Creation", title: "Create Infographic",
+    desc: "Turn facts or data into a styled, easy-to-scan infographic.",
+    tags: ["infographic", "style", "data"], tip: "Pick a style below. For an image model, paste the result directly; for a chat model, ask it to also write the layout as HTML or a Canva brief.",
+    prompt: `Design an infographic about {{topic}} for {{audience}}.
+Visual style: {{style}}.
+Format: {{format}} (e.g. A4 portrait, 1080x1350 Instagram post, 16:9 slide).
+Key points and data to include:
+{{key_points}}
+
+Structure: a bold title, a one-line key takeaway, 4–6 sections with icons or simple charts, and a footer with the source.
+Use a clear visual hierarchy, at most 2 typefaces, and keep each text block under 25 words.
+Make the key numbers the visual heroes, and make sure all text is spelled correctly and readable.` },
+  { id: "create-slides", cat: "Visual Creation", title: "Create Slides",
+    desc: "Plan and design a full slide deck in a consistent visual style.",
+    tags: ["slides", "presentation", "style"], tip: "Pick a style below. Works with Gemini in Slides, Canva, Gamma, Copilot in PowerPoint, ChatGPT and Claude.",
+    prompt: `Create a {{slide_count}}-slide presentation on {{topic}} for {{audience}}.
+Goal of the deck: {{goal}}
+Visual style: {{style}}.
+Apply the style consistently to every slide: backgrounds, colour palette, typography, icons, charts and imagery.
+
+For each slide give:
+- Slide title
+- On-slide content (max 6 short bullets, or one key visual)
+- Suggested visual, chart or image (described in the chosen style)
+- Speaker notes (2–3 sentences)
+
+Include a title slide, an agenda slide, and a closing slide with a clear call to action.` },
 
   // ---------- Research ----------
   { id: "deep-research", cat: "Research", title: "Structured Research Brief",
@@ -567,6 +632,32 @@ Output:
 """` },
 ];
 
+// ---------- Visual styles ----------
+const STYLES = [
+  { name: "Minimalism", desc: "clean layout, generous white space, 2–3 colour palette, simple sans-serif type, only essential elements", c: ["#f5f5f2", "#1d1d1f", "#d9d9d6"] },
+  { name: "Maximalism", desc: "bold clashing colours, dense layered patterns, abundant decoration, mixed typefaces, rich textures", c: ["#e6007e", "#ffcc00", "#00a19a", "#5b2a86"] },
+  { name: "Futuristic", desc: "sleek metallic surfaces, neon accents, clean geometric shapes, HUD-like tech details, dark background", c: ["#0a0f1e", "#9aa7b8", "#00e5ff"] },
+  { name: "Vector Art", desc: "flat vector illustration, crisp edges, solid colour fills, simple geometric shapes, minimal gradients", c: ["#2b59c3", "#f5b700", "#ff6b6b", "#ffffff"] },
+  { name: "Collage Art", desc: "cut-out photos and paper, torn edges, mixed-media layers, tape and paper textures, scrapbook composition", c: ["#e8dcc4", "#b5523b", "#3a3a3a", "#7a9e9f"] },
+  { name: "Retro", desc: "1970s palette of mustard, orange and brown, rounded bold type, film grain, vintage print feel", c: ["#e1a32a", "#d4572a", "#6b3e26", "#f2e3c6"] },
+  { name: "Cyberpunk", desc: "neon pink and cyan on a dark rainy city at night, glitch effects, futuristic signage, high contrast", c: ["#0d0221", "#ff2a6d", "#05d9e8"] },
+  { name: "Pop Art", desc: "bold primary colours, Ben-Day halftone dots, thick black outlines, comic-book look inspired by Warhol and Lichtenstein", c: ["#ffde00", "#e4002b", "#0057b8", "#111111"] },
+  { name: "Glassmorphism", desc: "frosted translucent glass panels, background blur, soft vibrant gradients, subtle light borders and reflections", c: ["#a18cd1", "#fbc2eb", "#e0f2ff"] },
+  { name: "Clay Style", desc: "soft 3D claymorphism, rounded puffy shapes, matte pastel colours, soft shadows, playful toy-like feel", c: ["#ffb4a2", "#b5e2fa", "#f7d6e0", "#c3f0ca"] },
+  { name: "Pixel Art", desc: "8-bit / 16-bit pixel grid, limited palette, retro video game aesthetic, crisp blocky edges", c: ["#1a1c2c", "#5d275d", "#ef7d57", "#a7f070"] },
+  { name: "Editorial", desc: "magazine layout, strong typographic hierarchy, elegant serif headlines, column grid, refined photography", c: ["#fbfaf7", "#151515", "#b8323a"] },
+  { name: "Y2K", desc: "early-2000s chrome and iridescent surfaces, bubbly shapes, holographic gradients, pink, baby blue and silver", c: ["#ff9de2", "#9ad7ff", "#c0c0c8", "#e8e8ff"] },
+  { name: "Swiss Design", desc: "strict modular grid, bold Helvetica-style sans-serif, asymmetric layout, flat colour blocks, objective clarity", c: ["#ffffff", "#e30613", "#111111"] },
+  { name: "Surreal", desc: "dreamlike impossible scenes, unexpected scale, floating objects, soft surreal lighting, inspired by Dalí and Magritte", c: ["#87a8d0", "#f2c3a0", "#3f4a6b", "#e9dfc9"] },
+  { name: "Bohemian", desc: "earthy warm tones, natural textures, hand-drawn botanical motifs, woven patterns, relaxed free-spirited feel", c: ["#c97b4a", "#e9c46a", "#6b8f71", "#f4e9d8"] },
+  { name: "Victorian Style", desc: "ornate filigree borders, engraved illustrations, decorative serif and script lettering, sepia, burgundy and gold", c: ["#3b1e1e", "#7a1f2b", "#c9a14a", "#efe3c8"] },
+  { name: "Graffiti", desc: "spray-paint street art, paint drips, bold wildstyle lettering, brick wall texture, vivid saturated colours", c: ["#222222", "#ff3d00", "#76ff03", "#2979ff"] },
+  { name: "Aurora", desc: "flowing luminous gradients of green, teal, purple and pink, soft glow, dark sky background, ethereal mood", c: ["#0b1026", "#2de2a6", "#7b5cff", "#ff6ec7"] },
+  { name: "Handwritten", desc: "hand-drawn marker and crayon lettering, sketchy scribbles, organic imperfect lines, warm personal feel", c: ["#faf6ee", "#e63b2e", "#111111"] },
+];
+const styleValue = st => `${st.name} (${st.desc})`;
+let currentStyle = null;
+
 // ---------- State ----------
 const $ = s => document.querySelector(s);
 const store = {
@@ -619,7 +710,7 @@ function renderGrid() {
     <article class="card" data-id="${p.id}">
       <div class="card-top">
         <span class="cat-tag">${esc(p.cat)}</span>
-        <button class="star ${favs.has(p.id) ? "on" : ""}" data-star="${p.id}" aria-label="Favourite">${favs.has(p.id) ? "★" : "☆"}</button>
+        <span class="right">${varsOf(p.prompt).includes("style") ? `<span class="badge">20 styles</span>` : ""}<button class="star ${favs.has(p.id) ? "on" : ""}" data-star="${p.id}" aria-label="Favourite">${favs.has(p.id) ? "★" : "☆"}</button></span>
       </div>
       <h3>${esc(p.title)}</h3>
       <p class="desc">${esc(p.desc)}</p>
@@ -658,10 +749,22 @@ function openModal(id) {
   const vars = varsOf(current.prompt);
   $("#mVars").innerHTML = vars.map(v => `<label>${esc(label(v))}<input data-var="${v}" placeholder="${esc(label(v))}"></label>`).join("");
   $("#mVars").style.display = vars.length ? "" : "none";
+  currentStyle = null;
+  $("#mStyles").hidden = !vars.includes("style");
+  renderStyles();
   renderModalPrompt();
   $("#overlay").classList.add("open");
   document.body.style.overflow = "hidden";
   $("#mVars input")?.focus();
+}
+function renderStyles() {
+  $("#mStyleName").textContent = currentStyle === null ? "None selected" : STYLES[currentStyle].name;
+  $("#mStyleGrid").innerHTML = STYLES.map((st, i) => `
+    <button type="button" class="style-opt ${i === currentStyle ? "active" : ""}" data-style="${i}" aria-pressed="${i === currentStyle}">
+      <span class="swatch">${st.c.map(c => `<i style="background:${c}"></i>`).join("")}</span>
+      <b><span class="num">${i + 1}.</span>${esc(st.name)}</b>
+      <small>${esc(st.desc.split(",")[0])}</small>
+    </button>`).join("");
 }
 function closeModal() {
   $("#overlay").classList.remove("open");
@@ -709,8 +812,17 @@ $("#mVars").oninput = e => {
   const v = e.target.dataset.var; if (!v) return;
   values[v] = e.target.value.trim(); renderModalPrompt();
 };
+$("#mStyleGrid").onclick = e => {
+  const b = e.target.closest("[data-style]"); if (!b) return;
+  const i = +b.dataset.style;
+  currentStyle = currentStyle === i ? null : i;
+  values.style = currentStyle === null ? "" : styleValue(STYLES[currentStyle]);
+  const input = $('#mVars input[data-var="style"]');
+  if (input) input.value = values.style;
+  renderStyles(); renderModalPrompt();
+};
 $("#mCopy").onclick = e => copy(fill(current.prompt, false), e.currentTarget);
-$("#mReset").onclick = () => { values = {}; $("#mVars").querySelectorAll("input").forEach(i => i.value = ""); renderModalPrompt(); };
+$("#mReset").onclick = () => { values = {}; currentStyle = null; renderStyles(); $("#mVars").querySelectorAll("input").forEach(i => i.value = ""); renderModalPrompt(); };
 $("#mClose").onclick = closeModal;
 $("#overlay").onclick = e => { if (e.target.id === "overlay") closeModal(); };
 document.addEventListener("keydown", e => {
