@@ -167,7 +167,7 @@
   }
   .preset:hover { color: var(--text); border-color: var(--accent); }
   .preset.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .aud-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; }
+  .aud-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 8px; }
   .aud-opt {
     background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px;
     display: flex; flex-direction: column; gap: 3px; text-align: left; cursor: pointer; color: var(--text); font: inherit;
@@ -176,6 +176,11 @@
   .aud-opt:focus-visible, .preset:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .aud-opt.active { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent); }
   .aud-opt b { font-size: 13px; font-weight: 600; }
+  .style-picker .custom {
+    width: 100%; margin-top: 8px; background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
+    border-radius: 8px; padding: 8px 10px; font: inherit; font-size: 14px;
+  }
+  .style-picker .custom:focus { outline: none; border-color: var(--accent); }
   .aud-opt small { font-size: 11.5px; color: var(--muted); line-height: 1.35; }
   .vars input {
     background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
@@ -297,7 +302,7 @@
 <section class="hero wrap">
   <div class="pill">AI Sandbox Project</div>
   <h1>Ready-to-use prompts for <span>every AI experiment</span></h1>
-  <p>A curated library of prompts for the AI Sandbox, each built as Role, Objective, Context, Key Requirements, Expected Output, and Testing &amp; Quality. Choose what to create, pick an expert role, pick your audience, one of 20 visual styles and the AI engine you use, fill in the blanks, then copy. Works with ChatGPT, Claude, Gemini, NotebookLM and Copilot.</p>
+  <p>A curated library of prompts for the AI Sandbox, each built as Role, Objective, Context, Key Requirements, Expected Output, and Testing &amp; Quality. Choose what to create, pick an expert role, audience, tone, one of 20 visual styles and the AI engine you use, fill in the blanks, then copy. Works with ChatGPT, Claude, Gemini, NotebookLM and Copilot.</p>
   <div class="stats">
     <div class="stat"><b id="statPrompts">0</b><small>Prompts</small></div>
     <div class="stat"><b id="statCats">0</b><small>Categories</small></div>
@@ -353,15 +358,23 @@
     <div class="style-picker" id="mRoles" hidden>
       <h4>Choose a role <span id="mRoleName">None selected</span></h4>
       <div class="aud-grid" id="mRoleGrid"></div>
+      <input class="custom" id="custom-role" data-var="role" placeholder="Or type your own role">
     </div>
     <div class="style-picker" id="mAudience" hidden>
       <h4>Choose a target audience <span id="mAudName">None selected</span></h4>
       <div class="aud-grid" id="mAudGrid"></div>
+      <input class="custom" id="custom-audience" data-var="audience" placeholder="Or describe your own audience">
+    </div>
+    <div class="style-picker" id="mTones" hidden>
+      <h4>Choose a tone <span id="mToneName">None selected</span></h4>
+      <div class="aud-grid" id="mToneGrid"></div>
+      <input class="custom" id="custom-tone" data-var="tone" placeholder="Or type your own tone">
     </div>
     <div class="style-picker" id="mStyles" hidden>
       <h4>Choose a visual style <span id="mStyleName">None selected</span></h4>
       <div class="style-preview" id="mStylePreview" hidden></div>
       <div class="style-grid" id="mStyleGrid"></div>
+      <input class="custom" id="custom-style" data-var="style" placeholder="Or describe your own style">
     </div>
     <div class="engine-box" id="mEngine">
       <h4>AI engine <span>Steps and output adapt to the tool you choose</span></h4>
@@ -567,7 +580,7 @@ const PROMPTS = [
     desc: "Steer the Audio Overview hosts to focus on what matters.",
     tags: ["notebooklm", "audio", "podcast"], role: "Podcast Producer", tip: "Paste into the 'Customise' box of Audio Overview.",
     objective: "I want an Audio Overview that focuses on {{focus_area}}.",
-    context: "Listeners: {{audience}}. Tone: {{tone}}.",
+    context: "Listeners: {{audience}}.",
     reqs: ["Include why this matters to the listeners at the start, then the top 3 insights from the sources.",
       "Include concrete examples from the documents.",
       "Include practical next steps the listener can take this week at the end.",
@@ -599,7 +612,7 @@ const PROMPTS = [
     desc: "Clear, polite emails in the right tone, every time.",
     tags: ["email", "communication"],
     objective: "I want an email to {{recipient}} that achieves this: {{goal}}.",
-    context: "Subject: {{subject}}. Tone: {{tone}}.",
+    context: "Subject: {{subject}}.",
     reqs: ["Include a clear subject line, one main ask and a specific deadline or next step.",
       "Include 2 versions: one formal and one friendlier.",
       "Include no more than 150 words per version.",
@@ -629,7 +642,7 @@ const PROMPTS = [
     desc: "Engaging post about a project milestone or lesson learned.",
     tags: ["social", "linkedin"], role: "LinkedIn Ghostwriter",
     objective: "I want a LinkedIn post about {{topic}} that people read and comment on.",
-    context: "Tone: {{tone}}.",
+    context: "The post is for my professional network on LinkedIn.",
     reqs: ["Include a hook in the first line, a short story or insight, and 3 key takeaways.",
       "Include a question at the end that invites comments.",
       "Include no more than 200 words and at most 3 relevant hashtags.",
@@ -832,7 +845,7 @@ const PROMPTS = [
 // ---------- Prompt structure ----------
 const TESTING = "TESTING & QUALITY:\nChallenge assumptions, identify weaknesses, verify facts, state uncertainties and recommend improvements. Do not fabricate information.";
 PROMPTS.forEach(p => {
-  p.prompt = `ROLE:\nAct as {{role}}.\n\nOBJECTIVE:\n${p.objective}\n\nCONTEXT:\nHere is the background: ${p.context}\n\nKEY REQUIREMENTS:\n${p.reqs.map((r, i) => `${i + 1}. ${r}`).join("\n")}\n\nEXPECTED OUTPUT:\nPresent the result in ${p.output}.${p.noLang ? "" : "\nLanguage: {{output_language}}."}`;
+  p.prompt = `ROLE:\nAct as {{role}}.\n\nOBJECTIVE:\n${p.objective}\n\nCONTEXT:\nHere is the background: ${p.context}\n\nKEY REQUIREMENTS:\n${p.reqs.map((r, i) => `${i + 1}. ${r}`).join("\n")}\n\nEXPECTED OUTPUT:\nPresent the result in ${p.output}.${p.noLang ? "" : "\nLanguage: {{output_language}}."}\nTone: {{tone}}.`;
 });
 
 // ---------- Predefined roles, by category (first one is the default) ----------
@@ -927,6 +940,7 @@ const defaultsFor = p => {
   const d = {};
   if (rolesFor(p).length) d.role = rolesFor(p)[defaultRoleIndex(p)].value;
   if (!p.noLang) d.output_language = "English";
+  d.tone = toneValue(TONES[0]);
   return d;
 };
 
@@ -986,10 +1000,6 @@ const AUDIENCES = [
     value: "children aged 7 to 12: very simple words, short sentences, a fun and friendly tone, playful examples and bright visuals, nothing scary" },
 ];
 const PRESETS = {
-  tone: ["Corporate", "Professional", "Formal", "Friendly", "Persuasive", "Inspiring",
-    { label: "Storytelling", value: "storytelling (a short narrative with a relatable person, a challenge and a resolution)" },
-    { label: "Analogy", value: "analogy-driven (explain each key point through a simple, relatable analogy)" },
-    "Casual", "Fun"],
   slide_count: ["5", "8", "10", "12", "15"],
   format: ["A4 portrait", "A3 poster", "16:9 slide", "1080x1350 Instagram post", "1080x1920 story"],
   aspect_ratio: ["1:1 square", "4:5 portrait", "16:9 landscape", "9:16 vertical", "3:2 photo"],
@@ -1000,6 +1010,28 @@ const PRESETS = {
   timeframe: ["3 months", "12 months", "3 years", "5 years"],
 };
 let currentAud = null;
+const TONES = [
+  { name: "Professional", short: "Clear, confident, courteous" },
+  { name: "Corporate", short: "Polished, brand-safe business voice" },
+  { name: "Formal", short: "Official and precise, no slang" },
+  { name: "Executive", short: "Brief, bottom line up front" },
+  { name: "Authoritative", short: "Expert, evidence-based, decisive" },
+  { name: "Data-driven", short: "Facts and numbers first" },
+  { name: "Persuasive", short: "Benefit-led with a clear call to action" },
+  { name: "Inspiring", short: "Uplifting and motivating" },
+  { name: "Storytelling", short: "A relatable person, a challenge and a resolution" },
+  { name: "Analogy", short: "Key points explained through simple analogies" },
+  { name: "Educational", short: "Patient, step-by-step teaching" },
+  { name: "Friendly", short: "Warm and conversational" },
+  { name: "Empathetic", short: "Understanding and reassuring" },
+  { name: "Diplomatic", short: "Tactful and balanced on sensitive issues" },
+  { name: "Urgent", short: "Direct, time-sensitive, action-focused" },
+  { name: "Humorous", short: "Light and witty, still work-appropriate" },
+  { name: "Casual", short: "Relaxed, everyday language" },
+  { name: "Fun / Playful", short: "Energetic and playful, great for kids" },
+];
+const toneValue = t => `${t.name.toLowerCase()} (${t.short.charAt(0).toLowerCase() + t.short.slice(1)})`;
+let currentTone = null;
 let currentRole = null;
 
 // ---------- AI engines ----------
@@ -1178,7 +1210,7 @@ function openModal(id) {
   $("#mDesc").textContent = current.desc;
   $("#mTip").textContent = current.tip ? "Tip: " + current.tip : "Tip: fill the fields above — the prompt updates live. Empty fields are copied as {{placeholders}}.";
   const vars = varsOf(current.prompt);
-  $("#mVars").innerHTML = vars.map(v => `<div class="var"><label for="var-${v}">${esc(label(v))}</label><input id="var-${v}" data-var="${v}" placeholder="${esc(label(v))}">${PRESETS[v] ? `<div class="preset-row">${PRESETS[v].map(p => typeof p === "string" ? { label: p, value: p } : p).map(p => `<button type="button" class="preset" data-preset="${v}" data-value="${esc(p.value)}" title="${esc(p.value)}">${esc(p.label)}</button>`).join("")}</div>` : ""}</div>`).join("");
+  $("#mVars").innerHTML = vars.filter(v => !PICKER_VARS.includes(v)).map(v => `<div class="var"><label for="var-${v}">${esc(label(v))}</label><input id="var-${v}" data-var="${v}" placeholder="${esc(label(v))}">${PRESETS[v] ? `<div class="preset-row">${PRESETS[v].map(p => typeof p === "string" ? { label: p, value: p } : p).map(p => `<button type="button" class="preset" data-preset="${v}" data-value="${esc(p.value)}" title="${esc(p.value)}">${esc(p.label)}</button>`).join("")}</div>` : ""}</div>`).join("");
   Object.entries(values).forEach(([v, val]) => { const i = $(`#mVars input[data-var="${v}"]`); if (i) i.value = val; });
   syncPresets();
   currentRole = rolesFor(current).length ? defaultRoleIndex(current) : null;
@@ -1187,7 +1219,11 @@ function openModal(id) {
   currentAud = null;
   $("#mAudience").hidden = !vars.includes("audience");
   renderAudiences();
-  $("#mVars").style.display = vars.length ? "" : "none";
+  $("#mVars").style.display = vars.some(v => !PICKER_VARS.includes(v)) ? "" : "none";
+  currentTone = values.tone ? TONES.findIndex(t => toneValue(t) === values.tone) : null;
+  $("#mTones").hidden = !vars.includes("tone");
+  renderTones();
+  document.querySelectorAll(".style-picker .custom").forEach(i => i.value = "");
   currentStyle = null;
   $("#mStyles").hidden = !vars.includes("style");
   renderStyles();
@@ -1195,18 +1231,26 @@ function openModal(id) {
   renderModalPrompt();
   $("#overlay").classList.add("open");
   document.body.style.overflow = "hidden";
-  $("#mVars input")?.focus();
+  $(".modal").scrollTop = 0;
+}
+const PICKER_VARS = ["role", "audience", "tone", "style"];
+function renderTones() {
+  $("#mToneName").textContent = currentTone === null ? (values.tone ? "Custom" : "None selected") : TONES[currentTone].name;
+  $("#mToneGrid").innerHTML = TONES.map((t, i) => `
+    <button type="button" class="aud-opt ${i === currentTone ? "active" : ""}" data-tone="${i}" aria-pressed="${i === currentTone}">
+      <b>${esc(t.name)}</b><small>${esc(t.short)}</small>
+    </button>`).join("");
 }
 function renderRoles() {
   const roles = rolesFor(current);
-  $("#mRoleName").textContent = currentRole === null ? "None selected" : roles[currentRole].name;
+  $("#mRoleName").textContent = currentRole === null ? (values.role ? "Custom" : "None selected") : roles[currentRole].name;
   $("#mRoleGrid").innerHTML = roles.map((r, i) => `
     <button type="button" class="aud-opt ${i === currentRole ? "active" : ""}" data-role="${i}" aria-pressed="${i === currentRole}">
       <b>${esc(r.name)}</b><small>${esc(r.short)}</small>
     </button>`).join("");
 }
 function renderAudiences() {
-  $("#mAudName").textContent = currentAud === null ? "None selected" : AUDIENCES[currentAud].name;
+  $("#mAudName").textContent = currentAud === null ? (values.audience ? "Custom" : "None selected") : AUDIENCES[currentAud].name;
   $("#mAudGrid").innerHTML = AUDIENCES.map((a, i) => `
     <button type="button" class="aud-opt ${i === currentAud ? "active" : ""}" data-aud="${i}" aria-pressed="${i === currentAud}">
       <b>${esc(a.name)}</b><small>${esc(a.short)}</small>
@@ -1219,10 +1263,12 @@ function setVar(v, val) {
   values[v] = val;
   const input = $(`#mVars input[data-var="${v}"]`);
   if (input) input.value = val;
+  const custom = $(`#custom-${v}`);
+  if (custom) custom.value = "";
 }
 function renderStyles() {
   const st = STYLES[currentStyle];
-  $("#mStyleName").textContent = st ? st.name : "None selected";
+  $("#mStyleName").textContent = st ? st.name : (values.style ? "Custom" : "None selected");
   $("#mStylePreview").hidden = !st;
   if (st) $("#mStylePreview").innerHTML = `${styleImg(st)}<div><b>${currentStyle + 1}. ${esc(st.name)}</b><p>${esc(st.desc)}.</p><p class="muted">Sample: a property management title slide in this style. Your AI engine creates the real result.</p></div>`;
   $("#mStyleGrid").innerHTML = STYLES.map((s, i) => `
@@ -1302,6 +1348,22 @@ $("#mVars").onclick = e => {
   setVar(v, values[v] === b.dataset.value ? "" : b.dataset.value);
   syncPresets(); renderModalPrompt();
 };
+document.querySelectorAll(".style-picker .custom").forEach(inp => inp.oninput = () => {
+  const v = inp.dataset.var;
+  values[v] = inp.value.trim();
+  if (v === "role") { currentRole = null; renderRoles(); }
+  if (v === "audience") { currentAud = null; renderAudiences(); }
+  if (v === "tone") { currentTone = null; renderTones(); }
+  if (v === "style") { currentStyle = null; renderStyles(); }
+  renderModalPrompt();
+});
+$("#mToneGrid").onclick = e => {
+  const b = e.target.closest("[data-tone]"); if (!b) return;
+  const i = +b.dataset.tone;
+  currentTone = currentTone === i ? null : i;
+  setVar("tone", currentTone === null ? "" : toneValue(TONES[currentTone]));
+  renderTones(); renderModalPrompt();
+};
 $("#mRoleGrid").onclick = e => {
   const b = e.target.closest("[data-role]"); if (!b) return;
   const i = +b.dataset.role;
@@ -1327,8 +1389,10 @@ $("#mCopy").onclick = e => copy(fullPrompt(current), e.currentTarget);
 $("#mReset").onclick = () => {
   values = defaultsFor(current); currentStyle = null; currentAud = null;
   currentRole = rolesFor(current).length ? defaultRoleIndex(current) : null;
+  currentTone = 0;
   $("#mVars").querySelectorAll("input").forEach(i => i.value = values[i.dataset.var] || "");
-  renderRoles(); renderStyles(); renderAudiences(); syncPresets(); renderModalPrompt();
+  document.querySelectorAll(".style-picker .custom").forEach(i => i.value = "");
+  renderRoles(); renderTones(); renderStyles(); renderAudiences(); syncPresets(); renderModalPrompt();
 };
 $("#mClose").onclick = closeModal;
 $("#overlay").onclick = e => { if (e.target.id === "overlay") closeModal(); };
