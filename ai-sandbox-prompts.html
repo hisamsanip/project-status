@@ -297,7 +297,7 @@
 <section class="hero wrap">
   <div class="pill">AI Sandbox Project</div>
   <h1>Ready-to-use prompts for <span>every AI experiment</span></h1>
-  <p>A curated library of tested prompts for the AI Sandbox. Choose what to create, pick your audience, one of 20 visual styles and the AI engine you use, fill in the blanks, then copy. Works with ChatGPT, Claude, Gemini, NotebookLM and Copilot.</p>
+  <p>A curated library of prompts for the AI Sandbox, each built as Role, Objective, Context, Key Requirements, Expected Output, and Testing &amp; Quality. Choose what to create, pick an expert role, pick your audience, one of 20 visual styles and the AI engine you use, fill in the blanks, then copy. Works with ChatGPT, Claude, Gemini, NotebookLM and Copilot.</p>
   <div class="stats">
     <div class="stat"><b id="statPrompts">0</b><small>Prompts</small></div>
     <div class="stat"><b id="statCats">0</b><small>Categories</small></div>
@@ -350,6 +350,10 @@
     </div>
     <p class="desc" id="mDesc"></p>
     <div class="vars" id="mVars"></div>
+    <div class="style-picker" id="mRoles" hidden>
+      <h4>Choose a role <span id="mRoleName">None selected</span></h4>
+      <div class="aud-grid" id="mRoleGrid"></div>
+    </div>
     <div class="style-picker" id="mAudience" hidden>
       <h4>Choose a target audience <span id="mAudName">None selected</span></h4>
       <div class="aud-grid" id="mAudGrid"></div>
@@ -381,417 +385,550 @@ const PROMPTS = [
   { id: "create-slides", cat: "Slides", kind: "slides", title: "Create Slides",
     desc: "Plan and design a full slide deck in a consistent visual style.",
     tags: ["slides", "presentation", "style"],
-    prompt: `Create a {{slide_count}}-slide presentation on {{topic}} for {{audience}}.
-Goal of the deck: {{goal}}
-Visual style: {{style}}.
-Apply the style consistently to every slide: backgrounds, colour palette, typography, icons, charts and imagery.
-
-For each slide give:
-- Slide title
-- On-slide content (max 6 short bullets, or one key visual)
-- Suggested visual, chart or image (described in the chosen style)
-- Speaker notes (2–3 sentences)
-
-Include a title slide, an agenda slide, and a closing slide with a clear call to action.` },
+    objective: "I want to create a {{slide_count}}-slide presentation on {{topic}} that achieves this goal: {{goal}}.",
+    context: "The audience is {{audience}}. The deck must use this visual style: {{style}}.",
+    reqs: ["Include a title slide, an agenda slide and a closing slide with a clear call to action.",
+      "Include, for every slide, a headline, on-slide content (max 6 short bullets or one key visual), a suggested visual or chart, and 2–3 sentences of speaker notes.",
+      "Include the visual style consistently on every slide: background, colour palette, typography, icons, charts and imagery.",
+      "Avoid walls of text, generic filler phrases and more than one key message per slide."],
+    output: "a numbered slide-by-slide outline with Title, Content, Visual and Speaker notes for each slide" },
   { id: "slides-from-doc", cat: "Slides", kind: "slides", title: "Slides from a Document",
     desc: "Turn a report, paper or meeting notes into a presentation.",
     tags: ["slides", "summary", "style"],
-    prompt: `Turn the document below (or the attached file) into a {{slide_count}}-slide presentation for {{audience}}.
-Visual style: {{style}}.
-Keep the key messages and numbers accurate. One idea per slide, max 5 bullets, and suggest a chart or visual wherever data appears.
-Add speaker notes for each slide and end with a summary slide of 3 takeaways.
-
-Document:
-"""
-{{document}}
-"""` },
+    objective: "I want to turn the document below into a clear {{slide_count}}-slide presentation.",
+    context: "The audience is {{audience}}. Visual style: {{style}}. The document (or the attached file):\n\"\"\"\n{{document}}\n\"\"\"",
+    reqs: ["Include the document's key messages and numbers exactly as written.",
+      "Include one idea per slide, max 5 bullets, and a chart or visual wherever data appears.",
+      "Include speaker notes for each slide and a final slide with 3 key takeaways.",
+      "Avoid adding facts, figures or claims that are not in the document."],
+    output: "a numbered slide-by-slide outline with Title, Content, Visual and Speaker notes, followed by a list of gaps or unclear points in the document" },
   { id: "pitch-deck", cat: "Slides", kind: "slides", title: "Pitch / Proposal Deck",
     desc: "A persuasive 10-slide deck to win approval or budget.",
-    tags: ["slides", "pitch", "style"],
-    prompt: `Create a 10-slide pitch deck to convince {{audience}} to approve {{proposal}}.
-Visual style: {{style}}.
-Slide order: 1) Title 2) The problem 3) Why now 4) Proposed solution 5) How it works 6) Benefits and impact, with numbers 7) Cost and timeline 8) Risks and mitigation 9) The ask 10) Next steps.
-Write each slide headline as a full-sentence key message, keep on-slide text minimal, and add speaker notes.` },
+    tags: ["slides", "pitch", "style"], role: "Pitch Deck Specialist",
+    objective: "I want to convince {{audience}} to approve {{proposal}}.",
+    context: "This is a 10-slide pitch deck. Visual style: {{style}}. Supporting facts and figures: {{key_facts}}",
+    reqs: ["Include this slide order: 1) Title 2) The problem 3) Why now 4) Proposed solution 5) How it works 6) Benefits and impact, with numbers 7) Cost and timeline 8) Risks and mitigation 9) The ask 10) Next steps.",
+      "Include a full-sentence key message as the headline of every slide.",
+      "Include speaker notes that anticipate the audience's likely objections.",
+      "Avoid hype, unsupported numbers and paragraphs on slides."],
+    output: "a numbered 10-slide outline with Headline, Content, Visual and Speaker notes, then the top 3 objections with suggested answers" },
 
   // ---------- Infographic ----------
   { id: "create-infographic", cat: "Infographic", kind: "infographic", title: "Create Infographic",
     desc: "Turn facts or data into a styled, easy-to-scan infographic.",
     tags: ["infographic", "style", "data"],
-    prompt: `Design an infographic about {{topic}} for {{audience}}.
-Visual style: {{style}}.
-Format: {{format}} (e.g. A4 portrait, 1080x1350 Instagram post, 16:9 slide).
-Key points and data to include:
-{{key_points}}
-
-Structure: a bold title, a one-line key takeaway, 4–6 sections with icons or simple charts, and a footer with the source.
-Use a clear visual hierarchy, at most 2 typefaces, and keep each text block under 25 words.
-Make the key numbers the visual heroes, and make sure all text is spelled correctly and readable.` },
+    objective: "I want to explain {{topic}} in one infographic that people can understand at a glance.",
+    context: "Audience: {{audience}}. Visual style: {{style}}. Format: {{format}}. Key points and data:\n{{key_points}}",
+    reqs: ["Include a bold title, a one-line key takeaway, 4–6 sections with icons or simple charts, and a footer with the source.",
+      "Include the key numbers as the visual heroes, with a clear visual hierarchy and at most 2 typefaces.",
+      "Include all text spelled exactly as given, with each text block under 25 words.",
+      "Avoid clutter, charts that distort the data, and invented statistics."],
+    output: "a finished infographic in the stated format; if you cannot render images, a section-by-section layout spec with exact text, icons, chart types and colours" },
   { id: "process-infographic", cat: "Infographic", kind: "infographic", title: "Process / Timeline Infographic",
     desc: "Show steps or milestones as a clear visual flow.",
     tags: ["infographic", "process", "timeline", "style"],
-    prompt: `Design a step-by-step infographic showing {{process}} for {{audience}}.
-Visual style: {{style}}.
-Format: {{format}}.
-Steps or milestones:
-{{steps}}
-
-Show them as a numbered flow or timeline with an icon and a one-line description for each.
-Add a title, a short intro line, and a tip or warning box at the end. Keep all text short and spelled exactly as written.` },
+    objective: "I want to show {{process}} as a clear step-by-step visual.",
+    context: "Audience: {{audience}}. Visual style: {{style}}. Format: {{format}}. Steps or milestones:\n{{steps}}",
+    reqs: ["Include each step as a numbered stage in a flow or timeline, with an icon and a one-line description.",
+      "Include a title, a short intro line and a tip or warning box at the end.",
+      "Include all text short and spelled exactly as written.",
+      "Avoid crossing arrows, an unclear order and more than 8 steps on one page."],
+    output: "a finished infographic in the stated format; if you cannot render images, a layout spec with the exact text and icon for each step" },
   { id: "comparison-infographic", cat: "Infographic", kind: "infographic", title: "Comparison Infographic",
     desc: "Side-by-side visual comparison of two options.",
     tags: ["infographic", "comparison", "style"],
-    prompt: `Design a comparison infographic: {{option_a}} vs {{option_b}}, for {{audience}}.
-Visual style: {{style}}.
-Format: {{format}}.
-Compare on these points: {{criteria}}
-
-Use a two-column layout with a matching icon on each row, highlight the better option on each point, and end with a one-line verdict.
-Keep every label under 8 words.` },
+    objective: "I want to compare {{option_a}} and {{option_b}} so the audience can decide quickly.",
+    context: "Audience: {{audience}}. Visual style: {{style}}. Format: {{format}}. Points to compare: {{criteria}}",
+    reqs: ["Include a two-column layout with a matching icon on each row.",
+      "Include a clear marker of the better option on each point and a one-line verdict at the end.",
+      "Include labels of no more than 8 words each.",
+      "Avoid layout or colour choices that favour one option without evidence."],
+    output: "a finished infographic in the stated format; if you cannot render images, a row-by-row layout spec with exact text and icons" },
 
   // ---------- Visual ----------
   { id: "create-image", cat: "Visual", kind: "image", title: "Create Image",
     desc: "Generate an image in one of 20 graphic design styles.",
     tags: ["image", "style", "design"],
-    prompt: `Create an image of {{subject}}.
-Visual style: {{style}}.
-Purpose: {{purpose}}. Aspect ratio: {{aspect_ratio}}.
-Text to include in the image (spell exactly as written, keep it legible): {{text_in_image}}
-Apply the style consistently to composition, colour palette, lighting, texture and typography.
-Avoid watermarks, distorted hands or faces, and cluttered backgrounds.` },
+    objective: "I want an image of {{subject}} to use for {{purpose}}.",
+    context: "Visual style: {{style}}. Aspect ratio: {{aspect_ratio}}. Text to show in the image: {{text_in_image}}",
+    reqs: ["Include the visual style consistently in composition, colour palette, lighting, texture and typography.",
+      "Include any text exactly as written, large and legible.",
+      "Include one clear focal point and enough empty space around it.",
+      "Avoid watermarks, distorted hands or faces, extra text and cluttered backgrounds."],
+    output: "one finished image at the stated aspect ratio, followed by a one-line description of your design choices and 2 variations I could try" },
   { id: "poster", cat: "Visual", kind: "image", title: "Poster / Event Flyer",
     desc: "A print-ready poster or flyer for an event or campaign.",
     tags: ["poster", "event", "style"],
-    prompt: `Design a poster for {{event_name}}.
-Visual style: {{style}}.
-Format: {{format}}.
-Details to show (spell exactly as written):
-- Date and time: {{date_time}}
-- Venue: {{venue}}
-- Tagline: {{tagline}}
-
-Make the event name the dominant element, keep a clear reading order (name, date, venue, details), and leave margins for printing.` },
+    objective: "I want a poster that makes people notice and attend {{event_name}}.",
+    context: "Visual style: {{style}}. Format: {{format}}. Date and time: {{date_time}}. Venue: {{venue}}. Tagline: {{tagline}}.",
+    reqs: ["Include the event name as the dominant element.",
+      "Include a clear reading order (name, date, venue, then other details), all spelled exactly as written.",
+      "Include print-safe margins and strong contrast so it reads from a distance.",
+      "Avoid more than 3 typefaces, tiny text and busy backgrounds behind text."],
+    output: "one finished poster in the stated format; if you cannot render images, a layout spec with exact text, hierarchy, colours and imagery" },
   { id: "social-graphic", cat: "Visual", kind: "image", title: "Social Media Graphic",
     desc: "Scroll-stopping post or story graphic for any platform.",
-    tags: ["social", "image", "style"],
-    prompt: `Create a {{platform}} post graphic announcing {{message}}.
-Visual style: {{style}}.
-Size: {{size}} (e.g. 1080x1080 square, 1080x1920 story).
-Headline on the graphic: "{{headline}}"
-Brand colours, if any: {{brand_colours}}
-
-Keep the headline large and readable on a phone, use at most 12 words of text, and leave space for a logo in one corner.` },
+    tags: ["social", "image", "style"], role: "Social Media Creative",
+    objective: "I want a {{platform}} graphic that announces {{message}} and stops people scrolling.",
+    context: "Visual style: {{style}}. Size: {{size}}. Headline: \"{{headline}}\". Brand colours, if any: {{brand_colours}}.",
+    reqs: ["Include the headline large enough to read on a phone.",
+      "Include space for a logo in one corner.",
+      "Include no more than 12 words of text in the graphic.",
+      "Avoid small print, low contrast and important content near the edges."],
+    output: "one finished graphic at the stated size, plus a suggested caption of up to 2 sentences" },
   { id: "image-prompt", cat: "Visual", title: "Image Generation Prompt",
     desc: "Write detailed prompts to paste into Midjourney, Firefly, Imagen or DALL·E.",
-    tags: ["image", "prompt", "design"], tip: "Useful with Claude or NotebookLM, which don't paint images: let them write the prompt, then paste it into an image tool.",
-    prompt: `Write 3 detailed image-generation prompts for: {{subject}}.
-Style: {{style}}. Aspect ratio: {{aspect_ratio}}.
-Each prompt should specify subject, setting, composition, lighting, colour palette, camera/lens or medium, and mood.
-Also give a negative prompt listing what to avoid.` },
+    tags: ["image", "prompt", "design"], role: "Art Director",
+    tip: "Useful with Claude or NotebookLM, which don't paint images: let them write the prompt, then paste it into an image tool.",
+    objective: "I want ready-to-paste prompts that generate images of {{subject}}.",
+    context: "Visual style: {{style}}. Aspect ratio: {{aspect_ratio}}. The prompts will be used in image tools such as Midjourney, Firefly, Imagen or DALL·E.",
+    reqs: ["Include in each prompt the subject, setting, composition, lighting, colour palette, camera, lens or medium, and mood.",
+      "Include 3 clearly different variations.",
+      "Include a negative prompt that lists what to avoid.",
+      "Avoid names of living artists and trademarked characters."],
+    output: "3 numbered prompts in code blocks, each under 80 words, followed by the negative prompt" },
 
   // ---------- Getting Started ----------
   { id: "role-setup", cat: "Getting Started", title: "Expert Role Setup",
     desc: "Prime the AI to act as a domain expert before you start a session.",
     tags: ["role", "system"], tip: "Use as the first message of a new chat.",
-    prompt: `You are a senior {{role}} with 15+ years of experience in {{industry}}.
-For this conversation:
-- Ask clarifying questions before answering if my request is ambiguous.
-- Be concise and practical; prefer bullet points and examples.
-- Flag any assumptions you make and any risks I should consider.
-- If you don't know something, say so instead of guessing.
-
-My first task is: {{task}}` },
+    objective: "I want expert help with this task: {{task}}.",
+    context: "Industry: {{industry}}. This is the start of a working session, so ask before you assume.",
+    reqs: ["Include clarifying questions before answering if my request is ambiguous.",
+      "Include practical steps, examples and the assumptions you make.",
+      "Include the risks I should consider.",
+      "Avoid guessing; say clearly when you don't know."],
+    output: "short sections with bullet points, ending with your first 3 questions for me" },
   { id: "prompt-improver", cat: "Getting Started", title: "Prompt Improver",
-    desc: "Turn a rough idea into a well-structured, high-quality prompt.",
-    tags: ["meta", "optimise"],
-    prompt: `Act as a prompt engineer. Rewrite my rough prompt below into a clear, effective prompt.
-Include: the role the AI should take, context, the exact task, constraints, and the desired output format.
-Then list 3 questions I could answer to make it even better.
-
-Rough prompt:
-"""
-{{rough_prompt}}
-"""` },
+    desc: "Turn a rough idea into a prompt that follows this vault's structure.",
+    tags: ["meta", "optimise"], role: "Prompt Engineer",
+    objective: "I want to turn my rough prompt into a clear, effective prompt.",
+    context: "My rough prompt:\n\"\"\"\n{{rough_prompt}}\n\"\"\"",
+    reqs: ["Include these sections in the rewritten prompt: ROLE, OBJECTIVE, CONTEXT, KEY REQUIREMENTS, EXPECTED OUTPUT, and TESTING & QUALITY.",
+      "Include placeholders in [brackets] for information I still need to add.",
+      "Include 3 questions I could answer to make it even better.",
+      "Avoid changing my intent or adding requirements I did not ask for."],
+    output: "the improved prompt in a code block, followed by the 3 questions" },
   { id: "explain-like", cat: "Getting Started", title: "Explain at My Level",
     desc: "Get any concept explained at the right depth for the audience.",
-    tags: ["learning", "explain"],
-    prompt: `Explain {{topic}} to a {{audience}}.
-Structure:
-1. One-sentence summary
-2. A simple analogy
-3. How it actually works (3–5 bullets)
-4. A real-world example relevant to {{industry}}
-5. Common misconceptions
-Keep it under 300 words.` },
+    tags: ["learning", "explain"], role: "Teacher / Trainer",
+    objective: "I want to understand {{topic}} well enough to explain it to others.",
+    context: "Audience: {{audience}}. Industry for examples: {{industry}}.",
+    reqs: ["Include a one-sentence summary and a simple analogy.",
+      "Include how it works in 3–5 bullets and one real-world example from the industry.",
+      "Include common misconceptions.",
+      "Avoid jargon unless you explain it."],
+    output: "5 short parts under clear headings, under 300 words in total" },
 
   // ---------- Research ----------
   { id: "deep-research", cat: "Research", title: "Structured Research Brief",
     desc: "A thorough brief on any topic with sources and open questions.",
     tags: ["research", "analysis"],
-    prompt: `Research {{topic}} and produce a structured brief for {{audience}}.
-Sections:
-- Executive summary (5 bullets max)
-- Key facts & figures (with sources/links where possible)
-- Main players / stakeholders
-- Trends over the last {{timeframe}}
-- Risks & opportunities
-- Open questions worth investigating further
-Clearly separate verified facts from your own inferences.` },
+    objective: "I want a reliable, well-structured brief on {{topic}}.",
+    context: "Audience: {{audience}}. Time period to cover: the last {{timeframe}}.",
+    reqs: ["Include an executive summary of up to 5 bullets, key facts and figures with sources, and the main players or stakeholders.",
+      "Include trends over the time period, risks and opportunities.",
+      "Include open questions worth investigating further.",
+      "Avoid mixing verified facts with your own inferences; label each clearly."],
+    output: "a brief with headings, a source list with links where available, and a confidence level (high, medium or low) for each key claim" },
   { id: "compare-options", cat: "Research", title: "Compare Options Matrix",
     desc: "Side-by-side comparison of tools, vendors or approaches.",
-    tags: ["comparison", "decision"],
-    prompt: `Compare the following options for {{use_case}}: {{options}}.
-Create a table with these criteria: cost, ease of use, scalability, security, integration, support, and best-fit scenario.
-After the table, give a recommendation for a team of {{team_size}} with a budget of {{budget}}, and explain the trade-offs.` },
+    tags: ["comparison", "decision"], role: "Market Research Consultant",
+    objective: "I want to choose the best option for {{use_case}}.",
+    context: "Options: {{options}}. Team size: {{team_size}}. Budget: {{budget}}.",
+    reqs: ["Include a comparison on cost, ease of use, scalability, security, integration, support and best-fit scenario.",
+      "Include a clear recommendation for my team size and budget.",
+      "Include the main trade-offs and any deal-breakers.",
+      "Avoid presenting prices as current unless you are sure; flag figures that need checking."],
+    output: "a comparison table, followed by the recommendation and trade-offs in short paragraphs" },
   { id: "source-qa", cat: "Research", title: "Source-Grounded Q&A",
     desc: "Answer only from uploaded sources — ideal for NotebookLM.",
     tags: ["notebooklm", "citations"], tip: "Works best in NotebookLM or with documents attached.",
-    prompt: `Using ONLY the provided sources, answer: {{question}}
-Rules:
-- Cite the source for every claim.
-- If the sources don't contain the answer, say "Not found in sources".
-- Highlight any contradictions between sources.
-- End with 3 follow-up questions the sources could help answer.` },
+    objective: "I want an accurate answer to this question: {{question}}",
+    context: "Use only the sources provided in this chat or notebook.",
+    reqs: ["Include a citation for every claim.",
+      "Include any contradictions between sources.",
+      "Include 3 follow-up questions the sources could help answer.",
+      "Avoid any information that is not in the sources; write \"Not found in sources\" when needed."],
+    output: "a direct answer first, then supporting points with citations" },
 
   // ---------- NotebookLM ----------
   { id: "nlm-study-guide", cat: "NotebookLM", title: "Study Guide Generator",
     desc: "Turn your notebook sources into a complete study guide.",
-    tags: ["notebooklm", "learning"],
-    prompt: `Create a study guide from all sources in this notebook for {{audience}}.
-Include:
-1. Key concepts with short definitions
-2. A glossary of important terms
-3. 10 quiz questions (mix of multiple choice and short answer) with an answer key
-4. 3 essay/discussion questions
-5. A one-page summary I can review in 5 minutes` },
+    tags: ["notebooklm", "learning"], role: "Instructional Designer",
+    objective: "I want a complete study guide built from the sources in this notebook.",
+    context: "Audience: {{audience}}.",
+    reqs: ["Include key concepts with short definitions and a glossary of important terms.",
+      "Include 10 quiz questions (multiple choice and short answer) with an answer key, plus 3 discussion questions.",
+      "Include a one-page summary that can be reviewed in 5 minutes.",
+      "Avoid any content that is not in the sources."],
+    output: "a study guide with those sections in order and citations to the sources" },
   { id: "nlm-audio-brief", cat: "NotebookLM", title: "Audio Overview Customiser",
     desc: "Steer the Audio Overview hosts to focus on what matters.",
-    tags: ["notebooklm", "audio", "podcast"], tip: "Paste into the 'Customise' box of Audio Overview.",
-    prompt: `Focus this audio overview on {{focus_area}} for an audience of {{audience}}.
-Start with why this matters to them, then cover the top 3 insights from the sources.
-Use concrete examples from the documents. Avoid jargon or explain it when used.
-End with practical next steps the listener can take this week.
-Keep the tone {{tone}}.` },
+    tags: ["notebooklm", "audio", "podcast"], role: "Podcast Producer", tip: "Paste into the 'Customise' box of Audio Overview.",
+    objective: "I want an Audio Overview that focuses on {{focus_area}}.",
+    context: "Listeners: {{audience}}. Tone: {{tone}}.",
+    reqs: ["Include why this matters to the listeners at the start, then the top 3 insights from the sources.",
+      "Include concrete examples from the documents.",
+      "Include practical next steps the listener can take this week at the end.",
+      "Avoid jargon unless it is explained."],
+    output: "a conversational audio overview that follows this structure" },
   { id: "nlm-timeline", cat: "NotebookLM", title: "Timeline & Key Events",
     desc: "Extract a chronological timeline from documents.",
     tags: ["notebooklm", "timeline"],
-    prompt: `From the sources, build a chronological timeline of {{subject}}.
-For each entry: date, event, people/teams involved, and why it mattered.
-Then list any gaps where dates or events are unclear, and the source each entry came from.` },
+    objective: "I want a clear chronological timeline of {{subject}}.",
+    context: "Use only the notebook sources.",
+    reqs: ["Include for each entry the date, event, people or teams involved, and why it mattered.",
+      "Include the source for each entry.",
+      "Include gaps where dates or events are unclear.",
+      "Avoid guessing dates that the sources don't state."],
+    output: "a table in date order, followed by the list of gaps" },
   { id: "nlm-faq", cat: "NotebookLM", title: "FAQ Builder",
     desc: "Generate an FAQ that answers what readers will actually ask.",
-    tags: ["notebooklm", "faq", "docs"],
-    prompt: `Read all sources and generate an FAQ for {{audience}}.
-Write 12 questions they are most likely to ask, grouped by theme.
-Answer each in 2–4 sentences using only source material, with a citation.
-Mark any question where the sources give an incomplete answer.` },
+    tags: ["notebooklm", "faq", "docs"], role: "Knowledge Manager",
+    objective: "I want an FAQ that answers what {{audience}} will actually ask.",
+    context: "Use only the notebook sources.",
+    reqs: ["Include 12 questions grouped by theme.",
+      "Include a 2–4 sentence answer with a citation for each question.",
+      "Include a flag on any question where the sources give an incomplete answer.",
+      "Avoid questions the sources cannot answer at all."],
+    output: "the FAQ grouped under theme headings" },
 
   // ---------- Writing ----------
   { id: "email-pro", cat: "Writing", title: "Professional Email",
     desc: "Clear, polite emails in the right tone, every time.",
     tags: ["email", "communication"],
-    prompt: `Write an email to {{recipient}} about {{subject}}.
-Tone: {{tone}}.
-Goal of the email: {{goal}}.
-Keep it under 150 words, with a clear subject line, one main ask, and a specific deadline or next step.
-Give me 2 versions: one formal, one friendlier.` },
+    objective: "I want an email to {{recipient}} that achieves this: {{goal}}.",
+    context: "Subject: {{subject}}. Tone: {{tone}}.",
+    reqs: ["Include a clear subject line, one main ask and a specific deadline or next step.",
+      "Include 2 versions: one formal and one friendlier.",
+      "Include no more than 150 words per version.",
+      "Avoid vague requests, unnecessary apologies and long paragraphs."],
+    output: "Version A and Version B, each with Subject and Body" },
   { id: "rewrite-clarity", cat: "Writing", title: "Rewrite for Clarity",
     desc: "Tighten and simplify any draft without losing meaning.",
-    tags: ["editing", "clarity"],
-    prompt: `Rewrite the text below to be clearer and more concise for {{audience}}.
-- Cut filler and repetition
-- Use active voice and short sentences
-- Keep all key facts
-- Preserve my voice; don't make it sound robotic
-Then list the main changes you made.
-
-Text:
-"""
-{{text}}
-"""` },
-  { id: "bm-translate", cat: "Writing", title: "Translate EN ⇄ BM",
+    tags: ["editing", "clarity"], role: "Editor",
+    objective: "I want my text to be clearer and more concise without losing its meaning.",
+    context: "Audience: {{audience}}. My text:\n\"\"\"\n{{text}}\n\"\"\"",
+    reqs: ["Include all key facts and keep my own voice.",
+      "Include active voice and short sentences.",
+      "Include a list of the main changes you made.",
+      "Avoid filler, repetition and a robotic tone."],
+    output: "the rewritten text, followed by the list of changes" },
+  { id: "bm-translate", cat: "Writing", title: "Translate English ⇄ Bahasa Melayu",
     desc: "Natural English–Bahasa Melayu translation for business use.",
-    tags: ["translation", "malay"],
-    prompt: `Translate the following text into {{target_language}}.
-Translate between English and Bahasa Melayu only. Use natural, professional business language suitable for Malaysia — not word-for-word.
-Keep names, numbers and technical terms accurate. Flag any phrase that has no direct equivalent.
-
-Text:
-"""
-{{text}}
-"""` },
+    tags: ["translation", "malay"], role: "Bilingual Translator (EN–BM)", noLang: true,
+    objective: "I want an accurate, natural translation into {{target_language}}.",
+    context: "This is for business use in Malaysia. The text:\n\"\"\"\n{{text}}\n\"\"\"",
+    reqs: ["Include natural, professional wording rather than a word-for-word translation.",
+      "Include names, numbers and technical terms exactly as in the original.",
+      "Include a note on any phrase that has no direct equivalent.",
+      "Avoid any language other than English and Bahasa Melayu."],
+    output: "the translation, followed by the notes" },
   { id: "linkedin-post", cat: "Writing", title: "LinkedIn Post",
     desc: "Engaging post about a project milestone or lesson learned.",
-    tags: ["social", "linkedin"],
-    prompt: `Write a LinkedIn post about {{topic}}.
-Hook in the first line, a short story or insight, 3 key takeaways, and a question to drive comments.
-Tone: {{tone}}. Max 200 words. Max 3 relevant hashtags. No emojis overload.` },
+    tags: ["social", "linkedin"], role: "LinkedIn Ghostwriter",
+    objective: "I want a LinkedIn post about {{topic}} that people read and comment on.",
+    context: "Tone: {{tone}}.",
+    reqs: ["Include a hook in the first line, a short story or insight, and 3 key takeaways.",
+      "Include a question at the end that invites comments.",
+      "Include no more than 200 words and at most 3 relevant hashtags.",
+      "Avoid emoji overload, buzzwords and humblebragging."],
+    output: "the post ready to paste, followed by 2 alternative opening hooks" },
 
   // ---------- Productivity ----------
   { id: "meeting-notes", cat: "Productivity", title: "Meeting Notes → Actions",
     desc: "Convert messy notes or transcripts into decisions and action items.",
     tags: ["meetings", "actions"],
-    prompt: `Turn the meeting notes below into:
-1. A 3-sentence summary
-2. Decisions made
-3. Action items in a table: Owner | Task | Due date | Priority
-4. Open questions / parking lot
-5. A short follow-up email I can send to attendees
-
-Notes:
-"""
-{{notes}}
-"""` },
+    objective: "I want to turn my meeting notes into clear decisions and actions.",
+    context: "Notes or transcript:\n\"\"\"\n{{notes}}\n\"\"\"",
+    reqs: ["Include a 3-sentence summary and the decisions made.",
+      "Include action items in a table: Owner | Task | Due date | Priority.",
+      "Include open questions and a short follow-up email to attendees.",
+      "Avoid assigning owners or dates that are not in the notes; mark them as TBC."],
+    output: "those sections in order under clear headings" },
   { id: "weekly-plan", cat: "Productivity", title: "Weekly Planner",
     desc: "Prioritise your week using impact vs effort.",
-    tags: ["planning", "priorities"],
-    prompt: `Here are my tasks for the week: {{tasks}}.
-My fixed commitments are: {{commitments}}.
-Sort the tasks with an Eisenhower matrix, then build a day-by-day plan for Monday–Friday with focus blocks.
-Suggest what to delegate or drop, and flag anything that's at risk.` },
+    tags: ["planning", "priorities"], role: "Productivity Coach",
+    objective: "I want a realistic plan for my week.",
+    context: "My tasks: {{tasks}}. My fixed commitments: {{commitments}}.",
+    reqs: ["Include an Eisenhower matrix of the tasks.",
+      "Include a day-by-day plan for Monday to Friday with focus blocks.",
+      "Include what to delegate or drop, and anything at risk.",
+      "Avoid scheduling more than 6 hours of focused work in a day."],
+    output: "the matrix as a table, followed by the daily plan as a table" },
   { id: "sop-writer", cat: "Productivity", title: "SOP Writer",
     desc: "Document a process as a clear standard operating procedure.",
-    tags: ["process", "documentation"],
-    prompt: `Write an SOP for: {{process}}.
-Include: purpose, scope, roles & responsibilities, prerequisites, numbered step-by-step instructions, quality checks, common mistakes, and escalation contacts ({{escalation}}).
-Format it so a new team member can follow it without help.` },
+    tags: ["process", "documentation"], role: "Operations Manager",
+    objective: "I want a standard operating procedure for: {{process}}.",
+    context: "Escalation contacts: {{escalation}}.",
+    reqs: ["Include purpose, scope, roles and responsibilities, and prerequisites.",
+      "Include numbered step-by-step instructions, quality checks and common mistakes.",
+      "Include the escalation contacts.",
+      "Avoid vague steps; each step must be one clear action."],
+    output: "an SOP a new team member can follow without help, with headings and numbered steps" },
 
   // ---------- Project Management ----------
   { id: "project-charter", cat: "Project Management", title: "Project Charter",
     desc: "Kick off a project with a one-page charter.",
     tags: ["pm", "kickoff"],
-    prompt: `Create a one-page project charter for {{project_name}}.
-Background: {{background}}
-Include: objectives (SMART), scope in/out, key deliverables, milestones, stakeholders, success metrics, risks, assumptions, and budget estimate.
-Use clear headings and tables where useful.` },
+    objective: "I want a one-page project charter for {{project_name}}.",
+    context: "{{background}}",
+    reqs: ["Include SMART objectives, scope in and out, key deliverables and milestones.",
+      "Include stakeholders, success metrics, risks, assumptions and a budget estimate.",
+      "Include tables wherever they make the charter easier to scan.",
+      "Avoid invented budget figures; label every estimate as an estimate."],
+    output: "a one-page charter with headings and tables" },
   { id: "status-report", cat: "Project Management", title: "Status Report",
     desc: "RAG-rated status update for management.",
-    tags: ["pm", "reporting"],
-    prompt: `Write a weekly status report for {{project_name}} for senior management.
-Updates this week: {{updates}}
-Format:
-- Overall status (Green/Amber/Red) with one-line reason
-- Progress vs plan
-- Key achievements
-- Risks & issues (with mitigation)
-- Decisions needed from management
-- Next week's priorities
-Keep it scannable — under 250 words.` },
+    tags: ["pm", "reporting"], role: "PMO Director",
+    objective: "I want a weekly status report on {{project_name}} for senior management.",
+    context: "Updates this week: {{updates}}",
+    reqs: ["Include overall status (Green, Amber or Red) with a one-line reason, progress against plan and key achievements.",
+      "Include risks and issues with mitigation, and decisions needed from management.",
+      "Include next week's priorities.",
+      "Avoid hiding bad news; state problems plainly."],
+    output: "a scannable report under 250 words with headings" },
   { id: "risk-register", cat: "Project Management", title: "Risk Register",
     desc: "Identify and score risks with mitigations.",
-    tags: ["pm", "risk"],
-    prompt: `Identify the top 10 risks for {{project_name}} ({{project_type}}).
-Output a table: Risk | Category | Likelihood (1–5) | Impact (1–5) | Score | Mitigation | Owner.
-Sort by score, and highlight the top 3 that need action now.` },
+    tags: ["pm", "risk"], role: "Risk Manager",
+    objective: "I want to identify and prioritise the top risks for {{project_name}}.",
+    context: "Project type: {{project_type}}.",
+    reqs: ["Include 10 risks in a table: Risk | Category | Likelihood (1–5) | Impact (1–5) | Score | Mitigation | Owner.",
+      "Include the table sorted by score, highest first.",
+      "Include the top 3 risks that need action now.",
+      "Avoid generic risks that don't apply to this type of project."],
+    output: "the table, followed by the top 3 risks with recommended actions" },
 
   // ---------- Coding ----------
   { id: "code-explain", cat: "Coding", title: "Explain This Code",
     desc: "Understand unfamiliar code line by line.",
     tags: ["code", "learning"],
-    prompt: `Explain this {{language}} code to someone with {{level}} experience.
-1. What it does overall (2 sentences)
-2. Walk through it step by step
-3. Potential bugs, edge cases or security issues
-4. How you would improve it
-
-\`\`\`
-{{code}}
-\`\`\`` },
+    objective: "I want to understand what this {{programming_language}} code does.",
+    context: "My experience level: {{level}}. The code:\n\`\`\`\n{{code}}\n\`\`\`",
+    reqs: ["Include what the code does overall, in 2 sentences.",
+      "Include a step-by-step walkthrough.",
+      "Include potential bugs, edge cases, security issues and improvements.",
+      "Avoid assuming behaviour you can't see in the code; say what would need checking."],
+    output: "those parts under headings, with code snippets where helpful" },
   { id: "build-tool", cat: "Coding", title: "Build a Mini Tool",
     desc: "Generate a single-file web app for a quick sandbox experiment.",
     tags: ["code", "prototype", "html"],
-    prompt: `Build a single-file HTML/CSS/JavaScript app that {{goal}}.
-Requirements:
-- No build step, works by opening the file in a browser
-- Clean, mobile-friendly UI
-- Data saved in localStorage
-- Features: {{features}}
-Return the full code in one block, then a short explanation of how to extend it.` },
+    objective: "I want a single-file web app that {{goal}}.",
+    context: "Features needed: {{features}}.",
+    reqs: ["Include HTML, CSS and JavaScript in one file that works by opening it in a browser, with no build step.",
+      "Include a clean, mobile-friendly UI and data saved in localStorage.",
+      "Include comments for the main parts of the code.",
+      "Avoid external dependencies unless they are essential."],
+    output: "the full code in one block, followed by a short guide on how to extend it" },
   { id: "debug", cat: "Coding", title: "Debug Assistant",
     desc: "Systematically find the root cause of an error.",
-    tags: ["code", "debugging"],
-    prompt: `I'm getting this error in {{language}}:
-{{error}}
-
-Expected behaviour: {{expected}}
-Here is the relevant code:
-{{code}}
-
-Find the root cause (not just the symptom), explain it, and give a fixed version. Then suggest how to prevent this class of bug.` },
+    tags: ["code", "debugging"], role: "QA Engineer",
+    objective: "I want to fix this {{programming_language}} error at its root cause.",
+    context: "The error:\n{{error}}\nExpected behaviour: {{expected}}\nThe code:\n\`\`\`\n{{code}}\n\`\`\`",
+    reqs: ["Include the root cause, not just the symptom, explained simply.",
+      "Include a fixed version of the code.",
+      "Include how to prevent this kind of bug.",
+      "Avoid rewriting unrelated parts of the code."],
+    output: "three sections: Root cause, Fix (as a code block) and Prevention" },
   { id: "excel-formula", cat: "Coding", title: "Excel / Sheets Formula",
     desc: "Get the right formula and understand how it works.",
-    tags: ["excel", "sheets", "data"],
-    prompt: `I need a {{app}} formula that {{goal}}.
-My data: {{data_layout}}
-Give the formula, explain each part, and show an alternative approach (e.g. a pivot table or Power Query) if it would be simpler.` },
+    tags: ["excel", "sheets", "data"], role: "Excel / Sheets Expert",
+    objective: "I want a {{app}} formula that {{goal}}.",
+    context: "My data layout: {{data_layout}}",
+    reqs: ["Include the formula and an explanation of each part.",
+      "Include a worked example with sample values.",
+      "Include an alternative approach, such as a pivot table or Power Query, if it would be simpler.",
+      "Avoid functions that are not available in {{app}}."],
+    output: "the formula in a code block, the explanation, then the alternative" },
 
   // ---------- Data & Analysis ----------
   { id: "data-insights", cat: "Data & Analysis", title: "Find Insights in Data",
     desc: "Pull trends and anomalies out of a dataset.",
     tags: ["data", "insights"],
-    prompt: `Analyse the dataset below about {{subject}}.
-1. Describe the data (columns, size, quality issues)
-2. Top 5 insights with supporting numbers
-3. Anomalies or outliers
-4. 3 recommended charts and what each would show
-5. Questions to investigate next
-
-Data:
-{{data}}` },
+    objective: "I want to find the most useful insights in this data about {{subject}}.",
+    context: "The data:\n{{data}}",
+    reqs: ["Include a description of the data and any quality issues.",
+      "Include the top 5 insights with supporting numbers, and any anomalies or outliers.",
+      "Include 3 recommended charts with what each would show, and questions to investigate next.",
+      "Avoid conclusions the data cannot support, and separate correlation from causation."],
+    output: "numbered sections, with tables where useful" },
   { id: "swot", cat: "Data & Analysis", title: "SWOT Analysis",
     desc: "Strategic SWOT with actionable strategies.",
-    tags: ["strategy", "swot"],
-    prompt: `Do a SWOT analysis for {{subject}} in the {{industry}} market.
-Give 4–5 points per quadrant, then a TOWS matrix with strategies (SO, ST, WO, WT).
-Finish with the 3 highest-priority actions.` },
+    tags: ["strategy", "swot"], role: "Strategy Consultant",
+    objective: "I want a strategic SWOT analysis of {{subject}}.",
+    context: "Market or industry: {{industry}}.",
+    reqs: ["Include 4–5 points in each quadrant.",
+      "Include a TOWS matrix with SO, ST, WO and WT strategies.",
+      "Include the 3 highest-priority actions.",
+      "Avoid generic points that could apply to any organisation."],
+    output: "a SWOT table, a TOWS table, then the 3 actions" },
   { id: "kpi-design", cat: "Data & Analysis", title: "KPI Designer",
     desc: "Define meaningful KPIs for a team or initiative.",
-    tags: ["kpi", "metrics"],
-    prompt: `Propose 8 KPIs for {{team_or_initiative}} whose goal is {{goal}}.
-For each: name, definition, formula, data source, target, frequency, and whether it's leading or lagging.
-Warn me about any KPI that could be gamed.` },
+    tags: ["kpi", "metrics"], role: "Business Intelligence Lead",
+    objective: "I want meaningful KPIs for {{team_or_initiative}} that track progress towards {{goal}}.",
+    context: "The KPIs will be used for regular performance reviews.",
+    reqs: ["Include 8 KPIs, each with name, definition, formula, data source, target and frequency.",
+      "Include whether each KPI is leading or lagging.",
+      "Include a warning for any KPI that could be gamed.",
+      "Avoid vanity metrics."],
+    output: "a KPI table, followed by the warnings" },
 
   // ---------- Creative ----------
   { id: "brainstorm", cat: "Creative", title: "Idea Brainstorm",
     desc: "Generate many diverse ideas, then rank the best.",
     tags: ["ideas", "brainstorm"],
-    prompt: `Brainstorm 20 ideas for {{challenge}}.
-Mix safe, bold and wildcard ideas. Then pick the top 5 using impact vs feasibility and explain why.
-Constraints: {{constraints}}` },
+    objective: "I want fresh ideas for {{challenge}}.",
+    context: "Constraints: {{constraints}}.",
+    reqs: ["Include 20 ideas that mix safe, bold and wildcard options.",
+      "Include the top 5 ranked by impact and feasibility, with reasons.",
+      "Include a first step for each of the top 5.",
+      "Avoid ideas that break the constraints."],
+    output: "a numbered list of 20 ideas, followed by a table of the top 5" },
   { id: "video-script", cat: "Creative", title: "Short Video Script",
     desc: "Script for a 30–60s reel, TikTok or explainer.",
-    tags: ["video", "script", "social"],
-    prompt: `Write a {{duration}} video script about {{topic}} for {{platform}}.
-Format as a table: Time | Visual | Voiceover/On-screen text.
-Hook in the first 3 seconds, one clear message, and a call to action: {{cta}}.` },
+    tags: ["video", "script", "social"], role: "Video Scriptwriter",
+    objective: "I want a {{duration}} video about {{topic}} for {{platform}}.",
+    context: "Call to action: {{cta}}.",
+    reqs: ["Include a hook in the first 3 seconds and one clear message.",
+      "Include the call to action at the end.",
+      "Include on-screen text for viewers watching without sound.",
+      "Avoid slow intros and more than one message."],
+    output: "a table: Time | Visual | Voiceover | On-screen text" },
 
   // ---------- AI Agents & Automation ----------
   { id: "gpt-builder", cat: "AI Agents & Automation", title: "Custom GPT / Gem Instructions",
     desc: "System instructions for a custom assistant (GPT, Gem, Claude Project).",
     tags: ["agent", "system prompt"],
-    prompt: `Write system instructions for a custom AI assistant called "{{assistant_name}}".
-Purpose: {{purpose}}
-Users: {{users}}
-Include: role, tone, what it should and shouldn't do, step-by-step workflow, output formats, how to handle missing info, and 3 example conversations.
-Keep the instructions under 1,500 words.` },
+    objective: "I want system instructions for a custom AI assistant called \"{{assistant_name}}\".",
+    context: "Purpose: {{purpose}}. Users: {{users}}.",
+    reqs: ["Include role, tone, a step-by-step workflow and output formats.",
+      "Include what it should and should not do, and how to handle missing information.",
+      "Include 3 example conversations.",
+      "Avoid instructions longer than 1,500 words."],
+    output: "a code block ready to paste into a custom GPT, Gem or Claude Project" },
   { id: "automation-idea", cat: "AI Agents & Automation", title: "Automation Opportunity Finder",
     desc: "Spot repetitive work that AI or no-code tools can automate.",
-    tags: ["automation", "workflow"],
-    prompt: `Here is how my team currently does {{process}}: {{current_steps}}.
-Identify which steps can be automated with AI or no-code tools (e.g. Zapier, Make, Power Automate, Apps Script).
-For each: tool suggestion, estimated time saved per week, difficulty (Low/Med/High), and risks.
-Rank them as quick wins vs bigger projects.` },
+    tags: ["automation", "workflow"], role: "Automation Specialist",
+    objective: "I want to automate repetitive work in {{process}}.",
+    context: "How my team does it today: {{current_steps}}",
+    reqs: ["Include which steps can be automated with AI or no-code tools such as Power Automate, Zapier, Make or Apps Script.",
+      "Include for each: tool, estimated hours saved per week, difficulty (Low, Medium or High) and risks.",
+      "Include a ranking of quick wins versus bigger projects.",
+      "Avoid automating steps that need human judgement or approval."],
+    output: "a table, followed by the automation you recommend doing first" },
   { id: "eval-output", cat: "AI Agents & Automation", title: "AI Output Evaluator",
     desc: "Critically review an AI answer before you trust it.",
-    tags: ["evaluation", "quality"],
-    prompt: `Act as a strict reviewer. Evaluate the AI-generated output below for the task "{{task}}".
-Score 1–10 on: accuracy, completeness, clarity, relevance and tone.
-List factual claims that need verification, anything missing, and give an improved version.
-
-Output:
-"""
-{{output}}
-"""` },
+    tags: ["evaluation", "quality"], role: "AI Quality Reviewer",
+    objective: "I want to know whether this AI output is good enough to use.",
+    context: "The task it was meant to do: {{task}}. The output:\n\"\"\"\n{{output}}\n\"\"\"",
+    reqs: ["Include scores from 1 to 10 for accuracy, completeness, clarity, relevance and tone.",
+      "Include factual claims that need verification and anything missing.",
+      "Include an improved version.",
+      "Avoid praise that is not backed by evidence."],
+    output: "a scores table, the list of issues, then the improved version" },
 ];
+
+// ---------- Prompt structure ----------
+const TESTING = "TESTING & QUALITY:\nChallenge assumptions, identify weaknesses, verify facts, state uncertainties and recommend improvements. Do not fabricate information.";
+PROMPTS.forEach(p => {
+  p.prompt = `ROLE:\nAct as {{role}}.\n\nOBJECTIVE:\n${p.objective}\n\nCONTEXT:\nHere is the background: ${p.context}\n\nKEY REQUIREMENTS:\n${p.reqs.map((r, i) => `${i + 1}. ${r}`).join("\n")}\n\nEXPECTED OUTPUT:\nPresent the result in ${p.output}.${p.noLang ? "" : "\nLanguage: {{output_language}}."}`;
+});
+
+// ---------- Predefined roles, by category (first one is the default) ----------
+const ROLES = {
+  "Slides": [
+    { name: "Top Management Consultant", short: "Board-level strategy decks", value: "a top management consultant from a leading global strategy firm who builds board-level presentations" },
+    { name: "Presentation Designer", short: "Clean, visual slides", value: "a senior presentation designer who turns complex content into clean, visual slides" },
+    { name: "Corporate Strategy Director", short: "Plans and results", value: "a corporate strategy director who presents plans and results to the board" },
+    { name: "Pitch Deck Specialist", short: "Win approval or funding", value: "a pitch deck specialist who has helped teams win approval and funding" },
+    { name: "Business Storyteller", short: "Narrative and persuasion", value: "a business storytelling coach who structures presentations as compelling narratives" },
+  ],
+  "Infographic": [
+    { name: "Information Designer", short: "Clarity from complexity", value: "a senior information designer who makes complex information easy to scan" },
+    { name: "Data Visualisation Expert", short: "Honest, clear charts", value: "a data visualisation expert who picks the right chart and keeps the data honest" },
+    { name: "Graphic Designer", short: "Layout, type and colour", value: "a senior graphic designer skilled in layout, typography and colour" },
+    { name: "Science Communicator", short: "Explains to non-experts", value: "a science communicator who explains technical topics to non-experts" },
+    { name: "Marketing Content Designer", short: "Shareable campaign visuals", value: "a marketing content designer who creates shareable infographics for campaigns" },
+  ],
+  "Visual": [
+    { name: "Graphic Designer", short: "Layout, type and colour", value: "a senior graphic designer skilled in layout, typography and colour" },
+    { name: "Art Director", short: "Concept and visual direction", value: "an art director who sets the concept, mood and visual direction for campaigns" },
+    { name: "Brand Designer", short: "On-brand visuals", value: "a brand designer who keeps every visual consistent with the brand identity" },
+    { name: "Illustrator", short: "Custom illustration", value: "a professional illustrator with a versatile range of styles" },
+    { name: "Social Media Creative", short: "Scroll-stopping posts", value: "a social media creative who designs scroll-stopping posts and stories" },
+    { name: "Commercial Photographer", short: "Photo-real imagery", value: "a commercial photographer and photo director for advertising imagery" },
+  ],
+  "Getting Started": [
+    { name: "Subject Matter Expert", short: "Deep domain knowledge", value: "a senior subject matter expert with 15+ years of experience in this field" },
+    { name: "Prompt Engineer", short: "Better AI prompts", value: "an expert prompt engineer who writes clear, effective prompts for AI tools" },
+    { name: "Teacher / Trainer", short: "Explains step by step", value: "an experienced teacher and corporate trainer who explains concepts step by step" },
+    { name: "Executive Coach", short: "Sharp questions, practical advice", value: "an executive coach who asks sharp questions and gives practical advice" },
+  ],
+  "Research": [
+    { name: "Senior Research Analyst", short: "Rigorous, sourced briefs", value: "a senior research analyst who produces rigorous, well-sourced briefs" },
+    { name: "Market Research Consultant", short: "Markets and competitors", value: "a market research consultant who analyses markets, customers and competitors" },
+    { name: "Policy Analyst", short: "Government and regulation", value: "a public policy analyst familiar with government and regulatory matters" },
+    { name: "Academic Researcher", short: "Evidence and literature", value: "an academic researcher who evaluates evidence and literature critically" },
+  ],
+  "NotebookLM": [
+    { name: "Research Librarian", short: "Answers from sources only", value: "a research librarian who answers strictly from the provided sources, with citations" },
+    { name: "Instructional Designer", short: "Learning materials", value: "an instructional designer who turns documents into effective learning materials" },
+    { name: "Knowledge Manager", short: "Organises information", value: "a knowledge manager who organises information so teams can find and use it" },
+    { name: "Podcast Producer", short: "Engaging audio", value: "a podcast producer who shapes material into engaging audio conversations" },
+  ],
+  "Writing": [
+    { name: "Corporate Communications Manager", short: "Official messages", value: "a corporate communications manager who writes clear, on-brand official messages" },
+    { name: "Copywriter", short: "Persuasive copy", value: "a senior copywriter who writes persuasive, concise copy" },
+    { name: "Editor", short: "Clarity and polish", value: "a professional editor who makes writing clear, correct and concise" },
+    { name: "Bilingual Translator (EN–BM)", short: "English and Bahasa Melayu", value: "a certified English–Bahasa Melayu translator experienced in Malaysian business writing" },
+    { name: "LinkedIn Ghostwriter", short: "Professional social posts", value: "a LinkedIn ghostwriter for senior professionals" },
+  ],
+  "Productivity": [
+    { name: "Executive Assistant", short: "Organised and proactive", value: "a senior executive assistant who is organised, proactive and detail-oriented" },
+    { name: "Operations Manager", short: "Reliable processes", value: "an operations manager who designs efficient, reliable processes" },
+    { name: "Productivity Coach", short: "Focus and priorities", value: "a productivity coach who helps busy professionals prioritise and focus" },
+    { name: "Process Improvement Specialist", short: "Lean Six Sigma", value: "a Lean Six Sigma process improvement specialist" },
+  ],
+  "Project Management": [
+    { name: "Project Manager (PMP)", short: "Plan and deliver", value: "a PMP-certified senior project manager" },
+    { name: "PMO Director", short: "Portfolio and governance", value: "a PMO director who oversees project portfolios and governance" },
+    { name: "Risk Manager", short: "Identify and mitigate", value: "an enterprise risk manager" },
+    { name: "Agile Coach", short: "Scrum and Kanban", value: "an agile coach experienced with Scrum and Kanban teams" },
+  ],
+  "Coding": [
+    { name: "Senior Software Engineer", short: "Clean, working code", value: "a senior software engineer who writes clean, well-tested code" },
+    { name: "Solutions Architect", short: "System design", value: "a solutions architect who designs reliable, secure systems" },
+    { name: "Excel / Sheets Expert", short: "Formulas and automation", value: "a Microsoft Excel and Google Sheets expert" },
+    { name: "QA Engineer", short: "Bugs and edge cases", value: "a QA engineer who finds bugs and edge cases early" },
+  ],
+  "Data & Analysis": [
+    { name: "Senior Data Analyst", short: "Insights from data", value: "a senior data analyst who turns data into clear insights" },
+    { name: "Business Intelligence Lead", short: "Dashboards and KPIs", value: "a business intelligence lead who designs dashboards and KPIs" },
+    { name: "Strategy Consultant", short: "Strategic frameworks", value: "a strategy consultant skilled in SWOT, TOWS and other strategic frameworks" },
+    { name: "Financial Analyst", short: "Numbers and forecasts", value: "a financial analyst who builds forecasts and business cases" },
+  ],
+  "Creative": [
+    { name: "Creative Director", short: "Big campaign ideas", value: "a creative director who leads campaign ideas" },
+    { name: "Video Scriptwriter", short: "Short-form video", value: "a scriptwriter for short-form social and corporate video" },
+    { name: "Brand Strategist", short: "Positioning and message", value: "a brand strategist who defines positioning and key messages" },
+    { name: "Content Creator", short: "Social-first content", value: "a content creator who makes engaging social-first content" },
+  ],
+  "AI Agents & Automation": [
+    { name: "AI Solutions Architect", short: "Assistants and workflows", value: "an AI solutions architect who designs practical AI assistants and workflows" },
+    { name: "Automation Specialist", short: "Power Automate, Zapier, Make", value: "an automation specialist experienced with Power Automate, Zapier, Make and Apps Script" },
+    { name: "AI Product Manager", short: "User value, safe adoption", value: "an AI product manager who focuses on user value and safe adoption" },
+    { name: "AI Quality Reviewer", short: "Checks AI output", value: "a strict AI quality reviewer who checks AI output for accuracy and bias" },
+  ],
+};
+const rolesFor = p => ROLES[p.cat] || [];
+const defaultRoleIndex = p => Math.max(0, rolesFor(p).findIndex(r => r.name === p.role));
+const defaultsFor = p => {
+  const d = {};
+  if (rolesFor(p).length) d.role = rolesFor(p)[defaultRoleIndex(p)].value;
+  if (!p.noLang) d.output_language = "English";
+  return d;
+};
 
 // ---------- Visual styles (sample: a property management title slide in each style) ----------
 const STYLE_IMG_DIR = "images/ai-sandbox-styles/";
@@ -859,9 +996,11 @@ const PRESETS = {
   size: ["1080x1080 square", "1080x1350 portrait", "1080x1920 story", "1200x628 link post"],
   platform: ["LinkedIn", "Instagram", "Facebook", "TikTok", "WhatsApp", "X"],
   target_language: ["English", "Bahasa Melayu"],
+  output_language: ["English", "Bahasa Melayu"],
   timeframe: ["3 months", "12 months", "3 years", "5 years"],
 };
 let currentAud = null;
+let currentRole = null;
 
 // ---------- AI engines ----------
 // level: native = built in, file = creates a file, code = built as HTML/SVG, workaround = needs a workaround, none = not supported
@@ -991,7 +1130,7 @@ function renderGrid() {
       <h3>${esc(p.title)}</h3>
       <p class="desc">${esc(p.desc)}</p>
       ${statusPill(p)}
-      <div class="preview">${esc(p.prompt)}</div>
+      <div class="preview">${esc(p.objective)}</div>
       <div class="card-foot">
         <div class="tags">${p.tags.map(t => `<span class="tag">#${esc(t)}</span>`).join("")}</div>
         <button class="btn" data-copy="${p.id}">Copy</button>
@@ -1014,13 +1153,13 @@ function fill(text, highlight) {
   });
 }
 const engineAdd = p => engineFor(p)?.add || "";
-const fullPrompt = p => fill(p.prompt, false) + (engineAdd(p) ? "\n\n" + engineAdd(p) : "");
+const fullPrompt = p => fill(p.prompt, false) + (engineAdd(p) ? "\n" + engineAdd(p) : "") + "\n\n" + TESTING;
 
 function renderModalPrompt() {
   const parts = current.prompt.split(/(\{\{\w+\}\})/);
   const add = engineAdd(current);
   $("#mPrompt").innerHTML = parts.map(s => /^\{\{\w+\}\}$/.test(s) ? fill(s, true) : esc(s)).join("")
-    + (add ? `<span class="engine-add">\n\n${esc(add)}</span>` : "");
+    + (add ? `<span class="engine-add">\n${esc(add)}</span>` : "") + "\n\n" + esc(TESTING);
 }
 
 function renderModalEngine() {
@@ -1033,13 +1172,18 @@ function renderModalEngine() {
 
 function openModal(id) {
   current = PROMPTS.find(p => p.id === id);
-  values = {};
+  values = defaultsFor(current);
   $("#mCat").textContent = current.cat;
   $("#mTitle").textContent = current.title;
   $("#mDesc").textContent = current.desc;
   $("#mTip").textContent = current.tip ? "Tip: " + current.tip : "Tip: fill the fields above — the prompt updates live. Empty fields are copied as {{placeholders}}.";
   const vars = varsOf(current.prompt);
   $("#mVars").innerHTML = vars.map(v => `<div class="var"><label for="var-${v}">${esc(label(v))}</label><input id="var-${v}" data-var="${v}" placeholder="${esc(label(v))}">${PRESETS[v] ? `<div class="preset-row">${PRESETS[v].map(p => typeof p === "string" ? { label: p, value: p } : p).map(p => `<button type="button" class="preset" data-preset="${v}" data-value="${esc(p.value)}" title="${esc(p.value)}">${esc(p.label)}</button>`).join("")}</div>` : ""}</div>`).join("");
+  Object.entries(values).forEach(([v, val]) => { const i = $(`#mVars input[data-var="${v}"]`); if (i) i.value = val; });
+  syncPresets();
+  currentRole = rolesFor(current).length ? defaultRoleIndex(current) : null;
+  $("#mRoles").hidden = !rolesFor(current).length;
+  renderRoles();
   currentAud = null;
   $("#mAudience").hidden = !vars.includes("audience");
   renderAudiences();
@@ -1052,6 +1196,14 @@ function openModal(id) {
   $("#overlay").classList.add("open");
   document.body.style.overflow = "hidden";
   $("#mVars input")?.focus();
+}
+function renderRoles() {
+  const roles = rolesFor(current);
+  $("#mRoleName").textContent = currentRole === null ? "None selected" : roles[currentRole].name;
+  $("#mRoleGrid").innerHTML = roles.map((r, i) => `
+    <button type="button" class="aud-opt ${i === currentRole ? "active" : ""}" data-role="${i}" aria-pressed="${i === currentRole}">
+      <b>${esc(r.name)}</b><small>${esc(r.short)}</small>
+    </button>`).join("");
 }
 function renderAudiences() {
   $("#mAudName").textContent = currentAud === null ? "None selected" : AUDIENCES[currentAud].name;
@@ -1132,13 +1284,14 @@ $("#grid").onclick = e => {
     store.set("aisb-favs", [...favs]); renderGrid(); return;
   }
   const cp = e.target.closest("[data-copy]");
-  if (cp) { values = {}; copy(fullPrompt(PROMPTS.find(p => p.id === cp.dataset.copy)), cp); return; }
+  if (cp) { values = defaultsFor(PROMPTS.find(p => p.id === cp.dataset.copy)); copy(fullPrompt(PROMPTS.find(p => p.id === cp.dataset.copy)), cp); return; }
   const card = e.target.closest(".card");
   if (card) openModal(card.dataset.id);
 };
 $("#mVars").oninput = e => {
   const v = e.target.dataset.var; if (!v) return;
   values[v] = e.target.value.trim();
+  if (v === "role" && currentRole !== null && values.role !== rolesFor(current)[currentRole].value) { currentRole = null; renderRoles(); }
   if (v === "audience" && currentAud !== null && values.audience !== AUDIENCES[currentAud].value) { currentAud = null; renderAudiences(); }
   if (v === "style" && currentStyle !== null && values.style !== styleValue(STYLES[currentStyle])) { currentStyle = null; renderStyles(); }
   syncPresets(); renderModalPrompt();
@@ -1148,6 +1301,13 @@ $("#mVars").onclick = e => {
   const v = b.dataset.preset;
   setVar(v, values[v] === b.dataset.value ? "" : b.dataset.value);
   syncPresets(); renderModalPrompt();
+};
+$("#mRoleGrid").onclick = e => {
+  const b = e.target.closest("[data-role]"); if (!b) return;
+  const i = +b.dataset.role;
+  currentRole = currentRole === i ? null : i;
+  setVar("role", currentRole === null ? "" : rolesFor(current)[currentRole].value);
+  renderRoles(); renderModalPrompt();
 };
 $("#mAudGrid").onclick = e => {
   const b = e.target.closest("[data-aud]"); if (!b) return;
@@ -1164,7 +1324,12 @@ $("#mStyleGrid").onclick = e => {
   renderStyles(); renderModalPrompt();
 };
 $("#mCopy").onclick = e => copy(fullPrompt(current), e.currentTarget);
-$("#mReset").onclick = () => { values = {}; currentStyle = null; currentAud = null; renderStyles(); renderAudiences(); syncPresets(); $("#mVars").querySelectorAll("input").forEach(i => i.value = ""); renderModalPrompt(); };
+$("#mReset").onclick = () => {
+  values = defaultsFor(current); currentStyle = null; currentAud = null;
+  currentRole = rolesFor(current).length ? defaultRoleIndex(current) : null;
+  $("#mVars").querySelectorAll("input").forEach(i => i.value = values[i.dataset.var] || "");
+  renderRoles(); renderStyles(); renderAudiences(); syncPresets(); renderModalPrompt();
+};
 $("#mClose").onclick = closeModal;
 $("#overlay").onclick = e => { if (e.target.id === "overlay") closeModal(); };
 document.addEventListener("keydown", e => {
