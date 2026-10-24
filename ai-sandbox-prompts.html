@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Sandbox Prompt Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0d12;
+    --surface: #12151d;
+    --surface-2: #181c26;
+    --border: #252a36;
+    --text: #e8ebf2;
+    --muted: #8b93a7;
+    --accent: #7c5cff;
+    --accent-2: #22d3ee;
+    --ok: #34d399;
+    --star: #fbbf24;
+    --radius: 14px;
+  }
+  :root[data-theme="light"] {
+    --bg: #f6f7fb;
+    --surface: #ffffff;
+    --surface-2: #f0f2f8;
+    --border: #e1e5ee;
+    --text: #141824;
+    --muted: #5d6578;
+    --accent: #6a46f5;
+    --accent-2: #0891b2;
+    --ok: #059669;
+    --star: #d97706;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+  /* Header */
+  header {
+    position: sticky; top: 0; z-index: 20;
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -0.02em; }
+  .logo {
+    width: 32px; height: 32px; border-radius: 9px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: grid; place-items: center; color: #fff; font-size: 16px;
+  }
+  .nav-actions { display: flex; gap: 8px; }
+  .icon-btn {
+    background: var(--surface); border: 1px solid var(--border); color: var(--text);
+    height: 36px; padding: 0 12px; border-radius: 10px; cursor: pointer; font: inherit; font-size: 14px;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .icon-btn:hover { border-color: var(--accent); }
+  .icon-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* Hero */
+  .hero { padding: 56px 0 28px; text-align: center; }
+  .pill {
+    display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent-2); border: 1px solid var(--border); background: var(--surface);
+    padding: 6px 12px; border-radius: 999px; margin-bottom: 18px;
+  }
+  .hero h1 { font-size: clamp(32px, 5vw, 52px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+  .hero h1 span {
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero p { color: var(--muted); max-width: 620px; margin: 14px auto 0; font-size: 17px; }
+  .stats { display: flex; justify-content: center; gap: 28px; margin-top: 24px; flex-wrap: wrap; }
+  .stat b { display: block; font-size: 24px; }
+  .stat small { color: var(--muted); font-size: 13px; }
+
+  /* Controls */
+  .controls { position: sticky; top: 64px; z-index: 10; background: var(--bg); padding: 16px 0 12px; }
+  .search {
+    position: relative; max-width: 640px; margin: 0 auto 14px;
+  }
+  .search input {
+    width: 100%; height: 48px; padding: 0 44px 0 44px; border-radius: 12px;
+    background: var(--surface); border: 1px solid var(--border); color: var(--text); font: inherit; font-size: 15px;
+  }
+  .search input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
+  .search .ico { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+  .search kbd {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 6px; padding: 2px 7px;
+  }
+  .cats { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; justify-content: safe center; }
+  .cats::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: 0 0 auto; background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+    padding: 7px 14px; border-radius: 999px; font: inherit; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;
+  }
+  .chip:hover { color: var(--text); }
+  .chip.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .chip .n { opacity: 0.6; margin-left: 4px; }
+
+  /* Grid */
+  .result-bar { display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 13px; margin: 10px 0 14px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; padding-bottom: 60px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 18px; display: flex; flex-direction: column; gap: 10px; cursor: pointer;
+    transition: border-color .15s, transform .15s;
+  }
+  .card:hover { border-color: color-mix(in srgb, var(--accent) 60%, var(--border)); transform: translateY(-2px); }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .cat-tag { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent-2); }
+  .card h3 { font-size: 16px; font-weight: 700; letter-spacing: -0.01em; }
+  .card .desc { color: var(--muted); font-size: 14px; }
+  .preview {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted);
+    background: var(--surface-2); border-radius: 8px; padding: 10px 12px;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .card-foot { display: flex; justify-content: space-between; align-items: center; margin-top: auto; gap: 8px; }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag { font-size: 11px; color: var(--muted); background: var(--surface-2); padding: 2px 8px; border-radius: 6px; }
+  .btn {
+    background: var(--accent); color: #fff; border: 0; border-radius: 9px; padding: 7px 12px;
+    font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;
+  }
+  .btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn.copied { background: var(--ok); }
+  .star { background: none; border: 0; cursor: pointer; font-size: 18px; color: var(--muted); line-height: 1; }
+  .star.on { color: var(--star); }
+  .empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 60px 0; }
+
+  /* Modal */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 50;
+    display: none; align-items: center; justify-content: center; padding: 16px;
+  }
+  .overlay.open { display: flex; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
+    width: 100%; max-width: 760px; max-height: 90vh; overflow: auto; padding: 24px;
+  }
+  .modal-head { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+  .modal h2 { font-size: 22px; letter-spacing: -0.02em; }
+  .modal .desc { color: var(--muted); margin-bottom: 16px; }
+  .vars { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .vars label { font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 4px; font-family: 'JetBrains Mono', monospace; }
+  .vars input {
+    background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
+    border-radius: 8px; padding: 8px 10px; font: inherit; font-family: 'Inter', sans-serif; font-size: 14px;
+  }
+  .vars input:focus { outline: none; border-color: var(--accent); }
+  .prompt-box {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.65;
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px; white-space: pre-wrap; word-break: break-word;
+  }
+  .prompt-box mark { background: color-mix(in srgb, var(--accent) 25%, transparent); color: var(--text); border-radius: 4px; padding: 0 3px; }
+  .prompt-box mark.filled { background: color-mix(in srgb, var(--ok) 22%, transparent); }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; flex-wrap: wrap; }
+  .tip { font-size: 13px; color: var(--muted); margin-top: 14px; border-left: 3px solid var(--accent-2); padding-left: 10px; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--text); color: var(--bg); padding: 10px 18px; border-radius: 10px; font-weight: 600; font-size: 14px;
+    transition: transform .25s; z-index: 60;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  footer { border-top: 1px solid var(--border); padding: 28px 0; color: var(--muted); font-size: 13px; text-align: center; }
+
+  @media (max-width: 600px) {
+    .wrap { padding: 0 16px; }
+    .grid { grid-template-columns: 1fr; }
+    .hero { padding-top: 36px; }
+    .search kbd, .hide-sm { display: none; }
+    .cats { justify-content: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand"><div class="logo">✦</div> AI Sandbox <span style="color:var(--muted);font-weight:500">/ Prompt Vault</span></div>
+    <div class="nav-actions">
+      <button class="icon-btn" id="favToggle" title="Show favourites">★ <span class="hide-sm">Favourites</span></button>
+      <button class="icon-btn" id="themeToggle" title="Toggle theme">☾</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero wrap">
+  <div class="pill">AI Sandbox Project</div>
+  <h1>Ready-to-use prompts for <span>every AI experiment</span></h1>
+  <p>A curated library of tested prompts for the AI Sandbox. Search, fill in the blanks, copy, and paste into ChatGPT, Claude, Gemini or NotebookLM.</p>
+  <div class="stats">
+    <div class="stat"><b id="statPrompts">0</b><small>Prompts</small></div>
+    <div class="stat"><b id="statCats">0</b><small>Categories</small></div>
+    <div class="stat"><b id="statFavs">0</b><small>Your favourites</small></div>
+  </div>
+</section>
+
+<div class="controls">
+  <div class="wrap">
+    <div class="search">
+      <span class="ico">⌕</span>
+      <input id="q" type="search" placeholder="Search prompts, tags, use cases…" autocomplete="off">
+      <kbd>/</kbd>
+    </div>
+    <div class="cats" id="cats"></div>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="result-bar"><span id="count"></span><span class="hide-sm">Click a card to customise · <b>{{variables}}</b> are fillable</span></div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer>
+  <div class="wrap">AI Sandbox Prompt Vault · Favourites are saved in your browser only · To add a prompt, append it to the <code>PROMPTS</code> list in this file.</div>
+</footer>
+
+<div class="overlay" id="overlay">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div>
+        <div class="cat-tag" id="mCat"></div>
+        <h2 id="mTitle"></h2>
+      </div>
+      <button class="icon-btn" id="mClose" aria-label="Close">✕</button>
+    </div>
+    <p class="desc" id="mDesc"></p>
+    <div class="vars" id="mVars"></div>
+    <div class="prompt-box" id="mPrompt"></div>
+    <div class="tip" id="mTip"></div>
+    <div class="modal-actions">
+      <button class="btn ghost" id="mReset">Reset fields</button>
+      <button class="btn" id="mCopy">Copy prompt</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Copied to clipboard</div>
+
+<script>
+const PROMPTS = [
+  // ---------- Getting Started ----------
+  { id: "role-setup", cat: "Getting Started", title: "Expert Role Setup",
+    desc: "Prime the AI to act as a domain expert before you start a session.",
+    tags: ["role", "system"], tip: "Use as the first message of a new chat.",
+    prompt: `You are a senior {{role}} with 15+ years of experience in {{industry}}.
+For this conversation:
+- Ask clarifying questions before answering if my request is ambiguous.
+- Be concise and practical; prefer bullet points and examples.
+- Flag any assumptions you make and any risks I should consider.
+- If you don't know something, say so instead of guessing.
+
+My first task is: {{task}}` },
+  { id: "prompt-improver", cat: "Getting Started", title: "Prompt Improver",
+    desc: "Turn a rough idea into a well-structured, high-quality prompt.",
+    tags: ["meta", "optimise"],
+    prompt: `Act as a prompt engineer. Rewrite my rough prompt below into a clear, effective prompt.
+Include: the role the AI should take, context, the exact task, constraints, and the desired output format.
+Then list 3 questions I could answer to make it even better.
+
+Rough prompt:
+"""
+{{rough_prompt}}
+"""` },
+  { id: "explain-like", cat: "Getting Started", title: "Explain at My Level",
+    desc: "Get any concept explained at the right depth for the audience.",
+    tags: ["learning", "explain"],
+    prompt: `Explain {{topic}} to a {{audience}}.
+Structure:
+1. One-sentence summary
+2. A simple analogy
+3. How it actually works (3–5 bullets)
+4. A real-world example relevant to {{industry}}
+5. Common misconceptions
+Keep it under 300 words.` },
+
+  // ---------- Research ----------
+  { id: "deep-research", cat: "Research", title: "Structured Research Brief",
+    desc: "A thorough brief on any topic with sources and open questions.",
+    tags: ["research", "analysis"],
+    prompt: `Research {{topic}} and produce a structured brief for {{audience}}.
+Sections:
+- Executive summary (5 bullets max)
+- Key facts & figures (with sources/links where possible)
+- Main players / stakeholders
+- Trends over the last {{timeframe}}
+- Risks & opportunities
+- Open questions worth investigating further
+Clearly separate verified facts from your own inferences.` },
+  { id: "compare-options", cat: "Research", title: "Compare Options Matrix",
+    desc: "Side-by-side comparison of tools, vendors or approaches.",
+    tags: ["comparison", "decision"],
+    prompt: `Compare the following options for {{use_case}}: {{options}}.
+Create a table with these criteria: cost, ease of use, scalability, security, integration, support, and best-fit scenario.
+After the table, give a recommendation for a team of {{team_size}} with a budget of {{budget}}, and explain the trade-offs.` },
+  { id: "source-qa", cat: "Research", title: "Source-Grounded Q&A",
+    desc: "Answer only from uploaded sources — ideal for NotebookLM.",
+    tags: ["notebooklm", "citations"], tip: "Works best in NotebookLM or with documents attached.",
+    prompt: `Using ONLY the provided sources, answer: {{question}}
+Rules:
+- Cite the source for every claim.
+- If the sources don't contain the answer, say "Not found in sources".
+- Highlight any contradictions between sources.
+- End with 3 follow-up questions the sources could help answer.` },
+
+  // ---------- NotebookLM ----------
+  { id: "nlm-study-guide", cat: "NotebookLM", title: "Study Guide Generator",
+    desc: "Turn your notebook sources into a complete study guide.",
+    tags: ["notebooklm", "learning"],
+    prompt: `Create a study guide from all sources in this notebook for {{audience}}.
+Include:
+1. Key concepts with short definitions
+2. A glossary of important terms
+3. 10 quiz questions (mix of multiple choice and short answer) with an answer key
+4. 3 essay/discussion questions
+5. A one-page summary I can review in 5 minutes` },
+  { id: "nlm-audio-brief", cat: "NotebookLM", title: "Audio Overview Customiser",
+    desc: "Steer the Audio Overview hosts to focus on what matters.",
+    tags: ["notebooklm", "audio", "podcast"], tip: "Paste into the 'Customise' box of Audio Overview.",
+    prompt: `Focus this audio overview on {{focus_area}} for an audience of {{audience}}.
+Start with why this matters to them, then cover the top 3 insights from the sources.
+Use concrete examples from the documents. Avoid jargon or explain it when used.
+End with practical next steps the listener can take this week.
+Keep the tone {{tone}}.` },
+  { id: "nlm-timeline", cat: "NotebookLM", title: "Timeline & Key Events",
+    desc: "Extract a chronological timeline from documents.",
+    tags: ["notebooklm", "timeline"],
+    prompt: `From the sources, build a chronological timeline of {{subject}}.
+For each entry: date, event, people/teams involved, and why it mattered.
+Then list any gaps where dates or events are unclear, and the source each entry came from.` },
+  { id: "nlm-faq", cat: "NotebookLM", title: "FAQ Builder",
+    desc: "Generate an FAQ that answers what readers will actually ask.",
+    tags: ["notebooklm", "faq", "docs"],
+    prompt: `Read all sources and generate an FAQ for {{audience}}.
+Write 12 questions they are most likely to ask, grouped by theme.
+Answer each in 2–4 sentences using only source material, with a citation.
+Mark any question where the sources give an incomplete answer.` },
+
+  // ---------- Writing ----------
+  { id: "email-pro", cat: "Writing", title: "Professional Email",
+    desc: "Clear, polite emails in the right tone, every time.",
+    tags: ["email", "communication"],
+    prompt: `Write a {{tone}} email to {{recipient}} about {{subject}}.
+Goal of the email: {{goal}}.
+Keep it under 150 words, with a clear subject line, one main ask, and a specific deadline or next step.
+Give me 2 versions: one formal, one friendlier.` },
+  { id: "rewrite-clarity", cat: "Writing", title: "Rewrite for Clarity",
+    desc: "Tighten and simplify any draft without losing meaning.",
+    tags: ["editing", "clarity"],
+    prompt: `Rewrite the text below to be clearer and more concise for {{audience}}.
+- Cut filler and repetition
+- Use active voice and short sentences
+- Keep all key facts
+- Preserve my voice; don't make it sound robotic
+Then list the main changes you made.
+
+Text:
+"""
+{{text}}
+"""` },
+  { id: "bm-translate", cat: "Writing", title: "Translate EN ⇄ BM",
+    desc: "Natural English–Bahasa Melayu translation for business use.",
+    tags: ["translation", "malay"],
+    prompt: `Translate the following text into {{target_language}}.
+Use natural, professional business language suitable for Malaysia — not word-for-word.
+Keep names, numbers and technical terms accurate. Flag any phrase that has no direct equivalent.
+
+Text:
+"""
+{{text}}
+"""` },
+  { id: "linkedin-post", cat: "Writing", title: "LinkedIn Post",
+    desc: "Engaging post about a project milestone or lesson learned.",
+    tags: ["social", "linkedin"],
+    prompt: `Write a LinkedIn post about {{topic}}.
+Hook in the first line, a short story or insight, 3 key takeaways, and a question to drive comments.
+Tone: {{tone}}. Max 200 words. Max 3 relevant hashtags. No emojis overload.` },
+
+  // ---------- Productivity ----------
+  { id: "meeting-notes", cat: "Productivity", title: "Meeting Notes → Actions",
+    desc: "Convert messy notes or transcripts into decisions and action items.",
+    tags: ["meetings", "actions"],
+    prompt: `Turn the meeting notes below into:
+1. A 3-sentence summary
+2. Decisions made
+3. Action items in a table: Owner | Task | Due date | Priority
+4. Open questions / parking lot
+5. A short follow-up email I can send to attendees
+
+Notes:
+"""
+{{notes}}
+"""` },
+  { id: "weekly-plan", cat: "Productivity", title: "Weekly Planner",
+    desc: "Prioritise your week using impact vs effort.",
+    tags: ["planning", "priorities"],
+    prompt: `Here are my tasks for the week: {{tasks}}.
+My fixed commitments are: {{commitments}}.
+Sort the tasks with an Eisenhower matrix, then build a day-by-day plan for Monday–Friday with focus blocks.
+Suggest what to delegate or drop, and flag anything that's at risk.` },
+  { id: "sop-writer", cat: "Productivity", title: "SOP Writer",
+    desc: "Document a process as a clear standard operating procedure.",
+    tags: ["process", "documentation"],
+    prompt: `Write an SOP for: {{process}}.
+Include: purpose, scope, roles & responsibilities, prerequisites, numbered step-by-step instructions, quality checks, common mistakes, and escalation contacts ({{escalation}}).
+Format it so a new team member can follow it without help.` },
+
+  // ---------- Project Management ----------
+  { id: "project-charter", cat: "Project Management", title: "Project Charter",
+    desc: "Kick off a project with a one-page charter.",
+    tags: ["pm", "kickoff"],
+    prompt: `Create a one-page project charter for {{project_name}}.
+Background: {{background}}
+Include: objectives (SMART), scope in/out, key deliverables, milestones, stakeholders, success metrics, risks, assumptions, and budget estimate.
+Use clear headings and tables where useful.` },
+  { id: "status-report", cat: "Project Management", title: "Status Report",
+    desc: "RAG-rated status update for management.",
+    tags: ["pm", "reporting"],
+    prompt: `Write a weekly status report for {{project_name}} for senior management.
+Updates this week: {{updates}}
+Format:
+- Overall status (Green/Amber/Red) with one-line reason
+- Progress vs plan
+- Key achievements
+- Risks & issues (with mitigation)
+- Decisions needed from management
+- Next week's priorities
+Keep it scannable — under 250 words.` },
+  { id: "risk-register", cat: "Project Management", title: "Risk Register",
+    desc: "Identify and score risks with mitigations.",
+    tags: ["pm", "risk"],
+    prompt: `Identify the top 10 risks for {{project_name}} ({{project_type}}).
+Output a table: Risk | Category | Likelihood (1–5) | Impact (1–5) | Score | Mitigation | Owner.
+Sort by score, and highlight the top 3 that need action now.` },
+
+  // ---------- Coding ----------
+  { id: "code-explain", cat: "Coding", title: "Explain This Code",
+    desc: "Understand unfamiliar code line by line.",
+    tags: ["code", "learning"],
+    prompt: `Explain this {{language}} code to someone with {{level}} experience.
+1. What it does overall (2 sentences)
+2. Walk through it step by step
+3. Potential bugs, edge cases or security issues
+4. How you would improve it
+
+\`\`\`
+{{code}}
+\`\`\`` },
+  { id: "build-tool", cat: "Coding", title: "Build a Mini Tool",
+    desc: "Generate a single-file web app for a quick sandbox experiment.",
+    tags: ["code", "prototype", "html"],
+    prompt: `Build a single-file HTML/CSS/JavaScript app that {{goal}}.
+Requirements:
+- No build step, works by opening the file in a browser
+- Clean, mobile-friendly UI
+- Data saved in localStorage
+- Features: {{features}}
+Return the full code in one block, then a short explanation of how to extend it.` },
+  { id: "debug", cat: "Coding", title: "Debug Assistant",
+    desc: "Systematically find the root cause of an error.",
+    tags: ["code", "debugging"],
+    prompt: `I'm getting this error in {{language}}:
+{{error}}
+
+Expected behaviour: {{expected}}
+Here is the relevant code:
+{{code}}
+
+Find the root cause (not just the symptom), explain it, and give a fixed version. Then suggest how to prevent this class of bug.` },
+  { id: "excel-formula", cat: "Coding", title: "Excel / Sheets Formula",
+    desc: "Get the right formula and understand how it works.",
+    tags: ["excel", "sheets", "data"],
+    prompt: `I need a {{app}} formula that {{goal}}.
+My data: {{data_layout}}
+Give the formula, explain each part, and show an alternative approach (e.g. a pivot table or Power Query) if it would be simpler.` },
+
+  // ---------- Data & Analysis ----------
+  { id: "data-insights", cat: "Data & Analysis", title: "Find Insights in Data",
+    desc: "Pull trends and anomalies out of a dataset.",
+    tags: ["data", "insights"],
+    prompt: `Analyse the dataset below about {{subject}}.
+1. Describe the data (columns, size, quality issues)
+2. Top 5 insights with supporting numbers
+3. Anomalies or outliers
+4. 3 recommended charts and what each would show
+5. Questions to investigate next
+
+Data:
+{{data}}` },
+  { id: "swot", cat: "Data & Analysis", title: "SWOT Analysis",
+    desc: "Strategic SWOT with actionable strategies.",
+    tags: ["strategy", "swot"],
+    prompt: `Do a SWOT analysis for {{subject}} in the {{industry}} market.
+Give 4–5 points per quadrant, then a TOWS matrix with strategies (SO, ST, WO, WT).
+Finish with the 3 highest-priority actions.` },
+  { id: "kpi-design", cat: "Data & Analysis", title: "KPI Designer",
+    desc: "Define meaningful KPIs for a team or initiative.",
+    tags: ["kpi", "metrics"],
+    prompt: `Propose 8 KPIs for {{team_or_initiative}} whose goal is {{goal}}.
+For each: name, definition, formula, data source, target, frequency, and whether it's leading or lagging.
+Warn me about any KPI that could be gamed.` },
+
+  // ---------- Creative & Image ----------
+  { id: "image-prompt", cat: "Creative & Image", title: "Image Generation Prompt",
+    desc: "Detailed prompts for Midjourney, DALL·E, Imagen or Firefly.",
+    tags: ["image", "design"],
+    prompt: `Write 3 detailed image-generation prompts for: {{subject}}.
+Style: {{style}}. Aspect ratio: {{aspect_ratio}}.
+Each prompt should specify subject, setting, composition, lighting, colour palette, camera/lens or medium, and mood.
+Also give a negative prompt listing what to avoid.` },
+  { id: "brainstorm", cat: "Creative & Image", title: "Idea Brainstorm",
+    desc: "Generate many diverse ideas, then rank the best.",
+    tags: ["ideas", "brainstorm"],
+    prompt: `Brainstorm 20 ideas for {{challenge}}.
+Mix safe, bold and wildcard ideas. Then pick the top 5 using impact vs feasibility and explain why.
+Constraints: {{constraints}}` },
+  { id: "video-script", cat: "Creative & Image", title: "Short Video Script",
+    desc: "Script for a 30–60s reel, TikTok or explainer.",
+    tags: ["video", "script", "social"],
+    prompt: `Write a {{duration}} video script about {{topic}} for {{platform}}.
+Format as a table: Time | Visual | Voiceover/On-screen text.
+Hook in the first 3 seconds, one clear message, and a call to action: {{cta}}.` },
+
+  // ---------- AI Agents & Automation ----------
+  { id: "gpt-builder", cat: "AI Agents & Automation", title: "Custom GPT / Gem Instructions",
+    desc: "System instructions for a custom assistant (GPT, Gem, Claude Project).",
+    tags: ["agent", "system prompt"],
+    prompt: `Write system instructions for a custom AI assistant called "{{assistant_name}}".
+Purpose: {{purpose}}
+Users: {{users}}
+Include: role, tone, what it should and shouldn't do, step-by-step workflow, output formats, how to handle missing info, and 3 example conversations.
+Keep the instructions under 1,500 words.` },
+  { id: "automation-idea", cat: "AI Agents & Automation", title: "Automation Opportunity Finder",
+    desc: "Spot repetitive work that AI or no-code tools can automate.",
+    tags: ["automation", "workflow"],
+    prompt: `Here is how my team currently does {{process}}: {{current_steps}}.
+Identify which steps can be automated with AI or no-code tools (e.g. Zapier, Make, Power Automate, Apps Script).
+For each: tool suggestion, estimated time saved per week, difficulty (Low/Med/High), and risks.
+Rank them as quick wins vs bigger projects.` },
+  { id: "eval-output", cat: "AI Agents & Automation", title: "AI Output Evaluator",
+    desc: "Critically review an AI answer before you trust it.",
+    tags: ["evaluation", "quality"],
+    prompt: `Act as a strict reviewer. Evaluate the AI-generated output below for the task "{{task}}".
+Score 1–10 on: accuracy, completeness, clarity, relevance and tone.
+List factual claims that need verification, anything missing, and give an improved version.
+
+Output:
+"""
+{{output}}
+"""` },
+];
+
+// ---------- State ----------
+const $ = s => document.querySelector(s);
+const store = {
+  get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+let favs = new Set(store.get("aisb-favs", []));
+let activeCat = "All";
+let favOnly = false;
+let current = null;
+let values = {};
+
+const cats = ["All", ...new Set(PROMPTS.map(p => p.cat))];
+const varsOf = text => [...new Set([...text.matchAll(/\{\{(\w+)\}\}/g)].map(m => m[1]))];
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const label = v => v.replace(/_/g, " ");
+
+// ---------- Theme ----------
+const savedTheme = store.get("aisb-theme", null);
+if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+else if (matchMedia("(prefers-color-scheme: light)").matches) document.documentElement.dataset.theme = "light";
+$("#themeToggle").onclick = () => {
+  const t = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  document.documentElement.dataset.theme = t;
+  $("#themeToggle").textContent = t === "light" ? "☾" : "☀";
+  store.set("aisb-theme", t);
+};
+
+// ---------- Render ----------
+function renderCats() {
+  $("#cats").innerHTML = cats.map(c => {
+    const n = c === "All" ? PROMPTS.length : PROMPTS.filter(p => p.cat === c).length;
+    return `<button class="chip ${c === activeCat ? "active" : ""}" data-cat="${esc(c)}">${esc(c)}<span class="n">${n}</span></button>`;
+  }).join("");
+}
+
+function filtered() {
+  const q = $("#q").value.trim().toLowerCase();
+  return PROMPTS.filter(p =>
+    (activeCat === "All" || p.cat === activeCat) &&
+    (!favOnly || favs.has(p.id)) &&
+    (!q || [p.title, p.desc, p.cat, p.prompt, ...p.tags].join(" ").toLowerCase().includes(q))
+  );
+}
+
+function renderGrid() {
+  const list = filtered();
+  $("#count").textContent = `${list.length} prompt${list.length === 1 ? "" : "s"}${favOnly ? " in favourites" : ""}`;
+  $("#grid").innerHTML = list.length ? list.map(p => `
+    <article class="card" data-id="${p.id}">
+      <div class="card-top">
+        <span class="cat-tag">${esc(p.cat)}</span>
+        <button class="star ${favs.has(p.id) ? "on" : ""}" data-star="${p.id}" aria-label="Favourite">${favs.has(p.id) ? "★" : "☆"}</button>
+      </div>
+      <h3>${esc(p.title)}</h3>
+      <p class="desc">${esc(p.desc)}</p>
+      <div class="preview">${esc(p.prompt)}</div>
+      <div class="card-foot">
+        <div class="tags">${p.tags.map(t => `<span class="tag">#${esc(t)}</span>`).join("")}</div>
+        <button class="btn" data-copy="${p.id}">Copy</button>
+      </div>
+    </article>`).join("")
+    : `<div class="empty">No prompts found. Try another search or category.</div>`;
+  $("#statPrompts").textContent = PROMPTS.length;
+  $("#statCats").textContent = cats.length - 1;
+  $("#statFavs").textContent = favs.size;
+}
+
+function fill(text, highlight) {
+  return text.replace(/\{\{(\w+)\}\}/g, (m, v) => {
+    const val = values[v];
+    if (!highlight) return val || m;
+    return val ? `<mark class="filled">${esc(val)}</mark>` : `<mark>${esc(m)}</mark>`;
+  });
+}
+
+function renderModalPrompt() {
+  const parts = current.prompt.split(/(\{\{\w+\}\})/);
+  $("#mPrompt").innerHTML = parts.map(s => /^\{\{\w+\}\}$/.test(s) ? fill(s, true) : esc(s)).join("");
+}
+
+function openModal(id) {
+  current = PROMPTS.find(p => p.id === id);
+  values = {};
+  $("#mCat").textContent = current.cat;
+  $("#mTitle").textContent = current.title;
+  $("#mDesc").textContent = current.desc;
+  $("#mTip").textContent = current.tip ? "Tip: " + current.tip : "Tip: fill the fields above — the prompt updates live. Empty fields are copied as {{placeholders}}.";
+  const vars = varsOf(current.prompt);
+  $("#mVars").innerHTML = vars.map(v => `<label>${esc(label(v))}<input data-var="${v}" placeholder="${esc(label(v))}"></label>`).join("");
+  $("#mVars").style.display = vars.length ? "" : "none";
+  renderModalPrompt();
+  $("#overlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+  $("#mVars input")?.focus();
+}
+function closeModal() {
+  $("#overlay").classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+async function copy(text, btn) {
+  try { await navigator.clipboard.writeText(text); }
+  catch {
+    const ta = document.createElement("textarea");
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    document.execCommand("copy"); ta.remove();
+  }
+  const t = $("#toast"); t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 1600);
+  if (btn) {
+    const old = btn.textContent;
+    btn.textContent = "Copied ✓"; btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = old; btn.classList.remove("copied"); }, 1600);
+  }
+}
+
+// ---------- Events ----------
+$("#cats").onclick = e => {
+  const b = e.target.closest("[data-cat]"); if (!b) return;
+  activeCat = b.dataset.cat; renderCats(); renderGrid();
+};
+$("#q").oninput = renderGrid;
+$("#favToggle").onclick = () => {
+  favOnly = !favOnly; $("#favToggle").classList.toggle("active", favOnly); renderGrid();
+};
+$("#grid").onclick = e => {
+  const star = e.target.closest("[data-star]");
+  if (star) {
+    const id = star.dataset.star;
+    favs.has(id) ? favs.delete(id) : favs.add(id);
+    store.set("aisb-favs", [...favs]); renderGrid(); return;
+  }
+  const cp = e.target.closest("[data-copy]");
+  if (cp) { copy(PROMPTS.find(p => p.id === cp.dataset.copy).prompt, cp); return; }
+  const card = e.target.closest(".card");
+  if (card) openModal(card.dataset.id);
+};
+$("#mVars").oninput = e => {
+  const v = e.target.dataset.var; if (!v) return;
+  values[v] = e.target.value.trim(); renderModalPrompt();
+};
+$("#mCopy").onclick = e => copy(fill(current.prompt, false), e.currentTarget);
+$("#mReset").onclick = () => { values = {}; $("#mVars").querySelectorAll("input").forEach(i => i.value = ""); renderModalPrompt(); };
+$("#mClose").onclick = closeModal;
+$("#overlay").onclick = e => { if (e.target.id === "overlay") closeModal(); };
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeModal();
+  if (e.key === "/" && document.activeElement.tagName !== "INPUT") { e.preventDefault(); $("#q").focus(); }
+});
+
+$("#themeToggle").textContent = document.documentElement.dataset.theme === "light" ? "☾" : "☀";
+renderCats();
+renderGrid();
+</script>
+</body>
+</html>
