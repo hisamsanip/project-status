@@ -158,7 +158,25 @@
   .modal h2 { font-size: 22px; letter-spacing: -0.02em; }
   .modal .desc { color: var(--muted); margin-bottom: 16px; }
   .vars { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 16px; }
-  .vars label { font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 4px; font-family: 'JetBrains Mono', monospace; }
+  .vars .var { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .vars label { font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .preset-row { display: flex; flex-wrap: wrap; gap: 4px; }
+  .preset {
+    font: inherit; font-size: 11.5px; padding: 3px 9px; border-radius: 999px; cursor: pointer;
+    background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+  }
+  .preset:hover { color: var(--text); border-color: var(--accent); }
+  .preset.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .aud-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; }
+  .aud-opt {
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px;
+    display: flex; flex-direction: column; gap: 3px; text-align: left; cursor: pointer; color: var(--text); font: inherit;
+  }
+  .aud-opt:hover { border-color: var(--accent); }
+  .aud-opt:focus-visible, .preset:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .aud-opt.active { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent); }
+  .aud-opt b { font-size: 13px; font-weight: 600; }
+  .aud-opt small { font-size: 11.5px; color: var(--muted); line-height: 1.35; }
   .vars input {
     background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
     border-radius: 8px; padding: 8px 10px; font: inherit; font-family: 'Inter', sans-serif; font-size: 14px;
@@ -279,10 +297,11 @@
 <section class="hero wrap">
   <div class="pill">AI Sandbox Project</div>
   <h1>Ready-to-use prompts for <span>every AI experiment</span></h1>
-  <p>A curated library of tested prompts for the AI Sandbox. Choose what to create, pick one of 20 visual styles and the AI engine you use, fill in the blanks, then copy. Works with ChatGPT, Claude, Gemini, NotebookLM and Copilot.</p>
+  <p>A curated library of tested prompts for the AI Sandbox. Choose what to create, pick your audience, one of 20 visual styles and the AI engine you use, fill in the blanks, then copy. Works with ChatGPT, Claude, Gemini, NotebookLM and Copilot.</p>
   <div class="stats">
     <div class="stat"><b id="statPrompts">0</b><small>Prompts</small></div>
     <div class="stat"><b id="statCats">0</b><small>Categories</small></div>
+    <div class="stat"><b>12</b><small>Audiences</small></div>
     <div class="stat"><b>20</b><small>Visual styles</small></div>
     <div class="stat"><b>5</b><small>AI engines</small></div>
     <div class="stat"><b id="statFavs">0</b><small>Your favourites</small></div>
@@ -331,6 +350,10 @@
     </div>
     <p class="desc" id="mDesc"></p>
     <div class="vars" id="mVars"></div>
+    <div class="style-picker" id="mAudience" hidden>
+      <h4>Choose a target audience <span id="mAudName">None selected</span></h4>
+      <div class="aud-grid" id="mAudGrid"></div>
+    </div>
     <div class="style-picker" id="mStyles" hidden>
       <h4>Choose a visual style <span id="mStyleName">None selected</span></h4>
       <div class="style-preview" id="mStylePreview" hidden></div>
@@ -825,6 +848,45 @@ const styleValue = st => `${st.name} (${st.desc})`;
 const styleSvg = (st, uid, cls = "") => `<svg class="${cls}" viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${esc(st.name)} sample">${st.svg(uid)}</svg>`;
 let currentStyle = null;
 
+// ---------- Predefined values ----------
+const AUDIENCES = [
+  { name: "Top Management", short: "CEO, directors, board",
+    value: "top management (CEO, directors and board members): lead with the executive summary, strategic impact, ROI, risks and the decisions needed; keep detail minimal and let the numbers speak" },
+  { name: "Middle Management", short: "Heads of department, managers",
+    value: "middle management (heads of department and line managers): focus on execution, resources, timelines, KPIs and what it means for their teams; practical and action-oriented" },
+  { name: "Monthly Meeting", short: "Regular management review",
+    value: "attendees of the monthly management meeting: a concise update against last month, KPIs with Green/Amber/Red status, key issues, decisions needed and next month's priorities" },
+  { name: "All Staff", short: "Every employee",
+    value: "all employees: clear, friendly, jargon-free language that explains what is changing, why it matters and what they need to do" },
+  { name: "New Joiners", short: "First weeks on the job",
+    value: "new joiners in their first weeks: welcoming tone, explain the basics and every acronym, and say who to ask for help" },
+  { name: "Technical Team", short: "Engineers, IT, specialists",
+    value: "the technical team (engineers, IT and subject specialists): precise and detailed, correct technical terms, specifications, constraints and trade-offs" },
+  { name: "Clients / Customers", short: "External buyers and users",
+    value: "clients and customers: benefit-focused, professional and persuasive, no internal jargon, a clear next step" },
+  { name: "Investors / Partners", short: "Funding and business partners",
+    value: "investors and business partners: growth story, market opportunity, financials, competitive advantage and credibility" },
+  { name: "Government / Regulators", short: "Authorities and agencies",
+    value: "government officials and regulators: formal and factual, compliance-focused, with evidence and references to the relevant policies" },
+  { name: "Public", short: "General audience",
+    value: "the general public: plain language, short sentences, relatable everyday examples, accessible and inclusive" },
+  { name: "Students", short: "Secondary school to university",
+    value: "students from secondary school to university: engaging and educational, step-by-step explanations with examples and a quick recap" },
+  { name: "Kids", short: "Children aged 7–12",
+    value: "children aged 7 to 12: very simple words, short sentences, a fun and friendly tone, playful examples and bright visuals, nothing scary" },
+];
+const PRESETS = {
+  tone: ["Professional", "Friendly", "Formal", "Persuasive", "Inspiring", "Casual", "Fun"],
+  slide_count: ["5", "8", "10", "12", "15"],
+  format: ["A4 portrait", "A3 poster", "16:9 slide", "1080x1350 Instagram post", "1080x1920 story"],
+  aspect_ratio: ["1:1 square", "4:5 portrait", "16:9 landscape", "9:16 vertical", "3:2 photo"],
+  size: ["1080x1080 square", "1080x1350 portrait", "1080x1920 story", "1200x628 link post"],
+  platform: ["LinkedIn", "Instagram", "Facebook", "TikTok", "WhatsApp", "X"],
+  target_language: ["Bahasa Melayu", "English", "Mandarin", "Tamil"],
+  timeframe: ["3 months", "12 months", "3 years", "5 years"],
+};
+let currentAud = null;
+
 // ---------- AI engines ----------
 // level: native = built in, file = creates a file, code = built as HTML/SVG, workaround = needs a workaround, none = not supported
 const LEVELS = {
@@ -1001,7 +1063,10 @@ function openModal(id) {
   $("#mDesc").textContent = current.desc;
   $("#mTip").textContent = current.tip ? "Tip: " + current.tip : "Tip: fill the fields above — the prompt updates live. Empty fields are copied as {{placeholders}}.";
   const vars = varsOf(current.prompt);
-  $("#mVars").innerHTML = vars.map(v => `<label>${esc(label(v))}<input id="var-${v}" data-var="${v}" placeholder="${esc(label(v))}"></label>`).join("");
+  $("#mVars").innerHTML = vars.map(v => `<div class="var"><label for="var-${v}">${esc(label(v))}</label><input id="var-${v}" data-var="${v}" placeholder="${esc(label(v))}">${PRESETS[v] ? `<div class="preset-row">${PRESETS[v].map(p => `<button type="button" class="preset" data-preset="${v}" data-value="${esc(p)}">${esc(p)}</button>`).join("")}</div>` : ""}</div>`).join("");
+  currentAud = null;
+  $("#mAudience").hidden = !vars.includes("audience");
+  renderAudiences();
   $("#mVars").style.display = vars.length ? "" : "none";
   currentStyle = null;
   $("#mStyles").hidden = !vars.includes("style");
@@ -1011,6 +1076,21 @@ function openModal(id) {
   $("#overlay").classList.add("open");
   document.body.style.overflow = "hidden";
   $("#mVars input")?.focus();
+}
+function renderAudiences() {
+  $("#mAudName").textContent = currentAud === null ? "None selected" : AUDIENCES[currentAud].name;
+  $("#mAudGrid").innerHTML = AUDIENCES.map((a, i) => `
+    <button type="button" class="aud-opt ${i === currentAud ? "active" : ""}" data-aud="${i}" aria-pressed="${i === currentAud}">
+      <b>${esc(a.name)}</b><small>${esc(a.short)}</small>
+    </button>`).join("");
+}
+function syncPresets() {
+  document.querySelectorAll("#mVars [data-preset]").forEach(b => b.classList.toggle("active", values[b.dataset.preset] === b.dataset.value));
+}
+function setVar(v, val) {
+  values[v] = val;
+  const input = $(`#mVars input[data-var="${v}"]`);
+  if (input) input.value = val;
 }
 function renderStyles() {
   const st = STYLES[currentStyle];
@@ -1082,19 +1162,33 @@ $("#grid").onclick = e => {
 };
 $("#mVars").oninput = e => {
   const v = e.target.dataset.var; if (!v) return;
-  values[v] = e.target.value.trim(); renderModalPrompt();
+  values[v] = e.target.value.trim();
+  if (v === "audience" && currentAud !== null && values.audience !== AUDIENCES[currentAud].value) { currentAud = null; renderAudiences(); }
+  if (v === "style" && currentStyle !== null && values.style !== styleValue(STYLES[currentStyle])) { currentStyle = null; renderStyles(); }
+  syncPresets(); renderModalPrompt();
+};
+$("#mVars").onclick = e => {
+  const b = e.target.closest("[data-preset]"); if (!b) return;
+  const v = b.dataset.preset;
+  setVar(v, values[v] === b.dataset.value ? "" : b.dataset.value);
+  syncPresets(); renderModalPrompt();
+};
+$("#mAudGrid").onclick = e => {
+  const b = e.target.closest("[data-aud]"); if (!b) return;
+  const i = +b.dataset.aud;
+  currentAud = currentAud === i ? null : i;
+  setVar("audience", currentAud === null ? "" : AUDIENCES[currentAud].value);
+  renderAudiences(); renderModalPrompt();
 };
 $("#mStyleGrid").onclick = e => {
   const b = e.target.closest("[data-style]"); if (!b) return;
   const i = +b.dataset.style;
   currentStyle = currentStyle === i ? null : i;
-  values.style = currentStyle === null ? "" : styleValue(STYLES[currentStyle]);
-  const input = $('#mVars input[data-var="style"]');
-  if (input) input.value = values.style;
+  setVar("style", currentStyle === null ? "" : styleValue(STYLES[currentStyle]));
   renderStyles(); renderModalPrompt();
 };
 $("#mCopy").onclick = e => copy(fullPrompt(current), e.currentTarget);
-$("#mReset").onclick = () => { values = {}; currentStyle = null; renderStyles(); $("#mVars").querySelectorAll("input").forEach(i => i.value = ""); renderModalPrompt(); };
+$("#mReset").onclick = () => { values = {}; currentStyle = null; currentAud = null; renderStyles(); renderAudiences(); syncPresets(); $("#mVars").querySelectorAll("input").forEach(i => i.value = ""); renderModalPrompt(); };
 $("#mClose").onclick = closeModal;
 $("#overlay").onclick = e => { if (e.target.id === "overlay") closeModal(); };
 document.addEventListener("keydown", e => {
