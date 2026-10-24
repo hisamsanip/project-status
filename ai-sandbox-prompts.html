@@ -14,8 +14,8 @@
     --border: #252a36;
     --text: #e8ebf2;
     --muted: #8b93a7;
-    --accent: #7c5cff;
-    --accent-2: #22d3ee;
+    --accent: #3d7bff;
+    --accent-2: #38c8f5;
     --ok: #34d399;
     --warn: #fbbf24;
     --bad: #f87171;
@@ -29,8 +29,8 @@
     --border: #e1e5ee;
     --text: #141824;
     --muted: #5d6578;
-    --accent: #6a46f5;
-    --accent-2: #0891b2;
+    --accent: #1f5fe0;
+    --accent-2: #0a8fc4;
     --ok: #059669;
     --warn: #b45309;
     --bad: #dc2626;
@@ -69,6 +69,13 @@
   }
   .icon-btn:hover { border-color: var(--accent); }
   .icon-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .logo { object-fit: cover; background: #fff; }
+  .hero-logo {
+    width: 200px; max-width: 60%; margin: 0 auto 20px; background: #fff; border-radius: 24px; padding: 6px;
+    border: 1px solid var(--border); box-shadow: 0 10px 30px color-mix(in srgb, var(--accent) 18%, transparent);
+  }
+  .hero-logo img { display: block; width: 100%; height: auto; border-radius: 18px; }
 
   /* Hero */
   .hero { padding: 56px 0 28px; text-align: center; }
@@ -291,7 +298,7 @@
 
 <header>
   <div class="wrap nav">
-    <div class="brand"><div class="logo">✦</div> AI Sandbox <span style="color:var(--muted);font-weight:500">/ Prompt Vault</span></div>
+    <div class="brand"><img class="logo" src="images/ai-sandbox-mark.png" alt="" width="32" height="32"> AI Sandbox <span style="color:var(--muted);font-weight:500">/ Prompt Vault</span></div>
     <div class="nav-actions">
       <button class="icon-btn" id="favToggle" title="Show favourites">★ <span class="hide-sm">Favourites</span></button>
       <button class="icon-btn" id="themeToggle" title="Toggle theme">☾</button>
@@ -300,8 +307,8 @@
 </header>
 
 <section class="hero wrap">
-  <div class="pill">AI Sandbox Project</div>
-  <h1>Ready-to-use prompts for <span>every AI experiment</span></h1>
+  <div class="hero-logo"><img src="images/ai-sandbox-logo.jpg" alt="AI Sandbox Workshop" width="240" height="240"></div>
+  <h1>Prompt Vault for <span>every AI experiment</span></h1>
   <p>A curated library of prompts for the AI Sandbox, each built as Role, Objective, Context, Key Requirements, Expected Output, and Testing &amp; Quality. Choose what to create, pick an expert role, audience, tone, one of 20 visual styles and the AI engine you use, fill in the blanks, then copy. Works with ChatGPT, Claude, Gemini, NotebookLM and Copilot.</p>
   <div class="stats">
     <div class="stat"><b id="statPrompts">0</b><small>Prompts</small></div>
