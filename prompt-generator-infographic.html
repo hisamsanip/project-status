@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Generator Infographic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* Collage Art infographic, A4 portrait (794 x 1123 px at 96 dpi) */
+  :root {
+    --kraft: #d8c6a0;
+    --paper: #f7f1e3;
+    --ink: #1d1b18;
+    --red: #d4452c;
+    --teal: #2e7672;
+    --blue: #2f6bff;
+    --tape: rgba(241, 223, 138, 0.82);
+    --display: 'Anton', 'Impact', 'Arial Narrow', sans-serif;
+    --body: 'Courier Prime', 'Courier New', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #8a7d66; display: flex; justify-content: center; padding: 24px 0; }
+  .a4 {
+    position: relative; width: 794px; height: 1123px; overflow: hidden; color: var(--ink); font-family: var(--body);
+    background:
+      radial-gradient(circle at 20% 15%, rgba(255,255,255,.18), transparent 40%),
+      radial-gradient(circle at 80% 85%, rgba(0,0,0,.08), transparent 45%),
+      repeating-linear-gradient(35deg, rgba(0,0,0,.025) 0 2px, transparent 2px 6px),
+      var(--kraft);
+  }
+  .scrap { position: absolute; background: var(--paper); box-shadow: 2px 4px 10px rgba(0,0,0,.28); }
+  .lined { background: repeating-linear-gradient(transparent 0 25px, #b9cbe0 25px 26px), var(--paper); }
+  .grid-paper { background: linear-gradient(#cfdccf 1px, transparent 1px) 0 0 / 18px 18px, linear-gradient(90deg, #cfdccf 1px, transparent 1px) 0 0 / 18px 18px, #f3f6ee; }
+  .tape { position: absolute; width: 96px; height: 26px; background: var(--tape); box-shadow: 0 1px 2px rgba(0,0,0,.15); z-index: 5; }
+  .label { font-family: var(--display); letter-spacing: .04em; text-transform: uppercase; font-size: 22px; line-height: 1; }
+  .text { font-size: 15.5px; line-height: 1.38; }
+  .hero { font-family: var(--display); line-height: .9; }
+
+  /* Title */
+  .title { left: 34px; top: 34px; width: 520px; height: 168px; padding: 22px 28px; transform: rotate(-1.6deg); }
+  .title h1 { font-family: var(--display); font-weight: 400; font-size: 76px; line-height: .95; letter-spacing: .01em; }
+  .title h1 span { display: inline-block; background: var(--red); color: var(--paper); padding: 0 10px; transform: rotate(1.5deg); }
+  .polaroid { left: 578px; top: 26px; width: 182px; padding: 10px 10px 30px; background: #fff; transform: rotate(4deg); }
+  .polaroid img { display: block; width: 100%; }
+  .polaroid small { display: block; text-align: center; font-size: 12px; margin-top: 6px; }
+
+  .takeaway { left: 52px; top: 216px; background: var(--ink); color: var(--paper); padding: 12px 22px; transform: rotate(.8deg); font-size: 20px; font-weight: 700; }
+  .purpose { left: 40px; top: 282px; width: 714px; height: 72px; padding: 14px 24px; transform: rotate(-.5deg); display: flex; gap: 16px; align-items: center; }
+  .purpose b { flex: 0 0 auto; font-family: var(--display); font-weight: 400; font-size: 20px; letter-spacing: .06em; color: var(--red); }
+
+  /* Section 1: 42 */
+  .s1 { left: 34px; top: 376px; width: 400px; height: 178px; padding: 20px 24px; transform: rotate(-1deg); display: grid; grid-template-columns: 128px 1fr; gap: 14px; align-items: center; }
+  .s1 .hero { font-size: 120px; color: var(--red); }
+
+  /* Section 2: 6-part brief */
+  .s2 { left: 34px; top: 574px; width: 726px; height: 214px; padding: 18px 24px; transform: rotate(.6deg); }
+  .steps { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 12px 0 10px; }
+  .step { background: #fff; border: 2px solid var(--ink); padding: 6px 6px 8px; text-align: center; font-weight: 700; font-size: 13px; line-height: 1.15; position: relative; }
+  .step:nth-child(odd) { transform: rotate(-2deg); }
+  .step:nth-child(even) { transform: rotate(1.6deg); background: #fde8a6; }
+  .step i { display: block; font-style: normal; font-family: var(--display); font-size: 26px; color: var(--teal); line-height: 1.1; }
+  .s2-head { display: flex; align-items: baseline; gap: 12px; }
+  .s2-head .hero { font-size: 54px; color: var(--teal); }
+
+  /* Section 3: menu */
+  .s3 { left: 456px; top: 378px; width: 304px; height: 176px; padding: 18px 20px; transform: rotate(1.8deg); }
+  .menu { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 10px 0 8px; text-align: center; }
+  .menu .hero { font-size: 46px; color: var(--blue); }
+  .menu small { display: block; font-size: 12px; font-weight: 700; }
+
+  /* Section 4: 5 engines */
+  .s4 { left: 34px; top: 808px; width: 352px; height: 222px; padding: 18px 22px; transform: rotate(-1.4deg); }
+  .s4-head { display: flex; gap: 14px; align-items: center; }
+  .s4 .hero { font-size: 72px; color: var(--red); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+  .chip { border: 2px solid var(--ink); background: #fff; padding: 2px 8px; font-weight: 700; font-size: 13px; }
+  .chip:nth-child(2n) { transform: rotate(-2deg); }
+
+  /* Section 5: what you do */
+  .s5 { left: 408px; top: 808px; width: 352px; height: 222px; padding: 18px 22px; transform: rotate(1.2deg); }
+  .flow { display: flex; align-items: center; justify-content: space-between; margin: 12px 0 12px; }
+  .flow div { text-align: center; font-weight: 700; font-size: 12.5px; width: 62px; }
+  .flow svg { width: 40px; height: 40px; display: block; margin: 0 auto 4px; }
+  .flow .arrow { width: auto; font-family: var(--display); font-size: 20px; color: var(--teal); }
+
+  .footer { left: 0; right: 0; bottom: 0; height: 80px; background: var(--ink); color: var(--paper); padding: 16px 40px 0; font-size: 13.5px; line-height: 1.45; }
+  .footer b { color: #fde8a6; }
+  .icon-row { display: flex; gap: 8px; align-items: center; }
+  .icon-row svg { width: 34px; height: 34px; flex: 0 0 auto; }
+</style>
+</head>
+<body>
+<div class="a4" id="sheet">
+
+  <div class="scrap title torn" data-seed="3">
+    <h1>PROMPT<br><span>GENERATOR</span></h1>
+  </div>
+  <div class="tape" style="left:250px;top:24px;transform:rotate(-6deg)"></div>
+
+  <div class="scrap polaroid">
+    <img src="images/ai-sandbox-logo.jpg" alt="AI Sandbox Workshop logo">
+    <small>AI Sandbox Workshop</small>
+  </div>
+  <div class="tape" style="left:620px;top:14px;transform:rotate(8deg)"></div>
+
+  <div class="scrap takeaway">Better questions in, better answers out.</div>
+
+  <div class="scrap purpose lined torn" data-seed="7">
+    <b>PURPOSE</b>
+    <p class="text">To inform the development of Prompt Generator to assist in create proper prompt and develop best result</p>
+  </div>
+  <div class="tape" style="left:690px;top:272px;transform:rotate(14deg);width:70px"></div>
+
+  <!-- 1 -->
+  <div class="scrap s1 torn" data-seed="11">
+    <div class="hero">42</div>
+    <div>
+      <div class="label">The recipe card</div>
+      <p class="text" style="margin-top:8px">42 ready-made prompts. Like a recipe card: follow the steps and get a result you can trust.</p>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="scrap s3 grid-paper torn" data-seed="19">
+    <div class="label">Pick from the menu</div>
+    <div class="menu">
+      <div><div class="hero">12</div><small>Audiences</small></div>
+      <div><div class="hero">18</div><small>Tones</small></div>
+      <div><div class="hero">20</div><small>Visual styles</small></div>
+    </div>
+    <p class="text" style="font-size:14px">Choose instead of typing, like ordering from a menu.</p>
+  </div>
+  <div class="tape" style="left:690px;top:366px;transform:rotate(24deg);width:70px"></div>
+
+  <!-- 2 -->
+  <div class="scrap s2 torn" data-seed="23">
+    <div class="s2-head"><div class="hero">6</div><div class="label">parts in every prompt</div></div>
+    <div class="steps">
+      <div class="step"><i>1</i>Role</div>
+      <div class="step"><i>2</i>Objective</div>
+      <div class="step"><i>3</i>Context</div>
+      <div class="step"><i>4</i>Key Requirements</div>
+      <div class="step"><i>5</i>Expected Output</div>
+      <div class="step"><i>6</i>Testing &amp; Quality</div>
+    </div>
+    <p class="text">Like briefing a new colleague: who they are, the goal, the background, the rules, the deliverable and the check.</p>
+  </div>
+  <div class="tape" style="left:30px;top:566px;transform:rotate(-14deg)"></div>
+
+  <!-- 4 -->
+  <div class="scrap s4 torn" data-seed="31">
+    <div class="s4-head">
+      <div class="hero">5</div>
+      <div class="label">AI engines,<br>one plug</div>
+    </div>
+    <div class="chips"><span class="chip">ChatGPT</span><span class="chip">Claude</span><span class="chip">Gemini</span><span class="chip">NotebookLM</span><span class="chip">Copilot</span></div>
+    <p class="text">Like a travel adapter: the same prompt, tuned to fit each tool.</p>
+  </div>
+
+  <!-- 5 -->
+  <div class="scrap s5 lined torn" data-seed="37">
+    <div class="label">What you do</div>
+    <div class="flow">
+      <div><svg viewBox="0 0 40 40" fill="none" stroke="#1d1b18" stroke-width="2.4"><rect x="6" y="8" width="28" height="24" rx="2"/><path d="M6 15h28"/><circle cx="14" cy="23" r="3" fill="#d4452c" stroke="none"/></svg>Choose</div>
+      <span class="arrow">›</span>
+      <div><svg viewBox="0 0 40 40" fill="none" stroke="#1d1b18" stroke-width="2.4"><path d="M8 30l3-9L27 5l6 6-16 16-9 3z"/><path d="M24 8l6 6"/></svg>Fill</div>
+      <span class="arrow">›</span>
+      <div><svg viewBox="0 0 40 40" fill="none" stroke="#1d1b18" stroke-width="2.4"><rect x="12" y="12" width="20" height="22" rx="2"/><path d="M8 28V8a2 2 0 0 1 2-2h16"/></svg>Copy</div>
+      <span class="arrow">›</span>
+      <div><svg viewBox="0 0 40 40" fill="none" stroke="#1d1b18" stroke-width="2.4"><circle cx="20" cy="20" r="14"/><path d="M13 20l5 5 9-10" stroke="#2e7672" stroke-width="3"/></svg>Check</div>
+    </div>
+    <p class="text">Fill the blanks, copy, paste. Then check the answer before you use it, like proofreading a letter.</p>
+  </div>
+  <div class="tape" style="left:690px;top:800px;transform:rotate(10deg);width:76px"></div>
+
+  <div class="scrap footer">
+    <b>Source:</b> AI Sandbox Prompt Vault (42 prompts, 13 categories, 56 expert roles, 12 audiences, 18 tones, 20 visual styles, 5 AI engines).<br>
+    AI Sandbox Workshop · Every AI answer still needs a human check.
+  </div>
+</div>
+<script>
+  // Torn top and bottom edges with a fixed seed so the layout renders the same every time
+  function rng(seed) { let s = seed; return () => (s = (s * 9301 + 49297) % 233280) / 233280; }
+  document.querySelectorAll(".torn").forEach(el => {
+    const r = rng(+el.dataset.seed || 1), n = 28, top = [], bottom = [];
+    for (let i = 0; i <= n; i++) top.push(`${(i / n * 100).toFixed(2)}% ${(r() * 2.6).toFixed(2)}%`);
+    for (let i = n; i >= 0; i--) bottom.push(`${(i / n * 100).toFixed(2)}% ${(100 - r() * 2.6).toFixed(2)}%`);
+    el.style.clipPath = `polygon(${top.join(",")},${bottom.join(",")})`;
+  });
+</script>
+</body>
+</html>
