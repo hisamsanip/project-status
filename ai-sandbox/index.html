@@ -244,11 +244,16 @@
   .style-preview b { font-size: 15px; }
   .style-preview p { font-size: 13px; margin-top: 4px; }
   .muted { color: var(--muted); }
+  .attach-help { font-size: 12.5px; margin-bottom: 8px; }
+  .attach-box { background: var(--surface-2); border: 1px dashed var(--border); border-radius: 12px; padding: 12px; }
+  .attach-box .preset { background: var(--surface); }
+  .attach-box .custom { background: var(--surface); }
+  .attach-add { color: var(--ok); }
 
   /* Create tiles */
   .create { padding-bottom: 8px; }
   .create h2 { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
-  .create-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .create-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
   .create-tile {
     display: flex; gap: 14px; align-items: center; text-align: left; cursor: pointer;
     background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; color: var(--text); font: inherit;
@@ -319,7 +324,7 @@
 <section class="hero wrap">
   <div class="hero-logo"><img src="../images/ai-sandbox-logo.jpg" alt="AI Sandbox Workshop" width="240" height="240"></div>
   <h1>Prompt Vault for <span>every AI experiment</span></h1>
-  <p>A curated library of prompts for the AI Sandbox, each built as Role, Objective, Context, Key Requirements, Expected Output, and Testing &amp; Quality. Choose what to create, pick an expert role, audience, tone, one of 20 visual styles and the AI engine you use, fill in the blanks, then copy. Works with ChatGPT, Claude, Gemini, NotebookLM and Copilot.</p>
+  <p>A curated library of prompts for the AI Sandbox, each built as Role, Objective, Context, Key Requirements, Expected Output, and Testing &amp; Quality. Choose what to create, attach your own documents, pick an expert role, audience, tone, one of 20 visual styles and the AI engine you use, fill in the blanks, then copy. Works with ChatGPT, Claude, Gemini, NotebookLM and Copilot.</p>
   <div class="stats">
     <div class="stat"><b id="statPrompts">0</b><small>Prompts</small></div>
     <div class="stat"><b id="statCats">0</b><small>Categories</small></div>
@@ -336,6 +341,7 @@
     <button type="button" class="create-tile" data-jump="Slides"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="5" y="8" width="34" height="23" rx="3"/><path d="M22 31v6M15 37h14M11 24l7-7l5 5l8-8"/></svg><span><b>Slides</b><small>Presentations and pitch decks</small><span class="n"></span></span></button>
     <button type="button" class="create-tile" data-jump="Infographic"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="9" y="5" width="26" height="34" rx="3"/><circle cx="17" cy="14" r="4"/><path d="M24 12h6M24 16h4M15 32v-6M22 32v-10M29 32v-8"/></svg><span><b>Infographic</b><small>Data, processes and comparisons</small><span class="n"></span></span></button>
     <button type="button" class="create-tile" data-jump="Visual"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="5" y="8" width="34" height="28" rx="3"/><circle cx="15" cy="17" r="3.5"/><path d="M5 31l10-9l8 7l6-5l10 8"/></svg><span><b>Visual</b><small>Images, posters and social graphics</small><span class="n"></span></span></button>
+    <button type="button" class="create-tile" data-jump="Dashboard"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="5" y="6" width="34" height="32" rx="3"/><path d="M5 14h34M12 32v-6M18 32v-10M24 32v-4"/><circle cx="32" cy="25" r="5"/></svg><span><b>Dashboard</b><small>KPIs, scorecards and project health</small><span class="n"></span></span></button>
   </div>
 </section>
 
@@ -392,6 +398,17 @@
       <div class="style-preview" id="mStylePreview" hidden></div>
       <div class="style-grid" id="mStyleGrid"></div>
       <input class="custom" id="custom-style" data-var="style" placeholder="Or describe your own style">
+    </div>
+    <div class="style-picker" id="mSchemes" hidden>
+      <h4>Choose a colour scheme <span id="mSchemeName">None selected</span></h4>
+      <div class="style-grid" id="mSchemeGrid"></div>
+      <input class="custom" id="custom-color_scheme" data-var="color_scheme" placeholder="Or type your own colours, e.g. brand hex codes">
+    </div>
+    <div class="style-picker attach-box" id="mAttach">
+      <h4>Attached document <span id="mAttachName">Not used</span></h4>
+      <p class="muted attach-help">Attach your file in the AI tool first (paperclip icon; in NotebookLM, add it as a source). Then choose how the AI should use it. You can pick more than one.</p>
+      <div class="preset-row" id="mAttachRow"></div>
+      <input class="custom" id="attach-name" placeholder="Document name, e.g. Q3 Sales Report.pdf (optional)">
     </div>
     <div class="engine-box" id="mEngine">
       <h4>AI engine <span>Steps and output adapt to the tool you choose</span></h4>
@@ -517,6 +534,48 @@ const PROMPTS = [
       "Include a negative prompt that lists what to avoid.",
       "Avoid names of living artists and trademarked characters."],
     output: "3 numbered prompts in code blocks, each under 80 words, followed by the negative prompt" },
+
+  // ---------- Dashboard ----------
+  { id: "create-dashboard", cat: "Dashboard", kind: "dashboard", title: "Create Dashboard",
+    desc: "A one-screen dashboard with KPI cards and charts in your chosen colour scheme.",
+    tags: ["dashboard", "kpi", "colour scheme"],
+    objective: "I want a dashboard on {{topic}} that helps {{audience}} see what matters and decide at a glance.",
+    context: "KPIs and data to show:\n{{kpis}}\nColour scheme: {{color_scheme}}. Screen or format: {{format}}.",
+    reqs: ["Include a header with the title, date range and a last-updated note, a row of 4–6 KPI cards showing actual versus target with a trend arrow, and 2–4 charts that each answer one question.",
+      "Include the colour scheme consistently across cards, charts and headers, and keep Green, Amber and Red only for status.",
+      "Include clear labels, units and the data source for every chart, with numbers aligned so they are easy to compare.",
+      "Avoid 3D charts, pie charts with many slices, decorative clutter and invented numbers; label any sample data clearly as SAMPLE."],
+    output: "a finished dashboard in the stated format (an interactive HTML page or the tool's own dashboard), followed by a short list of each KPI with its formula" },
+  { id: "kpi-scorecard", cat: "Dashboard", kind: "dashboard", title: "Monthly KPI Scorecard",
+    desc: "One-page scorecard for the monthly management meeting.",
+    tags: ["dashboard", "kpi", "monthly meeting"], role: "Business Intelligence Lead",
+    objective: "I want a one-page KPI scorecard for {{team_or_initiative}} to review at the monthly meeting.",
+    context: "Month: {{month}}. KPIs with actual and target values:\n{{kpis}}\nColour scheme: {{color_scheme}}.",
+    reqs: ["Include every KPI with actual, target, variance and a Green, Amber or Red status.",
+      "Include a 6-month trend sparkline where the data allows, plus the top 3 highlights and top 3 concerns.",
+      "Include the actions needed before next month, each with an owner.",
+      "Avoid filling in missing values; show them as \"No data\"."],
+    output: "a one-page scorecard dashboard, followed by the highlights, concerns and actions as bullets" },
+  { id: "project-dashboard", cat: "Dashboard", kind: "dashboard", title: "Project Portfolio Dashboard",
+    desc: "Health of all projects at a glance: status, budget, progress and risks.",
+    tags: ["dashboard", "projects", "pm"], role: "Project Dashboard Designer",
+    objective: "I want a dashboard that shows the health of every project in {{portfolio_name}}.",
+    context: "Project list with status, budget, progress and key dates:\n{{project_data}}\nColour scheme: {{color_scheme}}.",
+    reqs: ["Include summary counts by status (Green, Amber, Red), budget spent versus planned, and overall progress.",
+      "Include a project table with owner, % complete, next milestone and status, sorted with Red projects first.",
+      "Include overdue milestones and the top 5 risks.",
+      "Avoid hiding problem projects; show issues before achievements."],
+    output: "a finished dashboard with summary cards, charts and the project table" },
+  { id: "dashboard-build-guide", cat: "Dashboard", kind: "dashboard", title: "Excel / Power BI Dashboard Plan",
+    desc: "Step-by-step guide to build the dashboard yourself in your own tool.",
+    tags: ["dashboard", "excel", "power bi"], role: "Power BI / Excel Developer",
+    objective: "I want step-by-step instructions to build a {{topic}} dashboard in {{app}}.",
+    context: "Audience: {{audience}}. My data layout: {{data_layout}}. Colour scheme: {{color_scheme}}.",
+    reqs: ["Include the data preparation steps, the measures or formulas needed, and the charts to create.",
+      "Include the page layout and the exact hex colour codes from the colour scheme for each element.",
+      "Include the slicers or filters the audience will need.",
+      "Avoid features that are not available in {{app}}."],
+    output: "numbered steps grouped by stage (Prepare, Calculate, Visualise, Share), with formulas in code blocks" },
 
   // ---------- Getting Started ----------
   { id: "role-setup", cat: "Getting Started", title: "Expert Role Setup",
@@ -926,6 +985,14 @@ const ROLES = {
     { name: "Risk Manager", short: "Identify and mitigate", value: "an enterprise risk manager" },
     { name: "Agile Coach", short: "Scrum and Kanban", value: "an agile coach experienced with Scrum and Kanban teams" },
   ],
+  "Dashboard": [
+    { name: "BI Dashboard Designer", short: "Clear, decision-ready dashboards", value: "a senior BI dashboard designer who builds clear, decision-ready dashboards" },
+    { name: "Data Visualisation Expert", short: "Honest, clear charts", value: "a data visualisation expert who picks the right chart and keeps the data honest" },
+    { name: "Business Intelligence Lead", short: "KPIs and reporting", value: "a business intelligence lead who designs KPIs and management reporting" },
+    { name: "Project Dashboard Designer", short: "Portfolio and RAG status", value: "a PMO analyst who designs project portfolio dashboards with clear RAG status" },
+    { name: "Power BI / Excel Developer", short: "Builds it in your tool", value: "a Power BI and Excel developer who builds dashboards step by step" },
+    { name: "Financial Analyst", short: "Budgets and forecasts", value: "a financial analyst who builds budget and forecast dashboards" },
+  ],
   "Coding": [
     { name: "Senior Software Engineer", short: "Clean, working code", value: "a senior software engineer who writes clean, well-tested code" },
     { name: "Solutions Architect", short: "System design", value: "a solutions architect who designs reliable, secure systems" },
@@ -989,6 +1056,42 @@ const styleValue = st => `${st.name} (${st.desc})`;
 const styleImg = (st, cls = "") => `<img class="${cls}" src="${STYLE_IMG_DIR + st.img}" alt="${esc(st.name)} sample: property management title slide" loading="lazy" width="300" height="236">`;
 let currentStyle = null;
 
+// ---------- Dashboard colour schemes ----------
+const SCHEMES = [
+  { name: "AI Sandbox Blue", desc: "the AI Sandbox brand blues", bg: "#f4f7ff", surface: "#ffffff", text: "#0b1b4d", c: ["#1f3bb3", "#3d7bff", "#38c8f5", "#0b1b4d"] },
+  { name: "Corporate Navy", desc: "navy and steel with an amber highlight", bg: "#f3f5f9", surface: "#ffffff", text: "#0b2545", c: ["#0b2545", "#13315c", "#8da9c4", "#f4a261"] },
+  { name: "Emerald Growth", desc: "greens for growth and sustainability", bg: "#f0fdf4", surface: "#ffffff", text: "#064e3b", c: ["#065f46", "#10b981", "#6ee7b7", "#f59e0b"] },
+  { name: "Sunset Warm", desc: "energetic oranges and gold", bg: "#fff7ed", surface: "#ffffff", text: "#431407", c: ["#c2410c", "#f97316", "#fbbf24", "#7c2d12"] },
+  { name: "Monochrome Executive", desc: "calm greys with one red highlight", bg: "#f5f5f5", surface: "#ffffff", text: "#111827", c: ["#111827", "#4b5563", "#9ca3af", "#dc2626"] },
+  { name: "Dark Neon", desc: "dark theme with neon accents for screens", bg: "#0b1020", surface: "#151b33", text: "#e5e7eb", c: ["#22d3ee", "#a78bfa", "#f472b6", "#facc15"], dark: true },
+  { name: "Earthy Natural", desc: "olive, sand and clay tones", bg: "#f6f3ea", surface: "#fffdf7", text: "#3f3a2e", c: ["#5f6f52", "#a9b388", "#b99470", "#783d19"] },
+  { name: "Jalur Gemilang", desc: "Malaysian flag navy, red and yellow", bg: "#f7f8fc", surface: "#ffffff", text: "#010066", c: ["#010066", "#cc0001", "#ffcc00", "#5a5aa8"] },
+  { name: "Pastel Soft", desc: "soft pastels for friendly reports", bg: "#fbfaff", surface: "#ffffff", text: "#3b3355", c: ["#818cf8", "#f9a8d4", "#86efac", "#fcd34d"] },
+  { name: "Colour-blind Safe", desc: "Okabe–Ito palette, readable for colour-blind viewers", bg: "#ffffff", surface: "#f7f7f7", text: "#1a1a1a", c: ["#0072B2", "#E69F00", "#009E73", "#D55E00"] },
+];
+const schemeValue = sc => `${sc.name}${sc.dark ? " (dark theme)" : ""}: background ${sc.bg}, cards ${sc.surface}, text ${sc.text}, chart colours ${sc.c.join(", ")}`;
+const schemeSvg = sc => {
+  const [a, b, c, d] = sc.c, card = (x, i) => `<rect x="${x}" y="20" width="46" height="19" rx="3" fill="${sc.surface}"/><rect x="${x + 5}" y="25" width="20" height="2.5" rx="1" fill="${sc.text}" opacity=".45"/><rect x="${x + 5}" y="30" width="15" height="5" rx="1" fill="${sc.c[i]}"/>`;
+  const bars = [18, 28, 22, 34, 26, 38].map((h, i) => `<rect x="${12 + i * 14}" y="${89 - h}" width="9" height="${h}" rx="1.5" fill="${i === 5 ? d : b}"/>`).join("");
+  return `<svg class="thumb" viewBox="0 0 160 100" role="img" aria-label="${esc(sc.name)} sample dashboard"><rect width="160" height="100" fill="${sc.bg}"/><rect width="160" height="14" fill="${a}"/><rect x="6" y="5" width="40" height="4" rx="2" fill="#fff" opacity=".9"/>${card(6, 1)}${card(57, 2)}${card(108, 3)}<rect x="6" y="44" width="92" height="50" rx="3" fill="${sc.surface}"/>${bars}<rect x="104" y="44" width="50" height="50" rx="3" fill="${sc.surface}"/><g transform="rotate(-90 129 69)" fill="none" stroke-width="7"><circle cx="129" cy="69" r="14" stroke="${a}" stroke-dasharray="39.6 88"/><circle cx="129" cy="69" r="14" stroke="${b}" stroke-dasharray="26.4 88" stroke-dashoffset="-39.6"/><circle cx="129" cy="69" r="14" stroke="${c}" stroke-dasharray="22 88" stroke-dashoffset="-66"/></g></svg>`;
+};
+let currentScheme = null;
+
+// ---------- Attached document ----------
+const ATTACH_USES = [
+  { label: "Main source of facts", value: "the main source of facts, without adding facts that are not in it" },
+  { label: "Background only", value: "background context only" },
+  { label: "Data source", value: "the data source, with figures copied exactly as written" },
+  { label: "Template / format", value: "a template, following its structure, format and style" },
+  { label: "Brand / style guide", value: "the brand and style guide, following its colours, fonts and tone" },
+  { label: "Previous version to improve", value: "a previous version to review and improve" },
+];
+const ATTACH_SPLIT = "\n\nKEY REQUIREMENTS:";
+let attachUses = new Set(), attachName = "";
+const attachLine = () => attachUses.size
+  ? `Attached document: Refer to the attached document${attachName ? ` "${attachName}"` : ""} and use it as ${[...attachUses].map(i => ATTACH_USES[i].value).join("; and as ")}. Cite the page or section you rely on, and say clearly when something is not covered by the document.`
+  : "";
+
 // ---------- Predefined values ----------
 const AUDIENCES = [
   { name: "Top Management", short: "CEO, directors, board",
@@ -1018,7 +1121,8 @@ const AUDIENCES = [
 ];
 const PRESETS = {
   slide_count: ["5", "8", "10", "12", "15"],
-  format: ["A4 portrait", "A3 poster", "16:9 slide", "1080x1350 Instagram post", "1080x1920 story"],
+  format: ["A4 portrait", "A3 poster", "16:9 slide", "Desktop 16:9 screen", "Mobile screen", "1080x1350 Instagram post", "1080x1920 story"],
+  app: ["Excel", "Power BI", "Google Sheets", "Looker Studio"],
   aspect_ratio: ["1:1 square", "4:5 portrait", "16:9 landscape", "9:16 vertical", "3:2 photo"],
   size: ["1080x1080 square", "1080x1350 portrait", "1080x1920 story", "1200x628 link post"],
   platform: ["LinkedIn", "Instagram", "Facebook", "TikTok", "WhatsApp", "X"],
@@ -1065,6 +1169,8 @@ const ENGINES = {
       add: "Generate this as one finished infographic image. Check that every number and word in the image is spelled exactly as given." },
     slides: { level: "file", how: "ChatGPT writes the slide content and builds a downloadable .pptx with its code tool. Open the file in PowerPoint or Google Slides to polish it.",
       add: "After the outline, create a downloadable .pptx file that applies the chosen visual style (colours, fonts and layout) to every slide." },
+    dashboard: { level: "code", how: "ChatGPT builds the dashboard as an interactive HTML file or charts with its code tool. Attach your Excel or CSV file so it uses real numbers.",
+      add: "Build this as a single interactive HTML dashboard file I can download, using the colour scheme above. Label any sample data clearly." },
     text: { how: "Works with any prompt. Attach files, or turn on web search when the task needs current facts." } },
   claude: { name: "Claude",
     note: "Excellent for writing, analysis and code. It does not paint raster images; it builds visuals as HTML/SVG artifacts and creates files such as .pptx.",
@@ -1074,6 +1180,8 @@ const ENGINES = {
       add: "Build this infographic as a single self-contained HTML/SVG artifact sized to the format above, with all text exactly as given." },
     slides: { level: "file", how: "Claude creates a .pptx file when file creation is turned on, or an HTML slide deck artifact you can present in the browser.",
       add: "Create the deck as a downloadable .pptx file that applies the chosen visual style. If you can't create files, build it as an HTML slide deck artifact with one slide per screen." },
+    dashboard: { level: "code", how: "Claude builds an interactive HTML dashboard artifact you can open, share or download. Attach your Excel or CSV file so it uses real numbers.",
+      add: "Build this as an interactive HTML dashboard artifact using the colour scheme above. Label any sample data clearly." },
     text: { how: "Great for long documents and careful reasoning. Attach files or use a Project to give it background." } },
   gemini: { name: "Gemini",
     note: "Google's assistant. Generates images natively, and Canvas builds infographics and slide decks you can export to Google Slides.",
@@ -1083,6 +1191,8 @@ const ENGINES = {
       add: "Create this infographic in Canvas as a single visual page." },
     slides: { level: "native", how: "Select Canvas and paste the prompt. Gemini builds the deck, and you can export it to Google Slides. Inside Google Slides, Gemini's side panel can also add slides.",
       add: "Create this presentation in Canvas so I can export it to Google Slides." },
+    dashboard: { level: "code", how: "Select Canvas and paste the prompt. Gemini builds an interactive web dashboard you can preview and share. Attach a file or Google Sheet for real data.",
+      add: "Build this dashboard in Canvas as an interactive web page using the colour scheme above." },
     text: { how: "Works well with Google Workspace. Connect Gmail, Drive or Docs to work from your own files." } },
   notebooklm: { name: "NotebookLM",
     note: "Works only from the sources you upload. Its Studio panel creates slide decks, infographics, audio and video overviews, mind maps and reports.",
@@ -1092,6 +1202,8 @@ const ENGINES = {
       add: "Use only facts from the notebook sources." },
     slides: { level: "native", how: "Add your sources, open Studio › Slide Deck, click the edit (pencil) icon and paste this prompt as the customisation.",
       add: "Use only content from the notebook sources." },
+    dashboard: { level: "none", how: "NotebookLM doesn't build dashboards. Use it to pull the key figures from your sources, then paste them into Claude, ChatGPT, Gemini or Copilot to build the dashboard.",
+      add: "Base every figure only on the notebook sources, and list each figure with its source." },
     text: { how: "Upload your documents first. Answers come only from your sources, with citations." } },
   copilot: { name: "Copilot",
     note: "Microsoft Copilot. Creates images and works inside PowerPoint, Word and Excel with Microsoft 365.",
@@ -1101,6 +1213,8 @@ const ENGINES = {
       add: "Generate this as a finished infographic image with all text spelled exactly as given." },
     slides: { level: "native", how: "In PowerPoint, open Copilot, choose to create a presentation, and paste the prompt. You can also start from a Word file. Pick a Designer theme that matches the style.",
       add: "Create this presentation in PowerPoint." },
+    dashboard: { level: "native", how: "Open your data in Excel and ask Copilot to build charts and a PivotTable dashboard sheet, or use Copilot in Power BI to create a report page.",
+      add: "Build this in Excel on one dashboard sheet with charts and a PivotTable, using the colour scheme above for chart colours." },
     text: { how: "Best inside Microsoft 365. Reference your Word, Excel or Outlook files to ground the answer." } },
 };
 
@@ -1174,7 +1288,7 @@ function renderGrid() {
     <article class="card" data-id="${p.id}">
       <div class="card-top">
         <span class="cat-tag">${esc(p.cat)}</span>
-        <span class="right">${varsOf(p.prompt).includes("style") ? `<span class="badge">20 styles</span>` : ""}<button class="star ${favs.has(p.id) ? "on" : ""}" data-star="${p.id}" aria-label="Favourite">${favs.has(p.id) ? "★" : "☆"}</button></span>
+        <span class="right">${varsOf(p.prompt).includes("style") ? `<span class="badge">20 styles</span>` : ""}${varsOf(p.prompt).includes("color_scheme") ? `<span class="badge">10 colour schemes</span>` : ""}<button class="star ${favs.has(p.id) ? "on" : ""}" data-star="${p.id}" aria-label="Favourite">${favs.has(p.id) ? "★" : "☆"}</button></span>
       </div>
       <h3>${esc(p.title)}</h3>
       <p class="desc">${esc(p.desc)}</p>
@@ -1202,12 +1316,14 @@ function fill(text, highlight) {
   });
 }
 const engineAdd = p => engineFor(p)?.add || "";
-const fullPrompt = p => fill(p.prompt, false) + (engineAdd(p) ? "\n" + engineAdd(p) : "") + "\n\n" + TESTING;
+const withAttach = (text, line) => line ? text.replace(ATTACH_SPLIT, "\n" + line + ATTACH_SPLIT) : text;
+const fullPrompt = (p, line = "") => fill(withAttach(p.prompt, line), false) + (engineAdd(p) ? "\n" + engineAdd(p) : "") + "\n\n" + TESTING;
 
 function renderModalPrompt() {
-  const parts = current.prompt.split(/(\{\{\w+\}\})/);
-  const add = engineAdd(current);
-  $("#mPrompt").innerHTML = parts.map(s => /^\{\{\w+\}\}$/.test(s) ? fill(s, true) : esc(s)).join("")
+  const hl = text => text.split(/(\{\{\w+\}\})/).map(s => /^\{\{\w+\}\}$/.test(s) ? fill(s, true) : esc(s)).join("");
+  const [head, tail] = current.prompt.split(ATTACH_SPLIT);
+  const add = engineAdd(current), line = attachLine();
+  $("#mPrompt").innerHTML = hl(head) + (line ? `<span class="attach-add">\n${esc(line)}</span>` : "") + hl(ATTACH_SPLIT + tail)
     + (add ? `<span class="engine-add">\n${esc(add)}</span>` : "") + "\n\n" + esc(TESTING);
 }
 
@@ -1244,13 +1360,31 @@ function openModal(id) {
   currentStyle = null;
   $("#mStyles").hidden = !vars.includes("style");
   renderStyles();
+  currentScheme = null;
+  $("#mSchemes").hidden = !vars.includes("color_scheme");
+  renderSchemes();
+  attachUses = new Set(); attachName = ""; $("#attach-name").value = "";
+  renderAttach();
   renderModalEngine();
   renderModalPrompt();
   $("#overlay").classList.add("open");
   document.body.style.overflow = "hidden";
   $(".modal").scrollTop = 0;
 }
-const PICKER_VARS = ["role", "audience", "tone", "style"];
+const PICKER_VARS = ["role", "audience", "tone", "style", "color_scheme"];
+function renderSchemes() {
+  $("#mSchemeName").textContent = currentScheme === null ? (values.color_scheme ? "Custom" : "None selected") : SCHEMES[currentScheme].name;
+  $("#mSchemeGrid").innerHTML = SCHEMES.map((sc, i) => `
+    <button type="button" class="style-opt ${i === currentScheme ? "active" : ""}" data-scheme="${i}" aria-pressed="${i === currentScheme}">
+      ${schemeSvg(sc)}
+      <b><span class="num">${i + 1}.</span>${esc(sc.name)}</b>
+      <small>${esc(sc.desc)}</small>
+    </button>`).join("");
+}
+function renderAttach() {
+  $("#mAttachName").textContent = attachUses.size ? `${attachUses.size} use${attachUses.size > 1 ? "s" : ""} selected` : "Not used";
+  $("#mAttachRow").innerHTML = ATTACH_USES.map((u, i) => `<button type="button" class="preset ${attachUses.has(i) ? "active" : ""}" data-attach="${i}" aria-pressed="${attachUses.has(i)}">${esc(u.label)}</button>`).join("");
+}
 function renderTones() {
   $("#mToneName").textContent = currentTone === null ? (values.tone ? "Custom" : "None selected") : TONES[currentTone].name;
   $("#mToneGrid").innerHTML = TONES.map((t, i) => `
@@ -1372,8 +1506,27 @@ document.querySelectorAll(".style-picker .custom").forEach(inp => inp.oninput = 
   if (v === "audience") { currentAud = null; renderAudiences(); }
   if (v === "tone") { currentTone = null; renderTones(); }
   if (v === "style") { currentStyle = null; renderStyles(); }
+  if (v === "color_scheme") { currentScheme = null; renderSchemes(); }
   renderModalPrompt();
 });
+$("#mSchemeGrid").onclick = e => {
+  const b = e.target.closest("[data-scheme]"); if (!b) return;
+  const i = +b.dataset.scheme;
+  currentScheme = currentScheme === i ? null : i;
+  setVar("color_scheme", currentScheme === null ? "" : schemeValue(SCHEMES[currentScheme]));
+  renderSchemes(); renderModalPrompt();
+};
+$("#mAttachRow").onclick = e => {
+  const b = e.target.closest("[data-attach]"); if (!b) return;
+  const i = +b.dataset.attach;
+  attachUses.has(i) ? attachUses.delete(i) : attachUses.add(i);
+  renderAttach(); renderModalPrompt();
+};
+$("#attach-name").oninput = e => {
+  attachName = e.target.value.trim().replace(/[{}"]/g, "");
+  if (attachName && !attachUses.size) { attachUses.add(0); renderAttach(); }
+  renderModalPrompt();
+};
 $("#mToneGrid").onclick = e => {
   const b = e.target.closest("[data-tone]"); if (!b) return;
   const i = +b.dataset.tone;
@@ -1402,14 +1555,15 @@ $("#mStyleGrid").onclick = e => {
   setVar("style", currentStyle === null ? "" : styleValue(STYLES[currentStyle]));
   renderStyles(); renderModalPrompt();
 };
-$("#mCopy").onclick = e => copy(fullPrompt(current), e.currentTarget);
+$("#mCopy").onclick = e => copy(fullPrompt(current, attachLine()), e.currentTarget);
 $("#mReset").onclick = () => {
-  values = defaultsFor(current); currentStyle = null; currentAud = null;
+  values = defaultsFor(current); currentStyle = null; currentAud = null; currentScheme = null;
+  attachUses = new Set(); attachName = ""; $("#attach-name").value = "";
   currentRole = rolesFor(current).length ? defaultRoleIndex(current) : null;
   currentTone = 0;
   $("#mVars").querySelectorAll("input").forEach(i => i.value = values[i.dataset.var] || "");
   document.querySelectorAll(".style-picker .custom").forEach(i => i.value = "");
-  renderRoles(); renderTones(); renderStyles(); renderAudiences(); syncPresets(); renderModalPrompt();
+  renderRoles(); renderTones(); renderStyles(); renderSchemes(); renderAttach(); renderAudiences(); syncPresets(); renderModalPrompt();
 };
 $("#mClose").onclick = closeModal;
 $("#overlay").onclick = e => { if (e.target.id === "overlay") closeModal(); };
