@@ -22,13 +22,17 @@ The **M-slider** in the top bar simulates any programme month, and every page re
 
 Maturity scores and evidence files are illustrative sample data. KPI values are the deck's proposed targets, not actual results. The "AI" is deterministic rules over the plan content (`src/lib/insights.js`, `src/lib/assistant.js`), so it runs fully offline.
 
+## The HTML file
+
+`PFMSB_Canopy.html` in the repo root is the whole platform in one file, with all scripts and styles inlined. Double-click it to open it in a browser, or host it anywhere. Only the Google Fonts load from the internet.
+
 ## Develop
 
 ```bash
 cd pfmsb-platform
 npm install
 npm run dev      # local dev server
-npm run build    # writes the static site to ../pfmsb/
+npm run build    # writes one self-contained file: ../PFMSB_Canopy.html
 ```
 
 Stack: React 18, Vite, Framer Motion, Lucide icons, plain CSS with design tokens (`src/styles/base.css`).
