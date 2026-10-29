@@ -1,0 +1,206 @@
+/* ------------------------------------------------------------------
+   JomSplit design tokens
+   Concept: "Kertas & Pandan". Warm receipt paper, ink-black type and
+   one pandan-green accent for anything that means "settled". Money is
+   always set in a monospace face, like a printed receipt.
+------------------------------------------------------------------- */
+:root {
+  --bg: #f6f4ee;
+  --glow-1: rgba(46, 155, 99, 0.13);
+  --glow-2: rgba(120, 180, 230, 0.12);
+  --surface: #ffffff;
+  --surface-2: #fbfaf7;
+  --sunken: #f2efe7;
+  --line: rgba(20, 23, 26, 0.08);
+  --line-2: rgba(20, 23, 26, 0.14);
+  --line-3: rgba(20, 23, 26, 0.24);
+
+  --text: #14171a;
+  --text-2: #565c63;
+  --text-3: #8a8f96;
+
+  --ink: #14171a;
+  --on-ink: #ffffff;
+  --accent: #1d7a4c;
+  --accent-strong: #15603b;
+  --accent-soft: #e2f2e9;
+  --accent-on-ink: #79e0a6;
+  --primary-bg: var(--ink);
+  --primary-fg: #ffffff;
+  --primary-hover: #2a2f34;
+
+  --warn: #9a6512;
+  --warn-soft: #fbefd8;
+  --danger: #b93a26;
+  --danger-soft: #fbe5e0;
+  --info: #2b67a8;
+  --toast-ok: #79e0a6;
+  --toast-err: #ff9c87;
+
+  --font-display: 'Bricolage Grotesque', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-ui: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* 4px spacing scale */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 20px;
+  --s6: 24px;
+  --s8: 32px;
+  --s10: 40px;
+
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 18px;
+  --r-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(20, 23, 26, 0.05);
+  --shadow: 0 1px 2px rgba(20, 23, 26, 0.04), 0 8px 24px -12px rgba(20, 23, 26, 0.12);
+  --shadow-lg: 0 24px 64px -20px rgba(20, 23, 26, 0.28);
+  --ring: 0 0 0 3px rgba(29, 122, 76, 0.22);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --bg: #0d100f;
+  --glow-1: rgba(91, 211, 154, 0.1);
+  --glow-2: rgba(110, 160, 230, 0.07);
+  --surface: #151918;
+  --surface-2: #191e1c;
+  --sunken: #101413;
+  --line: rgba(225, 255, 238, 0.07);
+  --line-2: rgba(225, 255, 238, 0.12);
+  --line-3: rgba(225, 255, 238, 0.22);
+
+  --text: #eceeed;
+  --text-2: #a4aca7;
+  --text-3: #6f7873;
+
+  --ink: #1f2523;
+  --accent: #5bd39a;
+  --accent-strong: #79e0a6;
+  --accent-soft: rgba(91, 211, 154, 0.12);
+  --primary-bg: #5bd39a;
+  --primary-fg: #08130d;
+  --primary-hover: #79e0a6;
+
+  --warn: #f0b860;
+  --warn-soft: rgba(240, 184, 96, 0.12);
+  --danger: #ff8a75;
+  --danger-soft: rgba(255, 138, 117, 0.12);
+  --info: #8cc2ff;
+  --toast-ok: #1d7a4c;
+  --toast-err: #b93a26;
+
+  --shadow-sm: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 16px 40px -20px rgba(0, 0, 0, 0.7);
+  --shadow-lg: 0 30px 80px -20px rgba(0, 0, 0, 0.8);
+  --ring: 0 0 0 3px rgba(91, 211, 154, 0.28);
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 84px;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(900px 480px at 8% -10%, var(--glow-1), transparent 60%),
+    radial-gradient(800px 420px at 100% 0%, var(--glow-2), transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  transition: background-color 0.3s var(--ease), color 0.3s var(--ease);
+}
+
+h1,
+h2,
+h3,
+p,
+dl,
+dd,
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+ul,
+ol {
+  list-style: none;
+}
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+button {
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+}
+::selection {
+  background: var(--accent-soft);
+}
+
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+.muted {
+  color: var(--text-3);
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.spin {
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
