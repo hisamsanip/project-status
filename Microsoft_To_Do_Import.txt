@@ -1,0 +1,33 @@
+HOW TO USE
+1. In Microsoft To Do, create a list called "Seremban Sentral - MCA Documentation".
+2. Copy every line under LIST 1, paste into "Add a task", and confirm adding them as separate tasks.
+3. Create a second list "Seremban Sentral - Ground Works" and do the same with LIST 2.
+4. Set due dates and assign people in each task (shared lists only).
+
+========== LIST 1: Seremban Sentral - MCA Documentation (all due 30/10, 4.00 p.m.) ==========
+L1 Letter of endorsement from master policy provider - confirm received, send to legal (due 30/10 4pm)
+L2 Insurance claims & coverage issues - confirm material/disputed claims, refusals, non-renewals, conditions, exclusions + correspondence (due 30/10 4pm)
+L3 Original policies - confirm wet-ink originals or digital only; arrange legal to sight originals (due 30/10 4pm)
+L4 Master fire insurance policy - 2 copies (due 30/10 4pm)
+L5 Current fire insurance policy(ies) for the Units - 2 copies (due 30/10 4pm)
+L6 Joint baseline assessment with GD - confirm done for conditions, Excluded Defects, Common Property Defects; dates + documents (due 30/10 4pm)
+L7 Excluded Defects records - reports, correspondence, warranties, guarantees (due 30/10 4pm)
+L8 3 years of defect & works records - confirm availability incl. Excluded Defects and Units (due 30/10 4pm)
+L9 Rules & regulations / house rules - confirm registered with COB; proof of submission (due 30/10 4pm)
+L10 Quit rent & assessment - original receipts + 3 copies each for CTC (due 30/10 4pm)
+L11 Reply to legal - one consolidated response covering L1-L10 (due 30/10 4pm)
+
+========== LIST 2: Seremban Sentral - Ground Works ==========
+4 GD to start gym works after RFQ closes (due 31/10)
+5 Set up Google Form from survey and issue to residents (due 30/10)
+6 RFQ closes - collect panel contractor quotations (due 30/10) [In progress]
+7 Get pricing from recommended QS consultants and appoint one - Contract Management (due TBC) [In progress]
+8 Survey closes - compile results, one response per unit (due 2/11)
+9 Compare panel quotations against GD's proposal (before COB meeting)
+10 QS validation - gym after works start; landscape & other works before award
+11 Send update to stakeholders after comparison & QS validation (before COB meeting)
+12 Confirm COB meeting date - Wed 4/11 or Thu 5/11
+13 Prepare COB meeting pack - survey results, quotation comparison, QS validation, 50-50 funding (before COB meeting)
+14 Meeting with COB (4/11 tentative, or 5/11)
+15 Monitor gym & landscape works progress (until 14/11)
+16 Gym & landscape ready for soft launch (due 14/11)
