@@ -1,7 +1,8 @@
-import { useMemo } from "react";
+import { Fragment, useMemo } from "react";
 import { AbsoluteFill, Easing, interpolate, Sequence, useCurrentFrame, useVideoConfig } from "remotion";
 import { createTikTokStyleCaptions, type TikTokPage } from "@remotion/captions";
 import { buildCaptions } from "./captions";
+import type { Lang } from "./script";
 
 // Pages split only at the end of each script line, so a whole sentence shows at once.
 const COMBINE_MS = 60000;
@@ -39,8 +40,8 @@ const Page: React.FC<{ page: TikTokPage }> = ({ page }) => {
           const spoken = nowMs >= token.fromMs;
           const popFrame = ((token.fromMs - page.startMs) / 1000) * fps;
           return (
-            <span key={i} style={{ whiteSpace: "pre" }}>
-              {token.text.startsWith(" ") ? " " : ""}
+            <Fragment key={i}>
+              {token.text.startsWith(" ") ? " " : null}
               <span
                 style={{
                   display: "inline-block",
@@ -55,7 +56,7 @@ const Page: React.FC<{ page: TikTokPage }> = ({ page }) => {
               >
                 {token.text.trimStart()}
               </span>
-            </span>
+            </Fragment>
           );
         })}
       </div>
@@ -63,11 +64,11 @@ const Page: React.FC<{ page: TikTokPage }> = ({ page }) => {
   );
 };
 
-export const Subtitles: React.FC = () => {
+export const Subtitles: React.FC<{ lang: Lang }> = ({ lang }) => {
   const { fps } = useVideoConfig();
   const pages = useMemo(
-    () => createTikTokStyleCaptions({ captions: buildCaptions(), combineTokensWithinMilliseconds: COMBINE_MS }).pages,
-    [],
+    () => createTikTokStyleCaptions({ captions: buildCaptions(lang), combineTokensWithinMilliseconds: COMBINE_MS }).pages,
+    [lang],
   );
 
   return (

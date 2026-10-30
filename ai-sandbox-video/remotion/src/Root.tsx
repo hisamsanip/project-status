@@ -1,13 +1,14 @@
 import { Composition, Folder } from "remotion";
 import { HowToVideo } from "./HowToVideo";
 import { StepScene } from "./StepScene";
-import { SCENES, sceneFrames, TOTAL_FRAMES, FPS } from "./script";
+import { SCRIPTS, sceneFrames, totalFrames, FPS } from "./script";
 
 export const RemotionRoot: React.FC = () => (
   <>
-    <Composition id="PromptVaultHowTo" component={HowToVideo} durationInFrames={TOTAL_FRAMES} fps={FPS} width={1920} height={1080} />
+    <Composition id="PromptVaultHowTo" component={HowToVideo} durationInFrames={totalFrames("en")} fps={FPS} width={1920} height={1080} defaultProps={{ lang: "en" as const }} />
+    <Composition id="PromptVaultHowToMS" component={HowToVideo} durationInFrames={totalFrames("ms")} fps={FPS} width={1920} height={1080} defaultProps={{ lang: "ms" as const }} />
     <Folder name="Steps">
-      {SCENES.map(s =>
+      {SCRIPTS.en.scenes.map(s =>
         s.kind === "step" ? (
           <Composition
             key={s.id}
@@ -17,7 +18,7 @@ export const RemotionRoot: React.FC = () => (
             fps={FPS}
             width={1920}
             height={1080}
-            defaultProps={{ step: s.step, title: s.title, clip: s.clip, zoom: s.zoom }}
+            defaultProps={{ step: s.step, title: s.title, clip: s.clip, clipSeconds: s.clipSeconds }}
           />
         ) : null,
       )}

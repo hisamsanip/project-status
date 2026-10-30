@@ -1,4 +1,4 @@
-<html>
+<html data-composition-variables='[{"id": "headline", "type": "string", "label": "Headline", "default": "Ready to try it?"}, {"id": "favourites", "type": "string", "label": "Favourites tip", "default": "Save your favourites"}, {"id": "tag", "type": "string", "label": "Tagline", "default": "Better questions in, better answers out."}]'>
   <body>
     <style>
       /* Outro: same brand ground as the intro. Bottom 200px kept clear for Remotion subtitles. */
@@ -47,16 +47,20 @@
     <div id="outro-root" data-composition-id="outro" data-start="0" data-duration="7" data-width="1920" data-height="1080">
       <div id="scene" class="clip" data-start="0" data-duration="7" data-track-index="0">
         <div id="mark"><img src="../assets/ai-sandbox-mark.png" alt="" /></div>
-        <h1 id="headline">Ready to try it?</h1>
+        <h1 id="headline"></h1>
         <div id="url">hisamsanip.github.io/project-status/ai-sandbox</div>
         <div id="tips">
-          <div class="tip"><em>★</em> Save your favourites</div>
+          <div class="tip"><em>★</em> <span id="fav"></span></div>
           <div class="tip">ChatGPT · Claude · Gemini · NotebookLM · Copilot</div>
         </div>
-        <p id="tag">Better questions in, better answers out.</p>
+        <p id="tag"></p>
       </div>
     </div>
     <script>
+      const v = window.__hyperframes.getVariables();
+      document.querySelector("#headline").textContent = v.headline;
+      document.querySelector("#fav").textContent = v.favourites;
+      document.querySelector("#tag").textContent = v.tag;
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
       tl.fromTo("#scene", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.out" }, 0)

@@ -1,4 +1,4 @@
-<html>
+<html data-composition-variables='[{"id": "subtitle", "type": "string", "label": "Subtitle", "default": "How to use it in 6 simple steps"}, {"id": "steps", "type": "string", "label": "Step chips, separated by |", "default": "Create|AI tool|Fill in|Role & tone|Style & file|Copy"}, {"id": "fadeAt", "type": "number", "label": "Fade-out start (seconds)", "default": 7.0}]'>
   <body>
     <style>
       /* Intro: brand navy ground, AI Sandbox blues, Inter. Bottom 200px kept clear for Remotion subtitles. */
@@ -50,22 +50,25 @@
         background: var(--blue); font-size: 22px; font-weight: 800;
       }
     </style>
-    <div id="intro-root" data-composition-id="intro" data-start="0" data-duration="7.5" data-width="1920" data-height="1080">
-      <div id="scene" class="clip" data-start="0" data-duration="7.5" data-track-index="0">
+    <div id="intro-root" data-composition-id="intro" data-start="0" data-duration="8.5" data-width="1920" data-height="1080">
+      <div id="scene" class="clip" data-start="0" data-duration="8.5" data-track-index="0">
         <div id="logo"><img src="../assets/ai-sandbox-logo.jpg" alt="AI Sandbox Workshop" /></div>
         <h1 id="title">Prompt <span>Vault</span></h1>
-        <p id="subtitle">How to use it in 6 simple steps</p>
+        <p id="subtitle"></p>
         <div id="steps">
-          <div class="step"><b>1</b>Create</div>
-          <div class="step"><b>2</b>AI tool</div>
-          <div class="step"><b>3</b>Fill in</div>
-          <div class="step"><b>4</b>Role &amp; tone</div>
-          <div class="step"><b>5</b>Style &amp; file</div>
-          <div class="step"><b>6</b>Copy</div>
+          <div class="step"><b>1</b><span></span></div>
+          <div class="step"><b>2</b><span></span></div>
+          <div class="step"><b>3</b><span></span></div>
+          <div class="step"><b>4</b><span></span></div>
+          <div class="step"><b>5</b><span></span></div>
+          <div class="step"><b>6</b><span></span></div>
         </div>
       </div>
     </div>
     <script>
+      const v = window.__hyperframes.getVariables();
+      document.querySelector("#subtitle").textContent = v.subtitle;
+      v.steps.split("|").forEach((t, i) => { document.querySelectorAll(".step span")[i].textContent = t; });
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
       tl.fromTo("#logo", { opacity: 0, scale: 0.6, y: 40, filter: "blur(12px)" }, { opacity: 1, scale: 1, y: 0, filter: "blur(0px)", duration: 0.9, ease: "back.out(1.6)" }, 0.1)
@@ -74,7 +77,7 @@
         .fromTo(".step", { opacity: 0, y: 40, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(2)", stagger: 0.14 }, 1.4)
         .to(".step b", { backgroundColor: "#38c8f5", duration: 0.25, stagger: 0.14, yoyo: true, repeat: 1 }, 2.6)
         .to("#logo", { y: -14, duration: 1.6, ease: "sine.inOut", yoyo: true, repeat: 2 }, 2.2)
-        .to("#scene", { opacity: 0, scale: 1.06, filter: "blur(10px)", duration: 0.5, ease: "power2.in" }, 7.0);
+        .to("#scene", { opacity: 0, scale: 1.06, filter: "blur(10px)", duration: 0.5, ease: "power2.in" }, v.fadeAt);
       window.__timelines["intro"] = tl;
       tl.seek(0);
     </script>

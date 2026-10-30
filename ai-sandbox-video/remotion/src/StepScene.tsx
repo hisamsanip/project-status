@@ -1,6 +1,5 @@
-import { AbsoluteFill, Easing, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Easing, Freeze, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { Video } from "@remotion/media";
-import type { Zoom } from "./script";
 
 const NAVY = "#071338";
 const BLUE = "#3d7bff";
@@ -8,14 +7,12 @@ const CYAN = "#38c8f5";
 const ease = Easing.bezier(0.16, 1, 0.3, 1);
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
-export type StepSceneProps = { step: number; title: string; clip: string; zoom?: Zoom };
+export type StepSceneProps = { step: number; title: string; clip: string; clipSeconds: number };
 
-export const StepScene: React.FC<StepSceneProps> = ({ step, title, clip, zoom }) => {
+export const StepScene: React.FC<StepSceneProps> = ({ step, title, clip, clipSeconds }) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
-  const z = zoom
-    ? interpolate(frame, [zoom.from * fps, zoom.from * fps + 18, zoom.to * fps - 14, zoom.to * fps], [1, zoom.scale, zoom.scale, 1], { ...clamp, easing: ease })
-    : 1;
+  const lastClipFrame = Math.round(clipSeconds * fps) - 1;
 
   return (
     <AbsoluteFill
@@ -31,7 +28,7 @@ export const StepScene: React.FC<StepSceneProps> = ({ step, title, clip, zoom })
       {/* Step heading */}
       <div
         style={{
-          position: "absolute", left: 320, top: 34, display: "flex", alignItems: "center", gap: 22,
+          position: "absolute", left: 350, top: 30, display: "flex", alignItems: "center", gap: 22,
           opacity: interpolate(frame, [2, 12], [0, 1], clamp),
           translate: interpolate(frame, [2, 14], ["-40px 0px", "0px 0px"], { ...clamp, easing: ease }),
         }}
@@ -49,7 +46,7 @@ export const StepScene: React.FC<StepSceneProps> = ({ step, title, clip, zoom })
       </div>
 
       {/* Progress: six steps */}
-      <div style={{ position: "absolute", right: 320, top: 58, display: "flex", gap: 10, opacity: interpolate(frame, [2, 12], [0, 1], clamp) }}>
+      <div style={{ position: "absolute", right: 350, top: 54, display: "flex", gap: 10, opacity: interpolate(frame, [2, 12], [0, 1], clamp) }}>
         {[1, 2, 3, 4, 5, 6].map(n => (
           <div
             key={n}
@@ -64,7 +61,7 @@ export const StepScene: React.FC<StepSceneProps> = ({ step, title, clip, zoom })
       {/* Browser window with the real screen recording */}
       <div
         style={{
-          position: "absolute", left: 320, top: 128, width: 1280, borderRadius: 18, overflow: "hidden",
+          position: "absolute", left: 350, top: 118, width: 1220, borderRadius: 18, overflow: "hidden",
           background: "#fff", boxShadow: "0 40px 100px rgba(0,0,0,.55), 0 0 0 2px rgba(255,255,255,.08)",
           opacity: interpolate(frame, [0, 10], [0, 1], clamp),
           scale: interpolate(frame, [0, 16], [0.94, 1], { ...clamp, easing: ease, output: "perceptual-scale" }),
@@ -76,10 +73,10 @@ export const StepScene: React.FC<StepSceneProps> = ({ step, title, clip, zoom })
             hisamsanip.github.io/project-status/ai-sandbox
           </div>
         </div>
-        <div style={{ width: 1280, height: 720, overflow: "hidden" }}>
-          <div style={{ width: 1280, height: 720, scale: z, transformOrigin: zoom ? `${zoom.originX} ${zoom.originY}` : "50% 50%" }}>
-            <Video src={staticFile(clip)} muted style={{ width: 1280, height: 720, display: "block" }} />
-          </div>
+        <div style={{ width: 1220, height: 686, overflow: "hidden" }}>
+          <Freeze frame={lastClipFrame} active={frame >= lastClipFrame}>
+            <Video src={staticFile(clip)} muted style={{ width: 1220, height: 686, display: "block" }} />
+          </Freeze>
         </div>
       </div>
     </AbsoluteFill>
