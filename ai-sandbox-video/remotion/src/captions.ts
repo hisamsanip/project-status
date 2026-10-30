@@ -1,9 +1,9 @@
 import type { Caption } from "@remotion/captions";
-import { SCENES, sceneFrames, FPS } from "./script";
+import { SCENES, sceneFrames, FPS, lineEnd } from "./script";
 
 // Turns the script's subtitle lines into word-level captions on the full video timeline.
-// Each word gets a share of its line's time, weighted by word length, so the highlight
-// moves at a natural reading pace. The last word of each line ends a caption page.
+// Each line lasts exactly as long as its spoken audio; each word gets a share of that
+// time, weighted by word length, so the highlight follows the narrator. The last word of each line ends a caption page.
 export const buildCaptions = (): Caption[] => {
   const captions: Caption[] = [];
   let sceneStart = 0;
@@ -13,7 +13,7 @@ export const buildCaptions = (): Caption[] => {
       const weights = words.map(w => w.length + 3);
       const total = weights.reduce((a, b) => a + b, 0);
       const lineStart = (sceneStart + line.from) * 1000;
-      const lineMs = (line.to - line.from) * 1000;
+      const lineMs = (lineEnd(line) - line.from) * 1000;
       let t = lineStart;
       words.forEach((w, i) => {
         const d = (weights[i] / total) * lineMs;

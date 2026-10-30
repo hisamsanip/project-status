@@ -50,8 +50,8 @@
         background: var(--blue); font-size: 22px; font-weight: 800;
       }
     </style>
-    <div id="intro-root" data-composition-id="intro" data-start="0" data-duration="6" data-width="1920" data-height="1080">
-      <div id="scene" class="clip" data-start="0" data-duration="6" data-track-index="0">
+    <div id="intro-root" data-composition-id="intro" data-start="0" data-duration="7.5" data-width="1920" data-height="1080">
+      <div id="scene" class="clip" data-start="0" data-duration="7.5" data-track-index="0">
         <div id="logo"><img src="../assets/ai-sandbox-logo.jpg" alt="AI Sandbox Workshop" /></div>
         <h1 id="title">Prompt <span>Vault</span></h1>
         <p id="subtitle">How to use it in 6 simple steps</p>
@@ -73,8 +73,8 @@
         .fromTo("#subtitle", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.95)
         .fromTo(".step", { opacity: 0, y: 40, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(2)", stagger: 0.14 }, 1.4)
         .to(".step b", { backgroundColor: "#38c8f5", duration: 0.25, stagger: 0.14, yoyo: true, repeat: 1 }, 2.6)
-        .to("#logo", { y: -14, duration: 1.6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 2.2)
-        .to("#scene", { opacity: 0, scale: 1.06, filter: "blur(10px)", duration: 0.5, ease: "power2.in" }, 5.5);
+        .to("#logo", { y: -14, duration: 1.6, ease: "sine.inOut", yoyo: true, repeat: 2 }, 2.2)
+        .to("#scene", { opacity: 0, scale: 1.06, filter: "blur(10px)", duration: 0.5, ease: "power2.in" }, 7.0);
       window.__timelines["intro"] = tl;
       tl.seek(0);
     </script>

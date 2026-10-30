@@ -1,7 +1,7 @@
 # AI Sandbox Prompt Vault: how-to video
 
-A 72-second, 1920×1080 video that walks through the Prompt Vault in six steps, with
-animated word-by-word subtitles.
+A 73-second, 1920×1080 video that walks through the Prompt Vault in six steps, with an
+ElevenLabs voiceover and animated word-by-word subtitles that follow the narrator.
 
 Final video: `ai-sandbox-prompt-vault-how-to.mp4`
 
@@ -11,10 +11,12 @@ Final video: `ai-sandbox-prompt-vault-how-to.mp4`
 |---|---|---|
 | Intro and outro scenes | HyperFrames (HTML + GSAP) | `hyperframes/` → `remotion/public/clips/scenes.mp4` |
 | Six step recordings of the real site | Playwright, frame by frame | `capture/record.js` → `remotion/public/clips/step1–6.mp4` |
-| Edit, step headings, animated subtitles | Remotion | `remotion/src/` |
+| Voiceover (voice "Maya", model eleven_v4), loudness-normalised to -16 LUFS | ElevenLabs | `remotion/public/voiceover.mp3` |
+| Edit, step headings, voice placement, animated subtitles | Remotion | `remotion/src/` |
 
-The subtitle text and timing live in `remotion/src/script.ts`. Edit a line there and
-re-render to change what the video says.
+The subtitle text and timing live in `remotion/src/script.ts`. Each line has `audio: [start, end]`,
+its position in `voiceover.mp3`, and the subtitle lasts exactly as long as that audio. If you
+change the words, generate new narration in ElevenLabs and update those times.
 
 ## Rebuild
 
