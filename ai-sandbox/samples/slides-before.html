@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sample: slides from a vague prompt</title>
+<style>
+  /* Illustrative output for the vague prompt "Make a presentation about our Q3 performance."
+     It reproduces common problems on purpose: decorative title, walls of text, invented figures, unlabelled chart, no decision asked. */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #ccc; display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px; }
+  .slide { position: relative; width: 1280px; height: 720px; overflow: hidden; font-family: "Liberation Sans", Arial, sans-serif; color: #222;
+    background: linear-gradient(135deg, #e0f2ff, #fff 40%, #ffeaf4); }
+  .slide::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 26px; background: linear-gradient(90deg, #ff3d7f, #ff9a00, #2ecc71, #3498db); }
+  .wordart { font-family: "DejaVu Serif", serif; font-weight: bold; font-style: italic; text-align: center;
+    background: linear-gradient(90deg, #0052d4, #9b59b6, #ff3d7f); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  h2 { font-family: "DejaVu Serif", serif; font-size: 54px; color: #0052d4; padding: 40px 60px 10px; text-decoration: underline; }
+  ul { padding: 10px 70px 0 100px; font-size: 25px; line-height: 1.38; }
+  li { margin-bottom: 8px; }
+  .big-ico { font-size: 110px; text-align: center; }
+</style>
+</head>
+<body>
+  <div class="slide" id="s1">
+    <div class="big-ico" style="padding-top:70px">📈🚀🏆</div>
+    <h1 class="wordart" style="font-size:96px;margin-top:10px">Q3 PERFORMANCE<br>REVIEW!!!</h1>
+    <p style="text-align:center;font-family:'FreeMono',monospace;font-size:30px;margin-top:16px;color:#9b59b6">~ Driving Excellence Together ~</p>
+  </div>
+
+  <div class="slide" id="s2">
+    <h2>Overview</h2>
+    <ul>
+      <li>This quarter has been a very exciting and transformative period for our organisation as we continued our journey towards excellence.</li>
+      <li>Our dedicated team worked tirelessly across all departments to deliver outstanding results for all of our valued stakeholders.</li>
+      <li>We leveraged innovative solutions and synergies to optimise our operations and drive continuous improvement in every area.</li>
+      <li>Customer centricity remained at the heart of everything we do, and we remain fully committed to our core values going forward.</li>
+      <li>Looking ahead, we are well positioned to capitalise on new opportunities and to achieve even greater success in the coming quarters.</li>
+    </ul>
+  </div>
+
+  <div class="slide" id="s3">
+    <h2>Key Achievements 🎉</h2>
+    <div style="display:flex;gap:40px;padding:10px 60px;align-items:center">
+      <ul style="padding:0 0 0 40px;font-size:30px;line-height:1.6;font-family:'FreeMono',monospace;font-weight:bold;flex:1">
+        <li>Revenue ↑ 35%!!</li>
+        <li>Customer satisfaction 98%</li>
+        <li>200+ new clients</li>
+        <li>Costs ↓ 20%</li>
+        <li>Market leader 🥇</li>
+      </ul>
+      <svg width="520" height="420" viewBox="0 0 520 420">
+        <g><polygon points="60,360 120,330 120,140 60,170" fill="#c0392b"/><rect x="0" y="0" width="0" height="0"/></g>
+        <g><polygon points="60,170 120,140 160,160 100,190" fill="#ff7b6b"/><rect x="60" y="190" width="40" height="170" fill="#e74c3c"/></g>
+        <g><polygon points="180,360 240,330 240,80 180,110" fill="#2471a3"/><polygon points="180,110 240,80 280,100 220,130" fill="#7fb3e6"/><rect x="180" y="130" width="40" height="230" fill="#3498db"/></g>
+        <g><polygon points="300,360 360,330 360,200 300,230" fill="#1e8449"/><polygon points="300,230 360,200 400,220 340,250" fill="#7dd3a0"/><rect x="300" y="250" width="40" height="110" fill="#2ecc71"/></g>
+        <g><polygon points="420,360 480,330 480,40 420,70" fill="#b9770e"/><polygon points="420,70 480,40 520,60 460,90" fill="#ffd27f"/><rect x="420" y="90" width="40" height="270" fill="#f39c12"/></g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="slide" id="s4">
+    <div class="big-ico" style="padding-top:130px">🙏😊</div>
+    <h1 class="wordart" style="font-size:110px;margin-top:10px">Thank You!</h1>
+    <p style="text-align:center;font-size:40px;margin-top:10px;color:#555">Any Questions???</p>
+  </div>
+</body>
+</html>

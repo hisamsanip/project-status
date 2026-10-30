@@ -1,0 +1,26 @@
+ROLE:
+Act as a senior BI dashboard designer who builds clear, decision-ready dashboards.
+
+OBJECTIVE:
+I want a dashboard on Q3 property management service performance that shows what matters at a glance and helps the audience decide.
+
+CONTEXT:
+Here is the background: Audience: attendees of the monthly management meeting: a concise update against last month, KPIs with Green/Amber/Red status, key issues, decisions needed and next month's priorities. KPIs and data to show:
+Tickets resolved: 1,248 (Jul 398, Aug 421, Sep 429; Q2: 1,105). Average first response: 4.2 hours (Jul 4.6, Aug 4.1, Sep 3.9; target 6 hours). Tenant satisfaction: 87% (Jul 85%, Aug 87%, Sep 89%; Q2: 82%). Repairs completed on time: 92% (Jul 90%, Aug 92%, Sep 94%; target 90%). Top issue types: plumbing 34%, electrical 22%, lifts 18%, other 26%.
+Colour scheme: AI Sandbox Blue: background #f4f7ff, cards #ffffff, text #0b1b4d, chart colours #1f3bb3, #3d7bff, #38c8f5, #0b1b4d. Screen or format: Desktop 16:9 screen.
+Attached document: Refer to the attached document "Q3 Service Report.xlsx" and use it as the data source, with figures copied exactly as written. Cite the page or section you rely on, and say clearly when something is not covered by the document.
+
+KEY REQUIREMENTS:
+1. Include a header with the title, date range and a last-updated note, a row of 4–6 KPI cards showing actual versus target with a trend arrow, and 2–4 charts that each answer one question.
+2. Include the colour scheme consistently across cards, charts and headers, and keep Green, Amber and Red only for status.
+3. Include clear labels, units and the data source for every chart, with numbers aligned so they are easy to compare.
+4. Avoid 3D charts, pie charts with many slices, decorative clutter and invented numbers; label any sample data clearly as SAMPLE.
+
+EXPECTED OUTPUT:
+Present the result in a finished dashboard in the stated format (an interactive HTML page or the tool's own dashboard), followed by a short list of each KPI with its formula.
+Language: English.
+Tone: data-driven (facts and numbers first).
+Build this as an interactive HTML dashboard artifact using the colour scheme above. Label any sample data clearly.
+
+TESTING & QUALITY:
+Challenge assumptions, identify weaknesses, verify facts, state uncertainties and recommend improvements. Do not fabricate information.
