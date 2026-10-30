@@ -1,0 +1,82 @@
+<html>
+  <body>
+    <style>
+      /* Intro: brand navy ground, AI Sandbox blues, Inter. Bottom 200px kept clear for Remotion subtitles. */
+      :root {
+        --ground: #071338;
+        --ground-2: #0d2366;
+        --ink: #ffffff;
+        --muted: #a9bdf2;
+        --blue: #3d7bff;
+        --cyan: #38c8f5;
+        --font: "Inter", sans-serif;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      
+      #intro-root {
+        position: relative; width: 100%; height: 100%; font-family: var(--font); color: var(--ink);
+        background:
+          radial-gradient(1200px 700px at 50% 40%, var(--ground-2), transparent 70%),
+          linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px) 0 0 / 60px 60px,
+          linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px) 0 0 / 60px 60px,
+          var(--ground);
+      }
+      .clip { position: absolute; inset: 0; }
+      #logo {
+        position: absolute; left: 50%; top: 150px; width: 250px; height: 250px; margin-left: -125px;
+        background: #fff; border-radius: 40px; padding: 10px; box-shadow: 0 30px 80px rgba(61,123,255,.45);
+      }
+      #logo img { width: 100%; height: 100%; border-radius: 32px; display: block; }
+      #title {
+        position: absolute; left: 0; right: 0; top: 440px; text-align: center;
+        font-size: 128px; font-weight: 800; letter-spacing: -0.035em; line-height: 1;
+      }
+      #title span {
+        background: linear-gradient(90deg, var(--blue), var(--cyan));
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+      }
+      #subtitle {
+        position: absolute; left: 0; right: 0; top: 600px; text-align: center;
+        font-size: 50px; font-weight: 500; color: var(--muted); letter-spacing: -0.01em;
+      }
+      #steps { position: absolute; left: 0; right: 0; top: 720px; display: flex; justify-content: center; gap: 18px; }
+      .step {
+        display: flex; align-items: center; gap: 12px; padding: 14px 24px; border-radius: 999px;
+        background: rgba(255,255,255,.08); border: 1.5px solid rgba(255,255,255,.18);
+        font-size: 30px; font-weight: 600;
+      }
+      .step b {
+        width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+        background: var(--blue); font-size: 22px; font-weight: 800;
+      }
+    </style>
+    <div id="intro-root" data-composition-id="intro" data-start="0" data-duration="6" data-width="1920" data-height="1080">
+      <div id="scene" class="clip" data-start="0" data-duration="6" data-track-index="0">
+        <div id="logo"><img src="../assets/ai-sandbox-logo.jpg" alt="AI Sandbox Workshop" /></div>
+        <h1 id="title">Prompt <span>Vault</span></h1>
+        <p id="subtitle">How to use it in 6 simple steps</p>
+        <div id="steps">
+          <div class="step"><b>1</b>Create</div>
+          <div class="step"><b>2</b>AI tool</div>
+          <div class="step"><b>3</b>Fill in</div>
+          <div class="step"><b>4</b>Role &amp; tone</div>
+          <div class="step"><b>5</b>Style &amp; file</div>
+          <div class="step"><b>6</b>Copy</div>
+        </div>
+      </div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#logo", { opacity: 0, scale: 0.6, y: 40, filter: "blur(12px)" }, { opacity: 1, scale: 1, y: 0, filter: "blur(0px)", duration: 0.9, ease: "back.out(1.6)" }, 0.1)
+        .fromTo("#title", { opacity: 0, y: 60, scale: 1.08 }, { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: "power4.out" }, 0.55)
+        .fromTo("#subtitle", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.95)
+        .fromTo(".step", { opacity: 0, y: 40, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(2)", stagger: 0.14 }, 1.4)
+        .to(".step b", { backgroundColor: "#38c8f5", duration: 0.25, stagger: 0.14, yoyo: true, repeat: 1 }, 2.6)
+        .to("#logo", { y: -14, duration: 1.6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 2.2)
+        .to("#scene", { opacity: 0, scale: 1.06, filter: "blur(10px)", duration: 0.5, ease: "power2.in" }, 5.5);
+      window.__timelines["intro"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
