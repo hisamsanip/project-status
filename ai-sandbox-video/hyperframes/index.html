@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #071338; }
+    </style>
+  </head>
+  <body>
+    <!-- One film, both languages. Remotion trims each part out of scenes.mp4:
+         English intro 0–7.5s, English outro 7.5–14.5s, Malay intro 14.5–23s, Malay outro 23–30s. -->
+    <div id="root" data-composition-id="main" data-start="0" data-duration="30" data-width="1920" data-height="1080">
+      <div id="intro-en" data-composition-id="intro-en" data-composition-src="compositions/intro.html" data-start="0" data-duration="7.5" data-track-index="0"></div>
+      <div id="outro-en" data-composition-id="outro-en" data-composition-src="compositions/outro.html" data-start="7.5" data-duration="7" data-track-index="1"></div>
+      <div id="intro-ms" data-composition-id="intro-ms" data-composition-src="compositions/intro.html" data-start="14.5" data-duration="8.5" data-track-index="0"
+           data-variable-values='{"subtitle":"Cara menggunakannya dalam 6 langkah mudah","steps":"Hasilkan|Alat AI|Isi|Peranan & nada|Gaya & fail|Salin","fadeAt":8.0}'></div>
+      <div id="outro-ms" data-composition-id="outro-ms" data-composition-src="compositions/outro.html" data-start="23" data-duration="7" data-track-index="1"
+           data-variable-values='{"headline":"Jom cuba sekarang!","favourites":"Simpan kegemaran anda","tag":"Soalan yang lebih baik, jawapan yang lebih baik."}'></div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    </script>
+  </body>
+</html>

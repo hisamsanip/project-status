@@ -1,0 +1,78 @@
+<html data-composition-variables='[{"id": "headline", "type": "string", "label": "Headline", "default": "Ready to try it?"}, {"id": "favourites", "type": "string", "label": "Favourites tip", "default": "Save your favourites"}, {"id": "tag", "type": "string", "label": "Tagline", "default": "Better questions in, better answers out."}]'>
+  <body>
+    <style>
+      /* Outro: same brand ground as the intro. Bottom 200px kept clear for Remotion subtitles. */
+      :root {
+        --ground: #071338;
+        --ground-2: #0d2366;
+        --ink: #ffffff;
+        --muted: #a9bdf2;
+        --blue: #3d7bff;
+        --cyan: #38c8f5;
+        --font: "Inter", sans-serif;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      
+      #outro-root {
+        position: relative; width: 100%; height: 100%; font-family: var(--font); color: var(--ink);
+        background:
+          radial-gradient(1200px 700px at 50% 45%, var(--ground-2), transparent 70%),
+          linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px) 0 0 / 60px 60px,
+          linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px) 0 0 / 60px 60px,
+          var(--ground);
+      }
+      .clip { position: absolute; inset: 0; }
+      #mark {
+        position: absolute; left: 50%; top: 120px; width: 150px; height: 150px; margin-left: -75px;
+        background: #fff; border-radius: 34px; padding: 8px; box-shadow: 0 24px 60px rgba(61,123,255,.45);
+      }
+      #mark img { width: 100%; height: 100%; display: block; border-radius: 26px; }
+      #headline {
+        position: absolute; left: 0; right: 0; top: 320px; text-align: center;
+        font-size: 108px; font-weight: 800; letter-spacing: -0.035em; line-height: 1;
+      }
+      #url {
+        position: absolute; left: 50%; top: 480px; translate: -50% 0; white-space: nowrap;
+        padding: 26px 48px; border-radius: 26px; font-size: 52px; font-weight: 700; letter-spacing: -0.01em;
+        background: linear-gradient(90deg, var(--blue), var(--cyan)); box-shadow: 0 20px 60px rgba(56,200,245,.35);
+      }
+      #tips { position: absolute; left: 0; right: 0; top: 650px; display: flex; justify-content: center; gap: 22px; }
+      .tip {
+        padding: 16px 28px; border-radius: 999px; font-size: 32px; font-weight: 600; color: var(--muted);
+        background: rgba(255,255,255,.07); border: 1.5px solid rgba(255,255,255,.16);
+      }
+      .tip em { font-style: normal; color: #fbbf24; }
+      #tag { position: absolute; left: 0; right: 0; top: 770px; text-align: center; font-size: 40px; font-weight: 600; color: var(--ink); opacity: .9; }
+    </style>
+    <div id="outro-root" data-composition-id="outro" data-start="0" data-duration="7" data-width="1920" data-height="1080">
+      <div id="scene" class="clip" data-start="0" data-duration="7" data-track-index="0">
+        <div id="mark"><img src="../assets/ai-sandbox-mark.png" alt="" /></div>
+        <h1 id="headline"></h1>
+        <div id="url">hisamsanip.github.io/project-status/ai-sandbox</div>
+        <div id="tips">
+          <div class="tip"><em>★</em> <span id="fav"></span></div>
+          <div class="tip">ChatGPT · Claude · Gemini · NotebookLM · Copilot</div>
+        </div>
+        <p id="tag"></p>
+      </div>
+    </div>
+    <script>
+      const v = window.__hyperframes.getVariables();
+      document.querySelector("#headline").textContent = v.headline;
+      document.querySelector("#fav").textContent = v.favourites;
+      document.querySelector("#tag").textContent = v.tag;
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#scene", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.out" }, 0)
+        .fromTo("#mark", { opacity: 0, scale: 0.5, rotate: -12 }, { opacity: 1, scale: 1, rotate: 0, duration: 0.8, ease: "back.out(1.8)" }, 0.1)
+        .fromTo("#headline", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.7, ease: "power4.out" }, 0.4)
+        .fromTo("#url", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.7)" }, 0.9)
+        .fromTo(".tip", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out", stagger: 0.18 }, 1.6)
+        .fromTo("#tag", { opacity: 0 }, { opacity: 0.9, duration: 0.6 }, 2.4)
+        .to("#url", { scale: 1.04, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 3 }, 3.0)
+        .to("#scene", { opacity: 0, duration: 0.6, ease: "power2.in" }, 6.4);
+      window.__timelines["outro"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

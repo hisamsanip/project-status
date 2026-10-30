@@ -1,0 +1,9 @@
+{
+  "name": "ai-sandbox-howto-scenes",
+  "private": true,
+  "scripts": {
+    "check": "hyperframes lint",
+    "render": "hyperframes render -o ../remotion/public/clips/scenes.mp4"
+  },
+  "devDependencies": { "hyperframes": "0.8.219" }
+}
