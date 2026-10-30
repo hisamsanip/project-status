@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Before and after: infographic prompt</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { width: 1920px; height: 1080px; overflow: hidden; font-family: "Inter", sans-serif; color: #fff;
+    background: radial-gradient(1400px 800px at 50% 40%, #0d2366, transparent 72%), #071338; }
+  h1 { position: absolute; left: 70px; top: 34px; font-size: 54px; font-weight: 800; letter-spacing: -0.035em; }
+  h1 span { color: #38c8f5; }
+  .sub { position: absolute; left: 72px; top: 104px; font-size: 22px; color: #a9bdf2; }
+  .mark { position: absolute; right: 70px; top: 40px; display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 700; color: #cdd9ff; }
+  .mark img { width: 48px; height: 48px; border-radius: 12px; background: #fff; padding: 3px; }
+  .col { position: absolute; top: 152px; width: 860px; }
+  .pill { display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; border-radius: 999px; font-size: 22px; font-weight: 800; }
+  .prompt { margin-top: 12px; height: 74px; border-radius: 14px; padding: 12px 18px; display: flex; align-items: center;
+    background: rgba(255,255,255,.07); border: 1.5px solid rgba(255,255,255,.18); font-size: 17px; line-height: 1.35; color: #e8eeff; }
+  .prompt code { font-family: "JetBrains Mono", monospace; font-size: 18px; }
+  .prompt b { color: #fff; }
+  .img { position: absolute; top: 300px; width: 481px; height: 680px; border-radius: 10px; box-shadow: 0 24px 60px rgba(0,0,0,.5); }
+  ul { position: absolute; top: 310px; width: 340px; list-style: none; display: flex; flex-direction: column; gap: 20px; }
+  li { display: flex; gap: 14px; font-size: 21px; font-weight: 600; line-height: 1.3; }
+  .n, .dot { flex: 0 0 auto; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-size: 18px; font-weight: 800; color: #fff; }
+  .dot { position: absolute; border: 3px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,.35); }
+  .note { position: absolute; left: 70px; right: 70px; bottom: 26px; font-size: 15px; color: #8fa3d6; }
+</style></head><body>
+  <h1>Same request. <span>Two prompts.</span></h1>
+  <p class="sub">Infographic: Q3 property management service performance</p>
+  <div class="mark"><img src="../../images/ai-sandbox-mark.png" alt="">AI Sandbox Prompt Vault</div>
+
+  <div class="col" style="left:70px">
+    <div class="pill" style="background:#e5484d">✕ Without a proper prompt</div>
+    <div class="prompt"><code>"Make an infographic about our property management performance."</code></div>
+  </div>
+  <img class="img" style="left:70px" src="infographic-before.png" alt="Infographic from the vague prompt">
+  <ul style="left:585px"><li><span class="n" style="background:#e5484d">1</span>Generic title, no key message</li>
+<li><span class="n" style="background:#e5484d">2</span>Invented figures: 98%, 500+, #1. No data was given, so the AI made them up</li>
+<li><span class="n" style="background:#e5484d">3</span>A 72-word paragraph nobody will read</li>
+<li><span class="n" style="background:#e5484d">4</span>3D pie chart that adds up to 115%</li>
+<li><span class="n" style="background:#e5484d">5</span>No source, no takeaway, 3 fonts and too many colours</li></ul>
+  <div class="dot" style="left:50px;top:330px;background:#e5484d">1</div>
+<div class="dot" style="left:50px;top:468px;background:#e5484d">2</div>
+<div class="dot" style="left:50px;top:604px;background:#e5484d">3</div>
+<div class="dot" style="left:50px;top:719px;background:#e5484d">4</div>
+<div class="dot" style="left:50px;top:822px;background:#e5484d">5</div>
+
+  <div class="col" style="left:990px">
+    <div class="pill" style="background:#12a150">✓ With the Prompt Vault</div>
+    <div class="prompt"><span><b>Role</b> Information Designer · <b>Audience</b> Top Management · <b>Tone</b> Data-driven · <b>Style</b> Swiss Design · <b>Format</b> A4 portrait · <b>Data</b> Q3 Service Report.xlsx · <b>+ Testing &amp; Quality</b></span></div>
+  </div>
+  <img class="img" style="left:990px" src="infographic-after.png" alt="Infographic from the Prompt Vault prompt">
+  <ul style="left:1505px"><li><span class="n" style="background:#12a150">1</span>Clear title for top management</li>
+<li><span class="n" style="background:#12a150">2</span>The key message comes first, in one line</li>
+<li><span class="n" style="background:#12a150">3</span>Real figures from your file, with targets</li>
+<li><span class="n" style="background:#12a150">4</span>Honest chart on a true 0–40% scale</li>
+<li><span class="n" style="background:#12a150">5</span>Only calculated facts, clearly labelled</li>
+<li><span class="n" style="background:#12a150">6</span>Source cited, one typeface, one style</li></ul>
+  <div class="dot" style="left:970px;top:364px;background:#12a150">1</div>
+<div class="dot" style="left:970px;top:450px;background:#12a150">2</div>
+<div class="dot" style="left:970px;top:597px;background:#12a150">3</div>
+<div class="dot" style="left:970px;top:770px;background:#12a150">4</div>
+<div class="dot" style="left:970px;top:864px;background:#12a150">5</div>
+<div class="dot" style="left:970px;top:946px;background:#12a150">6</div>
+
+  <p class="note">Illustrative example with sample data. Left: typical problems when a vague prompt gives the AI nothing to work with. Right: built by following the full Prompt Vault prompt (Infographic › Create Infographic).</p>
+</body></html>

@@ -1,0 +1,25 @@
+ROLE:
+Act as a senior information designer who makes complex information easy to scan.
+
+OBJECTIVE:
+I want to explain Q3 property management service performance in one infographic that people can understand at a glance.
+
+CONTEXT:
+Here is the background: Audience: top management (CEO, directors and board members): lead with the executive summary, strategic impact, ROI, risks and the decisions needed; keep detail minimal and let the numbers speak. Visual style: Swiss Design (strict modular grid, bold Helvetica-style sans-serif, asymmetric layout, flat colour blocks, objective clarity). Format: A4 portrait. Key points and data:
+Tickets resolved: 1,248 (Q2: 1,105). Average first response: 4.2 hours (target: 6 hours). Tenant satisfaction: 87% (Q2: 82%). Repairs completed on time: 92% (target: 90%). Top issue types: plumbing 34%, electrical 22%, lifts 18%, other 26%.
+Attached document: Refer to the attached document "Q3 Service Report.xlsx" and use it as the data source, with figures copied exactly as written. Cite the page or section you rely on, and say clearly when something is not covered by the document.
+
+KEY REQUIREMENTS:
+1. Include a bold title, a one-line key takeaway, 4–6 sections with icons or simple charts, and a footer with the source.
+2. Include the key numbers as the visual heroes, with a clear visual hierarchy and at most 2 typefaces.
+3. Include all text spelled exactly as given, with each text block under 25 words.
+4. Avoid clutter, charts that distort the data, and invented statistics.
+
+EXPECTED OUTPUT:
+Present the result in a finished infographic in the stated format; if you cannot render images, a section-by-section layout spec with exact text, icons, chart types and colours.
+Language: English.
+Tone: data-driven (facts and numbers first).
+Build this infographic as a single self-contained HTML/SVG artifact sized to the format above, with all text exactly as given.
+
+TESTING & QUALITY:
+Challenge assumptions, identify weaknesses, verify facts, state uncertainties and recommend improvements. Do not fabricate information.

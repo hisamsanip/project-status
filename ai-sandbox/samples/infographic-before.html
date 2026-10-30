@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sample: infographic from a vague prompt</title>
+<style>
+  /* Illustrative output for the vague prompt "Make an infographic about our property management performance."
+     It reproduces common problems on purpose: invented figures, no message, clashing fonts and colours, too much text, no source. */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #ddd; display: flex; justify-content: center; padding: 20px 0; }
+  .a4 { position: relative; width: 794px; height: 1123px; overflow: hidden; padding: 34px 38px;
+    background: linear-gradient(160deg, #fff7d6, #ffe0f0 45%, #dff6ff); font-family: "Liberation Sans", Arial, sans-serif; color: #333; }
+  h1 { font-family: "DejaVu Serif", Georgia, serif; font-style: italic; font-size: 44px; line-height: 1.05; text-align: center;
+    background: linear-gradient(90deg, #ff3d7f, #ff9a00, #2ecc71, #3498db, #9b59b6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .buzz { text-align: center; font-family: "FreeMono", monospace; font-size: 15px; letter-spacing: .12em; margin: 10px 0 18px; color: #8e44ad; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .box { border-radius: 18px; padding: 16px 12px; text-align: center; color: #fff; box-shadow: 4px 6px 0 rgba(0,0,0,.15); }
+  .box .ico { font-size: 34px; line-height: 1.1; }
+  .box b { display: block; font-family: "DejaVu Serif", serif; font-size: 30px; margin: 4px 0; }
+  .box span { font-family: "FreeMono", monospace; font-size: 14px; font-weight: bold; }
+  .c1 { background: #ff5e78; } .c2 { background: #ffa41b; } .c3 { background: #2bb673; }
+  .c4 { background: #3b8beb; } .c5 { background: #a259ff; } .c6 { background: #00b8b8; }
+  .para { margin: 20px 0; font-size: 14.5px; line-height: 1.45; text-align: justify; background: rgba(255,255,255,.6); padding: 14px 16px; border: 2px dashed #ff9a00; border-radius: 10px; }
+  .pie-row { display: flex; align-items: center; gap: 26px; justify-content: center; }
+  .legend { font-family: "FreeMono", monospace; font-size: 15px; line-height: 1.8; font-weight: bold; }
+  .legend i { display: inline-block; width: 14px; height: 14px; border-radius: 3px; margin-right: 8px; vertical-align: -2px; }
+  .stars { text-align: center; font-size: 26px; margin-top: 18px; letter-spacing: 4px; }
+  .thanks { text-align: center; font-family: "DejaVu Serif", serif; font-style: italic; font-size: 26px; color: #e84393; margin-top: 6px; }
+</style>
+</head>
+<body>
+<div class="a4" id="sheet">
+  <h1 data-callout="title">Our Property Management Performance!</h1>
+  <p class="buzz">EXCELLENCE • INNOVATION • COMMITMENT • SYNERGY</p>
+
+  <div class="grid" data-callout="numbers">
+    <div class="box c1"><div class="ico">😊</div><b>98%</b><span>Happy Tenants!!</span></div>
+    <div class="box c2"><div class="ico">🏢</div><b>500+</b><span>Properties Managed</span></div>
+    <div class="box c3"><div class="ico">🔧</div><b>24/7</b><span>Support Always</span></div>
+    <div class="box c4"><div class="ico">🏆</div><b>#1</b><span>Award-Winning Service</span></div>
+    <div class="box c5"><div class="ico">⚡</div><b>FAST</b><span>Response Times</span></div>
+    <div class="box c6"><div class="ico">🌱</div><b>100%</b><span>Eco-Friendly</span></div>
+  </div>
+
+  <p class="para" data-callout="text">At our company, we believe that property management is about so much more than just buildings. It is about people, communities and creating synergy between all of our valued stakeholders. Through our relentless commitment to excellence and our innovative, best-in-class, customer-centric solutions, we continue to deliver outstanding value, world-class service and exceptional results across every dimension of our business, while always staying true to our core values of integrity, passion and teamwork.</p>
+
+  <div class="pie-row" data-callout="chart">
+    <svg width="230" height="200" viewBox="0 0 230 200">
+      <ellipse cx="115" cy="118" rx="100" ry="58" fill="#999"/>
+      <ellipse cx="115" cy="100" rx="100" ry="58" fill="#ff5e78"/>
+      <path d="M115 100 L215 100 A100 58 0 0 1 60 148 Z" fill="#3b8beb"/>
+      <path d="M115 100 L60 148 A100 58 0 0 1 22 78 Z" fill="#2bb673"/>
+      <path d="M115 100 L22 78 A100 58 0 0 1 95 43 Z" fill="#ffa41b"/>
+    </svg>
+    <div class="legend">
+      <div><i style="background:#ff5e78"></i>Maintenance 45%</div>
+      <div><i style="background:#3b8beb"></i>Leasing 30%</div>
+      <div><i style="background:#2bb673"></i>Admin 25%</div>
+      <div><i style="background:#ffa41b"></i>Other 15%</div>
+    </div>
+  </div>
+
+  <div class="stars">⭐⭐⭐⭐⭐</div>
+  <p class="thanks" data-callout="end">Thank you for your trust!</p>
+</div>
+</body>
+</html>
