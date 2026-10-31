@@ -1,0 +1,59 @@
+<html>
+  <body>
+    <style>
+      /* End card: same clay palette as the intro. Bottom 200px kept clear for Remotion subtitles. */
+      :root {
+        --ground: #fff4e6;
+        --ground-2: #ffe1bf;
+        --ink: #2b2118;
+        --muted: #7a5c43;
+        --accent: #e8743b;
+        --teal: #2f9c95;
+        --font: "Inter", sans-serif;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      #outro-root {
+        position: relative; width: 100%; height: 100%; font-family: var(--font); color: var(--ink); overflow: hidden;
+        background: radial-gradient(1200px 700px at 50% 40%, var(--ground-2), transparent 70%), var(--ground);
+      }
+      .clip { position: absolute; inset: 0; }
+      #headline {
+        position: absolute; left: 0; right: 0; top: 190px; text-align: center;
+        font-size: 96px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.08;
+      }
+      #headline em { font-style: normal; color: var(--accent); }
+      #points { position: absolute; left: 0; right: 0; top: 480px; display: flex; justify-content: center; gap: 26px; }
+      .pt {
+        display: flex; align-items: center; gap: 14px; padding: 18px 30px; border-radius: 26px;
+        background: #fff; border: 4px solid var(--ink); box-shadow: 0 10px 0 var(--ink);
+        font-size: 36px; font-weight: 700;
+      }
+      .pt b { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: var(--teal); color: #fff; font-size: 28px; }
+      #thanks {
+        position: absolute; left: 0; right: 0; top: 680px; text-align: center;
+        font-size: 58px; font-weight: 700; color: var(--teal);
+      }
+    </style>
+    <div id="outro-root" data-composition-id="outro" data-start="0" data-duration="7" data-width="1920" data-height="1080">
+      <div id="scene" class="clip" data-start="0" data-duration="7" data-track-index="0">
+        <h1 id="headline">Jadilah pemilik &amp; penghuni<br /><em>yang bertanggungjawab</em></h1>
+        <div id="points">
+          <div class="pt"><b>✓</b>Bayar caj</div>
+          <div class="pt"><b>✓</b>Hadir mesyuarat</div>
+          <div class="pt"><b>✓</b>Patuhi undang-undang kecil</div>
+        </div>
+        <p id="thanks">Terima kasih kerana menonton!</p>
+      </div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#headline", { opacity: 0, y: 60, scale: 1.06 }, { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: "power4.out" }, 0.2)
+        .fromTo(".pt", { opacity: 0, y: 40, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(2)", stagger: 0.2 }, 0.9)
+        .fromTo("#thanks", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 2.0)
+        .to("#scene", { opacity: 0, duration: 0.6, ease: "power2.in" }, 6.4);
+      window.__timelines["outro"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

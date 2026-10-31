@@ -1,0 +1,46 @@
+// Word timings in seconds of public/voiceover-ms.mp3, from an ElevenLabs Scribe transcript.
+// If the narration is regenerated, transcribe it again and replace this list.
+export const WORDS: [string, number, number][] = [
+  ["Assalamualaikum", 0, 0.96], ["dan", 1.08, 1.2], ["salam", 1.36, 1.6], ["sejahtera.", 1.68, 2.56],
+  ["Hari", 2.613, 2.72], ["ini,", 2.8, 3.36], ["jom", 3.44, 3.68], ["kita", 3.72, 3.92], ["fahami", 3.96, 4.4],
+  ["Akta", 4.56, 4.96], ["Pengurusan", 5.04, 5.52], ["Strata", 5.64, 6.08], ["dua", 6.32, 6.44], ["ribu", 6.48, 6.72],
+  ["tiga", 6.8, 6.96], ["belas.", 7.04, 7.44],
+  ["Adakah", 7.84, 8.24], ["anda", 8.36, 8.48], ["tinggal", 8.56, 8.88], ["di", 8.96, 9.04], ["kondominium,", 9.12, 10.08],
+  ["apartmen", 10.2, 10.72], ["atau", 10.88, 11.2], ["rumah", 11.28, 11.52], ["berstrata?", 11.6, 12.24],
+  ["Jika", 12.64, 12.96], ["ya,", 13.04, 13.6], ["akta", 13.72, 14], ["ini", 14.08, 14.32], ["sangat", 14.4, 14.8],
+  ["penting", 14.88, 15.2], ["untuk", 15.28, 15.44], ["anda.", 15.6, 15.84],
+  ["Akta", 16.24, 16.64], ["Pengurusan", 16.72, 17.12], ["Strata,", 17.2, 17.84], ["atau", 17.96, 18.16], ["Akta", 18.24, 18.56],
+  ["tujuh", 18.72, 19], ["ratus", 19.04, 19.28], ["lima", 19.44, 19.64], ["puluh", 19.68, 19.84], ["tujuh,", 19.92, 20.427],
+  ["mengawal", 20.56, 20.96], ["selia", 21.12, 21.44], ["pengurusan", 21.52, 22.16], ["dan", 22.24, 22.4],
+  ["penyenggaraan", 22.48, 23.2], ["bangunan", 23.28, 23.68], ["berstrata.", 23.76, 24.48],
+  ["Ia", 24.88, 25.04], ["terpakai", 25.12, 25.68], ["di", 25.72, 25.76], ["Semenanjung", 25.84, 26.32], ["Malaysia", 26.4, 26.88],
+  ["dan", 27.04, 27.2], ["Wilayah", 27.28, 27.68], ["Persekutuan", 27.76, 28.32], ["Labuan.", 28.44, 28.88],
+  ["Akta", 29.28, 29.6], ["ini", 29.68, 29.92], ["menjelaskan", 30, 30.64], ["hak", 30.72, 31.04], ["dan", 31.12, 31.28],
+  ["tanggungjawab", 31.36, 32.08], ["setiap", 32.16, 32.64], ["pemilik", 32.72, 33.04], ["petak.", 33.12, 33.6],
+  ["Pada", 33.92, 34.08], ["peringkat", 34.16, 34.48], ["awal,", 34.56, 35.12], ["bangunan", 35.24, 35.6], ["diuruskan", 35.68, 36.24],
+  ["oleh", 36.32, 36.56], ["Badan", 36.64, 36.96], ["Pengurusan", 37.12, 37.6], ["Bersama,", 37.64, 38.32], ["atau", 38.44, 38.64],
+  ["J", 38.8, 39.04], ["M", 39.12, 39.2], ["B.", 39.28, 39.6],
+  ["Kemudian,", 40, 40.6], ["Perbadanan", 40.72, 41.36], ["Pengurusan,", 41.44, 42.08], ["atau", 42.2, 42.44], ["M", 42.56, 42.72],
+  ["C,", 42.8, 43.12], ["mengambil", 43.2, 43.6], ["alih.", 43.68, 44],
+  ["Jawatankuasa", 44.4, 45.28], ["dipilih", 45.32, 45.76], ["dalam", 45.84, 46.08], ["mesyuarat", 46.16, 46.56], ["agung", 46.64, 46.96],
+  ["untuk", 47.12, 47.44], ["menguruskan", 47.52, 48.08], ["penyenggaraan,", 48.24, 49.2], ["kemudahan", 49.24, 49.84],
+  ["dan", 50.08, 50.24], ["bajet.", 50.32, 50.92],
+  ["Setiap", 51.12, 51.52], ["pemilik", 51.56, 52.08], ["wajib", 52.16, 52.56], ["membayar", 52.64, 53.04], ["caj", 53.2, 53.52],
+  ["penyenggaraan", 53.6, 54.24], ["dan", 54.4, 54.56], ["sumbangan", 54.72, 55.2], ["kepada", 55.28, 55.6], ["kumpulan", 55.68, 56.16],
+  ["wang", 56.32, 56.48], ["penjelas.", 56.56, 57.4],
+  ["Gagal", 57.6, 57.92], ["membayar", 58, 58.48], ["boleh", 58.64, 58.96], ["membawa", 59, 59.36], ["kepada", 59.44, 59.76],
+  ["tindakan", 59.84, 60.32], ["undang-undang.", 60.4, 61.12],
+  ["Sebarang", 61.52, 61.92], ["pertikaian", 62.04, 62.64], ["boleh", 62.72, 63], ["difailkan", 63.04, 63.6], ["di", 63.68, 63.84],
+  ["Tribunal", 63.92, 64.4], ["Pengurusan", 64.48, 64.96], ["Strata.", 65.04, 65.6],
+  ["Jadilah", 66, 66.4], ["pemilik", 66.48, 66.96], ["dan", 67.04, 67.2], ["penghuni", 67.28, 67.76], ["yang", 67.92, 68.08],
+  ["bertanggungjawab.", 68.16, 69.04],
+  ["Terima", 69.28, 69.52], ["kasih", 69.64, 69.84], ["kerana", 69.92, 70.24], ["menonton!", 70.32, 71.04],
+];
+
+// Spoken forms that read better as written forms in the subtitles.
+export const DISPLAY_MERGES: { spoken: string; shown: string }[] = [
+  { spoken: "dua ribu tiga belas.", shown: "2013." },
+  { spoken: "tujuh ratus lima puluh tujuh,", shown: "757," },
+  { spoken: "J M B.", shown: "JMB." },
+  { spoken: "M C,", shown: "MC," },
+];
