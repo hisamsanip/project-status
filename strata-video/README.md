@@ -1,6 +1,6 @@
 # Akta Pengurusan Strata 2013: explainer video (Bahasa Melayu)
 
-A 72-second, 1920×1080 explainer on Malaysia's Strata Management Act 2013 (Act 757), with
+A 76-second, 1920×1080 explainer on Malaysia's Strata Management Act 2013 (Act 757), with
 clay-cartoon scenes, on-screen key points, a Malay male voiceover and word-by-word subtitles.
 
 Final video: `akta-pengurusan-strata-ms.mp4`
