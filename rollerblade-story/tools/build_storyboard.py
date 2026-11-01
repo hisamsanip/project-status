@@ -71,6 +71,8 @@ def caption_html(c):
     return t.replace(h, f"<mark>{h}</mark>") if h else t
 
 
+VO_ONLY = {"10": "FLY!", "15": "Keep rolling!"}
+
 SFX_NAMES = {"pop": "pop", "ding": "ding", "freeze": "shutter + impact", "boom": "boom", "whoosh": "whoosh",
              "whooshSoft": "soft whoosh", "riser": "riser", "impact": "impact"}
 
@@ -78,16 +80,18 @@ cards = []
 for i, s in enumerate(shots, 1):
     sid = s["id"]
     what, fx = NOTES[sid]
-    caps = by_seg(cues["captions"], sid)
-    seen, cap_lines = set(), []
-    for c in caps:
-        if c["text"] in seen:
-            continue
-        seen.add(c["text"])
-        cap_lines.append(f"<p class=\"line\">{caption_html(c)}</p>")
+    vos = by_seg(cues["vo"], sid)
+    cap_lines = []
+    for v in vos:
+        if v["captions"]:
+            cap_lines.append("<p class=\"line\">" + " ".join(caption_html(c) for c in v["captions"]) + "</p>")
+        else:
+            cap_lines.append(f"<p class=\"line\">{html.escape(VO_ONLY[v['id']])} <span class=\"vo-only\">(voice only)</span></p>")
     hls = by_seg(cues["highlights"], sid)
     ovs = by_seg(cues["overlays"], sid)
     sfx = [SFX_NAMES[h["sfx"]] for h in hls if h.get("sfx")] + [SFX_NAMES[o["sfx"]] for o in ovs if o.get("sfx")] + [SFX_NAMES[x["type"]] for x in by_seg(cues["sfx"], sid)]
+    if vos:
+        sfx = ["voiceover " + ", ".join(v["id"] for v in vos)] + sfx
     kind = s["kind"]
     if kind in ("video", "broll"):
         src = f"{'home' if s['src'] == 'home' else 'street'} clip · {s['in']:.2f}–{s['out']:.2f}s"
@@ -107,7 +111,7 @@ for i, s in enumerate(shots, 1):
         <div class="row"><span class="tc">{tc(s['t0'])} → {tc(s['t1'])}</span><span class="dur">{s['t1'] - s['t0']:.1f}s</span>{speed}{tag_html}</div>
         <h3>{what}</h3>
         <p class="src">{src}</p>
-        {('<div class="block"><span class="lbl">Script</span>' + ''.join(cap_lines) + '</div>') if cap_lines else ''}
+        {('<div class="block"><span class="lbl">Voiceover &amp; caption</span>' + ''.join(cap_lines) + '</div>') if cap_lines else ''}
         {('<div class="block"><span class="lbl">On-screen</span><div class="hls">' + hl_html + ov_html + '</div></div>') if (hl_html or ov_html) else ''}
         <div class="block"><span class="lbl">Effects</span><p>{fx}</p></div>
         {('<div class="block"><span class="lbl">Sound</span><p class="sfx">' + ' · '.join(sfx) + '</p></div>') if sfx else ''}
@@ -123,13 +127,10 @@ act2_t = next(s["t0"] for s in shots if s["act"] == 2)
 
 # plain VO script
 script_rows = []
-seen = set()
-for c in cues["captions"]:
-    if c["text"] in seen:
-        continue
-    seen.add(c["text"])
-    t = next(s for s in shots if s["id"] == c["seg"])["t0"] + c["at"]
-    script_rows.append(f"<li><span class=\"tc\">{tc(t)}</span><span>{html.escape(c['text'])}</span></li>")
+for v in cues["vo"]:
+    t = next(x for x in shots if x["id"] == v["seg"])["t0"] + v["at"]
+    line = " ".join(c["text"] for c in v["captions"]) or VO_ONLY[v["id"]]
+    script_rows.append(f"<li><span class=\"tc\">{tc(t)}</span><span>{html.escape(line)}</span></li>")
 
 page = f"""<title>Her First Street Ride</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -207,8 +208,10 @@ mark {{ background: var(--act2); color: #1a1030; padding: 0 .2em; border-radius:
 .hl-location {{ color: var(--fg); }}
 .hl-location::before {{ content: "● "; color: var(--pink); }}
 .hl-hf {{ background: var(--sky-soft); border-color: var(--sky); color: var(--sky); }}
+.vo-only {{ font-weight: 400; color: var(--muted); font-size: 12px; }}
 .sfx {{ font-family: var(--mono); font-size: 12px !important; color: var(--muted); }}
 .two {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 32px; }}
+.vo-note {{ margin: -6px 0 12px; color: var(--muted); font-size: 14px; max-width: 60ch; }}
 .script {{ list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }}
 .script li {{ display: grid; grid-template-columns: 70px 1fr; gap: 12px; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 15.5px; }}
 .kit {{ display: grid; gap: 14px; }}
@@ -223,7 +226,7 @@ code {{ font-family: var(--mono); font-size: 12.5px; background: var(--sky-soft)
   <header>
     <div class="kicker">a rollerblade diary · storyboard</div>
     <h1>Her first <span>street ride</span></h1>
-    <p class="logline">A girl in a pink helmet goes from wobbling on her driveway to flying over crates in a busy market street. She tells it herself, in first person, through on-screen script lines, with stickers and stamps marking each win.</p>
+    <p class="logline">A girl in a pink helmet goes from wobbling on her driveway to flying over crates in a busy market street. She tells it herself in a first-person voiceover, with matching captions, stickers and stamps marking each win.</p>
     <div class="specs"><span><b>{TOTAL:.1f}s</b> runtime</span><span><b>{len(shots)}</b> shots</span><span><b>1920×1080</b> · {FPS} fps</span><span><b>2</b> source clips</span><span>Edit: <b>Remotion</b></span><span>Title / chapter / end cards: <b>HyperFrames</b></span></div>
   </header>
 
@@ -245,13 +248,15 @@ code {{ font-family: var(--mono); font-size: 12.5px; background: var(--sky-soft)
 
   <section class="two">
     <div>
-      <h2>Her script</h2>
+      <h2>Her voiceover</h2>
+      <p class="vo-note">Voiced with ElevenLabs (Emmaline, young British girl, eleven_v4), one clip per line. Captions follow the voice.</p>
       <ol class="script">{''.join(script_rows)}</ol>
     </div>
     <div class="kit">
       <h2>How it's built</h2>
       <div><h4>HyperFrames: title, chapter and end cards</h4><p>Three GSAP compositions (<code>intro</code>, <code>chapter</code>, <code>outro</code>) rendered as transparent WebM and layered into the edit.</p></div>
       <div><h4>Remotion: the edit</h4><p>Cuts, speed ramps, freezes, split screen, camera moves, script captions with word pop-in and highlight swipe, stickers and stamps, speed lines, flashes, letterbox, camcorder frame, grain and vignette. All timing comes from <code>edl.json</code> and <code>cues.json</code>.</p></div>
+      <div><h4>Voiceover</h4><p>15 lines generated with ElevenLabs, two takes each; the tighter take of each line was trimmed, cleaned up and placed on its shot. The music ducks about 9 dB under every line.</p></div>
       <div><h4>Sound</h4><p>Music bed (120 BPM, I–vi–IV–V) and every SFX are synthesised from code and timed to the same cue sheet: whooshes, pops, ding, shutter, impacts, riser and boom. The original location sound sits low underneath. The final mix is loudness-normalised to −14 LUFS.</p></div>
       <div><h4>B-roll</h4><p>Cut from the supplied footage: the skate close-up crop, the crowd reaction cutaway, the polaroid freeze and the DAY 1 / TODAY split screen.</p></div>
     </div>

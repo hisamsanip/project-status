@@ -198,6 +198,18 @@ swell[: n] *= (tt / tt[-1]) ** 1.5 * 0.05
 pads += np.roll(swell, int(fly0 * SR))
 
 music = drums * 0.9 + keys + low + pads
+
+# duck the music ~9 dB under every voiceover line (0.12 s ramps)
+duck = np.ones(N)
+ramp = int(0.12 * SR)
+for v in cues.get("vo", []):
+    a = int((at(v["seg"], v["at"]) - 0.05) * SR)
+    b = int((at(v["seg"], v["at"]) + v["len"]) * SR)
+    duck[max(0, a):b] = np.minimum(duck[max(0, a):b], 0.36)
+    if a - ramp > 0:
+        duck[a - ramp:a] = np.minimum(duck[a - ramp:a], np.linspace(1, 0.36, ramp))
+    duck[b:b + ramp] = np.minimum(duck[b:b + ramp], np.linspace(0.36, 1, len(duck[b:b + ramp])))
+music *= duck
 # overall fade in/out
 music *= np.clip(t_all / 1.2, 0, 1)
 music *= np.clip((TOTAL - t_all) / 0.8, 0, 1)

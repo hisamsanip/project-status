@@ -44,7 +44,38 @@ export const cueFrame = (id: string, at: number) => seg(id).from + Math.round(at
 
 export const ACT2_START = seg("market").from;
 
-export type CaptionCue = (typeof cues.captions)[number];
 export type HighlightCue = (typeof cues.highlights)[number];
 export type OverlayCue = (typeof cues.overlays)[number];
 export const CUES = cues;
+
+/** Voiceover clips placed on the timeline (lengths come from tools/prepare_vo.py). */
+export const VO_CLIPS = cues.vo.map((v) => ({
+  id: v.id,
+  from: cueFrame(v.seg, v.at),
+  frames: Math.ceil(v.len * FPS),
+}));
+
+/**
+ * Captions follow the voice: each starts when its line (or part of a line) is spoken
+ * and stays up until shortly after, never overlapping the next caption.
+ */
+export const CAPTIONS = (() => {
+  const list: { from: number; text: string; hl: string; end: number }[] = [];
+  cues.vo.forEach((v) => {
+    const start = cueFrame(v.seg, v.at);
+    const end = start + Math.round(v.len * FPS);
+    v.captions.forEach((c, i) => {
+      const next = v.captions[i + 1];
+      list.push({
+        from: start + Math.round(c.at * FPS),
+        text: c.text,
+        hl: c.hl,
+        end: next ? start + Math.round(next.at * FPS) : end + Math.round(0.35 * FPS),
+      });
+    });
+  });
+  return list.map((c, i) => {
+    const nextFrom = list[i + 1]?.from ?? Infinity;
+    return { ...c, frames: Math.max(10, Math.min(c.end, nextFrom) - c.from) };
+  });
+})();

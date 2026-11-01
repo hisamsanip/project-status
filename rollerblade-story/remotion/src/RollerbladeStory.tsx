@@ -1,7 +1,7 @@
 import React from "react";
 import { Audio } from "@remotion/media";
 import { AbsoluteFill, interpolate, OffthreadVideo, Sequence, staticFile, useCurrentFrame } from "remotion";
-import { ACT2_START, CUES, cueFrame, FPS, seg, SEGMENTS, TOTAL_FRAMES } from "./timeline";
+import { ACT2_START, CAPTIONS, CUES, cueFrame, FPS, seg, SEGMENTS, TOTAL_FRAMES, VO_CLIPS } from "./timeline";
 import { loadFonts } from "./fonts";
 import { FreezeShot, SplitShot, VideoShot } from "./components/Shots";
 import { Camcorder, FilmGrain, Flash, Letterbox, LightLeak, Vignette } from "./components/Effects";
@@ -97,15 +97,12 @@ export const RollerbladeStory: React.FC = () => {
         );
       })}
 
-      {/* ---------- SCRIPT CAPTIONS ---------- */}
-      {CUES.captions.map((c, i) => {
-        const dur = sec(c.dur);
-        return (
-          <Sequence key={`c${i}`} name={`Script · ${c.text}`} from={cueFrame(c.seg, c.at)} durationInFrames={dur}>
-            <Caption text={c.text} hl={c.hl} durationInFrames={dur} />
-          </Sequence>
-        );
-      })}
+      {/* ---------- SCRIPT CAPTIONS (timed to the voiceover) ---------- */}
+      {CAPTIONS.map((c, i) => (
+        <Sequence key={`c${i}`} name={`Script · ${c.text}`} from={c.from} durationInFrames={c.frames}>
+          <Caption text={c.text} hl={c.hl} durationInFrames={c.frames} />
+        </Sequence>
+      ))}
 
       {/* ---------- HYPERFRAMES OVERLAYS (alpha WebM) ---------- */}
       {CUES.overlays.map((o) => (
@@ -119,16 +116,23 @@ export const RollerbladeStory: React.FC = () => {
       </Sequence>
 
       {/* ---------- SOUND ---------- */}
-      <Audio src={staticFile("audio/music.mp3")} volume={0.9} />
-      <Audio src={staticFile("audio/sfx.mp3")} volume={1} />
+      {/* music is pre-ducked under the voiceover in tools/make_audio.py */}
+      <Audio src={staticFile("audio/music.mp3")} volume={0.85} />
+      <Audio src={staticFile("audio/sfx.mp3")} volume={0.85} />
+      {/* ElevenLabs voiceover, one clip per script line */}
+      {VO_CLIPS.map((v) => (
+        <Sequence key={v.id} name={`VO · ${v.id}`} from={v.from} durationInFrames={v.frames}>
+          <Audio src={staticFile(`vo/${v.id}.mp3`)} />
+        </Sequence>
+      ))}
       {/* natural ambience from each location, low under the music */}
-      <Sequence name="Ambience · home"  durationInFrames={act1Frames}>
-        <Audio src={staticFile("footage/home.mp4")} volume={0.5} />
+      <Sequence name="Ambience · home" durationInFrames={act1Frames}>
+        <Audio src={staticFile("footage/home.mp4")} volume={0.3} />
       </Sequence>
       <Sequence name="Ambience · street" from={ACT2_START} durationInFrames={sec(20)}>
         <Audio
           src={staticFile("footage/street.mp4")}
-          volume={(f) => interpolate(f, [0, 10, sec(18), sec(20)], [0, 0.22, 0.22, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}
+          volume={(f) => interpolate(f, [0, 10, sec(18), sec(20)], [0, 0.14, 0.14, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}
         />
       </Sequence>
     </AbsoluteFill>

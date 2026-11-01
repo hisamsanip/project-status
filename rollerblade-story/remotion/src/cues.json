@@ -1,50 +1,430 @@
 {
-  "captions": [
-    { "seg": "salute", "at": 0.15, "dur": 1.75, "text": "Okay… I can do this.", "hl": "I can do this." },
-    { "seg": "wobble", "at": 0.1,  "dur": 2.0,  "text": "Arms out. Don't look down.", "hl": "Don't look down." },
-    { "seg": "glide",  "at": 0.2,  "dur": 2.2,  "text": "Wait… I'm actually moving?!", "hl": "moving?!" },
-    { "seg": "thumbs", "at": 0.1,  "dur": 1.35, "text": "Driveway: conquered.", "hl": "conquered." },
-    { "seg": "market", "at": 2.15, "dur": 2.15, "text": "Next stop: the market street.", "hl": "market street." },
-    { "seg": "chairs", "at": 0.05, "dur": 1.5,  "text": "Plastic chairs? Slalom cones.", "hl": "Slalom cones." },
-    { "seg": "close1", "at": 0.0,  "dur": 0.62, "text": "Uncle, coming through!", "hl": "coming through!" },
-    { "seg": "close2", "at": 0.0,  "dur": 0.8,  "text": "Uncle, coming through!", "hl": "coming through!" },
-    { "seg": "weave",  "at": 0.2,  "dur": 1.35, "text": "Lean left…", "hl": "left…" },
-    { "seg": "weave",  "at": 1.6,  "dur": 1.35, "text": "Lean right…", "hl": "right…" },
-    { "seg": "weave",  "at": 3.0,  "dur": 1.45, "text": "Find the gap.", "hl": "the gap." },
-    { "seg": "fly",    "at": 0.2,  "dur": 1.6,  "text": "Deep breath…", "hl": "breath…" },
-    { "seg": "after",  "at": 0.2,  "dur": 2.0,  "text": "Heart racing. Smile huge.", "hl": "Smile huge." },
-    { "seg": "crowd",  "at": 0.05, "dur": 1.45, "text": "Even the uncles stopped to watch.", "hl": "stopped to watch." },
-    { "seg": "split",  "at": 0.35, "dur": 2.2,  "text": "Wobbly on day one. Flying today.", "hl": "Flying today." },
-    { "seg": "finale", "at": 0.2,  "dur": 1.8,  "text": "And I'm not done yet.", "hl": "not done yet." }
-  ],
   "highlights": [
-    { "seg": "salute", "at": 1.0,  "dur": 0.92, "type": "sticker", "text": "READY!", "color": "pink", "rot": -8, "x": 1300, "y": 260, "sfx": "pop" },
-    { "seg": "wheels", "at": 0.15, "dur": 1.8,  "type": "note", "text": "8 tiny wheels", "x": 170, "y": 230, "sfx": "pop" },
-    { "seg": "wheels", "at": 0.75, "dur": 1.2,  "type": "note", "text": "+ 1 very brave heart", "x": 210, "y": 330 },
-    { "seg": "glide",  "at": 1.0,  "dur": 1.45, "type": "sticker", "text": "ROLLING!", "color": "sky", "rot": 6, "x": 1240, "y": 300, "sfx": "pop" },
-    { "seg": "thumbs", "at": 0.2,  "dur": 1.25, "type": "stamp", "text": "LEVEL 1 ✓ CLEARED", "x": 880, "y": 250, "sfx": "ding" },
-    { "seg": "market", "at": 2.2,  "dur": 2.1,  "type": "location", "text": "THE MARKET STREET", "x": 120, "y": 150 },
-    { "seg": "chairs", "at": 0.3,  "dur": 1.2,  "type": "sticker", "text": "SLALOM MODE", "color": "sky", "rot": -5, "x": 1040, "y": 220, "sfx": "pop" },
-    { "seg": "closeFz","at": 0.0,  "dur": 1.0,  "type": "bigword", "text": "CLOSE CALL!", "color": "pink", "sfx": "freeze" },
-    { "seg": "fly",    "at": 2.0,  "dur": 1.6,  "type": "bigword", "text": "FLY!", "color": "cream", "sfx": "boom" },
-    { "seg": "landFz", "at": 0.0,  "dur": 1.2,  "type": "stamp", "text": "STUCK IT! 10/10", "x": 1080, "y": 240, "sfx": "freeze" },
-    { "seg": "crowd",  "at": 0.1,  "dur": 1.3,  "type": "location", "text": "THE AUDIENCE", "x": 120, "y": 150 }
+    {
+      "seg": "salute",
+      "at": 1.0,
+      "dur": 0.92,
+      "type": "sticker",
+      "text": "READY!",
+      "color": "pink",
+      "rot": -8,
+      "x": 1300,
+      "y": 260,
+      "sfx": "pop"
+    },
+    {
+      "seg": "wheels",
+      "at": 0.15,
+      "dur": 1.8,
+      "type": "note",
+      "text": "8 tiny wheels",
+      "x": 170,
+      "y": 230,
+      "sfx": "pop"
+    },
+    {
+      "seg": "wheels",
+      "at": 0.75,
+      "dur": 1.2,
+      "type": "note",
+      "text": "+ 1 very brave heart",
+      "x": 210,
+      "y": 330
+    },
+    {
+      "seg": "glide",
+      "at": 1.0,
+      "dur": 1.45,
+      "type": "sticker",
+      "text": "ROLLING!",
+      "color": "sky",
+      "rot": 6,
+      "x": 1240,
+      "y": 300,
+      "sfx": "pop"
+    },
+    {
+      "seg": "thumbs",
+      "at": 0.2,
+      "dur": 1.25,
+      "type": "stamp",
+      "text": "LEVEL 1 ✓ CLEARED",
+      "x": 880,
+      "y": 250,
+      "sfx": "ding"
+    },
+    {
+      "seg": "market",
+      "at": 2.2,
+      "dur": 2.1,
+      "type": "location",
+      "text": "THE MARKET STREET",
+      "x": 120,
+      "y": 150
+    },
+    {
+      "seg": "chairs",
+      "at": 0.3,
+      "dur": 1.2,
+      "type": "sticker",
+      "text": "SLALOM MODE",
+      "color": "sky",
+      "rot": -5,
+      "x": 1040,
+      "y": 220,
+      "sfx": "pop"
+    },
+    {
+      "seg": "closeFz",
+      "at": 0.0,
+      "dur": 1.0,
+      "type": "bigword",
+      "text": "CLOSE CALL!",
+      "color": "pink",
+      "sfx": "freeze"
+    },
+    {
+      "seg": "fly",
+      "at": 2.0,
+      "dur": 1.6,
+      "type": "bigword",
+      "text": "FLY!",
+      "color": "cream",
+      "sfx": "boom"
+    },
+    {
+      "seg": "landFz",
+      "at": 0.0,
+      "dur": 1.2,
+      "type": "stamp",
+      "text": "STUCK IT! 10/10",
+      "x": 1080,
+      "y": 240,
+      "sfx": "freeze"
+    },
+    {
+      "seg": "crowd",
+      "at": 0.1,
+      "dur": 1.3,
+      "type": "location",
+      "text": "THE AUDIENCE",
+      "x": 120,
+      "y": 150
+    }
   ],
   "overlays": [
-    { "seg": "intro",  "at": 0.0,  "src": "overlays/intro.webm",   "dur": 3.0 },
-    { "seg": "thumbs", "at": 1.08, "src": "overlays/chapter.webm", "dur": 2.5, "sfx": "whoosh" },
-    { "seg": "outro",  "at": 0.0,  "src": "overlays/outro.webm",   "dur": 4.0, "sfx": "boom" }
+    {
+      "seg": "intro",
+      "at": 0.0,
+      "src": "overlays/intro.webm",
+      "dur": 3.0
+    },
+    {
+      "seg": "thumbs",
+      "at": 1.45,
+      "src": "overlays/chapter.webm",
+      "dur": 2.5,
+      "sfx": "whoosh"
+    },
+    {
+      "seg": "outro",
+      "at": 0.0,
+      "src": "overlays/outro.webm",
+      "dur": 4.0,
+      "sfx": "boom"
+    }
   ],
   "sfx": [
-    { "seg": "salute", "at": 0.0,  "type": "whooshSoft" },
-    { "seg": "wheels", "at": 0.0,  "type": "whoosh" },
-    { "seg": "glide",  "at": 0.0,  "type": "whoosh" },
-    { "seg": "chairs", "at": 0.0,  "type": "whoosh" },
-    { "seg": "weave",  "at": 0.0,  "type": "whoosh" },
-    { "seg": "weave",  "at": 2.3,  "type": "riser", "len": 2.4 },
-    { "seg": "land",   "at": 0.38, "type": "impact" },
-    { "seg": "crowd",  "at": 0.0,  "type": "whooshSoft" },
-    { "seg": "split",  "at": 0.0,  "type": "whoosh" },
-    { "seg": "finale", "at": 0.0,  "type": "whooshSoft" }
+    {
+      "seg": "salute",
+      "at": 0.0,
+      "type": "whooshSoft"
+    },
+    {
+      "seg": "wheels",
+      "at": 0.0,
+      "type": "whoosh"
+    },
+    {
+      "seg": "glide",
+      "at": 0.0,
+      "type": "whoosh"
+    },
+    {
+      "seg": "chairs",
+      "at": 0.0,
+      "type": "whoosh"
+    },
+    {
+      "seg": "weave",
+      "at": 0.0,
+      "type": "whoosh"
+    },
+    {
+      "seg": "weave",
+      "at": 2.3,
+      "type": "riser",
+      "len": 2.4
+    },
+    {
+      "seg": "land",
+      "at": 0.38,
+      "type": "impact"
+    },
+    {
+      "seg": "crowd",
+      "at": 0.0,
+      "type": "whooshSoft"
+    },
+    {
+      "seg": "split",
+      "at": 0.0,
+      "type": "whoosh"
+    },
+    {
+      "seg": "finale",
+      "at": 0.0,
+      "type": "whooshSoft"
+    }
+  ],
+  "vo": [
+    {
+      "id": "01",
+      "take": "S1MsFwS2mfsZqcDh2zvl",
+      "lead": 0.0,
+      "seg": "salute",
+      "at": 0.1,
+      "tempo": 1.0,
+      "captions": [
+        {
+          "at": 0.0,
+          "text": "Okay… I can do this.",
+          "hl": "I can do this."
+        }
+      ],
+      "len": 2.429
+    },
+    {
+      "id": "02",
+      "take": "appWtpjIxp9H1mN1UaYd",
+      "lead": 0.17,
+      "seg": "wobble",
+      "at": 0.62,
+      "tempo": 1.0,
+      "captions": [
+        {
+          "at": 0.0,
+          "text": "Arms out. Don't look down.",
+          "hl": "Don't look down."
+        }
+      ],
+      "len": 2.586
+    },
+    {
+      "id": "03",
+      "take": "2331UUnaBm8j5x3pkdbM",
+      "lead": 0.0,
+      "seg": "wheels",
+      "at": 1.45,
+      "tempo": 1.0,
+      "captions": [
+        {
+          "at": 0.0,
+          "text": "Wait… I'm actually moving?!",
+          "hl": "moving?!"
+        }
+      ],
+      "len": 3.056
+    },
+    {
+      "id": "04",
+      "take": "e00ScHBxFonRIA58UAZ5",
+      "lead": 0.0,
+      "seg": "thumbs",
+      "at": 0.05,
+      "tempo": 1.08,
+      "captions": [
+        {
+          "at": 0.0,
+          "text": "Driveway: conquered.",
+          "hl": "conquered."
+        }
+      ],
+      "len": 1.933
+    },
+    {
+      "id": "05",
+      "take": "7IylGIHc3PTlXP5Omb6Q",
+      "lead": 0.0,
+      "seg": "market",
+      "at": 1.8,
+      "tempo": 1.0,
+      "captions": [
+        {
+          "at": 0.0,
+          "text": "Next stop: the market street!",
+          "hl": "market street!"
+        }
+      ],
+      "len": 2.377
+    },
+    {
+      "id": "06",
+      "take": "BqkWwH0YYJgYADiK9dKV",
+      "lead": 0.0,
+      "seg": "chairs",
+      "at": 0.05,
+      "tempo": 1.05,
+      "captions": [
+        {
+          "at": 0.0,
+          "text": "Plastic chairs? Slalom cones.",
+          "hl": "Slalom cones."
+        }
+      ],
+      "len": 2.351
+    },
+    {
+      "id": "07",
+      "take": "Prz9y6Uwlj9WSsv6YaRk",
+      "lead": 0.0,
+      "seg": "close1",
+      "at": 0.45,
+      "tempo": 1.0,
+      "captions": [
+        {
+          "at": 0.0,
+          "text": "Uncle, coming through!",
+          "hl": "coming through!"
+        }
+      ],
+      "len": 1.698
+    },
+    {
+      "id": "08",
+      "take": "bwX9AW9qk2qmPzKBzlg5",
+      "lead": 0.0,
+      "seg": "weave",
+      "at": 0.4,
+      "tempo": 1.0,
+      "captions": [
+        {
+          "at": 0.0,
+          "text": "Lean left…",
+          "hl": "left…"
+        },
+        {
+          "at": 1.4,
+          "text": "Lean right…",
+          "hl": "right…"
+        },
+        {
+          "at": 2.63,
+          "text": "Find the gap.",
+          "hl": "the gap."
+        }
+      ],
+      "len": 3.527
+    },
+    {
+      "id": "09",
+      "take": "Ccp7LoGtpiEvCM8Zpps1",
+      "lead": 0.22,
+      "seg": "fly",
+      "at": 0.2,
+      "tempo": 1.0,
+      "captions": [
+        {
+          "at": 0.0,
+          "text": "Deep breath…",
+          "hl": "breath…"
+        }
+      ],
+      "len": 1.28
+    },
+    {
+      "id": "10",
+      "take": "RG4CRIzSLEnYYcGOAGY2",
+      "lead": 0.0,
+      "seg": "fly",
+      "at": 2.0,
+      "tempo": 1.0,
+      "captions": [],
+      "len": 1.097
+    },
+    {
+      "id": "11",
+      "take": "hgrqBm0LpjkohcUW6gR3",
+      "lead": 0.0,
+      "seg": "landFz",
+      "at": 0.1,
+      "tempo": 1.12,
+      "captions": [
+        {
+          "at": 0.0,
+          "text": "Heart racing. Smile huge.",
+          "hl": "Smile huge."
+        }
+      ],
+      "len": 3.683
+    },
+    {
+      "id": "12",
+      "take": "Vzm7IVHwJFFKKGpxkegd",
+      "lead": 0.0,
+      "seg": "crowd",
+      "at": 0.35,
+      "tempo": 1.08,
+      "captions": [
+        {
+          "at": 0.0,
+          "text": "Even the uncles stopped to watch.",
+          "hl": "stopped to watch."
+        }
+      ],
+      "len": 2.9
+    },
+    {
+      "id": "13",
+      "take": "exiNBmYjM7obyoO0YgPU",
+      "lead": 0.2,
+      "seg": "split",
+      "at": 0.98,
+      "tempo": 1.0,
+      "captions": [
+        {
+          "at": 0.0,
+          "text": "Wobbly on day one. Flying today.",
+          "hl": "Flying today."
+        }
+      ],
+      "len": 3.161
+    },
+    {
+      "id": "14",
+      "take": "XaHYjpk8zsmSFUjieoQc",
+      "lead": 0.0,
+      "seg": "finale",
+      "at": 0.95,
+      "tempo": 1.0,
+      "captions": [
+        {
+          "at": 0.0,
+          "text": "And I'm not done yet.",
+          "hl": "not done yet."
+        }
+      ],
+      "len": 1.829
+    },
+    {
+      "id": "15",
+      "take": "9pI9fMklN8vb849EdWGd",
+      "lead": 0.0,
+      "seg": "outro",
+      "at": 1.3,
+      "tempo": 1.0,
+      "captions": [],
+      "len": 1.202
+    }
   ]
 }
