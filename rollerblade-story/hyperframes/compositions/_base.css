@@ -1,0 +1,18 @@
+@font-face { font-family: "Anton"; src: url("../fonts/anton-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Marker"; src: url("../fonts/permanent-marker-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "InterHF"; font-weight: 600; src: url("../fonts/inter-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "InterHF"; font-weight: 800; src: url("../fonts/inter-latin-800-normal.woff2") format("woff2"); }
+:root {
+  --pink: #ff4fa3;
+  --pink-deep: #e0237f;
+  --sky: #7fe0ff;
+  --cream: #fff6e9;
+  --ink: #1a1030;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; background: transparent; }
+.stage { position: absolute; inset: 0; }
+.anton { font-family: "Anton", sans-serif; text-transform: uppercase; line-height: 0.9; }
+.marker { font-family: "Marker", cursive; }
+.label { font-family: "InterHF", sans-serif; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; }
+.line-mask { overflow: hidden; display: block; padding: 12px 24px 34px; margin: -12px -24px -34px; }

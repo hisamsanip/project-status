@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="../vendor/gsap.min.js"></script>
+    <link rel="stylesheet" href="./_base.css" />
+    <style>
+      #root { width: 1920px; height: 1080px; position: relative; }
+      .panel { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; background: var(--pink); transform-origin: left center; }
+      .panel2 { background: var(--ink); }
+      .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+      .chip { font-size: 34px; color: var(--ink); background: var(--sky); padding: 12px 28px; border-radius: 999px; }
+      .big { font-size: 300px; color: var(--cream); margin-top: 18px; text-shadow: 0 12px 0 var(--pink-deep); }
+      .bar { margin-top: 46px; width: 900px; display: flex; align-items: center; gap: 22px; }
+      .node { font-size: 30px; color: var(--cream); white-space: nowrap; }
+      .track { flex: 1; height: 14px; border-radius: 7px; background: rgba(255,246,233,.25); overflow: hidden; }
+      .fill { width: 100%; height: 100%; background: var(--sky); transform-origin: left center; }
+      .done { color: var(--sky); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="chapter" data-start="0" data-duration="2.5" data-width="1920" data-height="1080">
+      <div id="chapter-stage" class="stage clip" data-start="0" data-duration="2.5" data-track-index="0">
+        <div class="panel" id="p1"></div>
+        <div class="panel panel2" id="p2"></div>
+        <div class="center">
+          <span class="line-mask"><div class="chip label" id="chip">Level 02</div></span>
+          <span class="line-mask"><div class="big anton" id="big">The Street</div></span>
+          <div class="bar" id="bar">
+            <div class="node label done">Driveway &#10003;</div>
+            <div class="track"><div class="fill" id="fill"></div></div>
+            <div class="node label">Market</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#p1", { scaleX: 0 }, { scaleX: 1, duration: 0.3, ease: "power3.inOut" }, 0);
+      tl.fromTo("#p2", { scaleX: 0 }, { scaleX: 1, duration: 0.3, ease: "power3.inOut" }, 0.1);
+      tl.fromTo("#chip", { y: 90 }, { y: 0, duration: 0.4, ease: "back.out(2)" }, 0.3);
+      tl.fromTo("#big", { y: 340, scale: 1.1 }, { y: 0, scale: 1, duration: 0.55, ease: "power4.out" }, 0.38);
+      tl.fromTo("#bar", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, 0.6);
+      tl.fromTo("#fill", { scaleX: 0 }, { scaleX: 1, duration: 0.9, ease: "power2.inOut" }, 0.75);
+      // exit: wipe everything off to the right
+      tl.to("#big", { y: -340, duration: 0.35, ease: "power3.in" }, 2.0);
+      tl.to("#chip", { y: -90, duration: 0.3, ease: "power3.in" }, 2.0);
+      tl.to("#bar", { opacity: 0, duration: 0.25 }, 2.0);
+      tl.set(["#p1", "#p2"], { transformOrigin: "right center" }, 2.05);
+      tl.to("#p2", { scaleX: 0, duration: 0.3, ease: "power3.inOut" }, 2.1);
+      tl.to("#p1", { scaleX: 0, duration: 0.3, ease: "power3.inOut" }, 2.18);
+      window.__timelines = window.__timelines || {};
+      window.__timelines["chapter"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
