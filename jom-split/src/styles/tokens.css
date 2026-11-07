@@ -1,0 +1,85 @@
+/* =========================================================================
+   JOM SPLIT · SISTEM REKA BENTUK "AURORA GLASS"
+   Konsep susun atur: kanvas tengah malam, satu titik fokus setiap skrin,
+   satu panel kaca beku sahaja; selebihnya permukaan legap.
+   Tema: gelap sahaja (pilihan reka bentuk, bukan terlupa tema cerah).
+   ========================================================================= */
+:root {
+  color-scheme: dark;
+
+  /* ---- Warna: permukaan ---- */
+  --c-bg: #070b14;
+  --c-surface: #0c1220;
+  --c-surface-2: #121a2c;
+  --c-surface-3: #1a2440;
+  --c-line: rgba(150, 170, 230, 0.14);
+  --c-line-strong: rgba(150, 170, 230, 0.28);
+
+  /* ---- Warna: teks (nisbah kontras diuji dalam scripts/contrast.mjs) ---- */
+  --c-text: #eaeef8;
+  --c-text-2: #aab5cd;
+  --c-text-3: #8f9bb6;
+
+  /* ---- Warna: aurora (hanya teal–biru–ungu yang berjiran; bukan pelangi) ---- */
+  --c-teal: #2dd4bf;
+  --c-blue: #5b8def;
+  --c-violet: #8b7cf6;
+  --c-accent: #5eead4;
+  --c-on-accent: #04201c;
+  --c-focus: #9fb8ff;
+
+  /* ---- Warna: makna (berasingan daripada aksen) ---- */
+  --c-good: #5cd6a0;
+  --c-warn: #f2b544;
+  --c-bad: #ff8a97;
+
+  /* ---- Tipografi: dua rupa taip sahaja ---- */
+  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --font-body: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --fs-caption: 0.75rem;   /* 12 */
+  --fs-small: 0.875rem;    /* 14 */
+  --fs-body: 1rem;         /* 16 */
+  --fs-lead: 1.125rem;     /* 18 */
+  --fs-h3: 1.25rem;        /* 20 */
+  --fs-h2: 1.75rem;        /* 28 */
+  --fs-h1: clamp(2.25rem, 1.6rem + 2.6vw, 3.5rem);
+  --fs-display: clamp(2.75rem, 1.7rem + 4.8vw, 5rem);
+  --lh-tight: 1.04;
+  --lh-snug: 1.25;
+  --lh-body: 1.6;
+
+  /* ---- Jarak: skala 8 px (4 px hanya untuk jurang kecil) ---- */
+  --sp-half: 4px;
+  --sp-1: 8px;
+  --sp-2: 16px;
+  --sp-3: 24px;
+  --sp-4: 32px;
+  --sp-5: 40px;
+  --sp-6: 48px;
+  --sp-8: 64px;
+  --sp-10: 80px;
+  --sp-12: 96px;
+  --gutter-l: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  --tap: 44px;
+
+  /* ---- Bucu ---- */
+  --r-sm: 8px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-pill: 999px;
+
+  /* ---- Bayang ---- */
+  --shadow-1: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 8px 24px -14px rgba(0, 0, 0, 0.7);
+  --shadow-2: 0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 24px 56px -24px rgba(0, 0, 0, 0.85);
+  --glow: 0 0 0 1px rgba(94, 234, 212, 0.25), 0 0 32px -8px rgba(45, 212, 191, 0.45);
+
+  /* ---- Gerakan: 150–300 ms ---- */
+  --dur-1: 150ms;
+  --dur-2: 200ms;
+  --dur-3: 300ms;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --nav-w: 248px;
+}
