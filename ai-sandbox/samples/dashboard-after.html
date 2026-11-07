@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sample: dashboard from a Prompt Vault prompt</title>
+<style>
+  /* Built by following dashboard-prompt-after.txt: monthly management meeting, AI Sandbox Blue colour scheme,
+     desktop 16:9, data-driven, figures exactly as given in the attached Q3 Service Report.xlsx (sample data).
+     Green is used only for status. Tickets and satisfaction have no target, so they show a comparison, not a status. */
+  :root { --bg: #f4f7ff; --card: #ffffff; --ink: #0b1b4d; --c1: #1f3bb3; --c2: #3d7bff; --c3: #38c8f5; --mid: #5a6788; --line: #e1e7f5; --ok: #138a4e; --ok-bg: #e3f6eb; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #333; display: flex; justify-content: center; padding: 20px; }
+  .dash { width: 1600px; height: 900px; overflow: hidden; background: var(--bg); color: var(--ink); font-family: "Inter", Arial, sans-serif; padding: 28px 32px; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 18px; }
+  h1 { font-size: 34px; font-weight: 800; letter-spacing: -0.03em; }
+  .meta { font-size: 15px; color: var(--mid); margin-top: 4px; }
+  .sample { font-size: 13px; font-weight: 800; letter-spacing: .1em; color: var(--c1); border: 2px solid var(--c1); border-radius: 8px; padding: 6px 12px; }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .card { background: var(--card); border-radius: 14px; border: 1px solid var(--line); padding: 18px 20px; }
+  .kpi .l { font-size: 14px; font-weight: 600; color: var(--mid); display: flex; justify-content: space-between; align-items: center; }
+  .kpi .v { font-size: 46px; font-weight: 800; letter-spacing: -0.04em; margin-top: 8px; font-variant-numeric: tabular-nums; }
+  .kpi .v small { font-size: 22px; letter-spacing: 0; }
+  .kpi .c { font-size: 14px; color: var(--mid); margin-top: 4px; }
+  .kpi .c b { color: var(--ink); }
+  .status { font-size: 12px; font-weight: 700; color: var(--ok); background: var(--ok-bg); border-radius: 999px; padding: 3px 10px; }
+  .status.none { color: var(--mid); background: #eef1f8; }
+  .up { color: var(--c2); font-weight: 700; }
+  .charts { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr; gap: 16px; margin-top: 16px; height: 520px; }
+  .chart h2 { font-size: 17px; font-weight: 700; }
+  .chart p { font-size: 13px; color: var(--mid); margin-top: 3px; }
+  .chart svg { display: block; margin-top: 14px; }
+  .chart svg text { font-family: "Inter", Arial, sans-serif; fill: var(--mid); font-size: 13px; }
+  .chart svg .val { fill: var(--ink); font-weight: 700; font-size: 14px; }
+  footer { margin-top: 14px; font-size: 13px; color: var(--mid); display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+<div class="dash" id="sheet">
+  <header data-callout="title">
+    <div>
+      <h1>Q3 service performance</h1>
+      <p class="meta">Jul–Sep · Monthly management meeting · Data from Q3 Service Report.xlsx</p>
+    </div>
+    <span class="sample">SAMPLE DATA</span>
+  </header>
+
+  <div class="kpis" data-callout="numbers">
+    <div class="card kpi"><div class="l">Tickets resolved <span class="status none">No target</span></div><div class="v">1,248</div><div class="c"><span class="up">▲</span> Q2: <b>1,105</b></div></div>
+    <div class="card kpi"><div class="l">Average first response <span class="status">On target</span></div><div class="v">4.2<small> hours</small></div><div class="c">Target: <b>6 hours</b> · Sep <b>3.9</b></div></div>
+    <div class="card kpi"><div class="l">Tenant satisfaction <span class="status none">No target</span></div><div class="v">87%</div><div class="c"><span class="up">▲</span> Q2: <b>82%</b></div></div>
+    <div class="card kpi"><div class="l">Repairs completed on time <span class="status">On target</span></div><div class="v">92%</div><div class="c">Target: <b>90%</b> · Sep <b>94%</b></div></div>
+  </div>
+
+  <div class="charts">
+    <div class="card chart" data-callout="chart">
+      <h2>Are we resolving more tickets?</h2>
+      <p>Tickets resolved per month</p>
+      <svg width="440" height="400" viewBox="0 0 440 400">
+        <g stroke="#e1e7f5"><line x1="50" y1="40" x2="430" y2="40"/><line x1="50" y1="140" x2="430" y2="140"/><line x1="50" y1="240" x2="430" y2="240"/><line x1="50" y1="340" x2="430" y2="340"/></g>
+        <text x="40" y="344" text-anchor="end">0</text><text x="40" y="244" text-anchor="end">150</text><text x="40" y="144" text-anchor="end">300</text><text x="40" y="44" text-anchor="end">450</text>
+        <rect x="80" y="75" width="80" height="265" fill="#3d7bff"/><rect x="200" y="59" width="80" height="281" fill="#3d7bff"/><rect x="320" y="54" width="80" height="286" fill="#1f3bb3"/>
+        <text class="val" x="120" y="65" text-anchor="middle">398</text><text class="val" x="240" y="49" text-anchor="middle">421</text><text class="val" x="360" y="44" text-anchor="middle">429</text>
+        <text x="120" y="366" text-anchor="middle">Jul</text><text x="240" y="366" text-anchor="middle">Aug</text><text x="360" y="366" text-anchor="middle">Sep</text>
+      </svg>
+    </div>
+    <div class="card chart" data-callout="target">
+      <h2>Are we inside the response target?</h2>
+      <p>Average first response, hours · target 6 hours</p>
+      <svg width="440" height="400" viewBox="0 0 440 400">
+        <g stroke="#e1e7f5"><line x1="50" y1="40" x2="430" y2="40"/><line x1="50" y1="140" x2="430" y2="140"/><line x1="50" y1="240" x2="430" y2="240"/><line x1="50" y1="340" x2="430" y2="340"/></g>
+        <text x="40" y="344" text-anchor="end">0</text><text x="40" y="244" text-anchor="end">2</text><text x="40" y="144" text-anchor="end">4</text><text x="40" y="44" text-anchor="end">6</text>
+        <line x1="50" y1="40" x2="430" y2="40" stroke="#0b1b4d" stroke-width="2" stroke-dasharray="7 6"/><text x="428" y="32" text-anchor="end" class="val">Target 6 h</text>
+        <polyline points="120,110 240,135 360,145" fill="none" stroke="#3d7bff" stroke-width="4"/>
+        <circle cx="120" cy="110" r="7" fill="#3d7bff"/><circle cx="240" cy="135" r="7" fill="#3d7bff"/><circle cx="360" cy="145" r="7" fill="#1f3bb3"/>
+        <text class="val" x="120" y="96" text-anchor="middle">4.6</text><text class="val" x="240" y="121" text-anchor="middle">4.1</text><text class="val" x="360" y="131" text-anchor="middle">3.9</text>
+        <text x="120" y="366" text-anchor="middle">Jul</text><text x="240" y="366" text-anchor="middle">Aug</text><text x="360" y="366" text-anchor="middle">Sep</text>
+      </svg>
+    </div>
+    <div class="card chart" data-callout="issues">
+      <h2>What are tenants reporting?</h2>
+      <p>Share of all Q3 tickets by issue type</p>
+      <svg width="440" height="400" viewBox="0 0 440 400">
+        <g stroke="#e1e7f5"><line x1="110" y1="30" x2="110" y2="330"/><line x1="185" y1="30" x2="185" y2="330"/><line x1="260" y1="30" x2="260" y2="330"/><line x1="335" y1="30" x2="335" y2="330"/><line x1="410" y1="30" x2="410" y2="330"/></g>
+        <text x="100" y="78" text-anchor="end">Plumbing</text><text x="100" y="148" text-anchor="end">Electrical</text><text x="100" y="218" text-anchor="end">Lifts</text><text x="100" y="288" text-anchor="end">Other</text>
+        <rect x="110" y="55" width="255" height="34" fill="#1f3bb3"/><rect x="110" y="125" width="165" height="34" fill="#3d7bff"/><rect x="110" y="195" width="135" height="34" fill="#38c8f5"/><rect x="110" y="265" width="195" height="34" fill="#3d7bff"/>
+        <text class="val" x="373" y="78">34%</text><text class="val" x="283" y="148">22%</text><text class="val" x="253" y="218">18%</text><text class="val" x="313" y="288">26%</text>
+        <text x="110" y="356" text-anchor="middle">0%</text><text x="185" y="356" text-anchor="middle">10%</text><text x="260" y="356" text-anchor="middle">20%</text><text x="335" y="356" text-anchor="middle">30%</text><text x="410" y="356" text-anchor="middle">40%</text>
+      </svg>
+    </div>
+  </div>
+
+  <footer data-callout="source">
+    <span>Source: Q3 Service Report.xlsx (sample data) · Q3 tickets = sum of the months; other Q3 figures = average of the months</span>
+    <span>Green = on target · no status shown where no target is set</span>
+  </footer>
+</div>
+</body>
+</html>

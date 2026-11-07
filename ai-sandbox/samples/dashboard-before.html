@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sample: dashboard from a vague prompt</title>
+<style>
+  /* Illustrative output for the vague prompt "Create a dashboard for our property management."
+     It reproduces common problems on purpose: invented metrics, gauges and 3D charts, unlabelled axes,
+     decorative red/green, no date range or source, too many tiles. */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #333; display: flex; justify-content: center; padding: 20px; }
+  .dash { width: 1600px; height: 900px; overflow: hidden; background: #14141f; color: #eee; font-family: "Liberation Sans", Arial, sans-serif; padding: 22px; }
+  h1 { font-family: "DejaVu Serif", serif; font-size: 34px; font-style: italic; color: #ffcc00; text-shadow: 0 0 12px #ff00aa; }
+  .tiles { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-top: 16px; }
+  .tile { border-radius: 10px; padding: 12px; text-align: center; }
+  .tile b { display: block; font-size: 30px; font-family: "FreeMono", monospace; }
+  .tile span { font-size: 13px; }
+  .t1 { background: #e91e63; } .t2 { background: #ff9800; } .t3 { background: #4caf50; } .t4 { background: #2196f3; }
+  .t5 { background: #9c27b0; } .t6 { background: #00bcd4; } .t7 { background: #f44336; } .t8 { background: #8bc34a; }
+  .t9 { background: #ff5722; } .t10 { background: #3f51b5; } .t11 { background: #cddc39; color: #222; } .t12 { background: #795548; }
+  .charts { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-top: 16px; }
+  .panel { background: #1f1f2e; border: 2px solid #ff00aa; border-radius: 10px; height: 470px; padding: 14px; position: relative; }
+  .panel h3 { font-size: 18px; color: #00e5ff; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+<div class="dash" id="sheet">
+  <h1 data-callout="title">⭐ PROPERTY DASHBOARD 2.0 ⭐</h1>
+  <div class="tiles" data-callout="numbers">
+    <div class="tile t1"><b>RM 2.4M</b><span>Revenue</span></div>
+    <div class="tile t2"><b>96%</b><span>Occupancy</span></div>
+    <div class="tile t3"><b>72</b><span>NPS</span></div>
+    <div class="tile t4"><b>1,500</b><span>Tickets</span></div>
+    <div class="tile t5"><b>98%</b><span>Happy</span></div>
+    <div class="tile t6"><b>24/7</b><span>Support</span></div>
+    <div class="tile t7"><b>12</b><span>Alerts!!</span></div>
+    <div class="tile t8"><b>4.9★</b><span>Rating</span></div>
+    <div class="tile t9"><b>+18%</b><span>Growth</span></div>
+    <div class="tile t10"><b>350</b><span>Units</span></div>
+    <div class="tile t11"><b>FAST</b><span>Response</span></div>
+    <div class="tile t12"><b>A+</b><span>Grade</span></div>
+  </div>
+  <div class="charts">
+    <div class="panel" data-callout="gauge">
+      <h3>Performance Meter</h3>
+      <svg width="440" height="380" viewBox="0 0 440 380">
+        <path d="M60 260 A160 160 0 0 1 380 260" fill="none" stroke="#f44336" stroke-width="40"/>
+        <path d="M110 140 A160 160 0 0 1 220 100" fill="none" stroke="#ff9800" stroke-width="40"/>
+        <path d="M220 100 A160 160 0 0 1 330 140" fill="none" stroke="#ffeb3b" stroke-width="40"/>
+        <path d="M330 140 A160 160 0 0 1 380 260" fill="none" stroke="#4caf50" stroke-width="40"/>
+        <line x1="220" y1="260" x2="320" y2="150" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+        <circle cx="220" cy="260" r="16" fill="#fff"/>
+        <text x="220" y="330" fill="#ffcc00" font-size="42" text-anchor="middle" font-family="FreeMono" font-weight="bold">GREAT!</text>
+      </svg>
+    </div>
+    <div class="panel" data-callout="chart">
+      <h3>Trends</h3>
+      <svg width="460" height="400" viewBox="0 0 460 400">
+        <polyline points="20,300 80,180 140,240 200,120 260,200 320,90 380,160 440,60" fill="none" stroke="#00e5ff" stroke-width="5"/>
+        <polyline points="20,250 80,280 140,150 200,210 260,110 320,190 380,80 440,130" fill="none" stroke="#ff00aa" stroke-width="5"/>
+        <polyline points="20,340 80,220 140,300 200,170 260,260 320,150 380,230 440,110" fill="none" stroke="#ffeb3b" stroke-width="5"/>
+      </svg>
+    </div>
+    <div class="panel" data-callout="pie">
+      <h3>Breakdown</h3>
+      <svg width="460" height="400" viewBox="0 0 460 400">
+        <ellipse cx="230" cy="230" rx="190" ry="100" fill="#555"/>
+        <ellipse cx="230" cy="200" rx="190" ry="100" fill="#e91e63"/>
+        <path d="M230 200 L420 200 A190 100 0 0 1 300 293 Z" fill="#2196f3"/>
+        <path d="M230 200 L300 293 A190 100 0 0 1 120 282 Z" fill="#4caf50"/>
+        <path d="M230 200 L120 282 A190 100 0 0 1 42 215 Z" fill="#ff9800"/>
+        <path d="M230 200 L42 215 A190 100 0 0 1 80 140 Z" fill="#9c27b0"/>
+        <path d="M230 200 L80 140 A190 100 0 0 1 180 102 Z" fill="#00bcd4"/>
+        <path d="M230 200 L180 102 A190 100 0 0 1 290 103 Z" fill="#cddc39"/>
+      </svg>
+    </div>
+  </div>
+</div>
+</body>
+</html>

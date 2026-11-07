@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>Before and after: slides prompt</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { width: 1920px; height: 1080px; overflow: hidden; font-family: "Inter", sans-serif; color: #fff;
+    background: radial-gradient(1400px 800px at 50% 40%, #0d2366, transparent 72%), #071338; }
+  h1 { position: absolute; left: 70px; top: 34px; font-size: 54px; font-weight: 800; letter-spacing: -0.035em; }
+  h1 span { color: #38c8f5; }
+  .sub { position: absolute; left: 72px; top: 104px; font-size: 22px; color: #a9bdf2; }
+  .mark { position: absolute; right: 70px; top: 40px; display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 700; color: #cdd9ff; }
+  .mark img { width: 48px; height: 48px; border-radius: 12px; background: #fff; padding: 3px; }
+  .col { position: absolute; top: 152px; width: 860px; }
+  .pill { display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; border-radius: 999px; font-size: 22px; font-weight: 800; }
+  .prompt { margin-top: 12px; height: 74px; border-radius: 14px; padding: 12px 18px; display: flex; align-items: center;
+    background: rgba(255,255,255,.07); border: 1.5px solid rgba(255,255,255,.18); font-size: 16.5px; line-height: 1.35; color: #e8eeff; }
+  .prompt code { font-family: "JetBrains Mono", monospace; font-size: 18px; }
+  .prompt b { color: #fff; }
+  .media { position: absolute; border-radius: 8px; box-shadow: 0 18px 50px rgba(0,0,0,.5); }
+  ul { position: absolute; top: 806px; width: 860px; list-style: none; display: grid; grid-template-columns: 1fr 1fr; column-gap: 28px; row-gap: 14px; }
+  li { display: flex; gap: 12px; align-items: flex-start; font-size: 18.5px; font-weight: 600; line-height: 1.3; }
+  .n, .dot { flex: 0 0 auto; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-size: 16px; font-weight: 800; color: #fff; }
+  .dot { position: absolute; border: 3px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,.35); }
+  .note { position: absolute; left: 70px; right: 70px; bottom: 24px; font-size: 15px; color: #8fa3d6; }
+</style></head><body>
+  <h1>Same request. <span>Two prompts.</span></h1>
+  <p class="sub">Slides: Q3 service review for top management</p>
+  <div class="mark"><img src="../../images/ai-sandbox-mark.png" alt="">AI Sandbox Prompt Vault</div>
+  <div class="col" style="left:70px"><div class="pill" style="background:#e5484d">✕ Without a proper prompt</div>
+    <div class="prompt"><code>"Make a presentation about our Q3 performance."</code></div></div>
+  <div class="col" style="left:990px"><div class="pill" style="background:#12a150">✓ With the Prompt Vault</div>
+    <div class="prompt"><span><b>Role</b> Top Management Consultant · <b>Audience</b> Top Management · <b>Tone</b> Executive · <b>Style</b> Minimalism · <b>4 slides</b> · <b>Goal</b> agree Q4 priorities · <b>Data</b> Q3 Service Report.xlsx · <b>+ Testing &amp; Quality</b></span></div></div>
+  <img class="media" style="left:70px;top:296px;width:422px;height:237px" src="slides-before-1.png" alt="Slide 1"><img class="media" style="left:508px;top:296px;width:422px;height:237px" src="slides-before-2.png" alt="Slide 2"><img class="media" style="left:70px;top:549px;width:422px;height:237px" src="slides-before-3.png" alt="Slide 3"><img class="media" style="left:508px;top:549px;width:422px;height:237px" src="slides-before-4.png" alt="Slide 4"><div class="dot" style="left:58px;top:284px;background:#e5484d">1</div><div class="dot" style="left:496px;top:284px;background:#e5484d">2</div><div class="dot" style="left:58px;top:537px;background:#e5484d">3</div><div class="dot" style="left:472px;top:651px;background:#e5484d">4</div><div class="dot" style="left:496px;top:537px;background:#e5484d">5</div><ul style="left:70px"><li><span class="n" style="background:#e5484d">1</span>Decorative title slide with no message</li><li><span class="n" style="background:#e5484d">2</span>Wall of text: five long sentences and no facts</li><li><span class="n" style="background:#e5484d">3</span>Invented figures (revenue +35%, 98%). None were given</li><li><span class="n" style="background:#e5484d">4</span>3D bar chart with no labels or axis</li><li><span class="n" style="background:#e5484d">5</span>Ends with "Thank you". No decision asked</li></ul>
+  <img class="media" style="left:990px;top:296px;width:422px;height:237px" src="slides-after-1.png" alt="Slide 1"><img class="media" style="left:1428px;top:296px;width:422px;height:237px" src="slides-after-2.png" alt="Slide 2"><img class="media" style="left:990px;top:549px;width:422px;height:237px" src="slides-after-3.png" alt="Slide 3"><img class="media" style="left:1428px;top:549px;width:422px;height:237px" src="slides-after-4.png" alt="Slide 4"><div class="dot" style="left:978px;top:284px;background:#12a150">1</div><div class="dot" style="left:1416px;top:284px;background:#12a150">2</div><div class="dot" style="left:1830px;top:284px;background:#12a150">3</div><div class="dot" style="left:978px;top:537px;background:#12a150">4</div><div class="dot" style="left:1416px;top:537px;background:#12a150">5</div><div class="dot" style="left:978px;top:509px;background:#12a150">6</div><ul style="left:990px"><li><span class="n" style="background:#12a150">1</span>The decision needed is stated up front</li><li><span class="n" style="background:#12a150">2</span>Each headline is the key message</li><li><span class="n" style="background:#12a150">3</span>Real figures from your file, with targets</li><li><span class="n" style="background:#12a150">4</span>One honest chart on a true 0–40% scale</li><li><span class="n" style="background:#12a150">5</span>Ends with a clear ask and owners</li><li><span class="n" style="background:#12a150">6</span>Source and slide number on every slide</li></ul>
+  <p class="note">Illustrative example with sample data. Left: typical problems when a vague prompt gives the AI nothing to work with. Right: built by following the full Prompt Vault prompt (Slides › Create Slides).</p>
+</body></html>
