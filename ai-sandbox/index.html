@@ -259,6 +259,8 @@
   .style-preview p { font-size: 13px; margin-top: 4px; }
   .muted { color: var(--muted); }
   .attach-help { font-size: 12.5px; margin-bottom: 8px; }
+  .scheme-hint { font-size: 12.5px; margin-top: 8px; line-height: 1.5; }
+  .scheme-hint a { color: var(--accent); }
   .attach-box { background: var(--surface-2); border: 1px dashed var(--border); border-radius: 12px; padding: 12px; }
   .attach-box .preset { background: var(--surface); }
   .attach-box .preset.active { background: var(--accent); border-color: var(--accent); color: #fff; }
@@ -421,6 +423,7 @@
     <div class="style-picker" id="mSchemes" hidden>
       <h4>Choose a colour scheme <span id="mSchemeName">None selected</span></h4>
       <div class="style-grid" id="mSchemeGrid"></div>
+      <p class="muted scheme-hint">Need another palette? Build one at <a href="https://coolors.co" target="_blank" rel="noopener">Coolors</a>, <a href="https://color.adobe.com" target="_blank" rel="noopener">Adobe Color</a>, <a href="https://colorhunt.co" target="_blank" rel="noopener">Color Hunt</a>, <a href="https://uigradients.com" target="_blank" rel="noopener">UI Gradients</a> or <a href="https://paletton.com" target="_blank" rel="noopener">Paletton</a>, then type its hex codes below. Use 3 to 5 colours and check the contrast.</p>
       <input class="custom" id="custom-color_scheme" data-var="color_scheme" placeholder="Or type your own colours, e.g. brand hex codes">
     </div>
     <div class="style-picker attach-box" id="mAttach">
@@ -462,36 +465,414 @@
 <script>
 const PROMPTS = [
   // ---------- Slides ----------
+  { id: "master-strategic-deck", cat: "Slides", kind: "slides", title: "Strategic Presentation (Master Prompt)",
+    desc: "The full consultant-grade brief: art direction, storytelling, typography, icons, design audit and a colour scheme of your choice.",
+    tags: ["slides", "master prompt", "strategy", "art direction", "colour scheme"], role: "Consultant, Creative Director & Presentation Designer",
+    tip: "Use this as the standard brief for important decks. Fill in the topic, goal and audience, then choose a colour scheme (or let the AI recommend one). Leave the optional fields as they are if you have nothing to add. Claude and ChatGPT can build the .pptx file; other tools give you the outline and design direction.",
+    objective: "A board-level strategic presentation that is art-directed, evidence-led and visually distinctive, with storytelling, a typography system, professional icons and a built-in design audit.",
+    attachMarker: "\n\n3. CREATIVE ART DIRECTION AND DESIGN INTELLIGENCE", noTesting: true,
+    defaults: { design_personality: "Not specified: recommend the strongest visual direction for this topic and audience, and explain why", references: "None provided", brand_guidelines: "None provided" },
+    raw: `MASTER PROMPT: PROFESSIONAL STRATEGIC POWERPOINT PRESENTATION
+
+1. ROLE AND EXPERTISE
+
+Act as {{role}}.
+
+Your expertise includes:
+- Strategic thinking and business storytelling.
+- Executive-level communication.
+- Professional PowerPoint design and visual composition.
+- Data visualisation and information architecture.
+- Professional typography, iconography and illustration.
+- Corporate strategy, business transformation and decision-making.
+
+Your task is to develop a presentation that combines strong strategic content, compelling storytelling and exceptional visual quality.
+
+Do not produce an ordinary collection of PowerPoint slides. Create a presentation that looks professionally art-directed and is suitable for senior management, board members, executives, clients or other relevant audiences.
+
+2. PRESENTATION OBJECTIVES
+
+Develop a presentation based on the following information:
+- Topic: {{topic}}
+- Presentation objective: {{goal}}
+- Number of slides: {{slide_count}}
+- Target audience: {{audience}}
+- Background and context: {{context}}
+- Presentation purpose: {{purpose}}
+- Preferred design personality: {{design_personality}}
+- Preferred colour palette: {{color_scheme}}
+- Visual references or inspiration: {{references}}
+- Brand guidelines or corporate identity: {{brand_guidelines}}
+- Language: {{output_language}}
+
+If some information is missing, make reasonable assumptions and clearly identify them. Ask for clarification only when essential.
+
+3. CREATIVE ART DIRECTION AND DESIGN INTELLIGENCE
+
+Before designing the slides, determine the most suitable visual direction based on the topic, audience, industry, presentation objective and intended emotional impact.
+
+Do not use a fixed design personality or default colour palette.
+
+Explore suitable visual directions, including:
+- Premium corporate and executive.
+- Modern editorial and minimalist.
+- Luxury and sophisticated.
+- Bold and contemporary.
+- Creative and experimental.
+- Futuristic and technology-driven.
+- Architectural and structural.
+- Elegant and refined.
+- Vibrant and energetic.
+- Data-driven and analytical.
+- Academic and research-oriented.
+
+These are examples, not restrictions.
+
+If no design preference is provided, independently recommend the strongest visual direction and colour palette. Briefly explain why the selected direction is appropriate.
+
+Colour strategy
+- Select colours based on the subject matter and intended audience.
+- Use a deliberate combination of primary, secondary and accent colours.
+- Create strong contrast between background, headings, body text and visual elements.
+- Avoid excessive use of colours.
+- Do not automatically use conventional blue-and-white corporate styling.
+- Do not repeatedly use the same palette across unrelated presentations.
+- Maintain colour consistency throughout the presentation without making every slide look identical.
+- If a colour palette is specified above, use it as the presentation's palette: choose 3 to 5 of its colours, with one dominant colour, one or two supporting colours and one accent (roughly 60/30/10).
+- Check the contrast between text and background (WCAG AA) for readability and accessibility.
+- Test the colours on real slides, including charts, before finalising.
+- Use colour with purpose: know what each colour signals, and keep status colours (green, amber, red) for status only.
+
+The final design should have a distinctive visual identity that supports the presentation's message.
+
+4. STRATEGIC STORYTELLING AND CONTENT STRUCTURE
+
+Develop a logical narrative rather than simply arranging information into slides.
+
+Where appropriate, structure the presentation using this flow:
+1. Opening: establish the subject and capture attention.
+2. Context: explain the background and current situation.
+3. Challenge: identify the key problems or opportunities.
+4. Analysis: present evidence, insights and implications.
+5. Strategic direction: explain the proposed approach.
+6. Recommendations: present actionable solutions.
+7. Implementation: explain priorities, responsibilities and timelines.
+8. Expected outcomes: demonstrate measurable value and impact.
+9. Conclusion: reinforce the central message.
+10. Call to action: specify the decision or action required.
+
+Adapt this structure to the topic. Do not force irrelevant sections into the presentation.
+
+Content principles
+- Every slide must communicate one primary message.
+- Use conclusion-led headlines rather than generic headings.
+- Make headlines meaningful and informative.
+- Prioritise insights over lengthy explanations.
+- Use concise, precise and professional language.
+- Avoid unnecessary repetition, filler content and decorative statements.
+- Support important claims with credible evidence.
+- Do not fabricate statistics, references, financial figures or research findings.
+- Clearly identify assumptions, estimates and illustrative examples.
+
+5. PROFESSIONAL TYPOGRAPHY AND FONT HIERARCHY
+
+Use professional typography to establish a strong visual hierarchy.
+
+Do not use the same font size throughout the presentation. Font sizes must vary according to the importance and function of the content.
+
+Suggested starting ranges for a 16:9 presentation:
+- Cover title: 36-52 pt
+- Section divider: 32-44 pt
+- Main slide headline: 26-34 pt
+- Key statement: 24-32 pt
+- Subheading: 18-24 pt
+- Body text: 15-20 pt
+- Data labels: 12-16 pt
+- Captions and footnotes: 9-12 pt
+
+Adjust these sizes based on the actual composition and viewing environment. These are guidelines, not rigid limits.
+
+Font selection
+
+Select fonts that complement the chosen design personality.
+
+Possible professional font pairings include:
+- Manrope + Aptos.
+- Montserrat + Inter.
+- Playfair Display + Inter.
+- Libre Baskerville + Source Sans 3.
+- Other suitable modern sans-serif and serif combinations.
+
+Requirements:
+- Use no more than two primary font families unless there is a strong design reason.
+- Use different weights such as Light, Regular, Medium, Semibold and Bold.
+- Use typography as a visual design element where appropriate.
+- Avoid excessive bolding and unnecessary uppercase text.
+- Maintain readability and consistent font treatment.
+- Use fonts available in the production environment or suitable for embedding.
+- Avoid unintended font substitutions.
+
+6. PROFESSIONAL ICONOGRAPHY, ILLUSTRATIONS AND VISUAL ASSETS
+
+Visual quality is a critical requirement.
+
+Use professional, relevant and high-quality visual assets. Do not rely on basic PowerPoint shapes as substitutes for proper icons, illustrations or images.
+
+A. Professional icons
+- Use high-quality icons from professional icon libraries or suitable vector assets.
+- Select icons that communicate the actual meaning of the content.
+- Maintain a consistent icon family and visual style.
+- Use appropriate line weight, proportions and colour treatment.
+- Ensure icons are properly sized, aligned and positioned.
+- Avoid emojis, random symbols and decorative icons that add no meaning.
+- Do not simulate professional icons using simple circles, rectangles or Unicode characters.
+
+B. Professional illustrations
+
+Select illustration styles that suit the presentation, such as:
+- Premium vector illustrations.
+- Isometric illustrations.
+- Technical and architectural illustrations.
+- Editorial illustrations.
+- High-quality 3D illustrations.
+- Photorealistic visualisations.
+- Custom conceptual illustrations.
+
+Illustrations must be relevant, intentional and visually sophisticated.
+
+C. High-quality images
+- Use relevant, high-resolution images.
+- Select images that support the message rather than merely decorate the slide.
+- Prefer authentic, professional and contextually appropriate imagery.
+- Use consistent image treatment where appropriate.
+- Avoid generic stock imagery, low-resolution images, distorted proportions and irrelevant visuals.
+- Ensure image cropping, positioning and aspect ratios are professionally handled.
+- Never stretch images unnaturally.
+
+D. Visual asset quality
+
+Do not replace meaningful visual assets with primitive shapes.
+
+Basic shapes may be used for:
+- Backgrounds and colour blocks.
+- Diagram structures and connectors.
+- Charts and data visualisations.
+- Simple supporting design elements.
+
+However, when the content requires an actual icon, illustration, photograph or technical visualisation, use a proper visual asset instead.
+
+7. ALIGNMENT, SYMMETRY AND COMPOSITION
+
+All slides must demonstrate professional design precision.
+
+Apply the following requirements:
+- Use a consistent grid and alignment system.
+- Align headings, text, images, icons and diagrams precisely.
+- Maintain consistent margins and spacing.
+- Use equal spacing between elements that belong to the same group.
+- Keep related components consistent in size and proportion.
+- Ensure diagrams are properly centred and balanced where appropriate.
+- Maintain consistent connector lines, arrow directions and spacing.
+- Avoid overlapping, floating, misaligned or unevenly distributed elements.
+- Ensure text and visual assets do not collide.
+- Maintain visual balance across the entire slide.
+
+Symmetry requirements
+- Use symmetrical composition when it improves clarity, balance and professionalism.
+- Ensure diagrams, process flows, capability models and comparison layouts are properly aligned and proportioned.
+- For intentionally asymmetrical editorial layouts, maintain optical balance and deliberate visual hierarchy.
+- Do not force symmetry when it weakens the composition.
+
+Every slide must look intentional, balanced and professionally arranged.
+
+8. VISUAL STORYTELLING AND DATA VISUALISATION
+
+Choose the most appropriate visual format for each message.
+
+Possible formats include:
+- Strategic frameworks.
+- Process flows and workflows.
+- Operating models.
+- Organisational structures.
+- Roadmaps and implementation timelines.
+- Comparison matrices.
+- Before-and-after visualisations.
+- Performance dashboards.
+- Financial charts.
+- Infographics.
+- Architecture diagrams.
+- Ecosystem maps.
+- Conceptual illustrations.
+- Geographic visualisations.
+
+For charts:
+- Select the correct chart type.
+- Highlight the most important finding.
+- Use readable labels and appropriate scales.
+- Avoid unnecessary gridlines and visual clutter.
+- Do not distort data to create a more impressive result.
+- Clearly distinguish actual data from estimates or illustrative data.
+
+Do not use a chart, diagram or illustration simply because it looks attractive. Every visual must serve a communication purpose.
+
+9. SLIDE-BY-SLIDE DESIGN REQUIREMENTS
+
+For every slide, provide:
+1. Slide number and title.
+2. Main headline: the key message or conclusion.
+3. Key content: concise information supporting the headline.
+4. Suggested visual: the most suitable image, icon, illustration, chart or diagram.
+5. Design direction: layout, composition, colour treatment and visual hierarchy.
+6. Typography direction: appropriate font sizes, weights and hierarchy.
+7. Speaker notes: two to three sentences explaining the intended presentation narrative.
+
+Use no more than six concise bullet points on a slide. Where possible, replace long bullet lists with meaningful visual representations.
+
+Avoid using the same layout repeatedly. Introduce appropriate variation while maintaining a coherent overall design system.
+
+10. POWERPOINT PRODUCTION REQUIREMENTS
+
+Produce a professionally designed PowerPoint presentation with the following requirements:
+- Widescreen 16:9 format.
+- Fully editable PowerPoint elements.
+- Professional typography and consistent visual hierarchy.
+- High-quality icons, illustrations and images.
+- Properly aligned diagrams and visual elements.
+- Consistent margins, spacing and composition.
+- Appropriate transitions only where they improve the presentation.
+- No unnecessary decorative effects.
+- No overcrowded slides.
+- No text overflowing outside slide boundaries.
+
+Where technically possible:
+- Use editable text, shapes, charts and diagrams.
+- Use high-resolution image assets for photographs and complex illustrations.
+- Do not flatten entire slides into single images.
+- Keep individual components editable wherever practical.
+
+11. CRITICAL THINKING AND FACTUAL ACCURACY
+
+Act as a critical strategic advisor, not merely a presentation designer.
+- Challenge weak assumptions and unsupported arguments.
+- Identify gaps in the proposed strategy.
+- Highlight risks, limitations and dependencies.
+- Strengthen recommendations with logical reasoning.
+- Verify factual claims using credible and current sources when research is required.
+- Provide references for externally sourced information.
+- Never invent statistics, case studies, quotations or references.
+- Clearly label hypothetical or illustrative examples.
+- Distinguish facts, assumptions, estimates and recommendations.
+
+If the proposed idea is weak, explain why and recommend a stronger alternative.
+
+12. FINAL QUALITY CONTROL AND DESIGN AUDIT
+
+Before delivering the presentation, review every slide individually and assess the following.
+
+Strategic quality
+- Does the slide communicate one clear message?
+- Is the headline conclusion-led?
+- Does the content support the presentation objective?
+- Is the narrative logical and persuasive?
+
+Visual quality
+- Does the slide look professionally designed?
+- Is the visual direction appropriate for the topic?
+- Are the images and illustrations relevant and high quality?
+- Are the icons professional and consistent?
+- Is the typography attractive and readable?
+- Is the visual hierarchy immediately clear?
+
+Alignment and composition
+- Are elements aligned to a consistent grid?
+- Are spacing and proportions consistent?
+- Are diagrams symmetrical where appropriate?
+- Is the overall composition visually balanced?
+- Are there any overlapping or misaligned elements?
+
+Technical quality
+- Are all texts readable at presentation size?
+- Are images sharp and correctly cropped?
+- Are charts accurate?
+- Are fonts rendered correctly?
+- Are all objects within slide boundaries?
+- Are the PowerPoint elements editable?
+
+Render and inspect the completed slides at presentation size whenever the available tools permit. Correct any design or technical defects and inspect the revised slides again.
+
+Do not accept a slide simply because it contains the required information. It must also meet professional visual standards.
+
+13. FINAL DELIVERABLES
+
+Provide the following:
+
+A. Presentation strategy
+- Recommended narrative structure.
+- Recommended design personality.
+- Recommended colour palette.
+- Recommended typography system.
+
+B. Slide-by-slide outline
+- Complete content and visual direction for every slide.
+
+C. Final presentation
+- Editable PowerPoint (.pptx).
+- 16:9 widescreen format.
+
+D. Supporting material
+- Speaker notes.
+- References and sources, where applicable.
+
+E. Final design assessment
+- Identify any remaining weaknesses.
+- Confirm that alignment, visual quality, typography and factual accuracy have been checked.
+
+FINAL INSTRUCTION
+
+Create a presentation that is strategically convincing, visually distinctive, professionally executed and suitable for its intended audience.
+
+Do not settle for generic corporate slides, repetitive layouts, primitive illustrations or inconsistent visual arrangements.
+
+The objective is not simply to make the slides look attractive. The objective is to make the audience understand, remember and act on the message.` },
   { id: "create-slides", cat: "Slides", kind: "slides", title: "Create Slides",
     desc: "Plan and design a full slide deck in a consistent visual style.",
     tags: ["slides", "presentation", "style"],
     objective: "I want to create a {{slide_count}}-slide presentation on {{topic}} that achieves this goal: {{goal}}.",
-    context: "The audience is {{audience}}. The deck must use this visual style: {{style}}.",
+    context: "The audience is {{audience}}. The deck must use this visual style: {{style}}. Colour scheme: {{color_scheme}}.",
     reqs: ["Include a title slide, an agenda slide and a closing slide with a clear call to action.",
       "Include, for every slide, a headline, on-slide content (max 6 short bullets or one key visual), a suggested visual or chart, and 2–3 sentences of speaker notes.",
       "Include the visual style consistently on every slide: background, colour palette, typography, icons, charts and imagery.",
-      "Avoid walls of text, generic filler phrases and more than one key message per slide."],
-    output: "a numbered slide-by-slide outline with Title, Content, Visual and Speaker notes for each slide" },
+      "Avoid walls of text, generic filler phrases and more than one key message per slide.",
+      "Include a type hierarchy that varies with importance (for 16:9: cover 36 to 52 pt, headlines 26 to 34 pt, body 15 to 20 pt, captions 9 to 12 pt), at most two font families, and the colour scheme applied with 3 to 5 colours and WCAG AA contrast.",
+      "Include proper icons, illustrations or images that carry meaning, in one consistent style, never emoji or basic shapes standing in for icons.",
+      "Include alignment to a consistent grid with equal spacing, no overlaps or overflow, and layouts that vary from slide to slide within one design system."],
+    output: "a numbered slide-by-slide outline with Title, Content, Visual and Speaker notes for each slide. Before you finish, review every slide for message, hierarchy, alignment and facts, fix what falls short, and list what you changed" },
   { id: "slides-from-doc", cat: "Slides", kind: "slides", title: "Slides from a Document",
     desc: "Turn a report, paper or meeting notes into a presentation.",
     tags: ["slides", "summary", "style"],
     objective: "I want to turn the document below into a clear {{slide_count}}-slide presentation.",
-    context: "The audience is {{audience}}. Visual style: {{style}}. The document (or the attached file):\n\"\"\"\n{{document}}\n\"\"\"",
+    context: "The audience is {{audience}}. Visual style: {{style}}. Colour scheme: {{color_scheme}}. The document (or the attached file):\n\"\"\"\n{{document}}\n\"\"\"",
     reqs: ["Include the document's key messages and numbers exactly as written.",
       "Include one idea per slide, max 5 bullets, and a chart or visual wherever data appears.",
       "Include speaker notes for each slide and a final slide with 3 key takeaways.",
-      "Avoid adding facts, figures or claims that are not in the document."],
-    output: "a numbered slide-by-slide outline with Title, Content, Visual and Speaker notes, followed by a list of gaps or unclear points in the document" },
+      "Avoid adding facts, figures or claims that are not in the document.",
+      "Include a type hierarchy that varies with importance (for 16:9: cover 36 to 52 pt, headlines 26 to 34 pt, body 15 to 20 pt, captions 9 to 12 pt), at most two font families, and the colour scheme applied with 3 to 5 colours and WCAG AA contrast.",
+      "Include proper icons, illustrations or images that carry meaning, in one consistent style, never emoji or basic shapes standing in for icons.",
+      "Include alignment to a consistent grid with equal spacing, no overlaps or overflow, and layouts that vary from slide to slide within one design system."],
+    output: "a numbered slide-by-slide outline with Title, Content, Visual and Speaker notes, followed by a list of gaps or unclear points in the document. Before you finish, review every slide for message, hierarchy, alignment and facts, fix what falls short, and list what you changed" },
   { id: "pitch-deck", cat: "Slides", kind: "slides", title: "Pitch / Proposal Deck",
     desc: "A persuasive 10-slide deck to win approval or budget.",
     tags: ["slides", "pitch", "style"], role: "Pitch Deck Specialist",
     objective: "I want to win approval for {{proposal}}.",
-    context: "This is a 10-slide pitch deck. Audience: {{audience}}. Visual style: {{style}}. Supporting facts and figures: {{key_facts}}",
+    context: "This is a 10-slide pitch deck. Audience: {{audience}}. Visual style: {{style}}. Colour scheme: {{color_scheme}}. Supporting facts and figures: {{key_facts}}",
     reqs: ["Include this slide order: 1) Title 2) The problem 3) Why now 4) Proposed solution 5) How it works 6) Benefits and impact, with numbers 7) Cost and timeline 8) Risks and mitigation 9) The ask 10) Next steps.",
       "Include a full-sentence key message as the headline of every slide.",
       "Include speaker notes that anticipate the audience's likely objections.",
-      "Avoid hype, unsupported numbers and paragraphs on slides."],
-    output: "a numbered 10-slide outline with Headline, Content, Visual and Speaker notes, then the top 3 objections with suggested answers" },
+      "Avoid hype, unsupported numbers and paragraphs on slides.",
+      "Include a type hierarchy that varies with importance (for 16:9: cover 36 to 52 pt, headlines 26 to 34 pt, body 15 to 20 pt, captions 9 to 12 pt), at most two font families, and the colour scheme applied with 3 to 5 colours and WCAG AA contrast.",
+      "Include proper icons, illustrations or images that carry meaning, in one consistent style, never emoji or basic shapes standing in for icons.",
+      "Include alignment to a consistent grid with equal spacing, no overlaps or overflow, and layouts that vary from slide to slide within one design system."],
+    output: "a numbered 10-slide outline with Headline, Content, Visual and Speaker notes, then the top 3 objections with suggested answers. Before you finish, review every slide for message, hierarchy, alignment and facts, fix what falls short, and list what you changed" },
 
   // ---------- Infographic ----------
   { id: "create-infographic", cat: "Infographic", kind: "infographic", title: "Create Infographic",
@@ -623,9 +1004,10 @@ const PROMPTS = [
     tags: ["dashboard", "react", "ui/ux", "frontend", "ai platform"], role: "Creative Director & Frontend Lead",
     tip: "Fill in the product details, then pick a design concept or write your own. Use this as the standard brief for every dashboard build. For a full multi-file project, Claude Code or ChatGPT's code tools work best; a single-page preview works well in Claude or Gemini Canvas.",
     objective: "I want to redesign and build {{product_name}} into a visually impressive, premium-quality AI technology platform: a complete, working frontend mockup that looks like a real technology startup product, not a student project, a generic website or a basic admin dashboard.",
-    context: "What the product is: {{product_description}}\nWho uses it: {{users}}\nPages and features it must include: {{pages}}\nWhat a first-time user should feel and be able to do in the first 10 seconds: {{first_impression}}\nDesign concept: {{design_concept}}\nCombine these visual styles: premium SaaS product design, modern AI technology interface, editorial-style typography, minimalist layouts, futuristic data visualisation, sophisticated dashboard design.\nInspiration, not to be copied: Linear for its clean interface and sophisticated interactions, Apple for premium typography, whitespace and visual hierarchy, Stripe for polished SaaS layouts and information presentation, Vercel for the modern technology aesthetic, Framer for creative layouts and smooth interactions, and modern AI startups for dark interfaces, subtle gradients and intelligent visual elements.\nIt must work on desktop, laptop, tablet and mobile.",
+    context: "What the product is: {{product_description}}\nWho uses it: {{users}}\nPages and features it must include: {{pages}}\nWhat a first-time user should feel and be able to do in the first 10 seconds: {{first_impression}}\nDesign concept: {{design_concept}}\nColour scheme: {{color_scheme}}\nCombine these visual styles: premium SaaS product design, modern AI technology interface, editorial-style typography, minimalist layouts, futuristic data visualisation, sophisticated dashboard design.\nInspiration, not to be copied: Linear for its clean interface and sophisticated interactions, Apple for premium typography, whitespace and visual hierarchy, Stripe for polished SaaS layouts and information presentation, Vercel for the modern technology aesthetic, Framer for creative layouts and smooth interactions, and modern AI startups for dark interfaces, subtle gradients and intelligent visual elements.\nIt must work on desktop, laptop, tablet and mobile.",
     reqs: ["Include a mature, sophisticated, slightly futuristic look that communicates an intelligent platform powered by AI through the interface itself: live insights, confidence scores, AI suggestions and subtle motion.",
       "Include a design system defined first and used everywhere: colour tokens, a type scale with at most two typefaces, spacing on an 8 px scale, radius, shadow and motion rules. Text must meet WCAG AA contrast.",
+      "Include the colour scheme above as the brand palette: define colour tokens for background, surface, text, accent and status from it, adapt it to the design concept (dark or light), use 3 to 5 colours, and keep green, amber and red for status only.",
       "Include one clear focal point per screen, generous whitespace, editorial-style headings and consistent cards and alignment.",
       "Include honest, futuristic data visualisation: labelled axes and units, direct labels, no 3D, and realistic sample data labelled as sample.",
       "Include a responsive layout that works properly on desktop, laptop, tablet and mobile. On mobile, convert the sidebar into a compact navigation menu, make upload areas responsive, stack cards properly, keep text readable and make buttons at least 44 px to tap.",
@@ -979,12 +1361,13 @@ const PROMPTS = [
 // ---------- Prompt structure ----------
 const TESTING = "TESTING & QUALITY:\nChallenge assumptions, identify weaknesses, verify facts, state uncertainties and recommend improvements. Do not fabricate information.";
 PROMPTS.forEach(p => {
-  p.prompt = `ROLE:\nAct as {{role}}.\n\nOBJECTIVE:\n${p.objective}\n\nCONTEXT:\nHere is the background: ${p.context}\n\nKEY REQUIREMENTS:\n${p.reqs.map((r, i) => `${i + 1}. ${r}`).join("\n")}\n\nEXPECTED OUTPUT:\nPresent the result in ${p.output}.${p.noLang ? "" : "\nLanguage: {{output_language}}."}\nTone: {{tone}}.`;
+  p.prompt = p.raw || `ROLE:\nAct as {{role}}.\n\nOBJECTIVE:\n${p.objective}\n\nCONTEXT:\nHere is the background: ${p.context}\n\nKEY REQUIREMENTS:\n${p.reqs.map((r, i) => `${i + 1}. ${r}`).join("\n")}\n\nEXPECTED OUTPUT:\nPresent the result in ${p.output}.${p.noLang ? "" : "\nLanguage: {{output_language}}."}\nTone: {{tone}}.`;
 });
 
 // ---------- Predefined roles, by category (first one is the default) ----------
 const ROLES = {
   "Slides": [
+    { name: "Consultant, Creative Director & Presentation Designer", short: "Strategy, art direction and design", value: "a senior management consultant from a leading global consulting firm, an experienced creative director, a professional presentation designer and an information designer" },
     { name: "Top Management Consultant", short: "Board-level strategy decks", value: "a top management consultant from a leading global strategy firm who builds board-level presentations" },
     { name: "Presentation Designer", short: "Clean, visual slides", value: "a senior presentation designer who turns complex content into clean, visual slides" },
     { name: "Corporate Strategy Director", short: "Plans and results", value: "a corporate strategy director who presents plans and results to the board" },
@@ -1078,13 +1461,14 @@ const ROLES = {
   ],
 };
 const rolesFor = p => ROLES[p.cat] || [];
-const defaultRoleIndex = p => Math.max(0, rolesFor(p).findIndex(r => r.name === p.role));
+const defaultRoleIndex = p => { const i = rolesFor(p).findIndex(r => r.name === p.role); return i >= 0 ? i : (p.cat === "Slides" ? 1 : 0); };
 const defaultsFor = p => {
   const d = {};
   if (rolesFor(p).length) d.role = rolesFor(p)[defaultRoleIndex(p)].value;
   if (!p.noLang) d.output_language = "English";
   d.tone = toneValue(TONES[0]);
-  return d;
+  if (/\{\{color_scheme\}\}/.test(p.prompt)) d.color_scheme = AUTO_VALUE;
+  return { ...d, ...(p.defaults || {}) };
 };
 
 // ---------- Visual styles (sample: a property management title slide in each style) ----------
@@ -1116,7 +1500,19 @@ const styleImg = (st, cls = "") => `<img class="${cls}" src="${STYLE_IMG_DIR + s
 let currentStyle = null;
 
 // ---------- Dashboard colour schemes ----------
+const lum = h => { const [r, g, b] = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255).map(v => v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+const palette = (name, desc, c) => { const dark = [...c].sort((x, y) => lum(x) - lum(y))[0]; return { name, desc, c, bg: "#f8f8fb", surface: "#ffffff", text: lum(dark) < 0.12 ? dark : "#1c1a2b", palette: true }; };
+const AUTO_VALUE = "Let the AI recommend: choose the strongest colour palette for this subject, audience and industry, explain in one sentence why, use 3 to 5 colours (one dominant, one or two supporting, one accent), and do not default to conventional blue and white corporate styling";
+const AUTO_SCHEME = { name: "Let the AI recommend", desc: "The AI picks the best palette for your topic and explains why", auto: true, c: ["#3d7bff", "#a259ff", "#f4c345"], bg: "#f4f7ff", surface: "#ffffff", text: "#0b1b4d" };
 const SCHEMES = [
+  AUTO_SCHEME,
+  palette("Violet and Mint", "violet to mint: tech, product, startups", ["#391d8b", "#7754c8", "#4e73e6", "#63b7b7", "#8fcd9c"]),
+  palette("Indigo and Sunrise", "indigo, magenta and warm yellow: bold, energetic", ["#112483", "#92358e", "#df566a", "#ec7c34", "#f4c345"]),
+  palette("Deep Teal and Lemon", "deep teal to soft yellow: fresh, calm, wellbeing", ["#1d485b", "#4b9ea4", "#7cc4c0", "#c1d9b9", "#f7d985"]),
+  palette("Midnight and Peach", "midnight, sage and peach: warm, editorial", ["#192036", "#629e97", "#ece5c7", "#f3bf9a", "#ed826d"]),
+  palette("Plum and Marigold", "plum, rose and gold: creative, premium", ["#312150", "#7f4fb2", "#ec8198", "#f0aa6f", "#f4ca66"]),
+  palette("Sunset Gradient", "violet, green, orange and coral: modern, friendly", ["#796db9", "#6cac93", "#ef9c53", "#e76565"]),
+  palette("Navy Signal", "navy, blue, green, gold and red: analytical, corporate", ["#09103e", "#3c53bd", "#4f8f81", "#f2b950", "#c13e36"]),
   { name: "AI Sandbox Blue", desc: "the AI Sandbox brand blues", bg: "#f4f7ff", surface: "#ffffff", text: "#0b1b4d", c: ["#1f3bb3", "#3d7bff", "#38c8f5", "#0b1b4d"] },
   { name: "Corporate Navy", desc: "navy and steel with an amber highlight", bg: "#f3f5f9", surface: "#ffffff", text: "#0b2545", c: ["#0b2545", "#13315c", "#8da9c4", "#f4a261"] },
   { name: "Emerald Growth", desc: "greens for growth and sustainability", bg: "#f0fdf4", surface: "#ffffff", text: "#064e3b", c: ["#065f46", "#10b981", "#6ee7b7", "#f59e0b"] },
@@ -1128,8 +1524,13 @@ const SCHEMES = [
   { name: "Pastel Soft", desc: "soft pastels for friendly reports", bg: "#fbfaff", surface: "#ffffff", text: "#3b3355", c: ["#818cf8", "#f9a8d4", "#86efac", "#fcd34d"] },
   { name: "Colour-blind Safe", desc: "Okabe–Ito palette, readable for colour-blind viewers", bg: "#ffffff", surface: "#f7f7f7", text: "#1a1a1a", c: ["#0072B2", "#E69F00", "#009E73", "#D55E00"] },
 ];
-const schemeValue = sc => `${sc.name}${sc.dark ? " (dark theme)" : ""}: background ${sc.bg}, cards ${sc.surface}, text ${sc.text}, chart colours ${sc.c.join(", ")}`;
-const schemeSvg = sc => {
+const schemeValue = sc => sc.auto ? AUTO_VALUE
+  : sc.palette ? `${sc.name}: ${sc.c.length}-colour palette ${sc.c.join(", ")}. Use ${sc.text} for text and headings, white or a very light tint for backgrounds, and the other colours for accents and charts, with the dominant colour at about 60%, supporting colours about 30% and the accent about 10%`
+  : `${sc.name}${sc.dark ? " (dark theme)" : ""}: background ${sc.bg}, cards ${sc.surface}, text ${sc.text}, chart colours ${sc.c.join(", ")}`;
+const schemeIndex = () => { const i = values.color_scheme ? SCHEMES.findIndex(sc => schemeValue(sc) === values.color_scheme) : -1; return i < 0 ? null : i; };
+const schemeSvg = (sc, mode = "dash") => {
+  if (sc.auto) return `<svg class="thumb" viewBox="0 0 160 100" role="img" aria-label="${esc(sc.name)}"><defs><linearGradient id="autoGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3d7bff"/><stop offset=".55" stop-color="#a259ff"/><stop offset="1" stop-color="#f4c345"/></linearGradient></defs><rect width="160" height="100" fill="url(#autoGrad)"/><path d="M80 22l6.5 19 19 6.5-19 6.5-6.5 19-6.5-19-19-6.5 19-6.5z" fill="#fff"/><path d="M125 16l3.2 8.5 8.5 3.2-8.5 3.2-3.2 8.5-3.2-8.5-8.5-3.2 8.5-3.2z" fill="#fff" opacity=".85"/><path d="M36 64l2.6 6.4 6.4 2.6-6.4 2.6-2.6 6.4-2.6-6.4-6.4-2.6 6.4-2.6z" fill="#fff" opacity=".85"/></svg>`;
+  if (mode === "slides") { const [a, b, , d] = sc.c; return `<svg class="thumb" viewBox="0 0 160 100" role="img" aria-label="${esc(sc.name)} sample slide"><rect width="160" height="100" fill="${sc.bg}"/><rect width="160" height="6" fill="${a}"/><rect x="12" y="22" width="70" height="7" rx="1.5" fill="${sc.text}"/><rect x="12" y="34" width="52" height="7" rx="1.5" fill="${sc.text}"/><rect x="12" y="49" width="40" height="3" rx="1" fill="${sc.text}" opacity=".4"/><rect x="12" y="56" width="48" height="3" rx="1" fill="${sc.text}" opacity=".4"/><rect x="96" y="18" width="52" height="58" rx="3" fill="${a}"/><rect x="96" y="18" width="52" height="20" rx="3" fill="${b}"/><circle cx="122" cy="58" r="9" fill="${d}"/>${sc.c.map((col, i) => `<rect x="${12 + i * 16}" y="82" width="12" height="9" rx="1.5" fill="${col}"/>`).join("")}</svg>`; }
   const [a, b, c, d] = sc.c, card = (x, i) => `<rect x="${x}" y="20" width="46" height="19" rx="3" fill="${sc.surface}"/><rect x="${x + 5}" y="25" width="20" height="2.5" rx="1" fill="${sc.text}" opacity=".45"/><rect x="${x + 5}" y="30" width="15" height="5" rx="1" fill="${sc.c[i]}"/>`;
   const bars = [18, 28, 22, 34, 26, 38].map((h, i) => `<rect x="${12 + i * 14}" y="${89 - h}" width="9" height="${h}" rx="1.5" fill="${i === 5 ? d : b}"/>`).join("");
   return `<svg class="thumb" viewBox="0 0 160 100" role="img" aria-label="${esc(sc.name)} sample dashboard"><rect width="160" height="100" fill="${sc.bg}"/><rect width="160" height="14" fill="${a}"/><rect x="6" y="5" width="40" height="4" rx="2" fill="#fff" opacity=".9"/>${card(6, 1)}${card(57, 2)}${card(108, 3)}<rect x="6" y="44" width="92" height="50" rx="3" fill="${sc.surface}"/>${bars}<rect x="104" y="44" width="50" height="50" rx="3" fill="${sc.surface}"/><g transform="rotate(-90 129 69)" fill="none" stroke-width="7"><circle cx="129" cy="69" r="14" stroke="${a}" stroke-dasharray="39.6 88"/><circle cx="129" cy="69" r="14" stroke="${b}" stroke-dasharray="26.4 88" stroke-dashoffset="-39.6"/><circle cx="129" cy="69" r="14" stroke="${c}" stroke-dasharray="22 88" stroke-dashoffset="-66"/></g></svg>`;
@@ -1182,6 +1583,8 @@ const PRESETS = {
   slide_count: ["5", "8", "10", "12", "15"],
   format: ["A4 portrait", "A3 poster", "16:9 slide", "Desktop 16:9 screen", "Mobile screen", "1080x1350 Instagram post", "1080x1920 story"],
   app: ["Excel", "Power BI", "Google Sheets", "Looker Studio"],
+  purpose: ["Inform", "Persuade", "Seek approval", "Propose a strategy", "Report performance", "Educate"],
+  design_personality: ["Premium corporate and executive", "Modern editorial and minimalist", "Luxury and sophisticated", "Bold and contemporary", "Creative and experimental", "Futuristic and technology-driven", "Architectural and structural", "Elegant and refined", "Vibrant and energetic", "Data-driven and analytical", "Academic and research-oriented"],
   design_concept: [
     { label: "Quiet Intelligence", value: "Quiet Intelligence: a calm, dark graphite interface with one electric-blue accent. AI appears as small, precise moments (live insights, confidence meters, soft glows on active elements), never as decoration. Premium, restrained and confident." },
     { label: "Neural Command Centre", value: "Neural Command Centre: a dark, data-dense control room with a luminous grid, thin glowing lines and live status indicators. Futuristic but organised, built for monitoring and fast decisions." },
@@ -1365,7 +1768,7 @@ function renderGrid() {
     <article class="card" data-id="${p.id}">
       <div class="card-top">
         <span class="cat-tag">${esc(p.cat)}</span>
-        <span class="right">${varsOf(p.prompt).includes("style") ? `<span class="badge">20 styles</span>` : ""}${varsOf(p.prompt).includes("color_scheme") ? `<span class="badge">10 colour schemes</span>` : ""}<button class="star ${favs.has(p.id) ? "on" : ""}" data-star="${p.id}" aria-label="Favourite">${favs.has(p.id) ? "★" : "☆"}</button></span>
+        <span class="right">${varsOf(p.prompt).includes("style") ? `<span class="badge">20 styles</span>` : ""}${varsOf(p.prompt).includes("color_scheme") ? `<span class="badge">${SCHEMES.length} colour schemes</span>` : ""}<button class="star ${favs.has(p.id) ? "on" : ""}" data-star="${p.id}" aria-label="Favourite">${favs.has(p.id) ? "★" : "☆"}</button></span>
       </div>
       <h3>${esc(p.title)}</h3>
       <p class="desc">${esc(p.desc)}</p>
@@ -1393,15 +1796,17 @@ function fill(text, highlight) {
   });
 }
 const engineAdd = p => engineFor(p)?.add || "";
-const withAttach = (text, line) => line ? text.replace(ATTACH_SPLIT, "\n" + line + ATTACH_SPLIT) : text;
-const fullPrompt = (p, line = "") => fill(withAttach(p.prompt, line), false) + (engineAdd(p) ? "\n" + engineAdd(p) : "") + "\n\n" + TESTING;
+const attachMarker = p => p.attachMarker || ATTACH_SPLIT;
+const withAttach = (p, line) => line ? p.prompt.replace(attachMarker(p), "\n" + line + attachMarker(p)) : p.prompt;
+const fullPrompt = (p, line = "") => fill(withAttach(p, line), false) + (engineAdd(p) ? "\n" + engineAdd(p) : "") + (p.noTesting ? "" : "\n\n" + TESTING);
 
 function renderModalPrompt() {
   const hl = text => text.split(/(\{\{\w+\}\})/).map(s => /^\{\{\w+\}\}$/.test(s) ? fill(s, true) : esc(s)).join("");
-  const [head, tail] = current.prompt.split(ATTACH_SPLIT);
+  const marker = attachMarker(current), at = current.prompt.indexOf(marker);
+  const head = current.prompt.slice(0, at), tail = current.prompt.slice(at);
   const add = engineAdd(current), line = attachLine();
-  $("#mPrompt").innerHTML = hl(head) + (line ? `<span class="attach-add">\n${esc(line)}</span>` : "") + hl(ATTACH_SPLIT + tail)
-    + (add ? `<span class="engine-add">\n${esc(add)}</span>` : "") + "\n\n" + esc(TESTING);
+  $("#mPrompt").innerHTML = hl(head) + (line ? `<span class="attach-add">\n${esc(line)}</span>` : "") + hl(tail)
+    + (add ? `<span class="engine-add">\n${esc(add)}</span>` : "") + (current.noTesting ? "" : "\n\n" + esc(TESTING));
 }
 
 function renderModalEngine() {
@@ -1437,7 +1842,7 @@ function openModal(id) {
   currentStyle = null;
   $("#mStyles").hidden = !vars.includes("style");
   renderStyles();
-  currentScheme = null;
+  currentScheme = schemeIndex();
   $("#mSchemes").hidden = !vars.includes("color_scheme");
   renderSchemes();
   attachUses = new Set(); attachName = ""; $("#attach-name").value = "";
@@ -1453,7 +1858,7 @@ function renderSchemes() {
   $("#mSchemeName").textContent = currentScheme === null ? (values.color_scheme ? "Custom" : "None selected") : SCHEMES[currentScheme].name;
   $("#mSchemeGrid").innerHTML = SCHEMES.map((sc, i) => `
     <button type="button" class="style-opt ${i === currentScheme ? "active" : ""}" data-scheme="${i}" aria-pressed="${i === currentScheme}">
-      ${schemeSvg(sc)}
+      ${schemeSvg(sc, current && current.kind === "slides" ? "slides" : "dash")}
       <b><span class="num">${i + 1}.</span>${esc(sc.name)}</b>
       <small>${esc(sc.desc)}</small>
     </button>`).join("");
@@ -1634,7 +2039,7 @@ $("#mStyleGrid").onclick = e => {
 };
 $("#mCopy").onclick = e => copy(fullPrompt(current, attachLine()), e.currentTarget);
 $("#mReset").onclick = () => {
-  values = defaultsFor(current); currentStyle = null; currentAud = null; currentScheme = null;
+  values = defaultsFor(current); currentStyle = null; currentAud = null; currentScheme = schemeIndex();
   attachUses = new Set(); attachName = ""; $("#attach-name").value = "";
   currentRole = rolesFor(current).length ? defaultRoleIndex(current) : null;
   currentTone = 0;
