@@ -928,6 +928,161 @@ The objective is not simply to make the slides look attractive. The objective is
       "Include print-safe margins and strong contrast so it reads from a distance.",
       "Avoid more than 3 typefaces, tiny text and busy backgrounds behind text."],
     output: "one finished poster in the stated format; if you cannot render images, a layout spec with exact text, hierarchy, colours and imagery" },
+  { id: "poster-rebuild", cat: "Visual", kind: "image", schemeGroup: "poster", title: "Poster Rebuild (from a rough draft)",
+    desc: "Attach a messy poster and have it rebuilt around one strong idea, with exact copy, a clear hierarchy and the brand intact.",
+    tags: ["poster", "image", "rebuild", "art direction", "colour scheme"],
+    tip: "Attach your rough poster image first (paperclip in ChatGPT, Gemini or Copilot, which can generate images). Fill in what you know; blank lines are inferred from the poster. Always read the finished poster word by word, because image tools can still misspell text. Claude can't paint images, so it will write an image prompt or an SVG.",
+    objective: "Rebuild a rough, messy poster into one finished, art-directed poster built around a single strong idea, with the exact copy and the brand intact.",
+    attachMarker: "\n\nTHE BRIEF", noTesting: true,
+    defaults: {
+      poster_purpose: "Infer from the attached rough poster",
+      where_it_runs: "Infer from the format of the attached poster",
+      poster_audience: "Infer from the attached poster and its purpose",
+      poster_goal: "Infer from the attached poster what the viewer should think, feel or do",
+      core_message: "Infer the one-sentence message from the attached poster",
+      required_copy: "All the text in the attached poster, word for word, with every price, date and detail exactly as written",
+      poster_cta: "The call to action in the attached poster, if any. Do not invent one",
+      brand_name: "The brand shown in the attached poster. Do not invent one",
+      brand_character: "Infer from the attached poster and its purpose",
+      visual_direction: "Choose the direction that best suits the idea and the brand",
+      poster_size: "The format of the attached poster, unless a size is given here",
+      assets_supplied: "The logo, product, people and other assets visible in the attached poster",
+      keep_elements: "The mandatory copy, the logo and the product",
+      remove_elements: "Anything that does not serve the idea",
+      people_policy: "Keep the supplied people exactly as they are" },
+    raw: `ROLE
+You are the creative director of a leading design studio. You have art-directed award-winning posters, campaigns, editorial layouts and brand launches across fashion, food, sport, music, health, tech and luxury. You think in ideas first and pixels second. You are ruthless about clarity and allergic to clutter.
+
+WHAT I'M GIVING YOU
+The attached image is a rough, messy poster. Treat it as a brief written in pictures: read it for the subject, the offer, the facts, the brand elements and the assets I already have. Then put it aside. Do not copy its layout, its type choices, its effects, its spacing or its mistakes. You are not polishing it. You are finding the one good idea buried inside it and rebuilding the poster from a blank canvas around that idea.
+
+If there is no image attached, reply with exactly this and nothing else:
+"Attach the rough poster you want rebuilt and I'll take it from there."
+
+THE BRIEF
+Purpose: {{poster_purpose}}
+Where it will run: {{where_it_runs}}
+Audience: {{poster_audience}}
+Goal: {{poster_goal}}
+Core message: {{core_message}}
+Copy that must appear, word for word: {{required_copy}}
+Call to action: {{poster_cta}}
+Brand: {{brand_name}}
+Brand character: {{brand_character}}
+Colours: {{color_scheme}}
+Visual direction: {{visual_direction}}
+Size: {{poster_size}}
+Assets supplied: {{assets_supplied}}
+Keep no matter what: {{keep_elements}}
+Get rid of: {{remove_elements}}
+People policy: {{people_policy}}
+
+Where a line is left blank, infer the most sensible choice from the reference and the purpose. Never fabricate a price, date, discount, statistic, medical or legal claim, web address, social handle, logo, award or certification that I did not give you.
+
+STEP 1: READ BEFORE YOU DRAW (do this silently, don't print it)
+Work out:
+- the single most important thing this poster must say
+- the strongest visual asset available (a product, a place, a shape, a headline)
+- the one action the viewer should take
+- which text is mandatory and which is filler
+- exactly why the rough version feels amateur: weak hierarchy, too many things shouting at once, poor type, random colour, uneven spacing, low contrast, stock effects, no clear focal point
+- what is worth keeping from the original thinking and what gets thrown away
+Use these answers to make every decision that follows.
+
+STEP 2: ONE IDEA
+Build the entire poster around one hero element and one visual concept that lands the message instantly. That concept might be extreme scale, a surprising crop, type that physically interacts with the subject, confident negative space, a strict editorial grid, or a visual metaphor tied to the purpose. Pick one. Never stack several ideas on top of each other.
+
+Then set the reading order, and make it unmissable within one second even at phone-feed size:
+1. Hero: the dominant image, product, headline or visual idea.
+2. Message: the key line, understood immediately.
+3. Support: date, offer, details, call to action.
+4. Signature: the brand mark, present but never fighting the hero.
+
+The headline, the product, the logo, the CTA and any decoration must NOT carry equal weight. One hero. One promise. One path for the eye.
+
+STEP 3: LAYOUT
+- Sit everything on an underlying grid, even when the final composition is asymmetric or unconventional.
+- Push scale contrast hard: the hero is huge, support text is small, nothing lives in the middle.
+- Keep margins, alignments and spacing intervals consistent from edge to edge.
+- Balance asymmetrically and deliberately. Every weight should feel placed, not dropped.
+- Add depth only when the idea needs it, through overlap, scale, focus and light.
+- Keep faces, products, logos and text inside the safe area for the chosen size.
+- No accidental tangents, no elements kissing the frame by mistake, no cramped corners.
+- Don't centre everything out of habit. Choose the alignment that makes the idea stronger.
+- Empty space is doing a job. Don't fill it because it's there.
+
+STEP 4: TYPE
+Typography is a headline act here, not a caption.
+- One display typeface with real character, plus one supporting typeface only if genuinely needed.
+- No outlines, drop shadows, glows, bevels, 3D, warping, arching or other text effects.
+- Clear, obvious steps between headline, sub-headline, body, CTA and small print.
+- Everything important is legible at a glance on a phone.
+- Sensible line lengths. Never shrink long copy into an unreadable slab.
+- No placeholder words, invented letters, random symbols or gibberish, ever.
+- Reproduce every piece of mandatory copy exactly: spelling, punctuation, capitals, numbers, dates.
+- Do not rewrite, trim or drop mandatory copy unless I've said you can.
+- Bilingual posters get a clear hierarchy between the two languages; neither is decoration.
+- Arabic is set right-to-left with correctly joined letterforms, correct punctuation and natural breaks. Never mirrored, never distorted.
+
+STEP 5: SUBJECT AND PRODUCT TRUTH
+- Apply the People policy from the brief. If people are kept, preserve identity, features, skin tone, expression, pose, clothing and every recognisable detail unless I've asked for a change. If the policy is no people, represent the subject through objects, places, materials, shapes or type instead, with no figures, silhouettes, hands or characters anywhere.
+- Products keep their exact shape, proportions, colours, materials, packaging, label and logo.
+- Never swap the real subject for a generic AI version of it.
+- No duplicated objects, warped anatomy, extra fingers, melted packaging, wrong reflections or impossible perspective.
+- Match light direction, shadow softness, colour temperature, perspective, depth of field and grain across everything you composite.
+- Ground the subject with believable contact shadows and reflections.
+- Skin, food, fabric, metal, glass and card should look like the real material. No plastic sheen, no over-sharpening.
+- If the source image is weak, improve it gently without changing what it is.
+
+STEP 6: COLOUR AND LIGHT
+Use the brief's colours as a disciplined palette: one dominant background, one or two supporting tones, one accent with a job.
+- The accent points at the message or the CTA and nowhere else.
+- Text always separates cleanly from its background.
+- Bold and legible, never harsh or oversaturated.
+- Consistent highlights, shadows and grading across the whole piece.
+- Gradients, glow, grain, blur and texture only when the chosen direction genuinely calls for them.
+- Exact hex values are exact. Protect them.
+
+STEP 7: BRAND DISCIPLINE
+- The result should feel like it could only belong to this brand, not a template with a logo pasted on at the end.
+- Logo at a sensible size with breathing room. Never stretched, redrawn, recoloured or invented.
+- Legal, promotional and contact details stay in, but stay quiet.
+- No fake stars, reviews, badges, seals, awards, UI chrome, social icons or claims.
+- Avoid the tired clichés of the industry unless you can turn one into something fresh and relevant.
+- Tone follows goal: premium is restrained, energetic is dynamic, healthcare is credible, food is appetising, fashion is editorial.
+
+STEP 8: CUT THE NOISE
+Remove anything that isn't communicating, supporting the hierarchy or serving the idea: stray objects, gradient soup, particles, sparks, smoke, light streaks, lens flares, glows, fake 3D, decorative lines, arrows, borders, frames, ribbons, badges, icon clutter, repeated information, competing CTAs, meaningless microtext and template ornaments.
+No over-processed skin, no oversaturated food, no warped products, no unreal materials, no elements added just to make the canvas feel busy.
+Then commit to ONE memorable move (a surprising crop, dramatic scale, type meeting image, brave negative space, a striking composition) and execute it cleanly, without wrapping it in extra effects.
+
+STEP 9: OUTPUT
+- Design natively at the requested size and ratio. Don't design something else and crop it.
+- Use the whole canvas with intent, edge to edge.
+- Keep all essential content inside platform-safe margins.
+- It must work as a thumbnail and at full size.
+- Crisp edges, clean masking, real detail, controlled texture, professional grading.
+- High resolution and ready for the stated platform or print.
+- Deliver one finished poster only. No moodboard, no contact sheet, no wireframe, no before-and-after, no device or wall mockup unless asked.
+- No labels, measurements, crop marks or presentation frames in the artwork.
+
+THE STANDARD
+Bold. Clear. Premium. Contemporary. Intentional. Memorable.
+It should look art-directed by a top human designer, not assembled from a template or drowned by an image generator. Stop the scroll with one strong idea, never with noise. Don't improve the original. Take it apart, throw away the noise, find the strongest idea, and rebuild.
+
+BEFORE YOU FINISH, CHECK
+- Is the idea understood in one second?
+- Is there exactly one hero?
+- Is the main message readable at phone size?
+- Does the eye travel in the order you intended?
+- Does every element earn its place?
+- Are margins, spacing and alignment consistent?
+- Is every supplied word exact, with no gibberish?
+- Are the logo, product, people (if any) and brand colours accurate?
+- Are light, shadow, scale and perspective believable?
+- Does it feel like this brand, not a template?
+- Would deleting any decorative element make it clearer? Then delete it.
+Last test: strip everything except the hero and the main message. If the idea still lands, you're done. If not, strengthen the concept before you finish.` },
   { id: "social-graphic", cat: "Visual", kind: "image", title: "Social Media Graphic",
     desc: "Scroll-stopping post or story graphic for any platform.",
     tags: ["social", "image", "style"], role: "Social Media Creative",
@@ -1678,7 +1833,7 @@ const defaultsFor = p => {
   if (rolesFor(p).length) d.role = rolesFor(p)[defaultRoleIndex(p)].value;
   if (!p.noLang) d.output_language = "English";
   d.tone = toneValue(TONES[0]);
-  if (/\{\{color_scheme\}\}/.test(p.prompt)) d.color_scheme = p.kind === "website" ? KEEP_VALUE : AUTO_VALUE;
+  if (/\{\{color_scheme\}\}/.test(p.prompt)) d.color_scheme = schemeValue(defaultScheme(p));
   return { ...d, ...(p.defaults || {}) };
 };
 
@@ -1716,13 +1871,18 @@ const palette = (name, desc, c) => { const dark = [...c].sort((x, y) => lum(x) -
 const AUTO_VALUE = "Let the AI recommend: choose the strongest colour palette for this subject, audience and industry, explain in one sentence why, use 3 to 5 colours (one dominant, one or two supporting, one accent), and do not default to conventional blue and white corporate styling";
 const AUTO_SCHEME = { name: "Let the AI recommend", desc: "The AI picks the best palette for your topic and explains why", auto: true, hideFor: ["website"], c: ["#3d7bff", "#a259ff", "#f4c345"], bg: "#f4f7ff", surface: "#ffffff", text: "#0b1b4d" };
 const KEEP_VALUE = "Keep the site's existing palette: extract and refine the current colours, and do not introduce new hues";
-const KEEP_SCHEME = { name: "Keep the site's existing palette", desc: "Extract and refine the current colours; no new hues", keep: true, onlyFor: ["website"], c: ["#6b7280", "#9aa0ad", "#c9ccd4"], bg: "#f8f8fb", surface: "#ffffff", text: "#1c1a2b" };
+const KEEP_SCHEME = { name: "Keep the site's existing palette", desc: "Extract and refine the current colours; no new hues", keep: true, value: KEEP_VALUE, defaultFor: ["website"], onlyFor: ["website"], c: ["#6b7280", "#9aa0ad", "#c9ccd4"], bg: "#f8f8fb", surface: "#ffffff", text: "#1c1a2b" };
+const POSTER_VALUE = "Use the colours in my rough poster and the brand, refined into a disciplined palette: one dominant background, one or two supporting tones and one accent with a job. Exact hex values, if given, are exact";
+const POSTER_SCHEME = { name: "Use the colours in my rough poster", desc: "Take the palette from the attached poster and sharpen it", keep: true, value: POSTER_VALUE, defaultFor: ["poster"], onlyFor: ["poster"], c: ["#1f2a44", "#e8e1d3", "#d9482b"], bg: "#f8f8fb", surface: "#ffffff", text: "#1c1a2b" };
 const direction = (name, desc, c) => ({ name, desc, c, bg: "#f8f8fb", surface: "#ffffff", text: c[0], direction: true, onlyFor: ["website"] });
-const schemeVisible = (sc, p) => (!sc.onlyFor || sc.onlyFor.includes(p.kind)) && (!sc.hideFor || !sc.hideFor.includes(p.kind));
+const schemeGroup = p => p.schemeGroup || p.kind;
+const schemeVisible = (sc, p) => (!sc.onlyFor || sc.onlyFor.includes(schemeGroup(p))) && (!sc.hideFor || !sc.hideFor.includes(schemeGroup(p)));
 const schemesFor = p => SCHEMES.filter(sc => schemeVisible(sc, p));
+const defaultScheme = p => SCHEMES.find(sc => sc.defaultFor && sc.defaultFor.includes(schemeGroup(p))) || AUTO_SCHEME;
 const SCHEMES = [
   AUTO_SCHEME,
   KEEP_SCHEME,
+  POSTER_SCHEME,
   direction("Warm Earth and Terracotta", "warm earthy neutrals with a terracotta accent", ["#5b4636", "#c9b79c", "#e8ddcb", "#c4623f"]),
   direction("Charcoal and One Bold Accent", "deep charcoal with a single bold accent", ["#17181b", "#2a2c31", "#8a8d93", "#ff4d2e"]),
   direction("Soft Pastels and One Accent", "soft pastels with one saturated accent", ["#3b3150", "#ddebf0", "#f6eef1", "#5b3df5"]),
@@ -1747,7 +1907,7 @@ const SCHEMES = [
   { name: "Colour-blind Safe", desc: "Okabe–Ito palette, readable for colour-blind viewers", bg: "#ffffff", surface: "#f7f7f7", text: "#1a1a1a", c: ["#0072B2", "#E69F00", "#009E73", "#D55E00"] },
 ];
 const schemeValue = sc => sc.auto ? AUTO_VALUE
-  : sc.keep ? KEEP_VALUE
+  : sc.value ? sc.value
   : sc.direction ? `${sc.name}: suggested starting palette ${sc.c.join(", ")}. Refine it to suit the brand, and use the accent only on primary calls to action, key highlights and active states`
   : sc.palette ? `${sc.name}: ${sc.c.length}-colour palette ${sc.c.join(", ")}. Use ${sc.text} for text and headings, white or a very light tint for backgrounds, and the other colours for accents and charts, with the dominant colour at about 60%, supporting colours about 30% and the accent about 10%`
   : `${sc.name}${sc.dark ? " (dark theme)" : ""}: background ${sc.bg}, cards ${sc.surface}, text ${sc.text}, chart colours ${sc.c.join(", ")}`;
@@ -1755,6 +1915,7 @@ const schemeIndex = () => { const i = values.color_scheme ? SCHEMES.findIndex(sc
 const schemeSvg = (sc, mode = "dash") => {
   if (sc.auto) return `<svg class="thumb" viewBox="0 0 160 100" role="img" aria-label="${esc(sc.name)}"><defs><linearGradient id="autoGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3d7bff"/><stop offset=".55" stop-color="#a259ff"/><stop offset="1" stop-color="#f4c345"/></linearGradient></defs><rect width="160" height="100" fill="url(#autoGrad)"/><path d="M80 22l6.5 19 19 6.5-19 6.5-6.5 19-6.5-19-19-6.5 19-6.5z" fill="#fff"/><path d="M125 16l3.2 8.5 8.5 3.2-8.5 3.2-3.2 8.5-3.2-8.5-8.5-3.2 8.5-3.2z" fill="#fff" opacity=".85"/><path d="M36 64l2.6 6.4 6.4 2.6-6.4 2.6-2.6 6.4-2.6-6.4-6.4-2.6 6.4-2.6z" fill="#fff" opacity=".85"/></svg>`;
   if (sc.keep) return `<svg class="thumb" viewBox="0 0 160 100" role="img" aria-label="${esc(sc.name)}"><rect width="160" height="100" fill="#f1f1f4"/><rect x="14" y="14" width="132" height="72" rx="5" fill="#fff" stroke="#9aa0ad" stroke-width="1.5" stroke-dasharray="5 4"/><rect x="26" y="26" width="60" height="7" rx="2" fill="#9aa0ad"/><rect x="26" y="40" width="96" height="4" rx="2" fill="#c9ccd4"/><rect x="26" y="49" width="80" height="4" rx="2" fill="#c9ccd4"/><circle cx="32" cy="70" r="6" fill="#6b7280"/><circle cx="48" cy="70" r="6" fill="#9aa0ad"/><circle cx="64" cy="70" r="6" fill="#c9ccd4"/><path d="M118 68l5 5 10-11" fill="none" stroke="#3d7bff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  if (mode === "poster") { const [a, b] = sc.c, acc = sc.c[sc.c.length - 1]; return `<svg class="thumb" viewBox="0 0 160 100" role="img" aria-label="${esc(sc.name)} sample poster"><rect width="160" height="100" fill="${sc.bg}"/><rect x="52" y="6" width="56" height="88" rx="2" fill="${a}"/><circle cx="80" cy="38" r="16" fill="${b}"/><rect x="60" y="62" width="40" height="5" rx="1.5" fill="#fff"/><rect x="60" y="71" width="28" height="3" rx="1" fill="#fff" opacity=".7"/><rect x="60" y="80" width="18" height="6" rx="3" fill="${acc}"/></svg>`; }
   if (mode === "web") { const [a, b, c] = sc.c, acc = sc.c[sc.c.length - 1]; return `<svg class="thumb" viewBox="0 0 160 100" role="img" aria-label="${esc(sc.name)} sample website"><rect width="160" height="100" fill="${sc.bg}"/><rect width="160" height="10" fill="${sc.surface}"/><rect x="8" y="3.5" width="22" height="3" rx="1.5" fill="${sc.text}"/><rect y="10" width="160" height="46" fill="${a}"/><rect x="12" y="24" width="64" height="6" rx="1.5" fill="#fff"/><rect x="12" y="34" width="46" height="4" rx="1.5" fill="#fff" opacity=".7"/><rect x="12" y="43" width="26" height="7" rx="3.5" fill="${acc}"/><rect x="88" y="18" width="60" height="32" rx="3" fill="${b}"/><rect x="10" y="64" width="42" height="28" rx="3" fill="${sc.surface}"/><rect x="59" y="64" width="42" height="28" rx="3" fill="${sc.surface}"/><rect x="108" y="64" width="42" height="28" rx="3" fill="${sc.surface}"/><rect x="14" y="68" width="34" height="12" rx="2" fill="${c}"/><rect x="63" y="68" width="34" height="12" rx="2" fill="${b}"/><rect x="112" y="68" width="34" height="12" rx="2" fill="${a}"/></svg>`; }
   if (mode === "slides") { const [a, b, , d] = sc.c; return `<svg class="thumb" viewBox="0 0 160 100" role="img" aria-label="${esc(sc.name)} sample slide"><rect width="160" height="100" fill="${sc.bg}"/><rect width="160" height="6" fill="${a}"/><rect x="12" y="22" width="70" height="7" rx="1.5" fill="${sc.text}"/><rect x="12" y="34" width="52" height="7" rx="1.5" fill="${sc.text}"/><rect x="12" y="49" width="40" height="3" rx="1" fill="${sc.text}" opacity=".4"/><rect x="12" y="56" width="48" height="3" rx="1" fill="${sc.text}" opacity=".4"/><rect x="96" y="18" width="52" height="58" rx="3" fill="${a}"/><rect x="96" y="18" width="52" height="20" rx="3" fill="${b}"/><circle cx="122" cy="58" r="9" fill="${d}"/>${sc.c.map((col, i) => `<rect x="${12 + i * 16}" y="82" width="12" height="9" rx="1.5" fill="${col}"/>`).join("")}</svg>`; }
   const [a, b, c, d] = sc.c, card = (x, i) => `<rect x="${x}" y="20" width="46" height="19" rx="3" fill="${sc.surface}"/><rect x="${x + 5}" y="25" width="20" height="2.5" rx="1" fill="${sc.text}" opacity=".45"/><rect x="${x + 5}" y="30" width="15" height="5" rx="1" fill="${sc.c[i]}"/>`;
@@ -1815,6 +1976,11 @@ const PRESETS = {
   typography: ["Keep the existing fonts", "Suggest a display, body and accent pairing that matches the tone"],
   conversion_goal: ["Book a demo", "Join an event", "Add to cart", "Download the app", "Contact us"],
   motion_words: ["premium + trust + clarity", "adventure + energy + exploration", "craft + warmth + precision"],
+  where_it_runs: ["Instagram post", "Instagram story", "Paid ad", "A3 print", "Billboard"],
+  brand_character: ["premium", "playful", "authoritative", "energetic", "calm"],
+  visual_direction: ["editorial", "minimal", "luxury", "brutalist", "streetwear", "futuristic", "experimental"],
+  poster_size: ["1080x1350 (4:5 Instagram post)", "1080x1920 (9:16 story)", "1080x1080 (1:1 square)", "A3 portrait", "A4 portrait"],
+  people_policy: [{ label: "Keep the people", value: "Keep the supplied people exactly as they are" }, { label: "No people", value: "NO people, faces, hands or figures anywhere" }],
   purpose: ["Inform", "Persuade", "Seek approval", "Propose a strategy", "Report performance", "Educate"],
   design_personality: ["Premium corporate and executive", "Modern editorial and minimalist", "Luxury and sophisticated", "Bold and contemporary", "Creative and experimental", "Futuristic and technology-driven", "Architectural and structural", "Elegant and refined", "Vibrant and energetic", "Data-driven and analytical", "Academic and research-oriented"],
   design_concept: [
@@ -2071,7 +2237,7 @@ function openModal(id) {
   Object.entries(values).forEach(([v, val]) => { const i = $(`#mVars input[data-var="${v}"]`); if (i) i.value = val; });
   syncPresets();
   currentRole = rolesFor(current).length ? defaultRoleIndex(current) : null;
-  $("#mRoles").hidden = !rolesFor(current).length;
+  $("#mRoles").hidden = !rolesFor(current).length || !vars.includes("role");
   renderRoles();
   currentAud = null;
   $("#mAudience").hidden = !vars.includes("audience");
@@ -2098,7 +2264,7 @@ function openModal(id) {
 const PICKER_VARS = ["role", "audience", "tone", "style", "color_scheme"];
 function renderSchemes() {
   $("#mSchemeName").textContent = currentScheme === null ? (values.color_scheme ? "Custom" : "None selected") : SCHEMES[currentScheme].name;
-  const mode = current && current.kind === "slides" ? "slides" : current && current.kind === "website" ? "web" : "dash";
+  const mode = current && current.schemeGroup === "poster" ? "poster" : current && current.kind === "slides" ? "slides" : current && current.kind === "website" ? "web" : "dash";
   let shown = 0;
   $("#mSchemeGrid").innerHTML = SCHEMES.map((sc, i) => !schemeVisible(sc, current) ? "" : `
     <button type="button" class="style-opt ${i === currentScheme ? "active" : ""}" data-scheme="${i}" aria-pressed="${i === currentScheme}">
