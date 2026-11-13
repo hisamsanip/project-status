@@ -1,0 +1,3 @@
+# Netlify serves only the personal profile site from this repository.
+[build]
+  publish = "profile"
