@@ -39,7 +39,7 @@
     --wrap: 1240px;
 }
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { background: var(--graphite); scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
     margin: 0;
     background: var(--paper);
@@ -114,7 +114,7 @@ ul, ol { list-style: none; }
     text-decoration: none;
     color: var(--on-dark);
 }
-.nav ul { display: flex; gap: 2.2rem; }
+.nav ul { display: flex; gap: 2rem; }
 .nav li a {
     font-family: var(--f-mono);
     font-size: .72rem;
@@ -443,16 +443,19 @@ a.email { background: linear-gradient(var(--cobalt-lt), var(--cobalt-lt)) 0 100%
 a.email:hover { background-size: 100% 1px; }
 .contact .frame img { aspect-ratio: 4 / 5; object-position: 50% 8%; }
 
-/* ---------- Title block footer ---------- */
-.titleblock { border-top: 1px solid var(--line-dark); }
-.titleblock dl {
-    display: grid;
-    grid-template-columns: 2fr 2fr 1fr 1fr;
-}
-.titleblock div { padding: 1.1rem 1.2rem 1.3rem 0; }
-.titleblock div + div { padding-left: 1.2rem; border-left: 1px solid var(--line-dark); }
-.titleblock dt { margin-bottom: .3rem; }
-.titleblock dd { font-size: .92rem; color: var(--on-dark); }
+/* ---------- Footer sign-off ---------- */
+.signoff { border-top: 1px solid var(--line-dark); padding-bottom: env(safe-area-inset-bottom, 0px); }
+.signoff .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .6rem 2rem; padding-block: 1.5rem 1.7rem; }
+.signoff a { text-decoration: none; transition: color .25s; }
+.signoff a:hover { color: var(--on-dark); }
+
+/* ---------- Leadership ---------- */
+.lead-intro { max-width: 40rem; font-size: clamp(1.1rem, 1.5vw, 1.3rem); font-weight: 300; line-height: 1.55; color: var(--on-dark); margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+.pillars { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(2.2rem, 4vw, 3.5rem) clamp(1.8rem, 4vw, 3.5rem); }
+.pillar { border-top: 1px solid var(--on-dark); padding-top: 1.3rem; }
+.pillar .label { color: var(--cobalt-lt); }
+.pillar h3 { font-size: clamp(1.45rem, 2.3vw, 1.95rem); margin-top: .9rem; }
+.pillar p { margin-top: .9rem; color: var(--on-dark-2); font-size: .98rem; line-height: 1.6; }
 
 /* ---------- Motion ---------- */
 @media (prefers-reduced-motion: no-preference) {
@@ -470,6 +473,9 @@ a.email:hover { background-size: 100% 1px; }
 }
 
 /* ---------- Responsive ---------- */
+@media (max-width: 1100px) {
+    .pillars { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 @media (max-width: 960px) {
     .nav ul { gap: 1.4rem; }
     .reg-row { grid-template-columns: 3rem minmax(0, 1fr) minmax(0, 1fr); }
@@ -504,9 +510,7 @@ a.email:hover { background-size: 100% 1px; }
     .level { grid-template-columns: 1fr; gap: 1.1rem; }
     .level-mark { flex-direction: row; align-items: baseline; gap: 1rem; }
     .level-body ul { grid-template-columns: 1fr; }
-    .titleblock dl { grid-template-columns: 1fr 1fr; }
-    .titleblock div:nth-child(3) { padding-left: 0; border-left: 0; }
-    .titleblock div:nth-child(n+3) { border-top: 1px solid var(--line-dark); }
+    .pillars { grid-template-columns: 1fr; }
 }
 @media (max-width: 520px) {
     .expertise { grid-template-columns: 1fr; }
@@ -522,6 +526,7 @@ a.email:hover { background-size: 100% 1px; }
             <a class="mark" href="#top" aria-label="Hisam Sanip, back to top">H&thinsp;S</a>
             <ul>
                 <li><a href="#profile">Profile</a></li>
+                <li><a href="#leadership">Leadership</a></li>
                 <li><a href="#career">Career</a></li>
                 <li><a href="#projects">Projects</a></li>
                 <li><a href="#credentials">Credentials</a></li>
@@ -540,9 +545,9 @@ a.email:hover { background-size: 100% 1px; }
 
     <div class="wrap hero-body">
         <div class="hero-copy">
-            <p class="label rise" style="--i:0">Facilities &amp; Property Manager &middot; Malaysia</p>
+            <p class="label rise" style="--i:0">Head of Facilities &amp; Property Management &middot; Malaysia</p>
             <h1 class="display rise" style="--i:1"><span>Hisam</span><span>Sanip</span></h1>
-            <p class="hero-lead rise" style="--i:2">Twenty-five years keeping buildings working, from chilled water plants and shopping malls to a national housing portfolio.</p>
+            <p class="hero-lead rise" style="--i:2">Twenty-five years keeping buildings working. Today I set the strategy, build the systems and lead the teams behind a national housing portfolio.</p>
             <div class="actions rise" style="--i:3">
                 <a class="btn" href="#contact">Get in touch
                     <svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h14M10 1l4 4-4 4" stroke="currentColor" stroke-width="1.2"/></svg>
@@ -576,14 +581,61 @@ a.email:hover { background-size: 100% 1px; }
             <h2 class="display reveal">A building is handed over once. It is run every day after.</h2>
             <p class="reveal">I am a <strong>Facilities and Property Manager</strong> with extensive experience in the retail industry and in commercial and residential development, covering facilities planning, design, operation and management.</p>
             <p class="reveal">I started as a mechanical engineer installing and commissioning air-conditioning and chilled water plant. Since 2007 I have been on the other side of handover: running shopping malls, an office tower and, today, the facilities and property management of PR1MA's housing complexes.</p>
+            <p class="reveal">My work now is mostly direction: setting strategy, designing operating models and building the team. I also develop my own <strong>AI-assisted systems</strong> to make operations more efficient.</p>
             <ul class="expertise reveal" aria-label="Areas of expertise">
+                <li>Strategic Planning &amp; Operating Models</li>
+                <li>Leadership &amp; Team Development</li>
                 <li>Facilities Management</li>
-                <li>Property Management</li>
+                <li>Property &amp; Strata Management</li>
+                <li>AI &amp; Digital Operations</li>
                 <li>Energy Management</li>
                 <li>Project Management</li>
                 <li>Green Building Technologies</li>
                 <li>Air Conditioning &amp; Mechanical Ventilation</li>
+                <li>Regulatory &amp; Government Liaison</li>
             </ul>
+        </div>
+    </div>
+</section>
+
+<section class="section dark" id="leadership">
+    <div class="wrap">
+        <div class="section-head">
+            <p class="label reveal">Leadership</p>
+            <h2 class="display reveal">Strategy first. Then the systems and the people to deliver it.</h2>
+        </div>
+        <p class="lead-intro reveal">Running a building well is an operational skill. Running a portfolio well is a leadership one. These are the six things I bring to a senior role.</p>
+        <div class="pillars">
+            <article class="pillar reveal">
+                <p class="label">Strategic thinking</p>
+                <h3 class="display">Sets the direction before the detail</h3>
+                <p>Planned how PR1MA moves its complexes from development into long-term maintenance, and prepared the business model for its wholly owned facilities management subsidiary.</p>
+            </article>
+            <article class="pillar reveal">
+                <p class="label">Building from zero</p>
+                <h3 class="display">Comfortable with a blank page</h3>
+                <p>A new subsidiary, a new asset management system and a first set of operating procedures, each taken from idea to working practice across all PR1MA complexes.</p>
+            </article>
+            <article class="pillar reveal">
+                <p class="label">AI and data</p>
+                <h3 class="display">Uses AI hands-on, not only as a sponsor</h3>
+                <p>Has developed several AI-assisted systems to improve operational efficiency, including a project portfolio dashboard, and runs operations from metrics rather than anecdote.</p>
+            </article>
+            <article class="pillar reveal">
+                <p class="label">Stakeholders</p>
+                <h3 class="display">Trusted at ministry and board level</h3>
+                <p>Prepared the cabinet paper and worked with the ministry and legal counsel on PR1MA's exemption from the Strata Management Act 2013.</p>
+            </article>
+            <article class="pillar reveal">
+                <p class="label">People</p>
+                <h3 class="display">Builds the team, then its culture</h3>
+                <p>Coaches and mentors staff across the department, sets shared standards, and invests in team retreats that build trust beyond day-to-day work.</p>
+            </article>
+            <article class="pillar reveal">
+                <p class="label">Judgement</p>
+                <h3 class="display">An engineer's rigour, an operator's realism</h3>
+                <p>Six years installing and commissioning plant means technical decisions, budgets and contractor claims are tested properly before they are approved.</p>
+            </article>
         </div>
     </div>
 </section>
@@ -811,14 +863,11 @@ a.email:hover { background-size: 100% 1px; }
             </figure>
         </div>
     </div>
-    <div class="titleblock">
+    <div class="signoff">
         <div class="wrap">
-            <dl>
-                <div><dt class="label">Title</dt><dd>Hisam Sanip, Professional Profile</dd></div>
-                <div><dt class="label">Discipline</dt><dd>Facilities &amp; Property Management</dd></div>
-                <div><dt class="label">Sheet</dt><dd>A-001</dd></div>
-                <div><dt class="label">Rev.</dt><dd>2026</dd></div>
-            </dl>
+            <span class="label">&copy; 2026 Hisam Sanip</span>
+            <span class="label">Facilities &amp; Property Management</span>
+            <a class="label" href="#top">Back to top &uarr;</a>
         </div>
     </div>
 </footer>
