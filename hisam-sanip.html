@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Hisam Sanip</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Hisam Sanip — Facilities and Property Manager. Twenty-five years across retail, commercial and residential buildings in Malaysia.">
+<meta name="theme-color" content="#24221f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Hanken+Grotesk:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script>document.documentElement.classList.add('js');</script>
+<style>
+/* Layout concept: the page is a drawing set. Hero carries structural grid lines,
+   the career reads as a building section (top floor = today, ground = 2001),
+   projects are a drawing register, the footer is a title block. */
+:root {
+    color-scheme: light;
+    --graphite: #24221f;
+    --graphite-2: #2f2c28;
+    --stone: #e6e3dc;
+    --paper: #f4f2ed;
+    --ink: #1c1b19;
+    --ink-2: #5e5b55;
+    --on-dark: #efece5;
+    --on-dark-2: #aaa59c;
+    --line: rgba(28, 27, 25, .16);
+    --line-dark: rgba(239, 236, 229, .15);
+    --cobalt: #2c41b0;
+    --cobalt-lt: #aebaff;
+
+    --f-display: 'Marcellus', 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    --f-body: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif;
+    --f-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+    --gutter-l: max(24px, env(safe-area-inset-left, 0px));
+    --gutter-r: max(24px, env(safe-area-inset-right, 0px));
+    --wrap: 1240px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--f-body);
+    font-size: 17px;
+    line-height: 1.65;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+h1, h2, h3, p, ul, ol, dl, dd, figure { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 3px; }
+.dark :focus-visible { outline-color: var(--cobalt-lt); }
+
+.wrap {
+    max-width: var(--wrap);
+    margin-inline: auto;
+    padding-left: var(--gutter-l);
+    padding-right: var(--gutter-r);
+}
+.dark { background: var(--graphite); color: var(--on-dark); }
+.stone { background: var(--stone); }
+
+.label {
+    font-family: var(--f-mono);
+    font-size: .72rem;
+    font-weight: 500;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+}
+.dark .label { color: var(--on-dark-2); }
+.display {
+    font-family: var(--f-display);
+    font-weight: 400;
+    letter-spacing: -.012em;
+    line-height: 1.08;
+    text-wrap: balance;
+}
+.section { padding-block: clamp(4.5rem, 10vw, 8.5rem); }
+.section-head {
+    display: grid;
+    grid-template-columns: minmax(0, 11rem) minmax(0, 1fr);
+    gap: 1.5rem 3rem;
+    align-items: baseline;
+    margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
+}
+.section-head h2 { font-size: clamp(2.1rem, 4.6vw, 3.6rem); max-width: 18ch; }
+
+/* ---------- Nav ---------- */
+.nav {
+    position: absolute;
+    inset: 0 0 auto 0;
+    z-index: 5;
+    padding-top: env(safe-area-inset-top, 0px);
+}
+.nav .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-block: 1.6rem;
+}
+.mark {
+    font-family: var(--f-display);
+    font-size: 1.25rem;
+    letter-spacing: .08em;
+    text-decoration: none;
+    color: var(--on-dark);
+}
+.nav ul { display: flex; gap: 2.2rem; }
+.nav li a {
+    font-family: var(--f-mono);
+    font-size: .72rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--on-dark-2);
+    padding-block: .4rem;
+    background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+    transition: color .25s, background-size .35s cubic-bezier(.2, .7, .2, 1);
+}
+.nav li a:hover { color: var(--on-dark); background-size: 100% 1px; }
+
+/* ---------- Hero ---------- */
+.hero { position: relative; overflow: hidden; isolation: isolate; }
+.gridlines {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+.gridlines .wrap {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 5.6rem;
+}
+.gridlines span {
+    position: relative;
+    width: 1.9rem;
+    height: 1.9rem;
+    border: 1px solid var(--line-dark);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-family: var(--f-mono);
+    font-size: .62rem;
+    color: var(--on-dark-2);
+    opacity: .8;
+}
+.gridlines span::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 1px;
+    height: 200vh;
+    background: var(--line-dark);
+    opacity: .55;
+}
+.hero-figure {
+    position: absolute;
+    z-index: 1;
+    top: 3.25rem;
+    bottom: 0;
+    right: max(0px, calc((100vw - var(--wrap)) / 2 - 3rem));
+    width: min(47%, 640px);
+}
+.hero-figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 0;
+    filter: saturate(.92) contrast(1.04);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 30%, #000 74%, transparent 100%), linear-gradient(180deg, transparent 0, #000 16%, #000 78%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(90deg, transparent 0, #000 30%, #000 74%, transparent 100%), linear-gradient(180deg, transparent 0, #000 16%, #000 78%, transparent 100%);
+    mask-composite: intersect;
+}
+.hero-body {
+    position: relative;
+    z-index: 2;
+    padding-top: clamp(10rem, 19vw, 14.5rem);
+    padding-bottom: clamp(3rem, 6vw, 5rem);
+}
+.hero-copy { max-width: 46rem; }
+.hero h1 {
+    font-size: clamp(3.6rem, 11.2vw, 10rem);
+    line-height: .92;
+    letter-spacing: -.028em;
+    margin-top: 1.4rem;
+}
+.hero h1 span { display: block; }
+.hero h1 span + span { padding-left: .52em; }
+.hero-lead {
+    margin-top: 2.4rem;
+    max-width: 30rem;
+    font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+    line-height: 1.55;
+    font-weight: 300;
+    color: var(--on-dark);
+}
+.actions { display: flex; flex-wrap: wrap; gap: .9rem; margin-top: 2.6rem; }
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .8rem;
+    padding: 1rem 1.5rem;
+    font-family: var(--f-mono);
+    font-size: .74rem;
+    font-weight: 500;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--on-dark);
+    background: var(--on-dark);
+    color: var(--graphite);
+    cursor: pointer;
+    transition: background .3s, color .3s, border-color .3s;
+}
+.btn svg { transition: transform .35s cubic-bezier(.2, .7, .2, 1); }
+.btn:hover { background: transparent; color: var(--on-dark); }
+.btn:hover svg { transform: translateX(4px); }
+.btn.ghost { background: transparent; color: var(--on-dark); border-color: var(--line-dark); }
+.btn.ghost:hover { border-color: var(--on-dark); }
+
+.hero-facts {
+    position: relative;
+    z-index: 2;
+    border-top: 1px solid var(--line-dark);
+}
+.hero-facts dl {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem 3rem;
+    padding-block: 1.7rem 2rem;
+}
+.hero-facts dt { margin-bottom: .45rem; }
+.hero-facts dd { font-size: 1rem; line-height: 1.4; color: var(--on-dark); }
+
+/* ---------- Profile ---------- */
+.profile-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(2.5rem, 6vw, 6rem);
+    align-items: start;
+}
+.frame { position: relative; }
+.frame img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: 50% 12%; filter: saturate(.92); }
+.frame figcaption {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: .8rem;
+}
+.profile-copy h2 { font-size: clamp(2.2rem, 4.7vw, 3.9rem); margin-top: 1.3rem; }
+.profile-copy p { margin-top: 1.5rem; max-width: 34rem; color: var(--ink-2); font-size: 1.08rem; }
+.profile-copy p strong { color: var(--ink); font-weight: 500; }
+.expertise {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--ink);
+}
+.expertise li {
+    font-family: var(--f-display);
+    font-size: clamp(1.15rem, 1.9vw, 1.5rem);
+    line-height: 1.25;
+    padding-block: 1.05rem;
+    padding-right: 1rem;
+    border-bottom: 1px solid var(--line);
+}
+
+/* ---------- Career: building section ---------- */
+.tower { position: relative; --rail: 11rem; }
+.tower::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--rail) + 1.5rem);
+    width: 1px;
+    background: var(--ink);
+}
+.lift {
+    position: absolute;
+    left: calc(var(--rail) + 1.5rem - 4px);
+    top: calc(var(--p, 0) * (100% - 9px));
+    width: 9px;
+    height: 9px;
+    background: var(--cobalt);
+    z-index: 1;
+}
+.level {
+    display: grid;
+    grid-template-columns: var(--rail) minmax(0, 1fr);
+    gap: 0 3rem;
+    padding-block: clamp(2.2rem, 4vw, 3.4rem);
+    border-top: 1px solid var(--line);
+}
+.level:first-of-type { border-top: 2px solid var(--ink); }
+.tower-base { border-top: 2px solid var(--ink); padding-top: .9rem; display: flex; justify-content: space-between; gap: 1rem; }
+.level-mark { display: flex; flex-direction: column; gap: .35rem; }
+.level-no {
+    font-family: var(--f-mono);
+    font-size: .78rem;
+    font-weight: 500;
+    letter-spacing: .14em;
+    color: var(--cobalt);
+}
+.level-years {
+    font-family: var(--f-display);
+    font-size: 1.35rem;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+}
+.level-body h3 { font-size: clamp(1.6rem, 3vw, 2.5rem); max-width: 22ch; }
+.level-role { margin-top: .6rem; font-weight: 500; font-size: 1.05rem; }
+.level-place { margin-top: .15rem; }
+.level-body ul {
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .85rem 2.6rem;
+    max-width: 58rem;
+}
+.level-body li {
+    position: relative;
+    padding-left: 1.15rem;
+    color: var(--ink-2);
+    font-size: .98rem;
+    line-height: 1.55;
+}
+.level-body li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: .72em;
+    width: .5rem;
+    height: 1px;
+    background: var(--ink);
+}
+.level-note { margin-top: 1.2rem; max-width: 40rem; font-size: .95rem; color: var(--ink-2); font-style: italic; }
+.level.current .level-years::after {
+    content: "";
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-left: .55rem;
+    border-radius: 50%;
+    background: var(--cobalt);
+    vertical-align: middle;
+    animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse { 50% { opacity: .25; } }
+
+/* ---------- Projects: drawing register ---------- */
+.register { border-top: 1px solid var(--on-dark); }
+.reg-row {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 4fr) minmax(0, 2.2fr) minmax(0, 5fr) minmax(0, 1.8fr);
+    gap: .4rem 2rem;
+    align-items: baseline;
+    padding-block: 1.25rem;
+    border-bottom: 1px solid var(--line-dark);
+    transition: background .3s;
+}
+.reg-row:not(.reg-head):hover { background: var(--graphite-2); }
+.reg-head { padding-block: .8rem; }
+.reg-no { font-family: var(--f-mono); font-size: .78rem; color: var(--cobalt-lt); letter-spacing: .08em; }
+.reg-name { font-family: var(--f-display); font-size: clamp(1.15rem, 1.7vw, 1.45rem); line-height: 1.25; }
+.reg-loc, .reg-scope { font-size: .95rem; color: var(--on-dark-2); line-height: 1.5; }
+.reg-role { font-family: var(--f-mono); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--on-dark); }
+.reg-foot { margin-top: 1.4rem; }
+
+/* ---------- Credentials ---------- */
+.cred-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: clamp(2.5rem, 6vw, 6rem);
+}
+.cred-grid h3 { margin-bottom: 1.2rem; }
+.cred-list { border-top: 1px solid var(--ink); }
+.cred-list li {
+    display: grid;
+    grid-template-columns: 2.6rem minmax(0, 1fr);
+    align-items: baseline;
+    padding-block: 1.15rem;
+    border-bottom: 1px solid var(--line);
+}
+.cred-list .n { font-family: var(--f-mono); font-size: .74rem; color: var(--cobalt); letter-spacing: .08em; }
+.cred-list .t { font-family: var(--f-display); font-size: clamp(1.15rem, 1.8vw, 1.45rem); line-height: 1.3; }
+.cred-list .s { display: block; font-family: var(--f-body); font-size: .92rem; color: var(--ink-2); margin-top: .2rem; }
+.edu { border-top: 1px solid var(--ink); }
+.edu li {
+    display: grid;
+    grid-template-columns: 4rem minmax(0, 1fr);
+    gap: 0 1rem;
+    align-items: baseline;
+    padding-block: 1.15rem;
+    border-bottom: 1px solid var(--line);
+}
+.edu .y { font-family: var(--f-display); font-size: 1.35rem; font-variant-numeric: tabular-nums; }
+.edu .t { font-weight: 500; line-height: 1.4; }
+.edu .s { display: block; font-weight: 400; font-size: .92rem; color: var(--ink-2); }
+
+/* ---------- Contact ---------- */
+.contact-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+    gap: clamp(2.5rem, 6vw, 6rem);
+    align-items: end;
+}
+.contact h2 { font-size: clamp(2.4rem, 6vw, 5rem); margin-top: 1.3rem; max-width: 14ch; }
+.contact p { margin-top: 1.5rem; max-width: 30rem; color: var(--on-dark-2); }
+.email-row {
+    margin-top: 2.6rem;
+    padding-block: 1.4rem;
+    border-block: 1px solid var(--line-dark);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+}
+.email {
+    font-family: var(--f-display);
+    font-size: clamp(1.35rem, 3.4vw, 2.5rem);
+    line-height: 1.2;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    min-width: 0;
+    user-select: all;
+}
+a.email { background: linear-gradient(var(--cobalt-lt), var(--cobalt-lt)) 0 100% / 0 1px no-repeat; transition: background-size .45s cubic-bezier(.2, .7, .2, 1); }
+a.email:hover { background-size: 100% 1px; }
+.contact .frame img { aspect-ratio: 4 / 5; object-position: 50% 8%; }
+
+/* ---------- Title block footer ---------- */
+.titleblock { border-top: 1px solid var(--line-dark); }
+.titleblock dl {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr 1fr;
+}
+.titleblock div { padding: 1.1rem 1.2rem 1.3rem 0; }
+.titleblock div + div { padding-left: 1.2rem; border-left: 1px solid var(--line-dark); }
+.titleblock dt { margin-bottom: .3rem; }
+.titleblock dd { font-size: .92rem; color: var(--on-dark); }
+
+/* ---------- Motion ---------- */
+@media (prefers-reduced-motion: no-preference) {
+    .js .rise { opacity: 0; transform: translateY(22px); animation: rise 1s cubic-bezier(.2, .7, .2, 1) forwards; animation-delay: calc(var(--i, 0) * 110ms + 150ms); }
+    .js .hero-figure { animation: figure 1.8s cubic-bezier(.2, .7, .2, 1) both; }
+    .js .reveal { opacity: 0; transform: translateY(26px); transition: opacity .9s cubic-bezier(.2, .7, .2, 1), transform .9s cubic-bezier(.2, .7, .2, 1); }
+    .js .reveal.in { opacity: 1; transform: none; }
+    .lift { transition: top .25s linear; }
+}
+@keyframes rise { to { opacity: 1; transform: none; } }
+@keyframes figure { from { opacity: 0; transform: scale(1.04); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .level.current .level-years::after { animation: none; }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 960px) {
+    .nav ul { gap: 1.4rem; }
+    .reg-row { grid-template-columns: 3rem minmax(0, 1fr) minmax(0, 1fr); }
+    .reg-head { display: none; }
+    .reg-name { grid-column: 2 / -1; }
+    .reg-loc { grid-column: 2; }
+    .reg-role { grid-column: 3; text-align: right; }
+    .reg-scope { grid-column: 2 / -1; }
+}
+@media (max-width: 820px) {
+    :root { --gutter-l: max(20px, env(safe-area-inset-left, 0px)); --gutter-r: max(20px, env(safe-area-inset-right, 0px)); }
+    body { font-size: 16px; }
+    .nav li:not(.keep) { display: none; }
+    .gridlines { display: none; }
+    .hero-figure { position: relative; top: 0; right: auto; width: 100%; height: 118vw; max-height: 620px; }
+    .hero-figure img {
+        -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 18%, #000 58%, transparent 100%);
+        mask-image: linear-gradient(180deg, transparent 0, #000 18%, #000 58%, transparent 100%);
+        -webkit-mask-composite: source-over;
+        mask-composite: add;
+    }
+    .hero-body { padding-top: 0; margin-top: -24vw; }
+    .hero h1 span + span { padding-left: .3em; }
+    .hero-facts dl { grid-template-columns: 1fr; gap: 1.1rem; }
+    .section-head { grid-template-columns: 1fr; gap: .8rem; }
+    .profile-grid, .cred-grid, .contact-grid { grid-template-columns: 1fr; }
+    .profile-grid .frame { max-width: 26rem; }
+    .contact-grid .frame { max-width: 20rem; order: -1; }
+    .tower { --rail: 0rem; padding-left: 1.4rem; }
+    .tower::before { left: 0; }
+    .lift { left: -4px; }
+    .level { grid-template-columns: 1fr; gap: 1.1rem; }
+    .level-mark { flex-direction: row; align-items: baseline; gap: 1rem; }
+    .level-body ul { grid-template-columns: 1fr; }
+    .titleblock dl { grid-template-columns: 1fr 1fr; }
+    .titleblock div:nth-child(3) { padding-left: 0; border-left: 0; }
+    .titleblock div:nth-child(n+3) { border-top: 1px solid var(--line-dark); }
+}
+@media (max-width: 520px) {
+    .expertise { grid-template-columns: 1fr; }
+    .btn { flex: 1 1 auto; justify-content: space-between; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero dark" id="top">
+    <nav class="nav" aria-label="Sections">
+        <div class="wrap">
+            <a class="mark" href="#top" aria-label="Hisam Sanip, back to top">H&thinsp;S</a>
+            <ul>
+                <li><a href="#profile">Profile</a></li>
+                <li><a href="#career">Career</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#credentials">Credentials</a></li>
+                <li class="keep"><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="gridlines" aria-hidden="true">
+        <div class="wrap"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span></div>
+    </div>
+
+    <figure class="hero-figure">
+        <img src="images/hisam-sanip-hero.jpg" width="1000" height="1400" alt="Hisam Sanip in a black suit and blue striped tie, standing with one hand in his pocket">
+    </figure>
+
+    <div class="wrap hero-body">
+        <div class="hero-copy">
+            <p class="label rise" style="--i:0">Facilities &amp; Property Manager &middot; Malaysia</p>
+            <h1 class="display rise" style="--i:1"><span>Hisam</span><span>Sanip</span></h1>
+            <p class="hero-lead rise" style="--i:2">Twenty-five years keeping buildings working, from chilled water plants and shopping malls to a national housing portfolio.</p>
+            <div class="actions rise" style="--i:3">
+                <a class="btn" href="#contact">Get in touch
+                    <svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true"><path d="M0 5h14M10 1l4 4-4 4" stroke="currentColor" stroke-width="1.2"/></svg>
+                </a>
+                <a class="btn ghost" href="#career">View career</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-facts rise" style="--i:4">
+        <div class="wrap">
+            <dl>
+                <div><dt class="label">Current role</dt><dd>Head, Facilities and Property Management, Perbadanan PR1MA Malaysia</dd></div>
+                <div><dt class="label">In practice since</dt><dd>2001, across retail, commercial and residential buildings</dd></div>
+                <div><dt class="label">Trained as</dt><dd>Mechanical engineer, Universiti Teknologi MARA</dd></div>
+            </dl>
+        </div>
+    </div>
+</header>
+
+<main>
+
+<section class="section stone" id="profile">
+    <div class="wrap profile-grid">
+        <figure class="frame reveal">
+            <img src="images/hisam-sanip-profile.jpg" width="820" height="1090" alt="Portrait of Hisam Sanip buttoning his suit jacket" loading="lazy">
+            <figcaption><span class="label">Fig. 01</span><span class="label">Studio portrait</span></figcaption>
+        </figure>
+        <div class="profile-copy">
+            <p class="label reveal">Profile</p>
+            <h2 class="display reveal">A building is handed over once. It is run every day after.</h2>
+            <p class="reveal">I am a <strong>Facilities and Property Manager</strong> with extensive experience in the retail industry and in commercial and residential development, covering facilities planning, design, operation and management.</p>
+            <p class="reveal">I started as a mechanical engineer installing and commissioning air-conditioning and chilled water plant. Since 2007 I have been on the other side of handover: running shopping malls, an office tower and, today, the facilities and property management of PR1MA's housing complexes.</p>
+            <ul class="expertise reveal" aria-label="Areas of expertise">
+                <li>Facilities Management</li>
+                <li>Property Management</li>
+                <li>Energy Management</li>
+                <li>Project Management</li>
+                <li>Green Building Technologies</li>
+                <li>Air Conditioning &amp; Mechanical Ventilation</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="section" id="career">
+    <div class="wrap">
+        <div class="section-head">
+            <p class="label reveal">Career &middot; Section A&ndash;A</p>
+            <h2 class="display reveal">Six floors, built from the plant room up.</h2>
+        </div>
+
+        <div class="tower" id="tower">
+            <span class="lift" aria-hidden="true"></span>
+
+            <article class="level current reveal">
+                <div class="level-mark"><span class="level-no">LEVEL 06</span><span class="level-years">2014 &ndash; Present</span></div>
+                <div class="level-body">
+                    <h3 class="display">Perbadanan PR1MA Malaysia</h3>
+                    <p class="level-role">Head, Facilities and Property Management</p>
+                    <p class="label level-place">Petaling Jaya</p>
+                    <ul>
+                        <li>Set the facilities management strategy that carries PR1MA complexes from the development phase into the maintenance phase.</li>
+                        <li>Prepared and established the business model for PR1MA Facilities Management Sdn Bhd, the wholly owned subsidiary delivering a full spectrum of facilities and property management services.</li>
+                        <li>Manage completed strata developments through the Developer Management Period until a Joint Management Body or Management Corporation is formed under the Strata Management Act 2013.</li>
+                        <li>Led the Integrated Asset and Facilities Management System on JDE: complaint management, preventive maintenance, work orders and dashboard reporting of operational metrics.</li>
+                        <li>Established Standard Operating Procedures to standardise facilities management across all PR1MA complexes, and contributed to the PR1MA Housing Guidelines.</li>
+                        <li>Supported the request for exemption from the Strata Management Act 2013, including the cabinet paper, ministry liaison and drafting of the Exemption Order.</li>
+                        <li>Monitor and control the departmental budget, and coach and mentor staff within the department.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="level reveal">
+                <div class="level-mark"><span class="level-no">LEVEL 05</span><span class="level-years">2012 &ndash; 2014</span></div>
+                <div class="level-body">
+                    <h3 class="display">Setia City Mall</h3>
+                    <p class="level-role">Building Manager, Compass Property Management Sdn Bhd</p>
+                    <p class="label level-place">Setia Alam</p>
+                    <ul>
+                        <li>Managed, maintained and kept up the mall and its facilities to statutory, health, environmental and safety standards, within optimal resources and budget.</li>
+                        <li>Supervised all contractors and suppliers and monitored their service delivery.</li>
+                        <li>Carried out maintenance inspection and planning, root cause investigation and identification of insurance risks.</li>
+                        <li>Assisted in developing the annual operating and capital expenditure budget.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="level reveal">
+                <div class="level-mark"><span class="level-no">LEVEL 04</span><span class="level-years">2011 &ndash; 2012</span></div>
+                <div class="level-body">
+                    <h3 class="display">Glenmarie Asset Management Sdn Bhd</h3>
+                    <p class="level-role">Assistant Manager, Operations</p>
+                    <p class="label level-place">Shah Alam</p>
+                    <ul>
+                        <li>Monitored facilities and property management services for properties owned by the DRB-HICOM Group, and gave technical support to business development.</li>
+                        <li>Building Manager for Menara UniAsia, a 22-storey tower on Jalan Sultan Ismail, Kuala Lumpur.</li>
+                        <li>Set up the operational team and standard operating procedures for Integrated Facilities Management at IUCAM Village, Pekan, Pahang.</li>
+                        <li>Prepared documentation and supported audits for ISO 9001, OSH 18001 and ISO 14001.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="level reveal">
+                <div class="level-mark"><span class="level-no">LEVEL 03</span><span class="level-years">2009 &ndash; 2011</span></div>
+                <div class="level-body">
+                    <h3 class="display">Alamanda Shopping Centre</h3>
+                    <p class="level-role">Operations &amp; Housekeeping Executive, Suria KLCC Sdn Bhd</p>
+                    <p class="label level-place">Putrajaya</p>
+                    <ul>
+                        <li>Led the technician team and assisted the Operations Manager in day-to-day running of the complex.</li>
+                        <li>Monitored security and housekeeping, and managed service contractors.</li>
+                    </ul>
+                    <p class="level-note">Suria KLCC took over management of Alamanda in August 2009 under a corporate alignment. The work on site continued without a break.</p>
+                </div>
+            </article>
+
+            <article class="level reveal">
+                <div class="level-mark"><span class="level-no">LEVEL 02</span><span class="level-years">2007 &ndash; 2009</span></div>
+                <div class="level-body">
+                    <h3 class="display">Alamanda Shopping Centre</h3>
+                    <p class="level-role">Senior Executive, Operations, Putrajaya Holdings Sdn Bhd</p>
+                    <p class="label level-place">Putrajaya</p>
+                    <ul>
+                        <li>Kept mechanical and electrical equipment operating in good condition through the Building Management System.</li>
+                        <li>Advised tenants on technical matters during shop fit-out.</li>
+                        <li>Prepared procurement documentation, bills of quantity and specifications for building maintenance.</li>
+                        <li>Handled customer complaints relating to operations and maintenance of the complex.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <article class="level reveal">
+                <div class="level-mark"><span class="level-no">LEVEL 01</span><span class="level-years">2001 &ndash; 2007</span></div>
+                <div class="level-body">
+                    <h3 class="display">Pathfinder M&amp;E Sdn Bhd</h3>
+                    <p class="level-role">Project Engineer, then Project Manager</p>
+                    <p class="label level-place">Petaling Jaya</p>
+                    <ul>
+                        <li>Installed, commissioned and maintained air-conditioning and mechanical ventilation systems for government, university and data centre buildings.</li>
+                        <li>Delivered the centralised chilled water plant at KL Sentral as Project Manager.</li>
+                    </ul>
+                </div>
+            </article>
+
+            <div class="tower-base"><span class="label">Ground &middot; 2001</span><span class="label">B.Eng (Hons) Mechanical, UiTM</span></div>
+        </div>
+    </div>
+</section>
+
+<section class="section dark" id="projects">
+    <div class="wrap">
+        <div class="section-head">
+            <p class="label reveal">Projects &middot; Register</p>
+            <h2 class="display reveal">Engineering work, 2001 to 2007.</h2>
+        </div>
+
+        <div class="register reveal" role="table" aria-label="Project register">
+            <div class="reg-row reg-head" role="row">
+                <span class="label" role="columnheader">No.</span>
+                <span class="label" role="columnheader">Project</span>
+                <span class="label" role="columnheader">Location</span>
+                <span class="label" role="columnheader">Scope</span>
+                <span class="label" role="columnheader">Role</span>
+            </div>
+            <div class="reg-row" role="row">
+                <span class="reg-no" role="cell">P-01</span>
+                <span class="reg-name" role="cell">Centralised Chilled Water Plant</span>
+                <span class="reg-loc" role="cell">KL Sentral, Kuala Lumpur</span>
+                <span class="reg-scope" role="cell">Installation, commissioning and maintenance of chillers, cooling towers, pipework, electrical switchboard, HT switchgear, transformer and plant management system.</span>
+                <span class="reg-role" role="cell">Project Manager</span>
+            </div>
+            <div class="reg-row" role="row">
+                <span class="reg-no" role="cell">P-02</span>
+                <span class="reg-name" role="cell">Jabatan Peguam Negara, 4G7</span>
+                <span class="reg-loc" role="cell">Putrajaya</span>
+                <span class="reg-scope" role="cell">Installation of air-conditioning and mechanical ventilation systems.</span>
+                <span class="reg-role" role="cell">Project Manager</span>
+            </div>
+            <div class="reg-row" role="row">
+                <span class="reg-no" role="cell">P-03</span>
+                <span class="reg-name" role="cell">Alamanda Putrajaya, Parcel Z9</span>
+                <span class="reg-loc" role="cell">Putrajaya</span>
+                <span class="reg-scope" role="cell">Servicing and maintenance of air-conditioning and mechanical ventilation systems during the Defect Liability Period.</span>
+                <span class="reg-role" role="cell">Project Manager</span>
+            </div>
+            <div class="reg-row" role="row">
+                <span class="reg-no" role="cell">P-04</span>
+                <span class="reg-name" role="cell">Energy Transfer Station</span>
+                <span class="reg-loc" role="cell">Universiti Teknologi Petronas</span>
+                <span class="reg-scope" role="cell">Air-conditioning and mechanical ventilation, electrical switchboard, underground chilled water pipework and civil work.</span>
+                <span class="reg-role" role="cell">Project Engineer</span>
+            </div>
+            <div class="reg-row" role="row">
+                <span class="reg-no" role="cell">P-05</span>
+                <span class="reg-name" role="cell">Pusat Kawalan MEASAT 3</span>
+                <span class="reg-loc" role="cell">Cyberjaya</span>
+                <span class="reg-scope" role="cell">Installation and commissioning of air-conditioning and mechanical ventilation systems.</span>
+                <span class="reg-role" role="cell">Project Engineer</span>
+            </div>
+            <div class="reg-row" role="row">
+                <span class="reg-no" role="cell">P-06</span>
+                <span class="reg-name" role="cell">Data Centres, Packages 4G1, 4G3 and 4G4</span>
+                <span class="reg-loc" role="cell">Putrajaya</span>
+                <span class="reg-scope" role="cell">Air-conditioning and mechanical ventilation, electrical switchboard, UPS, FE-13 system and architectural work.</span>
+                <span class="reg-role" role="cell">Project Engineer</span>
+            </div>
+            <div class="reg-row" role="row">
+                <span class="reg-no" role="cell">P-07</span>
+                <span class="reg-name" role="cell">Package 3B2</span>
+                <span class="reg-loc" role="cell">Universiti Teknologi Petronas</span>
+                <span class="reg-scope" role="cell">Air-conditioning and mechanical ventilation, compressed lab air and fume hoods.</span>
+                <span class="reg-role" role="cell">Project Engineer</span>
+            </div>
+        </div>
+        <p class="label reg-foot reveal">All projects delivered with Pathfinder M&amp;E Sdn Bhd</p>
+    </div>
+</section>
+
+<section class="section stone" id="credentials">
+    <div class="wrap">
+        <div class="section-head">
+            <p class="label reveal">Credentials</p>
+            <h2 class="display reveal">Registered, certified, and trained as an engineer.</h2>
+        </div>
+        <div class="cred-grid">
+            <div class="reveal">
+                <h3 class="label">Certification and membership</h3>
+                <ol class="cred-list">
+                    <li><span class="n">C-1</span><span class="t">Certified Facilities Management Manager</span></li>
+                    <li><span class="n">C-2</span><span class="t">Professional Technologist</span></li>
+                    <li><span class="n">C-3</span><span class="t">Registered Property Manager<span class="s">Under BOVEAP</span></span></li>
+                    <li><span class="n">C-4</span><span class="t">Certified Energy Manager<span class="s">ASEAN Energy Manager Scheme (AEMAS)</span></span></li>
+                    <li><span class="n">C-5</span><span class="t">Associate Member<span class="s">Malaysia Institute of Property and Facilities Management</span></span></li>
+                    <li><span class="n">C-6</span><span class="t">Member<span class="s">Board of Engineers Malaysia (BEM)</span></span></li>
+                </ol>
+            </div>
+            <div class="reveal">
+                <h3 class="label">Education</h3>
+                <ol class="edu">
+                    <li><span class="y">2001</span><span class="t">Bachelor (Hons) in Mechanical Engineering<span class="s">Universiti Teknologi MARA, Shah Alam</span></span></li>
+                    <li><span class="y">1999</span><span class="t">Diploma in Mechanical Engineering<span class="s">Universiti Teknologi MARA, Shah Alam</span></span></li>
+                    <li><span class="y">1993</span><span class="t">Sijil Pelajaran Malaysia<span class="s">Sekolah Menengah Sains Muar, Johor</span></span></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<footer class="dark contact" id="contact">
+    <div class="wrap section">
+        <div class="contact-grid">
+            <div>
+                <p class="label reveal">Contact</p>
+                <h2 class="display reveal">Let&rsquo;s talk about your building.</h2>
+                <p class="reveal">For roles, advisory work or a conversation about facilities and property management. References are available on request.</p>
+                <div class="email-row reveal">
+                    <span class="email" id="email" data-u="hisamsanip" data-d="gmail.com">hisamsanip [at] gmail.com</span>
+                    <button class="btn ghost" id="copy" type="button" hidden>Copy email</button>
+                </div>
+            </div>
+            <figure class="frame reveal">
+                <img src="images/hisam-sanip-portrait.jpg" width="700" height="940" alt="Hisam Sanip, front-facing portrait in a black suit" loading="lazy">
+            </figure>
+        </div>
+    </div>
+    <div class="titleblock">
+        <div class="wrap">
+            <dl>
+                <div><dt class="label">Title</dt><dd>Hisam Sanip, Professional Profile</dd></div>
+                <div><dt class="label">Discipline</dt><dd>Facilities &amp; Property Management</dd></div>
+                <div><dt class="label">Sheet</dt><dd>A-001</dd></div>
+                <div><dt class="label">Rev.</dt><dd>2026</dd></div>
+            </dl>
+        </div>
+    </div>
+</footer>
+
+<script>
+(function () {
+    // Scroll reveals: content stays visible if observers are unavailable.
+    var items = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+            });
+        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+        items.forEach(function (el) { io.observe(el); });
+    } else {
+        items.forEach(function (el) { el.classList.add('in'); });
+    }
+
+    // The lift: a marker that travels the building section as you scroll it.
+    var tower = document.getElementById('tower');
+    var ticking = false;
+    function place() {
+        ticking = false;
+        var r = tower.getBoundingClientRect();
+        var mid = window.innerHeight * 0.5;
+        var p = (mid - r.top) / r.height;
+        tower.style.setProperty('--p', Math.max(0, Math.min(1, p)).toFixed(4));
+    }
+    window.addEventListener('scroll', function () {
+        if (!ticking) { ticking = true; requestAnimationFrame(place); }
+    }, { passive: true });
+    window.addEventListener('resize', place);
+    place();
+
+    // Email is assembled here so the address is not sitting in the markup for scrapers.
+    var el = document.getElementById('email');
+    var addr = el.getAttribute('data-u') + '@' + el.getAttribute('data-d');
+    var a = document.createElement('a');
+    a.className = 'email';
+    a.id = 'email';
+    a.href = 'mailto:' + addr;
+    a.textContent = addr;
+    el.replaceWith(a);
+
+    var btn = document.getElementById('copy');
+    btn.hidden = false;
+    btn.addEventListener('click', function () {
+        function done() {
+            btn.textContent = 'Copied';
+            setTimeout(function () { btn.textContent = 'Copy email'; }, 1800);
+        }
+        function select() {
+            var range = document.createRange();
+            range.selectNodeContents(a);
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+            btn.textContent = 'Selected, press copy';
+            setTimeout(function () { btn.textContent = 'Copy email'; }, 2200);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(addr).then(done, select);
+        } else { select(); }
+    });
+})();
+</script>
+</body>
+</html>
