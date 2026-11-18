@@ -363,6 +363,7 @@
     <button type="button" class="create-tile" data-jump="Infographic"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="9" y="5" width="26" height="34" rx="3"/><circle cx="17" cy="14" r="4"/><path d="M24 12h6M24 16h4M15 32v-6M22 32v-10M29 32v-8"/></svg><span><b>Infographic</b><small>Data, processes and comparisons</small><span class="n"></span></span></button>
     <button type="button" class="create-tile" data-jump="Visual"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="5" y="8" width="34" height="28" rx="3"/><circle cx="15" cy="17" r="3.5"/><path d="M5 31l10-9l8 7l6-5l10 8"/></svg><span><b>Visual</b><small>Images, posters and social graphics</small><span class="n"></span></span></button>
     <button type="button" class="create-tile" data-jump="Dashboard"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="5" y="6" width="34" height="32" rx="3"/><path d="M5 14h34M12 32v-6M18 32v-10M24 32v-4"/><circle cx="32" cy="25" r="5"/></svg><span><b>Dashboard</b><small>KPIs, scorecards and project health</small><span class="n"></span></span></button>
+    <button type="button" class="create-tile" data-jump="Website"><svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="5" y="7" width="34" height="30" rx="3"/><path d="M5 15h34M12 29l6-7 5 5 4-4 5 6"/><circle cx="10" cy="11" r="1"/><circle cx="15" cy="11" r="1"/></svg><span><b>Website</b><small>Landing pages and cinematic upgrades</small><span class="n"></span></span></button>
   </div>
 </section>
 
@@ -927,6 +928,161 @@ The objective is not simply to make the slides look attractive. The objective is
       "Include print-safe margins and strong contrast so it reads from a distance.",
       "Avoid more than 3 typefaces, tiny text and busy backgrounds behind text."],
     output: "one finished poster in the stated format; if you cannot render images, a layout spec with exact text, hierarchy, colours and imagery" },
+  { id: "poster-rebuild", cat: "Visual", kind: "image", schemeGroup: "poster", title: "Poster Rebuild (from a rough draft)",
+    desc: "Attach a messy poster and have it rebuilt around one strong idea, with exact copy, a clear hierarchy and the brand intact.",
+    tags: ["poster", "image", "rebuild", "art direction", "colour scheme"],
+    tip: "Attach your rough poster image first (paperclip in ChatGPT, Gemini or Copilot, which can generate images). Fill in what you know; blank lines are inferred from the poster. Always read the finished poster word by word, because image tools can still misspell text. Claude can't paint images, so it will write an image prompt or an SVG.",
+    objective: "Rebuild a rough, messy poster into one finished, art-directed poster built around a single strong idea, with the exact copy and the brand intact.",
+    attachMarker: "\n\nTHE BRIEF", noTesting: true,
+    defaults: {
+      poster_purpose: "Infer from the attached rough poster",
+      where_it_runs: "Infer from the format of the attached poster",
+      poster_audience: "Infer from the attached poster and its purpose",
+      poster_goal: "Infer from the attached poster what the viewer should think, feel or do",
+      core_message: "Infer the one-sentence message from the attached poster",
+      required_copy: "All the text in the attached poster, word for word, with every price, date and detail exactly as written",
+      poster_cta: "The call to action in the attached poster, if any. Do not invent one",
+      brand_name: "The brand shown in the attached poster. Do not invent one",
+      brand_character: "Infer from the attached poster and its purpose",
+      visual_direction: "Choose the direction that best suits the idea and the brand",
+      poster_size: "The format of the attached poster, unless a size is given here",
+      assets_supplied: "The logo, product, people and other assets visible in the attached poster",
+      keep_elements: "The mandatory copy, the logo and the product",
+      remove_elements: "Anything that does not serve the idea",
+      people_policy: "Keep the supplied people exactly as they are" },
+    raw: `ROLE
+You are the creative director of a leading design studio. You have art-directed award-winning posters, campaigns, editorial layouts and brand launches across fashion, food, sport, music, health, tech and luxury. You think in ideas first and pixels second. You are ruthless about clarity and allergic to clutter.
+
+WHAT I'M GIVING YOU
+The attached image is a rough, messy poster. Treat it as a brief written in pictures: read it for the subject, the offer, the facts, the brand elements and the assets I already have. Then put it aside. Do not copy its layout, its type choices, its effects, its spacing or its mistakes. You are not polishing it. You are finding the one good idea buried inside it and rebuilding the poster from a blank canvas around that idea.
+
+If there is no image attached, reply with exactly this and nothing else:
+"Attach the rough poster you want rebuilt and I'll take it from there."
+
+THE BRIEF
+Purpose: {{poster_purpose}}
+Where it will run: {{where_it_runs}}
+Audience: {{poster_audience}}
+Goal: {{poster_goal}}
+Core message: {{core_message}}
+Copy that must appear, word for word: {{required_copy}}
+Call to action: {{poster_cta}}
+Brand: {{brand_name}}
+Brand character: {{brand_character}}
+Colours: {{color_scheme}}
+Visual direction: {{visual_direction}}
+Size: {{poster_size}}
+Assets supplied: {{assets_supplied}}
+Keep no matter what: {{keep_elements}}
+Get rid of: {{remove_elements}}
+People policy: {{people_policy}}
+
+Where a line is left blank, infer the most sensible choice from the reference and the purpose. Never fabricate a price, date, discount, statistic, medical or legal claim, web address, social handle, logo, award or certification that I did not give you.
+
+STEP 1: READ BEFORE YOU DRAW (do this silently, don't print it)
+Work out:
+- the single most important thing this poster must say
+- the strongest visual asset available (a product, a place, a shape, a headline)
+- the one action the viewer should take
+- which text is mandatory and which is filler
+- exactly why the rough version feels amateur: weak hierarchy, too many things shouting at once, poor type, random colour, uneven spacing, low contrast, stock effects, no clear focal point
+- what is worth keeping from the original thinking and what gets thrown away
+Use these answers to make every decision that follows.
+
+STEP 2: ONE IDEA
+Build the entire poster around one hero element and one visual concept that lands the message instantly. That concept might be extreme scale, a surprising crop, type that physically interacts with the subject, confident negative space, a strict editorial grid, or a visual metaphor tied to the purpose. Pick one. Never stack several ideas on top of each other.
+
+Then set the reading order, and make it unmissable within one second even at phone-feed size:
+1. Hero: the dominant image, product, headline or visual idea.
+2. Message: the key line, understood immediately.
+3. Support: date, offer, details, call to action.
+4. Signature: the brand mark, present but never fighting the hero.
+
+The headline, the product, the logo, the CTA and any decoration must NOT carry equal weight. One hero. One promise. One path for the eye.
+
+STEP 3: LAYOUT
+- Sit everything on an underlying grid, even when the final composition is asymmetric or unconventional.
+- Push scale contrast hard: the hero is huge, support text is small, nothing lives in the middle.
+- Keep margins, alignments and spacing intervals consistent from edge to edge.
+- Balance asymmetrically and deliberately. Every weight should feel placed, not dropped.
+- Add depth only when the idea needs it, through overlap, scale, focus and light.
+- Keep faces, products, logos and text inside the safe area for the chosen size.
+- No accidental tangents, no elements kissing the frame by mistake, no cramped corners.
+- Don't centre everything out of habit. Choose the alignment that makes the idea stronger.
+- Empty space is doing a job. Don't fill it because it's there.
+
+STEP 4: TYPE
+Typography is a headline act here, not a caption.
+- One display typeface with real character, plus one supporting typeface only if genuinely needed.
+- No outlines, drop shadows, glows, bevels, 3D, warping, arching or other text effects.
+- Clear, obvious steps between headline, sub-headline, body, CTA and small print.
+- Everything important is legible at a glance on a phone.
+- Sensible line lengths. Never shrink long copy into an unreadable slab.
+- No placeholder words, invented letters, random symbols or gibberish, ever.
+- Reproduce every piece of mandatory copy exactly: spelling, punctuation, capitals, numbers, dates.
+- Do not rewrite, trim or drop mandatory copy unless I've said you can.
+- Bilingual posters get a clear hierarchy between the two languages; neither is decoration.
+- Arabic is set right-to-left with correctly joined letterforms, correct punctuation and natural breaks. Never mirrored, never distorted.
+
+STEP 5: SUBJECT AND PRODUCT TRUTH
+- Apply the People policy from the brief. If people are kept, preserve identity, features, skin tone, expression, pose, clothing and every recognisable detail unless I've asked for a change. If the policy is no people, represent the subject through objects, places, materials, shapes or type instead, with no figures, silhouettes, hands or characters anywhere.
+- Products keep their exact shape, proportions, colours, materials, packaging, label and logo.
+- Never swap the real subject for a generic AI version of it.
+- No duplicated objects, warped anatomy, extra fingers, melted packaging, wrong reflections or impossible perspective.
+- Match light direction, shadow softness, colour temperature, perspective, depth of field and grain across everything you composite.
+- Ground the subject with believable contact shadows and reflections.
+- Skin, food, fabric, metal, glass and card should look like the real material. No plastic sheen, no over-sharpening.
+- If the source image is weak, improve it gently without changing what it is.
+
+STEP 6: COLOUR AND LIGHT
+Use the brief's colours as a disciplined palette: one dominant background, one or two supporting tones, one accent with a job.
+- The accent points at the message or the CTA and nowhere else.
+- Text always separates cleanly from its background.
+- Bold and legible, never harsh or oversaturated.
+- Consistent highlights, shadows and grading across the whole piece.
+- Gradients, glow, grain, blur and texture only when the chosen direction genuinely calls for them.
+- Exact hex values are exact. Protect them.
+
+STEP 7: BRAND DISCIPLINE
+- The result should feel like it could only belong to this brand, not a template with a logo pasted on at the end.
+- Logo at a sensible size with breathing room. Never stretched, redrawn, recoloured or invented.
+- Legal, promotional and contact details stay in, but stay quiet.
+- No fake stars, reviews, badges, seals, awards, UI chrome, social icons or claims.
+- Avoid the tired clichés of the industry unless you can turn one into something fresh and relevant.
+- Tone follows goal: premium is restrained, energetic is dynamic, healthcare is credible, food is appetising, fashion is editorial.
+
+STEP 8: CUT THE NOISE
+Remove anything that isn't communicating, supporting the hierarchy or serving the idea: stray objects, gradient soup, particles, sparks, smoke, light streaks, lens flares, glows, fake 3D, decorative lines, arrows, borders, frames, ribbons, badges, icon clutter, repeated information, competing CTAs, meaningless microtext and template ornaments.
+No over-processed skin, no oversaturated food, no warped products, no unreal materials, no elements added just to make the canvas feel busy.
+Then commit to ONE memorable move (a surprising crop, dramatic scale, type meeting image, brave negative space, a striking composition) and execute it cleanly, without wrapping it in extra effects.
+
+STEP 9: OUTPUT
+- Design natively at the requested size and ratio. Don't design something else and crop it.
+- Use the whole canvas with intent, edge to edge.
+- Keep all essential content inside platform-safe margins.
+- It must work as a thumbnail and at full size.
+- Crisp edges, clean masking, real detail, controlled texture, professional grading.
+- High resolution and ready for the stated platform or print.
+- Deliver one finished poster only. No moodboard, no contact sheet, no wireframe, no before-and-after, no device or wall mockup unless asked.
+- No labels, measurements, crop marks or presentation frames in the artwork.
+
+THE STANDARD
+Bold. Clear. Premium. Contemporary. Intentional. Memorable.
+It should look art-directed by a top human designer, not assembled from a template or drowned by an image generator. Stop the scroll with one strong idea, never with noise. Don't improve the original. Take it apart, throw away the noise, find the strongest idea, and rebuild.
+
+BEFORE YOU FINISH, CHECK
+- Is the idea understood in one second?
+- Is there exactly one hero?
+- Is the main message readable at phone size?
+- Does the eye travel in the order you intended?
+- Does every element earn its place?
+- Are margins, spacing and alignment consistent?
+- Is every supplied word exact, with no gibberish?
+- Are the logo, product, people (if any) and brand colours accurate?
+- Are light, shadow, scale and perspective believable?
+- Does it feel like this brand, not a template?
+- Would deleting any decorative element make it clearer? Then delete it.
+Last test: strip everything except the hero and the main message. If the idea still lands, you're done. If not, strengthen the concept before you finish.` },
   { id: "social-graphic", cat: "Visual", kind: "image", title: "Social Media Graphic",
     desc: "Scroll-stopping post or story graphic for any platform.",
     tags: ["social", "image", "style"], role: "Social Media Creative",
@@ -1016,6 +1172,320 @@ The objective is not simply to make the slides look attractive. The objective is
       "Include React functional components, reusable UI components, Lucide icons and an organised project structure (components, pages, hooks, data, styles).",
       "Avoid copying any reference site, generic admin templates, default framework styling, rainbow gradients, emoji used as icons, overused glassmorphism, walls of text, dead links, placeholder pages and lorem ipsum."],
     output: "a complete, runnable frontend project: first five lines stating your assumptions, then the design system (colours, type scale, spacing), then the file tree, then the full code for every file, then short notes on how to run it. Before you finish, review every page at desktop and mobile width against this brief, fix what falls short, and list what you changed" },
+
+  { id: "cinematic-website", cat: "Website", kind: "website", title: "Cinematic Website Enhancement",
+    desc: "Elevate an existing site with a cinematic loader, hero, scroll story, motion and a strong final call to action, without a rebuild.",
+    tags: ["website", "motion", "cinematic", "landing page", "colour scheme"], role: "Interaction Designer & Creative Technologist",
+    tip: "Attach the site's code or paste its URL (use the Attached document section below). The prompt improves what exists and keeps your content, branding and functionality. Claude Code, ChatGPT and Gemini Canvas can edit the code directly.",
+    objective: "Elevate an existing website with a premium, cinematic digital experience (loader, hero, scroll story, motion and a strong final call to action) without rebuilding it.",
+    attachMarker: "\n\n## 1. Cinematic Loading Experience",
+    defaults: { site_url: "The site's code or URL is attached or linked in this chat", site_tone: "premium & cinematic", typography: "Keep the existing fonts", motion_words: "2 to 4 words of your choice that match the tone above (state them before you start)" },
+    raw: `# Master Prompt: Cinematic Website Enhancement
+
+Act as {{role}}.
+
+Improve the existing {{website_name}} website rather than rebuilding it from scratch. Preserve the current content, branding, structure, imagery, and key functionality, but significantly elevate the website with a premium, cinematic digital experience.
+
+The goal is to make the website feel like a high-end {{campaign_type}} combined with a modern, professional microsite — immersive, energetic, sophisticated, and memorable.
+
+## PROJECT CONFIG
+
+- Website name / brand: {{website_name}}
+- Website type: {{website_type}}
+- Existing website (code or URL): {{site_url}}
+- Tone: {{site_tone}}
+- Colour palette: {{color_scheme}}
+- Typography: {{typography}}
+- Primary conversion goal: {{conversion_goal}}
+- Language of any new copy: {{output_language}}
+
+Whichever colour palette is chosen, the accent colour should be used sparingly and consistently — on primary CTAs, key highlights, and active states — never scattered across the whole page.
+
+## 1. Cinematic Loading Experience
+
+Create a short, elegant opening sequence when the website loads:
+
+- Display the brand identity/logo with subtle cinematic motion.
+- Use a brief fade, scale, or directional reveal rather than a long loading animation.
+- Transition smoothly into the hero section.
+- Never make users wait unnecessarily — include a hard fallback (under ~1.5–2s) so slow connections are never blocked.
+
+## 2. Hero Section
+
+Transform the existing hero into the visual centerpiece of the website.
+
+Use:
+
+- Full-screen imagery/video where available.
+- Subtle cinematic zoom on the background.
+- Layered foreground/background movement.
+- Slow parallax movement.
+- Animated headline reveal.
+- Staggered appearance of supporting text and CTA buttons.
+- Subtle atmospheric depth such as light movement, grain, or gradient overlays where appropriate.
+
+The hero should feel like the opening shot of a film for this brand. The animation must remain elegant and professional — not like a gaming website.
+
+## 3. Scroll Choreography
+
+Design the entire website as a continuous visual journey.
+
+As users scroll:
+
+- Sections should reveal progressively.
+- Headlines should animate into position.
+- Images should softly scale, slide, or reveal through masks.
+- Cards should appear with subtle staggered timing.
+- Background elements should move at different speeds to create depth.
+- Use pinned sections only where they genuinely improve storytelling.
+- Create smooth transitions between major sections.
+
+Avoid animating everything simultaneously. Every animation must have a purpose.
+
+## 4. Narrative Flow
+
+Structure the motion so the website gradually tells this site's own story, in whatever order its real sections already run (do not force content that doesn't exist) — typically something like:
+
+INTRO → VALUE PROPOSITION / WHY → FEATURES / SERVICES / ACTIVITIES → PROCESS OR TIMELINE → TEAM / TESTIMONIALS / SOCIAL PROOF → GALLERY → PRICING / LOCATION / DETAILS → FINAL CTA
+
+Each major section should feel like a new scene. Use visual transitions that make the user feel they are progressing through an experience rather than simply scrolling through a conventional webpage.
+
+## 5. Feature / Content Card Sections
+
+Make the site's core offerings (products, services, activities, features, case studies — whatever this site actually sells or showcases) visually engaging.
+
+When one enters the viewport:
+
+- Reveal the image dramatically but subtly.
+- Animate the title.
+- Introduce supporting information with staggered motion.
+- Add subtle image parallax.
+- Use hover interactions on desktop.
+
+Cards should feel tactile and interactive without becoming distracting.
+
+## 6. Image & Gallery Motion
+
+Upgrade any existing gallery or image grid with premium transitions:
+
+- Smooth image reveals.
+- Mask-based transitions.
+- Gentle zoom on hover.
+- Horizontal image movement where appropriate.
+- Full-screen image viewing with elegant transitions, if applicable.
+- Avoid excessive carousel movement.
+
+Images should remain the visual hero of the experience.
+
+## 7. Typography Animation
+
+Use sophisticated text reveals:
+
+- Word-by-word or line-by-line reveals for major headlines.
+- Subtle upward movement combined with opacity.
+- Staggered supporting text.
+- Strong typography hierarchy.
+
+Do not use excessive bouncing, rotating, elastic, or gimmicky text animations. Typography should feel like a premium campaign, not a template website.
+
+## 8. Navigation
+
+Improve the existing navigation with cinematic but practical behavior:
+
+- Transparent navigation over the hero.
+- Transition into a solid/glass navigation state when scrolling.
+- Smooth active-section indicators.
+- Elegant mobile menu animation.
+- Navigation should remain accessible and easy to use.
+
+Add a subtle scroll-progress indicator if it fits the existing design.
+
+## 9. Microinteractions
+
+Add refined interactions throughout the website:
+
+- Magnetic or subtle movement on primary CTA buttons.
+- Smooth hover transitions.
+- Image zoom effects.
+- Arrow/icon movement on buttons.
+- Interactive cards.
+- Subtle cursor-follow effects on desktop where appropriate.
+
+Keep microinteractions restrained. Do not add effects simply because they look impressive.
+
+## 10. Cinematic Transitions
+
+Create visual continuity between sections using:
+
+- Cross-fades.
+- Image masks.
+- Gradient transitions.
+- Scale transitions.
+- Parallax layers.
+- Subtle background movement.
+
+Major sections should feel connected rather than appearing as disconnected blocks.
+
+## 11. Final CTA
+
+Make the final conversion section feel like the climax of the experience.
+
+Use:
+
+- Strong full-width imagery or bold typography.
+- Dramatic but short reveal animation.
+- Clear primary CTA tied to the Primary Conversion Goal above.
+- Strong contrast.
+- Subtle background movement.
+
+The user should finish the page feeling ready to act — motivated to click through, not just impressed.
+
+## 12. Performance & UX
+
+This is critical:
+
+- Keep animations smooth at 60fps where possible.
+- Prefer GPU-friendly transforms and opacity.
+- Avoid excessive JavaScript animation.
+- Lazy-load images and video.
+- Do not introduce animation that causes layout shifts.
+- Ensure mobile performance remains excellent.
+- Respect \`prefers-reduced-motion\`.
+- Provide an accessible static experience when motion is disabled.
+- Never let animation interfere with navigation, reading, forms, or checkout/registration flows.
+
+## 13. Responsive Motion
+
+- **Desktop:** richer parallax, hover interactions, layered depth, cinematic transitions.
+- **Tablet:** reduce animation complexity while maintaining visual quality.
+- **Mobile:** prioritize performance and usability. Replace heavy parallax and cursor effects with lightweight reveal animations and subtle transitions.
+
+## 14. Overall Art Direction
+
+The motion language should communicate: {{motion_words}}.
+
+Think cinematic brand campaign, not flashy web animation. Motion should generally use smooth cinematic easing (expo/quint-out style curves), with carefully controlled duration and stagger timing — draw inspiration from film transitions and documentary-style pacing rather than game UI or template animation libraries.
+
+## Golden Rule
+
+Do not redesign the existing website unnecessarily. Enhance what already works.
+
+Preserve the existing branding, content, images, colors (unless the colour palette above calls for a refresh), sections, and functionality unless an improvement is clearly justified.
+
+Do not add animation everywhere. Create moments of stillness between cinematic movements so the website feels expensive, intentional, and sophisticated.
+
+The final result should feel like a premium, professionally art-directed campaign website — not a generic animated template.` },
+
+  { id: "resume-web-profile", cat: "Website", kind: "profile", schemeGroup: "profile", title: "Personal Web Profile from a Resume",
+    desc: "Turn your resume into a one-page personal site that looks like your own, with a colour scheme, fonts and a signature idea drawn from your field.",
+    tags: ["website", "resume", "personal brand", "portfolio", "linkedin"],
+    tip: "Pick your choices here, or leave 'Ask me' and answer in the chat. Copy the prompt, then paste your resume under RESUME and attach your photos in the AI tool. Check every date and number on the finished page, and read the 'Needs your confirmation' list before you publish.",
+    objective: "Build a single-page personal web profile from a resume that looks like a senior professional's own site, not a template, and is specific to their career and industry.",
+    attachMarker: "\n\nRESUME", noTesting: true,
+    defaults: { profile_purpose: "Ask me", typography_choice: "Ask me", design_direction: "Ask me", signature_concept: "Ask me", writing_style: "Ask me", profile_sections: "Ask me", motion_level: "Ask me", photos_note: "Ask me", contact_choice: "Ask me", profile_extras: "Ask me" },
+    raw: `You are an award-winning UI/UX designer, creative director and senior front-end developer. Build me a single-page personal web profile from my resume. It must look like a senior professional's own site, not a template, and it must be specific to my career and industry.
+
+## MY CHOICES SO FAR
+
+I may have chosen some answers in advance. For each line below that says "Ask me", ask that question in Step 2 as written. For each line where I have already chosen, skip that question and use my choice. If I have answered every question, skip Step 2 and go straight to Step 3.
+
+A. Purpose: {{profile_purpose}}
+B. Colour scheme: {{color_scheme}}
+C. Typography: {{typography_choice}}
+D. Design direction: {{design_direction}}
+E. Signature concept: {{signature_concept}}
+F. Writing style: {{writing_style}}
+G. Sections: {{profile_sections}}
+H. Motion: {{motion_level}}
+I. Photos: {{photos_note}}
+J. Contact: {{contact_choice}}
+K. Extras: {{profile_extras}}
+
+## STEP 1: READ MY RESUME
+Read the resume at the bottom. Extract my name, current title, employers, dates, achievements, skills, certifications, education and projects. Work out my years of experience from my earliest start date and today's date. Do not invent anything.
+
+## STEP 2: ASK FOR MY CHOICES
+Before designing, send ONE message with the questions below, numbered, with your recommended default marked (Recommended). Skip any question my resume already answers. I can reply "defaults" to accept everything. Then wait.
+
+A. Purpose: who should look at this page (recruiters, clients, a board, a headhunter) and what should they do next?
+B. Colour scheme:
+   1. Graphite and Cobalt: #24221f / #f4f2ed / accent #2c41b0
+   2. Midnight and Brass: #0f1b2d / #f3efe6 / accent #b08d3c
+   3. Forest and Bone: #17261f / #eef0e8 / accent #3f7d5c
+   4. Oxblood and Stone: #2a1215 / #efe9e4 / accent #9b2c2c
+   5. Ink and Signal Blue (light first): #111418 / #f6f7f9 / accent #1f6feb
+   6. Clay and Charcoal (warm light): #2b2a28 / #f1ebe1 / accent #a24e2a
+   7. Custom: my hex codes, a brand colour, or a description
+C. Typography (all Google Fonts):
+   1. Marcellus + Hanken Grotesk + IBM Plex Mono (refined, architectural)
+   2. Fraunces + Inter (warm editorial)
+   3. Playfair Display + Source Sans 3 (classic)
+   4. DM Serif Display + DM Sans (confident)
+   5. Space Grotesk + Inter (modern, technical)
+   6. Cormorant Garamond + Manrope (elegant)
+D. Design direction:
+   1. Dark editorial hero with light content sections
+   2. Light and minimal, generous white space
+   3. Bold typographic, huge type, little imagery
+   4. Soft and human, photo-led, rounded
+   5. Corporate classic, structured and conservative
+E. Signature concept: one visual idea drawn from MY field, used for the career section and small details (for example a building section for facilities, a flight path for aviation, a ledger for finance, a circuit for engineering, a ward chart for healthcare). Propose three options based on my resume, or let me name one.
+F. Writing style:
+   - Voice: first person ("I lead...") or third person ("[my name] leads...")
+   - Tone: concise executive / warm and personal / confident storyteller / plain-spoken
+   - Language and spelling: English (UK or US), Bahasa Malaysia, or other
+   - Length: tight (fewer words) or standard
+G. Sections (recommended): Hero, Profile, Leadership, Career, Selected projects, Credentials and education, Contact. Optional: awards, publications, languages, testimonials.
+H. Motion: none / subtle (load reveal, hover) / cinematic (scroll choreography).
+I. Photos: how many I am attaching, and whether I want them blended into the background.
+J. Contact: which of email, LinkedIn and phone to show. Default is email only.
+K. Extras: an ATS-friendly Word resume, a designed PDF CV, link-preview tags for LinkedIn.
+
+## STEP 3: CONFIRM THE PLAN
+Reply in under 150 words with my chosen palette, fonts, signature concept and section list. Include a two-sentence sample of my hero line and profile summary written in my chosen voice. Wait for my OK before building.
+
+## STEP 4: BUILD
+Content rules
+- Use only facts from my resume. Never invent employers, dates, numbers, awards or clients.
+- Where a stronger claim needs a number I did not give, write the sentence without it and add it to a "Needs your confirmation" list.
+- Where you reword my duties into achievements, keep the meaning identical.
+- Every label, number and code on the page must be true and mean something. No decorative fake IDs, sheet numbers or invented statistics.
+- Write short, direct sentences in active voice. Avoid "passionate", "results-driven", "dynamic", and mannered devices such as em-dash asides or "not X, but Y" phrasing.
+- If I am targeting a senior role, add a Leadership section: strategic thinking, building from zero, stakeholders, people, judgement, and any technology or AI skills I mention. Back each point with something from my resume.
+
+Design rules
+- Define all colours and fonts as CSS variables at the top of the file. Design both a light and a dark theme properly, following the viewer's system setting.
+- Open with the most characteristic thing about me: my name set large, my title, one strong line, and my photo if I have one.
+- Use my photos unframed (no boxes, borders or ID-photo crops). Crop for composition and blend the photo background into the page colour. Use real photos only, never stock or AI-generated faces. If I have no photo, use a typographic or monogram hero.
+- Present the career as a visual built on the signature concept from question E, with the current role most prominent.
+- Make repeated elements consistent, keep line length near 65 characters, and give body text comfortable spacing.
+- Spend boldness in one place (the hero or the signature concept) and keep the rest quiet.
+- Motion must respect prefers-reduced-motion, and everything must be visible without scrolling or waiting for animation.
+
+Technical rules
+- One self-contained HTML file with no build step.
+- Embed all images as base64 data, compressed to about 150 KB each, so the page cannot break if the file is uploaded on its own.
+- Responsive from 360 px to wide desktop, with no horizontal scrolling.
+- Semantic HTML, visible keyboard focus, WCAG AA contrast, descriptive alt text.
+- Page title, meta description and Open Graph tags (leave the final URL as a clearly marked placeholder).
+- No trackers and no external scripts other than Google Fonts.
+
+Privacy rules
+- Leave out my home address, age, date of birth, ID numbers and personal phone number unless I explicitly ask for them.
+- Show my email assembled by script, with a Copy button, so the address is not plain in the page source.
+
+## STEP 5: CHECK YOUR OWN WORK
+Open or render the page at phone width (about 400 px) and desktop width, in light and dark. Confirm every image loads, nothing overflows, text is readable on every background, and there are no console errors. Fix what you find before showing me.
+
+## STEP 6: DELIVER
+1. The finished page.
+2. A "Needs your confirmation" list: every claim, number or wording you were unsure of.
+3. Step-by-step instructions to publish it for free (Netlify, GitHub Pages or Vercel, my choice) that work from a phone, with no dragging of folders.
+4. Exact steps to add the link to LinkedIn: Featured section, Contact info website field, and the About section. Include how to refresh the link preview with LinkedIn's Post Inspector.
+5. Any extras I chose in question K.
+
+RESUME
+[Paste your resume here, then attach your photos]` },
 
   // ---------- Getting Started ----------
   { id: "role-setup", cat: "Getting Started", title: "Expert Role Setup",
@@ -1426,6 +1896,13 @@ const ROLES = {
     { name: "Risk Manager", short: "Identify and mitigate", value: "an enterprise risk manager" },
     { name: "Agile Coach", short: "Scrum and Kanban", value: "an agile coach experienced with Scrum and Kanban teams" },
   ],
+  "Website": [
+    { name: "Interaction Designer & Creative Technologist", short: "Cinematic, award-level web experiences", value: "an elite interaction designer, creative technologist and award-winning digital experience designer" },
+    { name: "Frontend Motion Developer", short: "Smooth, performant animation", value: "a senior frontend developer who specialises in performant motion, CSS and GSAP animation" },
+    { name: "Brand Experience Designer", short: "Campaign sites true to the brand", value: "a brand experience designer who builds campaign websites that stay true to the brand" },
+    { name: "UX Designer", short: "Clarity, flow and conversion", value: "a senior UX designer focused on clarity, flow and conversion" },
+    { name: "Conversion Copywriter", short: "Words that move people to act", value: "a conversion copywriter who writes clear, persuasive website copy" },
+  ],
   "Dashboard": [
     { name: "BI Dashboard Designer", short: "Clear, decision-ready dashboards", value: "a senior BI dashboard designer who builds clear, decision-ready dashboards" },
     { name: "Data Visualisation Expert", short: "Honest, clear charts", value: "a data visualisation expert who picks the right chart and keeps the data honest" },
@@ -1467,7 +1944,7 @@ const defaultsFor = p => {
   if (rolesFor(p).length) d.role = rolesFor(p)[defaultRoleIndex(p)].value;
   if (!p.noLang) d.output_language = "English";
   d.tone = toneValue(TONES[0]);
-  if (/\{\{color_scheme\}\}/.test(p.prompt)) d.color_scheme = AUTO_VALUE;
+  if (/\{\{color_scheme\}\}/.test(p.prompt)) d.color_scheme = schemeValue(defaultScheme(p));
   return { ...d, ...(p.defaults || {}) };
 };
 
@@ -1503,9 +1980,34 @@ let currentStyle = null;
 const lum = h => { const [r, g, b] = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255).map(v => v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
 const palette = (name, desc, c) => { const dark = [...c].sort((x, y) => lum(x) - lum(y))[0]; return { name, desc, c, bg: "#f8f8fb", surface: "#ffffff", text: lum(dark) < 0.12 ? dark : "#1c1a2b", palette: true }; };
 const AUTO_VALUE = "Let the AI recommend: choose the strongest colour palette for this subject, audience and industry, explain in one sentence why, use 3 to 5 colours (one dominant, one or two supporting, one accent), and do not default to conventional blue and white corporate styling";
-const AUTO_SCHEME = { name: "Let the AI recommend", desc: "The AI picks the best palette for your topic and explains why", auto: true, c: ["#3d7bff", "#a259ff", "#f4c345"], bg: "#f4f7ff", surface: "#ffffff", text: "#0b1b4d" };
+const AUTO_SCHEME = { name: "Let the AI recommend", desc: "The AI picks the best palette for your topic and explains why", auto: true, hideFor: ["website"], c: ["#3d7bff", "#a259ff", "#f4c345"], bg: "#f4f7ff", surface: "#ffffff", text: "#0b1b4d" };
+const KEEP_VALUE = "Keep the site's existing palette: extract and refine the current colours, and do not introduce new hues";
+const KEEP_SCHEME = { name: "Keep the site's existing palette", desc: "Extract and refine the current colours; no new hues", keep: true, value: KEEP_VALUE, defaultFor: ["website"], onlyFor: ["website"], c: ["#6b7280", "#9aa0ad", "#c9ccd4"], bg: "#f8f8fb", surface: "#ffffff", text: "#1c1a2b" };
+const POSTER_VALUE = "Use the colours in my rough poster and the brand, refined into a disciplined palette: one dominant background, one or two supporting tones and one accent with a job. Exact hex values, if given, are exact";
+const POSTER_SCHEME = { name: "Use the colours in my rough poster", desc: "Take the palette from the attached poster and sharpen it", keep: true, value: POSTER_VALUE, defaultFor: ["poster"], onlyFor: ["poster"], c: ["#1f2a44", "#e8e1d3", "#d9482b"], bg: "#f8f8fb", surface: "#ffffff", text: "#1c1a2b" };
+const profileScheme = (name, desc, ink, paper, accent) => ({ name, desc, c: [ink, paper, accent], bg: paper, surface: "#ffffff", text: ink, value: `${name}: ${ink} / ${paper} / accent ${accent}`, onlyFor: ["profile"] });
+const ASK_SCHEME = { name: "Ask me in the chat", desc: "The AI shows the options and I choose", ask: true, value: "Ask me", defaultFor: ["profile"], onlyFor: ["profile"], c: ["#6b7280", "#f1f1f4", "#3d7bff"], bg: "#f8f8fb", surface: "#ffffff", text: "#1c1a2b" };
+const direction = (name, desc, c) => ({ name, desc, c, bg: "#f8f8fb", surface: "#ffffff", text: c[0], direction: true, onlyFor: ["website"] });
+const schemeGroup = p => p.schemeGroup || p.kind;
+const schemeVisible = (sc, p) => { const g = schemeGroup(p); if (g === "profile") return !!(sc.onlyFor && sc.onlyFor.includes("profile")); return (!sc.onlyFor || sc.onlyFor.includes(g)) && (!sc.hideFor || !sc.hideFor.includes(g)); };
+const schemesFor = p => SCHEMES.filter(sc => schemeVisible(sc, p));
+const defaultScheme = p => SCHEMES.find(sc => sc.defaultFor && sc.defaultFor.includes(schemeGroup(p))) || AUTO_SCHEME;
 const SCHEMES = [
   AUTO_SCHEME,
+  KEEP_SCHEME,
+  POSTER_SCHEME,
+  ASK_SCHEME,
+  profileScheme("Graphite and Cobalt", "warm graphite on soft paper, cobalt accent", "#24221f", "#f4f2ed", "#2c41b0"),
+  profileScheme("Midnight and Brass", "midnight navy on ivory, brass accent", "#0f1b2d", "#f3efe6", "#b08d3c"),
+  profileScheme("Forest and Bone", "deep forest on bone, green accent", "#17261f", "#eef0e8", "#3f7d5c"),
+  profileScheme("Oxblood and Stone", "oxblood on stone, deep red accent", "#2a1215", "#efe9e4", "#9b2c2c"),
+  profileScheme("Ink and Signal Blue (light first)", "ink on near-white, signal-blue accent", "#111418", "#f6f7f9", "#1f6feb"),
+  profileScheme("Clay and Charcoal (warm light)", "charcoal on warm cream, clay accent", "#2b2a28", "#f1ebe1", "#a24e2a"),
+  direction("Warm Earth and Terracotta", "warm earthy neutrals with a terracotta accent", ["#5b4636", "#c9b79c", "#e8ddcb", "#c4623f"]),
+  direction("Charcoal and One Bold Accent", "deep charcoal with a single bold accent", ["#17181b", "#2a2c31", "#8a8d93", "#ff4d2e"]),
+  direction("Soft Pastels and One Accent", "soft pastels with one saturated accent", ["#3b3150", "#ddebf0", "#f6eef1", "#5b3df5"]),
+  direction("Monochrome and One Accent", "monochrome with one accent colour", ["#0f0f0f", "#6b6b6b", "#f2f2f2", "#1f5fe0"]),
+  direction("Jewel Tones on Dark", "jewel tones on a dark ground", ["#0e1020", "#1f6f78", "#7b2d5b", "#d4a24c"]),
   palette("Violet and Mint", "violet to mint: tech, product, startups", ["#391d8b", "#7754c8", "#4e73e6", "#63b7b7", "#8fcd9c"]),
   palette("Indigo and Sunrise", "indigo, magenta and warm yellow: bold, energetic", ["#112483", "#92358e", "#df566a", "#ec7c34", "#f4c345"]),
   palette("Deep Teal and Lemon", "deep teal to soft yellow: fresh, calm, wellbeing", ["#1d485b", "#4b9ea4", "#7cc4c0", "#c1d9b9", "#f7d985"]),
@@ -1525,11 +2027,18 @@ const SCHEMES = [
   { name: "Colour-blind Safe", desc: "Okabe–Ito palette, readable for colour-blind viewers", bg: "#ffffff", surface: "#f7f7f7", text: "#1a1a1a", c: ["#0072B2", "#E69F00", "#009E73", "#D55E00"] },
 ];
 const schemeValue = sc => sc.auto ? AUTO_VALUE
+  : sc.value ? sc.value
+  : sc.direction ? `${sc.name}: suggested starting palette ${sc.c.join(", ")}. Refine it to suit the brand, and use the accent only on primary calls to action, key highlights and active states`
   : sc.palette ? `${sc.name}: ${sc.c.length}-colour palette ${sc.c.join(", ")}. Use ${sc.text} for text and headings, white or a very light tint for backgrounds, and the other colours for accents and charts, with the dominant colour at about 60%, supporting colours about 30% and the accent about 10%`
   : `${sc.name}${sc.dark ? " (dark theme)" : ""}: background ${sc.bg}, cards ${sc.surface}, text ${sc.text}, chart colours ${sc.c.join(", ")}`;
 const schemeIndex = () => { const i = values.color_scheme ? SCHEMES.findIndex(sc => schemeValue(sc) === values.color_scheme) : -1; return i < 0 ? null : i; };
 const schemeSvg = (sc, mode = "dash") => {
   if (sc.auto) return `<svg class="thumb" viewBox="0 0 160 100" role="img" aria-label="${esc(sc.name)}"><defs><linearGradient id="autoGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3d7bff"/><stop offset=".55" stop-color="#a259ff"/><stop offset="1" stop-color="#f4c345"/></linearGradient></defs><rect width="160" height="100" fill="url(#autoGrad)"/><path d="M80 22l6.5 19 19 6.5-19 6.5-6.5 19-6.5-19-19-6.5 19-6.5z" fill="#fff"/><path d="M125 16l3.2 8.5 8.5 3.2-8.5 3.2-3.2 8.5-3.2-8.5-8.5-3.2 8.5-3.2z" fill="#fff" opacity=".85"/><path d="M36 64l2.6 6.4 6.4 2.6-6.4 2.6-2.6 6.4-2.6-6.4-6.4-2.6 6.4-2.6z" fill="#fff" opacity=".85"/></svg>`;
+  if (sc.ask) return `<svg class="thumb" viewBox="0 0 160 100" role="img" aria-label="${esc(sc.name)}"><rect width="160" height="100" fill="#f1f1f4"/><rect x="14" y="14" width="132" height="72" rx="5" fill="#fff" stroke="#9aa0ad" stroke-width="1.5" stroke-dasharray="5 4"/><text x="80" y="66" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="700" fill="#3d7bff">?</text></svg>`;
+  if (mode === "profile") { const [ink, paper, acc] = sc.c; return `<svg class="thumb" viewBox="0 0 160 100" role="img" aria-label="${esc(sc.name)} sample profile"><rect width="160" height="100" fill="${paper}"/><rect width="160" height="44" fill="${ink}"/><rect x="12" y="12" width="64" height="8" rx="1.5" fill="${paper}"/><rect x="12" y="24" width="44" height="4" rx="1" fill="${paper}" opacity=".7"/><rect x="12" y="32" width="22" height="5" rx="2.5" fill="${acc}"/><circle cx="126" cy="22" r="14" fill="${acc}" opacity=".9"/><rect x="12" y="54" width="60" height="4" rx="1" fill="${ink}"/><rect x="12" y="62" width="48" height="3" rx="1" fill="${ink}" opacity=".5"/><rect x="12" y="68" width="54" height="3" rx="1" fill="${ink}" opacity=".5"/><path d="M92 58v32" stroke="${ink}" stroke-width="1.5" opacity=".4"/><circle cx="92" cy="60" r="3" fill="${acc}"/><circle cx="92" cy="74" r="3" fill="${ink}"/><circle cx="92" cy="88" r="3" fill="${ink}"/><rect x="100" y="58" width="40" height="3" rx="1" fill="${ink}" opacity=".6"/><rect x="100" y="72" width="32" height="3" rx="1" fill="${ink}" opacity=".4"/><rect x="100" y="86" width="36" height="3" rx="1" fill="${ink}" opacity=".4"/></svg>`; }
+  if (sc.keep) return `<svg class="thumb" viewBox="0 0 160 100" role="img" aria-label="${esc(sc.name)}"><rect width="160" height="100" fill="#f1f1f4"/><rect x="14" y="14" width="132" height="72" rx="5" fill="#fff" stroke="#9aa0ad" stroke-width="1.5" stroke-dasharray="5 4"/><rect x="26" y="26" width="60" height="7" rx="2" fill="#9aa0ad"/><rect x="26" y="40" width="96" height="4" rx="2" fill="#c9ccd4"/><rect x="26" y="49" width="80" height="4" rx="2" fill="#c9ccd4"/><circle cx="32" cy="70" r="6" fill="#6b7280"/><circle cx="48" cy="70" r="6" fill="#9aa0ad"/><circle cx="64" cy="70" r="6" fill="#c9ccd4"/><path d="M118 68l5 5 10-11" fill="none" stroke="#3d7bff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  if (mode === "poster") { const [a, b] = sc.c, acc = sc.c[sc.c.length - 1]; return `<svg class="thumb" viewBox="0 0 160 100" role="img" aria-label="${esc(sc.name)} sample poster"><rect width="160" height="100" fill="${sc.bg}"/><rect x="52" y="6" width="56" height="88" rx="2" fill="${a}"/><circle cx="80" cy="38" r="16" fill="${b}"/><rect x="60" y="62" width="40" height="5" rx="1.5" fill="#fff"/><rect x="60" y="71" width="28" height="3" rx="1" fill="#fff" opacity=".7"/><rect x="60" y="80" width="18" height="6" rx="3" fill="${acc}"/></svg>`; }
+  if (mode === "web") { const [a, b, c] = sc.c, acc = sc.c[sc.c.length - 1]; return `<svg class="thumb" viewBox="0 0 160 100" role="img" aria-label="${esc(sc.name)} sample website"><rect width="160" height="100" fill="${sc.bg}"/><rect width="160" height="10" fill="${sc.surface}"/><rect x="8" y="3.5" width="22" height="3" rx="1.5" fill="${sc.text}"/><rect y="10" width="160" height="46" fill="${a}"/><rect x="12" y="24" width="64" height="6" rx="1.5" fill="#fff"/><rect x="12" y="34" width="46" height="4" rx="1.5" fill="#fff" opacity=".7"/><rect x="12" y="43" width="26" height="7" rx="3.5" fill="${acc}"/><rect x="88" y="18" width="60" height="32" rx="3" fill="${b}"/><rect x="10" y="64" width="42" height="28" rx="3" fill="${sc.surface}"/><rect x="59" y="64" width="42" height="28" rx="3" fill="${sc.surface}"/><rect x="108" y="64" width="42" height="28" rx="3" fill="${sc.surface}"/><rect x="14" y="68" width="34" height="12" rx="2" fill="${c}"/><rect x="63" y="68" width="34" height="12" rx="2" fill="${b}"/><rect x="112" y="68" width="34" height="12" rx="2" fill="${a}"/></svg>`; }
   if (mode === "slides") { const [a, b, , d] = sc.c; return `<svg class="thumb" viewBox="0 0 160 100" role="img" aria-label="${esc(sc.name)} sample slide"><rect width="160" height="100" fill="${sc.bg}"/><rect width="160" height="6" fill="${a}"/><rect x="12" y="22" width="70" height="7" rx="1.5" fill="${sc.text}"/><rect x="12" y="34" width="52" height="7" rx="1.5" fill="${sc.text}"/><rect x="12" y="49" width="40" height="3" rx="1" fill="${sc.text}" opacity=".4"/><rect x="12" y="56" width="48" height="3" rx="1" fill="${sc.text}" opacity=".4"/><rect x="96" y="18" width="52" height="58" rx="3" fill="${a}"/><rect x="96" y="18" width="52" height="20" rx="3" fill="${b}"/><circle cx="122" cy="58" r="9" fill="${d}"/>${sc.c.map((col, i) => `<rect x="${12 + i * 16}" y="82" width="12" height="9" rx="1.5" fill="${col}"/>`).join("")}</svg>`; }
   const [a, b, c, d] = sc.c, card = (x, i) => `<rect x="${x}" y="20" width="46" height="19" rx="3" fill="${sc.surface}"/><rect x="${x + 5}" y="25" width="20" height="2.5" rx="1" fill="${sc.text}" opacity=".45"/><rect x="${x + 5}" y="30" width="15" height="5" rx="1" fill="${sc.c[i]}"/>`;
   const bars = [18, 28, 22, 34, 26, 38].map((h, i) => `<rect x="${12 + i * 14}" y="${89 - h}" width="9" height="${h}" rx="1.5" fill="${i === 5 ? d : b}"/>`).join("");
@@ -1583,6 +2092,43 @@ const PRESETS = {
   slide_count: ["5", "8", "10", "12", "15"],
   format: ["A4 portrait", "A3 poster", "16:9 slide", "Desktop 16:9 screen", "Mobile screen", "1080x1350 Instagram post", "1080x1920 story"],
   app: ["Excel", "Power BI", "Google Sheets", "Looker Studio"],
+  website_type: ["Landing page", "Corporate site", "E-commerce", "Portfolio", "Event microsite", "SaaS marketing site"],
+  campaign_type: ["outdoor adventure campaign", "SaaS product launch", "boutique hospitality microsite", "fashion lookbook"],
+  site_tone: ["premium & cinematic", "bold & energetic", "minimal & elegant", "playful & warm", "rugged & adventurous", "corporate & trustworthy"],
+  typography: ["Keep the existing fonts", "Suggest a display, body and accent pairing that matches the tone"],
+  conversion_goal: ["Book a demo", "Join an event", "Add to cart", "Download the app", "Contact us"],
+  motion_words: ["premium + trust + clarity", "adventure + energy + exploration", "craft + warmth + precision"],
+  profile_purpose: ["Recruiters", "Clients", "A board", "A headhunter"],
+  typography_choice: [
+    { label: "Marcellus + Hanken Grotesk", value: "Marcellus + Hanken Grotesk + IBM Plex Mono (refined, architectural)" },
+    { label: "Fraunces + Inter", value: "Fraunces + Inter (warm editorial)" },
+    { label: "Playfair Display + Source Sans 3", value: "Playfair Display + Source Sans 3 (classic)" },
+    { label: "DM Serif Display + DM Sans", value: "DM Serif Display + DM Sans (confident)" },
+    { label: "Space Grotesk + Inter", value: "Space Grotesk + Inter (modern, technical)" },
+    { label: "Cormorant Garamond + Manrope", value: "Cormorant Garamond + Manrope (elegant)" },
+  ],
+  design_direction: [
+    { label: "Dark editorial hero", value: "Dark editorial hero with light content sections" },
+    { label: "Light and minimal", value: "Light and minimal, generous white space" },
+    { label: "Bold typographic", value: "Bold typographic, huge type, little imagery" },
+    { label: "Soft and human", value: "Soft and human, photo-led, rounded" },
+    { label: "Corporate classic", value: "Corporate classic, structured and conservative" },
+  ],
+  writing_style: [
+    { label: "First person, concise executive", value: "First person, concise executive tone, UK English, tight length" },
+    { label: "First person, warm and personal", value: "First person, warm and personal tone, UK English, standard length" },
+    { label: "Third person, confident storyteller", value: "Third person, confident storyteller tone, UK English, standard length" },
+    { label: "Bahasa Malaysia, plain-spoken", value: "First person, plain-spoken tone, Bahasa Malaysia, tight length" },
+  ],
+  profile_sections: [{ label: "Recommended set", value: "Hero, Profile, Leadership, Career, Selected projects, Credentials and education, Contact" }],
+  motion_level: ["None", "Subtle (load reveal, hover)", "Cinematic (scroll choreography)"],
+  contact_choice: ["Email only", "Email and LinkedIn", "Email, LinkedIn and phone"],
+  profile_extras: ["ATS-friendly Word resume", "Designed PDF CV", "LinkedIn link-preview tags", "None"],
+  where_it_runs: ["Instagram post", "Instagram story", "Paid ad", "A3 print", "Billboard"],
+  brand_character: ["premium", "playful", "authoritative", "energetic", "calm"],
+  visual_direction: ["editorial", "minimal", "luxury", "brutalist", "streetwear", "futuristic", "experimental"],
+  poster_size: ["1080x1350 (4:5 Instagram post)", "1080x1920 (9:16 story)", "1080x1080 (1:1 square)", "A3 portrait", "A4 portrait"],
+  people_policy: [{ label: "Keep the people", value: "Keep the supplied people exactly as they are" }, { label: "No people", value: "NO people, faces, hands or figures anywhere" }],
   purpose: ["Inform", "Persuade", "Seek approval", "Propose a strategy", "Report performance", "Educate"],
   design_personality: ["Premium corporate and executive", "Modern editorial and minimalist", "Luxury and sophisticated", "Bold and contemporary", "Creative and experimental", "Futuristic and technology-driven", "Architectural and structural", "Elegant and refined", "Vibrant and energetic", "Data-driven and analytical", "Academic and research-oriented"],
   design_concept: [
@@ -1643,6 +2189,10 @@ const ENGINES = {
       add: "Build this as a single interactive HTML dashboard file I can download, using the colour scheme above. Label any sample data clearly." },
     webapp: { level: "code", how: "ChatGPT writes the full React project and can preview a single-page version in Canvas. For a multi-file project, ask for the file tree first, then each file, and paste them into a Vite project.",
       add: "Build this as a working React project. If it does not fit in one reply, give me the file tree first, then each file in order, and confirm when the set is complete." },
+    website: { level: "code", how: "ChatGPT can improve your site if you attach or paste its files, and can preview a simple page in Canvas. For a full site, work file by file.",
+      add: "Work on my existing site code. Return every changed file in full, list each file you changed and why, and leave everything I did not mention exactly as it is." },
+    profile: { level: "code", how: "ChatGPT builds the page as one HTML file in Canvas or as a download, and can create the Word or PDF extras with its code tool. Attach your resume and photos in the chat.",
+      add: "Build the page as one self-contained HTML file I can download, and create any extras I choose as files." },
     text: { how: "Works with any prompt. Attach files, or turn on web search when the task needs current facts." } },
   claude: { name: "Claude",
     note: "Excellent for writing, analysis and code. It does not paint raster images; it builds visuals as HTML/SVG artifacts and creates files such as .pptx.",
@@ -1656,6 +2206,10 @@ const ENGINES = {
       add: "Build this as an interactive HTML dashboard artifact using the colour scheme above. Label any sample data clearly." },
     webapp: { level: "code", how: "Claude builds a working React app as an artifact you can preview, edit and share. For a larger multi-file project, use Claude Code so it can create and run the files for you.",
       add: "Build this as a working React app in an artifact, with the components organised by section. If it is too large for one artifact, give me the file tree and build it in stages, confirming each stage." },
+    website: { level: "code", how: "Claude can improve a site you attach or paste, and preview a single page as an artifact. For a full multi-file site, use Claude Code so it edits the files in place and runs the site.",
+      add: "Work on the attached site rather than rebuilding it. Show the changes as edited files, list every file you changed and why, and leave everything I did not mention untouched." },
+    profile: { level: "code", how: "Claude builds the page as an HTML artifact you can preview, edit and share, and can create the Word or PDF extras. Attach your resume and photos in the chat.",
+      add: "Build the page as a single self-contained HTML artifact, and create any extras I choose as files." },
     text: { how: "Great for long documents and careful reasoning. Attach files or use a Project to give it background." } },
   gemini: { name: "Gemini",
     note: "Google's assistant. Generates images natively, and Canvas builds infographics and slide decks you can export to Google Slides.",
@@ -1669,6 +2223,10 @@ const ENGINES = {
       add: "Build this dashboard in Canvas as an interactive web page using the colour scheme above." },
     webapp: { level: "code", how: "Select Canvas and paste the prompt. Gemini builds a live, interactive web app preview you can edit and share. For a multi-file project, ask for the file tree and each file in order.",
       add: "Build this in Canvas as an interactive web app with a live preview, then list anything you simplified." },
+    website: { level: "code", how: "Select Canvas, attach or paste the site's code, and Gemini edits it with a live preview. For a large site, ask for one file at a time.",
+      add: "Work on my existing site code in Canvas. Show the changes with a live preview, list every file you changed and why, and leave everything I did not mention untouched." },
+    profile: { level: "code", how: "Select Canvas and Gemini builds and previews the HTML page. Attach your resume and photos in the chat.",
+      add: "Build the page in Canvas as one self-contained HTML file with a live preview, and give me any extras I choose." },
     text: { how: "Works well with Google Workspace. Connect Gmail, Drive or Docs to work from your own files." } },
   notebooklm: { name: "NotebookLM",
     note: "Works only from the sources you upload. Its Studio panel creates slide decks, infographics, audio and video overviews, mind maps and reports.",
@@ -1682,6 +2240,10 @@ const ENGINES = {
       add: "Base every figure only on the notebook sources, and list each figure with its source." },
     webapp: { level: "none", how: "NotebookLM doesn't build apps. Use it to gather the product facts and sample data from your documents, then paste them into Claude, ChatGPT or Gemini to build the interface.",
       add: "Base every product fact only on the notebook sources and list them." },
+    website: { level: "none", how: "NotebookLM can't edit code. Use it to summarise your brand guide or site content, then take that into Claude, ChatGPT or Gemini to enhance the site.",
+      add: "Base any brand or content facts only on the notebook sources and list them." },
+    profile: { level: "none", how: "NotebookLM can't build the page. Use it to summarise your resume and achievements, then build the page in Claude, ChatGPT or Gemini.",
+      add: "Base every fact only on the notebook sources and list them." },
     text: { how: "Upload your documents first. Answers come only from your sources, with citations." } },
   copilot: { name: "Copilot",
     note: "Microsoft Copilot. Creates images and works inside PowerPoint, Word and Excel with Microsoft 365.",
@@ -1695,6 +2257,10 @@ const ENGINES = {
       add: "Build this in Excel on one dashboard sheet with charts and a PivotTable, using the colour scheme above for chart colours." },
     webapp: { level: "workaround", how: "Copilot writes the React code but does not run a live app in chat. Paste the files into a Vite project, or use GitHub Copilot in VS Code, to run it.",
       add: "Give me the file tree and the full code for each file, plus the exact commands to install and run the project." },
+    website: { level: "workaround", how: "GitHub Copilot in VS Code can edit your site's files in place. Copilot chat in the browser only suggests code that you paste in yourself.",
+      add: "Give me the changed files in full, a list of what changed and why, and the exact commands to run the site." },
+    profile: { level: "workaround", how: "Copilot writes the HTML but doesn't run it in chat. Save the code as index.html and open it in your browser to check it.",
+      add: "Give me the complete HTML file and the exact steps to save and open it." },
     text: { how: "Best inside Microsoft 365. Reference your Word, Excel or Outlook files to ground the answer." } },
 };
 
@@ -1768,7 +2334,7 @@ function renderGrid() {
     <article class="card" data-id="${p.id}">
       <div class="card-top">
         <span class="cat-tag">${esc(p.cat)}</span>
-        <span class="right">${varsOf(p.prompt).includes("style") ? `<span class="badge">20 styles</span>` : ""}${varsOf(p.prompt).includes("color_scheme") ? `<span class="badge">${SCHEMES.length} colour schemes</span>` : ""}<button class="star ${favs.has(p.id) ? "on" : ""}" data-star="${p.id}" aria-label="Favourite">${favs.has(p.id) ? "★" : "☆"}</button></span>
+        <span class="right">${varsOf(p.prompt).includes("style") ? `<span class="badge">20 styles</span>` : ""}${varsOf(p.prompt).includes("color_scheme") ? `<span class="badge">${schemesFor(p).length} colour schemes</span>` : ""}<button class="star ${favs.has(p.id) ? "on" : ""}" data-star="${p.id}" aria-label="Favourite">${favs.has(p.id) ? "★" : "☆"}</button></span>
       </div>
       <h3>${esc(p.title)}</h3>
       <p class="desc">${esc(p.desc)}</p>
@@ -1829,7 +2395,7 @@ function openModal(id) {
   Object.entries(values).forEach(([v, val]) => { const i = $(`#mVars input[data-var="${v}"]`); if (i) i.value = val; });
   syncPresets();
   currentRole = rolesFor(current).length ? defaultRoleIndex(current) : null;
-  $("#mRoles").hidden = !rolesFor(current).length;
+  $("#mRoles").hidden = !rolesFor(current).length || !vars.includes("role");
   renderRoles();
   currentAud = null;
   $("#mAudience").hidden = !vars.includes("audience");
@@ -1856,10 +2422,12 @@ function openModal(id) {
 const PICKER_VARS = ["role", "audience", "tone", "style", "color_scheme"];
 function renderSchemes() {
   $("#mSchemeName").textContent = currentScheme === null ? (values.color_scheme ? "Custom" : "None selected") : SCHEMES[currentScheme].name;
-  $("#mSchemeGrid").innerHTML = SCHEMES.map((sc, i) => `
+  const mode = current && current.schemeGroup === "profile" ? "profile" : current && current.schemeGroup === "poster" ? "poster" : current && current.kind === "slides" ? "slides" : current && current.kind === "website" ? "web" : "dash";
+  let shown = 0;
+  $("#mSchemeGrid").innerHTML = SCHEMES.map((sc, i) => !schemeVisible(sc, current) ? "" : `
     <button type="button" class="style-opt ${i === currentScheme ? "active" : ""}" data-scheme="${i}" aria-pressed="${i === currentScheme}">
-      ${schemeSvg(sc, current && current.kind === "slides" ? "slides" : "dash")}
-      <b><span class="num">${i + 1}.</span>${esc(sc.name)}</b>
+      ${schemeSvg(sc, mode)}
+      <b><span class="num">${++shown}.</span>${esc(sc.name)}</b>
       <small>${esc(sc.desc)}</small>
     </button>`).join("");
 }
