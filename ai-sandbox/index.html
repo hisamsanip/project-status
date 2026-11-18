@@ -16,6 +16,7 @@
 <link rel="apple-touch-icon" href="../images/ai-sandbox-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Hanken+Grotesk:wght@400;600&family=Fraunces:wght@500;600&family=Playfair+Display:wght@500;700&family=Source+Sans+3:wght@400;600&family=DM+Serif+Display&family=DM+Sans:wght@400;600&family=Space+Grotesk:wght@500;700&family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0b0d12;
@@ -191,6 +192,11 @@
   .vars { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 16px; }
   .vars .var { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
   .vars label { font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .hint { color: var(--muted, #8a93a6); font-size: 12px; line-height: 1.4; }
+  .font-preview { margin-top: 6px; padding: 14px 16px; border: 1px solid var(--border, #2a3142); border-radius: 12px; background: var(--surface); }
+  .font-preview .fp-h { font-size: 26px; line-height: 1.2; color: var(--text); }
+  .font-preview .fp-b { font-size: 15px; line-height: 1.5; margin-top: 8px; color: var(--text); opacity: .85; }
+  .font-preview .fp-n { font-size: 12px; margin-top: 8px; color: var(--muted, #8a93a6); }
   .preset-row { display: flex; flex-wrap: wrap; gap: 4px; }
   .preset {
     font: inherit; font-size: 11.5px; padding: 3px 9px; border-radius: 999px; cursor: pointer;
@@ -2088,6 +2094,10 @@ const AUDIENCES = [
   { name: "Kids", short: "Children aged 7–12",
     value: "children aged 7 to 12: very simple words, short sentences, a fun and friendly tone, playful examples and bright visuals, nothing scary" },
 ];
+const HINTS = {
+  signature_concept: "One visual idea from your own field that repeats through the page (for example your career timeline drawn as a building section). It makes the page feel like yours, not a template. Pick one, or leave Ask me and the AI will suggest three from your resume.",
+  typography_choice: "A heading font and a body font that work together. Tap a pairing to see it below.",
+};
 const PRESETS = {
   slide_count: ["5", "8", "10", "12", "15"],
   format: ["A4 portrait", "A3 poster", "16:9 slide", "Desktop 16:9 screen", "Mobile screen", "1080x1350 Instagram post", "1080x1920 story"],
@@ -2100,12 +2110,21 @@ const PRESETS = {
   motion_words: ["premium + trust + clarity", "adventure + energy + exploration", "craft + warmth + precision"],
   profile_purpose: ["Recruiters", "Clients", "A board", "A headhunter"],
   typography_choice: [
-    { label: "Marcellus + Hanken Grotesk", value: "Marcellus + Hanken Grotesk + IBM Plex Mono (refined, architectural)" },
-    { label: "Fraunces + Inter", value: "Fraunces + Inter (warm editorial)" },
-    { label: "Playfair Display + Source Sans 3", value: "Playfair Display + Source Sans 3 (classic)" },
-    { label: "DM Serif Display + DM Sans", value: "DM Serif Display + DM Sans (confident)" },
-    { label: "Space Grotesk + Inter", value: "Space Grotesk + Inter (modern, technical)" },
-    { label: "Cormorant Garamond + Manrope", value: "Cormorant Garamond + Manrope (elegant)" },
+    { hf: "Marcellus", bf: "Hanken Grotesk", label: "Marcellus + Hanken Grotesk", value: "Marcellus + Hanken Grotesk + IBM Plex Mono (refined, architectural)" },
+    { hf: "Fraunces", bf: "Inter", label: "Fraunces + Inter", value: "Fraunces + Inter (warm editorial)" },
+    { hf: "Playfair Display", bf: "Source Sans 3", label: "Playfair Display + Source Sans 3", value: "Playfair Display + Source Sans 3 (classic)" },
+    { hf: "DM Serif Display", bf: "DM Sans", label: "DM Serif Display + DM Sans", value: "DM Serif Display + DM Sans (confident)" },
+    { hf: "Space Grotesk", bf: "Inter", label: "Space Grotesk + Inter", value: "Space Grotesk + Inter (modern, technical)" },
+    { hf: "Cormorant Garamond", bf: "Manrope", label: "Cormorant Garamond + Manrope", value: "Cormorant Garamond + Manrope (elegant)" },
+  ],
+  signature_concept: [
+    { label: "Propose 3 from my resume", value: "Propose three options based on my resume and let me choose" },
+    { label: "Building section (facilities)", value: "A building section drawing: floors and levels used for the career timeline" },
+    { label: "Flight path (aviation)", value: "A flight path with waypoints used for the career timeline" },
+    { label: "Ledger (finance)", value: "A ledger with ruled lines and running totals used for the career timeline" },
+    { label: "Circuit (engineering)", value: "A circuit trace with nodes used for the career timeline" },
+    { label: "Ward chart (healthcare)", value: "A ward chart with vitals lines used for the career timeline" },
+    { label: "None, keep it simple", value: "No signature concept; keep the page clean and simple" },
   ],
   design_direction: [
     { label: "Dark editorial hero", value: "Dark editorial hero with light content sections" },
@@ -2391,7 +2410,7 @@ function openModal(id) {
   $("#mDesc").textContent = current.desc;
   $("#mTip").textContent = current.tip ? "Tip: " + current.tip : "Tip: fill the fields above — the prompt updates live. Empty fields are copied as {{placeholders}}.";
   const vars = varsOf(current.prompt);
-  $("#mVars").innerHTML = vars.filter(v => !PICKER_VARS.includes(v)).map(v => `<div class="var"><label for="var-${v}">${esc(label(v))}</label><input id="var-${v}" data-var="${v}" placeholder="${esc(label(v))}">${PRESETS[v] ? `<div class="preset-row">${PRESETS[v].map(p => typeof p === "string" ? { label: p, value: p } : p).map(p => `<button type="button" class="preset" data-preset="${v}" data-value="${esc(p.value)}" title="${esc(p.value)}">${esc(p.label)}</button>`).join("")}</div>` : ""}</div>`).join("");
+  $("#mVars").innerHTML = vars.filter(v => !PICKER_VARS.includes(v)).map(v => `<div class="var"><label for="var-${v}">${esc(label(v))}</label>${HINTS[v] ? `<small class="hint">${esc(HINTS[v])}</small>` : ""}<input id="var-${v}" data-var="${v}" placeholder="${esc(label(v))}">${PRESETS[v] ? `<div class="preset-row">${PRESETS[v].map(p => typeof p === "string" ? { label: p, value: p } : p).map(p => `<button type="button" class="preset" data-preset="${v}" data-value="${esc(p.value)}" title="${esc(p.value)}"${p.hf ? ` style="font-family:'${p.hf}',serif;font-size:14px"` : ""}>${esc(p.label)}</button>`).join("")}</div>${v === "typography_choice" ? `<div class="font-preview" id="fontPreview"></div>` : ""}` : ""}</div>`).join("");
   Object.entries(values).forEach(([v, val]) => { const i = $(`#mVars input[data-var="${v}"]`); if (i) i.value = val; });
   syncPresets();
   currentRole = rolesFor(current).length ? defaultRoleIndex(current) : null;
@@ -2459,6 +2478,13 @@ function renderAudiences() {
 }
 function syncPresets() {
   document.querySelectorAll("#mVars [data-preset]").forEach(b => b.classList.toggle("active", values[b.dataset.preset] === b.dataset.value));
+  const fp = $("#fontPreview");
+  if (fp) {
+    const f = (PRESETS.typography_choice || []).find(p => p.value === values.typography_choice);
+    fp.innerHTML = f
+      ? `<div class="fp-h" style="font-family:'${f.hf}',serif">Your name and role, set in this type</div><div class="fp-b" style="font-family:'${f.bf}',sans-serif">A short line about the work you are proudest of, so you can judge how comfortable the body text is to read.</div><div class="fp-n">${esc(f.hf)} for headings, ${esc(f.bf)} for body text</div>`
+      : `<div class="fp-n">Pick a pairing above to see how your headings and text will look.</div>`;
+  }
 }
 function setVar(v, val) {
   values[v] = val;
