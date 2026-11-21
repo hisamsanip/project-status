@@ -1,0 +1,16 @@
+/* Prompt Hub colour tokens. Rule: 60% navy, 30% powder blue, 10% yellow. */
+:root {
+  --ph-navy: #131e3a;        /* Midnight Navy, 60%, RGB 19 30 58, CMYK 67 48 0 77 */
+  --ph-powder: #afc6e9;      /* Powder Blue, 30%, RGB 175 198 233, CMYK 25 15 0 9 */
+  --ph-sun: #ffc20d;         /* Sunflower Yellow, 10%, RGB 255 194 13, CMYK 0 24 95 0 */
+  --ph-deep: #0d1530;        /* page background, dark mode */
+  --ph-panel: #1b2a4d;       /* cards and inputs, dark mode */
+  --ph-line: #2a3c66;        /* borders, dark mode */
+  --ph-ice: #eaf1fb;         /* text on navy */
+  --ph-mist: #eef3fb;        /* page background, light mode */
+  --ph-mist-line: #cfdbee;   /* borders, light mode */
+  --ph-muted-dark: #9db1d1;
+  --ph-muted-light: #4f6288;
+  --ph-font: "Inter", system-ui, sans-serif;
+  --ph-font-mono: "JetBrains Mono", monospace;
+}
