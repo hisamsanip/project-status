@@ -19,5 +19,6 @@ QUICK RULES
   3. Keep "Hub" as plain type. No pills, boxes, gradients or glows. Do not recolour or stretch the mark.
   4. Clear space: half the mark height on every side. Minimum size: mark 16 px, full logo 120 px wide.
   5. Write "Prompt Hub", never "PromptHub" or "prompt hub".
+  6. The endorsement line "by PFMSB" stays small, under the name (or after it in a footer). Keep it about one third of the wordmark height; never larger, never in yellow.
 
 Navy and Powder Blue were estimated from the reference image; Sunflower Yellow matches the reference exactly (#FFC20D, CMYK 0 24 95 0).

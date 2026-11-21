@@ -71,6 +71,8 @@
   .nav { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 12px; }
   .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -0.02em; }
   .logo { width: 32px; height: 32px; border-radius: 9px; }
+  .wm { display: flex; flex-direction: column; line-height: 1.1; }
+  .by { font-size: 10.5px; font-weight: 600; letter-spacing: .02em; color: var(--muted); }
   .hub { color: var(--accent); }
   :root[data-theme="light"] .hub { box-shadow: inset 0 -0.18em 0 #ffc20d; }
   .nav-actions { display: flex; gap: 8px; }
@@ -336,7 +338,7 @@
 
 <header>
   <div class="wrap nav">
-    <div class="brand"><img class="logo" src="../images/prompt-hub/prompt-hub-mark-96.png" alt="" width="32" height="32"><span>Prompt <span class="hub">Hub</span></span></div>
+    <div class="brand"><img class="logo" src="../images/prompt-hub/prompt-hub-mark-96.png" alt="" width="32" height="32"><span class="wm"><span>Prompt <span class="hub">Hub</span></span><small class="by">by PFMSB</small></span></div>
     <div class="nav-actions">
       <button class="icon-btn" id="favToggle" title="Show favourites">★ <span class="hide-sm">Favourites</span></button>
       <button class="icon-btn" id="themeToggle" title="Toggle theme">☾</button>
@@ -392,7 +394,7 @@
 </main>
 
 <footer>
-  <div class="wrap">Prompt Hub · Favourites are saved in your browser only</div>
+  <div class="wrap">Prompt Hub by PFMSB · Favourites are saved in your browser only</div>
 </footer>
 
 <div class="overlay" id="overlay">
