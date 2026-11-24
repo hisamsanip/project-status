@@ -1,9 +1,9 @@
 import { AbsoluteFill, Easing, Freeze, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { Video } from "@remotion/media";
 
-const NAVY = "#071338";
-const BLUE = "#3d7bff";
-const CYAN = "#38c8f5";
+const NAVY = "#131E3A"; // Midnight Navy (60%)
+const POWDER = "#AFC6E9"; // Powder Blue (30%)
+const SUN = "#FFC20D"; // Sunflower Yellow (10%)
 const ease = Easing.bezier(0.16, 1, 0.3, 1);
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
@@ -19,7 +19,7 @@ export const StepScene: React.FC<StepSceneProps> = ({ step, title, clip, clipSec
       style={{
         fontFamily: "Inter, sans-serif",
         color: "#fff",
-        background: `radial-gradient(1300px 760px at 50% 42%, #0d2366, transparent 72%),
+        background: `radial-gradient(1300px 760px at 50% 42%, #1B2A4D, transparent 72%),
           linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px) 0 0 / 60px 60px,
           linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px) 0 0 / 60px 60px, ${NAVY}`,
         opacity: interpolate(frame, [durationInFrames - 8, durationInFrames], [1, 0], clamp),
@@ -36,7 +36,7 @@ export const StepScene: React.FC<StepSceneProps> = ({ step, title, clip, clipSec
         <div
           style={{
             width: 66, height: 66, borderRadius: 20, display: "grid", placeItems: "center",
-            background: `linear-gradient(135deg, ${BLUE}, ${CYAN})`, fontSize: 38, fontWeight: 800,
+            background: SUN, color: NAVY, fontSize: 38, fontWeight: 800,
             scale: interpolate(frame, [4, 10, 16], [0.4, 1.15, 1], { ...clamp, output: "perceptual-scale" }),
           }}
         >
@@ -52,7 +52,7 @@ export const StepScene: React.FC<StepSceneProps> = ({ step, title, clip, clipSec
             key={n}
             style={{
               width: n === step ? 46 : 16, height: 16, borderRadius: 8,
-              background: n === step ? CYAN : n < step ? BLUE : "rgba(255,255,255,.22)",
+              background: n === step ? SUN : n < step ? POWDER : "rgba(255,255,255,.22)",
             }}
           />
         ))}
@@ -70,7 +70,7 @@ export const StepScene: React.FC<StepSceneProps> = ({ step, title, clip, clipSec
         <div style={{ height: 36, background: "#e9edf5", display: "flex", alignItems: "center", gap: 8, padding: "0 16px" }}>
           {["#ff5f57", "#febc2e", "#28c840"].map(c => <div key={c} style={{ width: 12, height: 12, borderRadius: 6, background: c }} />)}
           <div style={{ marginLeft: 18, flex: 1, height: 22, borderRadius: 11, background: "#fff", color: "#5d6578", fontSize: 14, display: "flex", alignItems: "center", paddingLeft: 14 }}>
-            hisamsanip.github.io/project-status/ai-sandbox
+            Prompt Hub
           </div>
         </div>
         <div style={{ width: 1220, height: 686, overflow: "hidden" }}>

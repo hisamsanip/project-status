@@ -1,0 +1,254 @@
+{
+  "en": {
+    "voice": "Lessac high (Piper, free)",
+    "voiceover": "voiceover-en.mp3",
+    "scenes": [
+      {
+        "id": "Intro",
+        "kind": "hyperframes",
+        "seconds": 7.5,
+        "lines": [
+          {
+            "sub": "Welcome to Prompt Hub, by PFMSB.",
+            "tts": "Welcome to Prompt Hub, by P F M S B."
+          },
+          {
+            "sub": "Here's how to build a great prompt in six simple steps.",
+            "tts": "Here's how to build a great prompt in six simple steps."
+          }
+        ]
+      },
+      {
+        "id": "Step1",
+        "step": 1,
+        "title": "Choose what to create",
+        "lines": [
+          {
+            "sub": "Step one: choose what you want to create.",
+            "tts": "Step one: choose what you want to create."
+          },
+          {
+            "sub": "Pick Slides, Infographic, Visual, Dashboard or Website, or search for any task.",
+            "tts": "Pick Slides, Infographic, Visual, Dashboard or Website, or search for any task."
+          }
+        ]
+      },
+      {
+        "id": "Step2",
+        "step": 2,
+        "title": "Pick your AI tool",
+        "lines": [
+          {
+            "sub": "Step two: pick the AI tool you'll paste into.",
+            "tts": "Step two: pick the AI tool you'll paste into."
+          },
+          {
+            "sub": "Each card now shows what that tool can do.",
+            "tts": "Each card now shows what that tool can do."
+          }
+        ]
+      },
+      {
+        "id": "Step3",
+        "step": 3,
+        "title": "Open a prompt and fill in the blanks",
+        "lines": [
+          {
+            "sub": "Step three: open a prompt and fill in the blanks.",
+            "tts": "Step three: open a prompt and fill in the blanks."
+          },
+          {
+            "sub": "Type your topic and goal, and tap a quick pick like 10 slides.",
+            "tts": "Type your topic and goal, and tap a quick pick like 10 slides."
+          }
+        ]
+      },
+      {
+        "id": "Step4",
+        "step": 4,
+        "title": "Choose role, audience and tone",
+        "lines": [
+          {
+            "sub": "Step four: choose the expert role, your audience and the tone.",
+            "tts": "Step four: choose the expert role, your audience and the tone."
+          },
+          {
+            "sub": "Every choice is written into the prompt for you.",
+            "tts": "Every choice is written into the prompt for you."
+          }
+        ]
+      },
+      {
+        "id": "Step5",
+        "step": 5,
+        "title": "Pick a style and add your document",
+        "lines": [
+          {
+            "sub": "Step five: pick a visual style to set the look.",
+            "tts": "Step five: pick a visual style to set the look."
+          },
+          {
+            "sub": "Attached a file? Tell the AI how to use it, like as your data source.",
+            "tts": "Attached a file? Tell the A I how to use it, like as your data source."
+          }
+        ]
+      },
+      {
+        "id": "Step6",
+        "step": 6,
+        "title": "Copy, paste and check",
+        "lines": [
+          {
+            "sub": "Step six: check the finished prompt, then tap Copy.",
+            "tts": "Step six: check the finished prompt, then tap Copy."
+          },
+          {
+            "sub": "Paste it into your AI tool, and always check the answer before you use it.",
+            "tts": "Paste it into your A I tool, and always check the answer before you use it."
+          }
+        ]
+      },
+      {
+        "id": "Outro",
+        "kind": "hyperframes",
+        "seconds": 7,
+        "lines": [
+          {
+            "sub": "Open Prompt Hub and try it today.",
+            "tts": "Open Prompt Hub and try it today."
+          },
+          {
+            "sub": "Better questions in, better answers out.",
+            "tts": "Better questions in, better answers out."
+          }
+        ]
+      }
+    ]
+  },
+  "ms": {
+    "voice": "ElevenLabs (Aisyah)",
+    "voiceover": "voiceover-ms.mp3",
+    "scenes": [
+      {
+        "id": "Intro",
+        "kind": "hyperframes",
+        "seconds": 9.6,
+        "lines": [
+          {
+            "sub": "Selamat datang ke Prompt Hub, oleh PFMSB.",
+            "tts": "Selamat datang ke Prompt Hub, oleh PFMSB."
+          },
+          {
+            "sub": "Begini cara membina prompt yang hebat dalam enam langkah mudah.",
+            "tts": "Begini cara membina prompt yang hebat dalam enam langkah mudah."
+          }
+        ]
+      },
+      {
+        "id": "Step1",
+        "step": 1,
+        "title": "Pilih apa yang hendak dihasilkan",
+        "lines": [
+          {
+            "sub": "Langkah satu: pilih apa yang anda mahu hasilkan.",
+            "tts": "Langkah satu: pilih apa yang anda mahu hasilkan."
+          },
+          {
+            "sub": "Pilih Slides, Infographic, Visual, Dashboard atau Website, atau cari sebarang tugasan.",
+            "tts": "Pilih Slides, Infographic, Visual, Dashboard atau Website, atau cari sebarang tugasan."
+          }
+        ]
+      },
+      {
+        "id": "Step2",
+        "step": 2,
+        "title": "Pilih alat AI anda",
+        "lines": [
+          {
+            "sub": "Langkah dua: pilih alat AI yang akan anda gunakan.",
+            "tts": "Langkah dua: pilih alat AI yang akan anda gunakan."
+          },
+          {
+            "sub": "Setiap kad kini menunjukkan keupayaan alat tersebut.",
+            "tts": "Setiap kad kini menunjukkan keupayaan alat tersebut."
+          }
+        ]
+      },
+      {
+        "id": "Step3",
+        "step": 3,
+        "title": "Buka prompt dan isi tempat kosong",
+        "lines": [
+          {
+            "sub": "Langkah tiga: buka prompt dan isikan tempat kosong.",
+            "tts": "Langkah tiga: buka prompt dan isikan tempat kosong."
+          },
+          {
+            "sub": "Taip topik dan matlamat anda, dan tekan pilihan pantas seperti 10 slaid.",
+            "tts": "Taip topik dan matlamat anda, dan tekan pilihan pantas seperti 10 slaid."
+          }
+        ]
+      },
+      {
+        "id": "Step4",
+        "step": 4,
+        "title": "Pilih peranan, khalayak dan nada",
+        "lines": [
+          {
+            "sub": "Langkah empat: pilih peranan pakar, khalayak dan nada.",
+            "tts": "Langkah empat: pilih peranan pakar, khalayak dan nada."
+          },
+          {
+            "sub": "Setiap pilihan akan ditulis ke dalam prompt untuk anda.",
+            "tts": "Setiap pilihan akan ditulis ke dalam prompt untuk anda."
+          }
+        ]
+      },
+      {
+        "id": "Step5",
+        "step": 5,
+        "title": "Pilih gaya dan tambah dokumen",
+        "lines": [
+          {
+            "sub": "Langkah lima: pilih gaya visual untuk menentukan rupanya.",
+            "tts": "Langkah lima: pilih gaya visual untuk menentukan rupanya."
+          },
+          {
+            "sub": "Ada fail dilampirkan? Beritahu AI cara menggunakannya, contohnya sebagai sumber data.",
+            "tts": "Ada fail dilampirkan? Beritahu AI cara menggunakannya, contohnya sebagai sumber data."
+          }
+        ]
+      },
+      {
+        "id": "Step6",
+        "step": 6,
+        "title": "Salin, tampal dan semak",
+        "lines": [
+          {
+            "sub": "Langkah enam: semak prompt yang siap, kemudian tekan Copy.",
+            "tts": "Langkah enam: semak prompt yang siap, kemudian tekan Copy."
+          },
+          {
+            "sub": "Tampal ke alat AI anda, dan sentiasa semak jawapannya sebelum digunakan.",
+            "tts": "Tampal ke alat AI anda, dan sentiasa semak jawapannya sebelum digunakan."
+          }
+        ]
+      },
+      {
+        "id": "Outro",
+        "kind": "hyperframes",
+        "seconds": 7,
+        "lines": [
+          {
+            "sub": "Buka Prompt Hub dan cubalah hari ini.",
+            "tts": "Buka Prompt Hub dan cubalah hari ini."
+          },
+          {
+            "sub": "Soalan yang lebih baik, jawapan yang lebih baik.",
+            "tts": "Soalan yang lebih baik, jawapan yang lebih baik."
+          }
+        ]
+      }
+    ]
+  }
+}
