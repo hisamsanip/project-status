@@ -1,5 +1,5 @@
 {
-  "name": "ai-sandbox-howto-scenes",
+  "name": "prompt-hub-howto-scenes",
   "private": true,
   "scripts": {
     "check": "hyperframes lint",

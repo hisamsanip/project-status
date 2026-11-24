@@ -1,4 +1,4 @@
-// Records the six "how to use" clips of the AI Sandbox Prompt Vault, frame by frame.
+// Records the six "how to use" clips of Prompt Hub, frame by frame.
 // Each frame is a real screenshot of the site, so text stays sharp and timing is exact.
 // Usage: node record.js <site-url> <output-dir>
 const { chromium } = require("playwright");
@@ -9,7 +9,7 @@ const SITE = process.argv[2] || "http://127.0.0.1:8770/ai-sandbox/";
 const OUT = process.argv[3] || path.join(__dirname, "..", "remotion", "public", "clips");
 const FPS = 30;
 
-const CURSOR_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24"><path d="M4 2l15 10.5-6.6 1.3 3.9 7.4-2.6 1.3-3.9-7.4L4 20z" fill="#fff" stroke="#0b1b4d" stroke-width="1.4" stroke-linejoin="round"/></svg>`;
+const CURSOR_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24"><path d="M4 2l15 10.5-6.6 1.3 3.9 7.4-2.6 1.3-3.9-7.4L4 20z" fill="#fff" stroke="#131E3A" stroke-width="1.4" stroke-linejoin="round"/></svg>`;
 
 class Clip {
   constructor(page, file, totalFrames) {
@@ -43,8 +43,8 @@ async function setup(page) {
   await page.addStyleTag({ content: `
     #fakecursor{position:fixed;left:0;top:0;z-index:99999;pointer-events:none;translate:-5px -3px}
     #fakeripple{position:fixed;left:0;top:0;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;
-      border:4px solid #3d7bff;background:rgba(61,123,255,.18);pointer-events:none;z-index:99998;opacity:0}
-    *{caret-color:#3d7bff}` });
+      border:4px solid #ffc20d;background:rgba(255,194,13,.22);pointer-events:none;z-index:99998;opacity:0}
+    *{caret-color:#ffc20d}` });
   await page.evaluate(svg => {
     const c = document.createElement("div"); c.id = "fakecursor"; c.innerHTML = svg; document.body.appendChild(c);
     const r = document.createElement("div"); r.id = "fakeripple"; document.body.appendChild(r);
@@ -83,9 +83,9 @@ function makeActions(page, clipRef) {
       for (let i = 1; i <= frames; i++) { await page.evaluate(y => scrollTo(0, y), from + (toY - from) * ease(i / frames)); await clip().shot(); }
     },
     async scrollModalTo(loc, margin = 70, frames = 22) {
-      const to = await loc.evaluate((el, m) => { const md = document.querySelector(".modal"); return Math.max(0, md.scrollTop + el.getBoundingClientRect().top - md.getBoundingClientRect().top - m); }, margin);
-      const from = await page.evaluate(() => document.querySelector(".modal").scrollTop);
-      for (let i = 1; i <= frames; i++) { await page.evaluate(y => { document.querySelector(".modal").scrollTop = y; }, from + (to - from) * ease(i / frames)); await clip().shot(); }
+      const to = await loc.evaluate((el, m) => { const md = document.querySelector(".modal:not(.video-modal)"); return Math.max(0, md.scrollTop + el.getBoundingClientRect().top - md.getBoundingClientRect().top - m); }, margin);
+      const from = await page.evaluate(() => document.querySelector(".modal:not(.video-modal)").scrollTop);
+      for (let i = 1; i <= frames; i++) { await page.evaluate(y => { document.querySelector(".modal:not(.video-modal)").scrollTop = y; }, from + (to - from) * ease(i / frames)); await clip().shot(); }
     },
   };
 }
@@ -96,7 +96,7 @@ function makeActions(page, clipRef) {
   const start = (page, name, seconds) => { console.log(name); clipRef.current = new Clip(page, path.join(OUT, name + ".mp4"), Math.round(seconds * FPS)); return clipRef.current; };
 
   // ---------- Steps 1-2: the page, at 1280x720 ----------
-  const ctx1 = await browser.newContext({ viewport: { width: 1280, height: 720 }, deviceScaleFactor: 1.5, colorScheme: "light", reducedMotion: "reduce" });
+  const ctx1 = await browser.newContext({ viewport: { width: 1280, height: 720 }, deviceScaleFactor: 1.5, colorScheme: "dark", reducedMotion: "reduce" });
   const p1 = await ctx1.newPage();
   await p1.goto(SITE, { waitUntil: "networkidle" });
   await p1.evaluate(() => document.fonts.ready);
@@ -108,7 +108,7 @@ function makeActions(page, clipRef) {
   await c.hold(30);
   const tilesY = await p1.locator(".create").evaluate(el => el.getBoundingClientRect().top + scrollY - 90);
   await a1.scrollWindow(tilesY, 24);
-  for (const t of ["Slides", "Infographic", "Visual", "Dashboard"]) { await a1.moveTo(p1.locator(`[data-jump="${t}"]`), 14); await c.hold(16); }
+  for (const t of ["Slides", "Infographic", "Visual", "Dashboard", "Website"]) { await a1.moveTo(p1.locator(`[data-jump="${t}"]`), 14); await c.hold(16); }
   await a1.moveTo(p1.locator('[data-jump="Slides"]'), 20);
   await c.hold(6);
   await a1.click();
@@ -131,7 +131,7 @@ function makeActions(page, clipRef) {
   await ctx1.close();
 
   // ---------- Steps 3-6: the prompt window, at 960x540 so it fills the frame ----------
-  const ctx2 = await browser.newContext({ viewport: { width: 960, height: 540 }, deviceScaleFactor: 2, colorScheme: "light", reducedMotion: "reduce" });
+  const ctx2 = await browser.newContext({ viewport: { width: 960, height: 540 }, deviceScaleFactor: 2, colorScheme: "dark", reducedMotion: "reduce" });
   const p2 = await ctx2.newPage();
   await p2.goto(SITE, { waitUntil: "networkidle" });
   await p2.evaluate(() => document.fonts.ready);

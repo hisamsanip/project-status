@@ -5,12 +5,12 @@ import { StepScene } from "./StepScene";
 import { Subtitles } from "./Subtitles";
 
 // Intro and outro come from the bilingual HyperFrames film (scenes.mp4); the six steps are
-// real screen recordings of the Prompt Vault. Each narration line is placed in its scene
+// real screen recordings of Prompt Hub. Each narration line is placed in its scene
 // from the language's ElevenLabs voiceover; subtitles sit on top of everything.
 export const HowToVideo: React.FC<{ lang: Lang }> = ({ lang }) => {
   const { scenes, voiceover } = SCRIPTS[lang];
   return (
-    <AbsoluteFill style={{ background: "#071338" }}>
+    <AbsoluteFill style={{ background: "#131E3A" }}>
       <Series>
         {scenes.map(scene => (
           <Series.Sequence key={scene.id} name={scene.id} durationInFrames={sceneFrames(scene)}>
