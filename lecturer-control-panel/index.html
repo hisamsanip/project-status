@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lecturer Teaching Control Panel</title>
+<meta name="theme-color" content="#020617">
+
+<!-- Tailwind CSS (CDN) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- obs-websocket-js v5 (CDN) → global: OBSWebSocket -->
+<script src="https://cdn.jsdelivr.net/npm/obs-websocket-js@5.0.6/dist/obs-ws.global.js"></script>
+
+<style>
+  :root { color-scheme: dark; }
+  html, body { height: 100%; }
+  body {
+    background: #020617;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;           /* tiada zoom dua-ketuk pada Surface */
+    overscroll-behavior: none;
+  }
+  /* Elak pilihan teks tidak sengaja semasa menyentuh butang */
+  button, .nosel { user-select: none; -webkit-user-select: none; }
+  button { touch-action: manipulation; transition: transform .08s ease, background-color .15s ease, box-shadow .15s ease, border-color .15s ease; }
+  button:active:not(:disabled) { transform: scale(.97); }
+  button:disabled { cursor: not-allowed; }
+  button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid #38bdf8; outline-offset: 2px; }
+
+  /* ---------- Butang Scene ---------- */
+  .scene-btn {
+    --c: 56 189 248;                      /* RGB aksen (ditimpa setiap butang) */
+    position: relative; text-align: left;
+    background: rgb(15 23 42);
+    border: 3px solid rgb(51 65 85);
+    border-radius: 1.25rem;
+    padding: 1rem 1.3rem;
+    min-height: 8.25rem;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .scene-btn:hover:not(:disabled) { border-color: rgb(var(--c) / .7); background: rgb(30 41 59); }
+  .scene-btn[data-active="true"] {
+    background: rgb(var(--c) / .18);
+    border-color: rgb(var(--c));
+    box-shadow: 0 0 0 4px rgb(var(--c) / .25), 0 0 40px rgb(var(--c) / .35);
+  }
+  .scene-btn[data-flash="true"] { background: rgb(var(--c) / .35); }
+  .scene-btn:disabled { opacity: .45; }
+  .scene-key {
+    width: 3.25rem; height: 3.25rem; border-radius: .9rem;
+    display: grid; place-items: center;
+    font-weight: 800; font-size: 1.6rem;
+    background: rgb(var(--c) / .18); color: rgb(var(--c));
+    border: 2px solid rgb(var(--c) / .6);
+  }
+  .scene-btn[data-active="true"] .scene-key { background: rgb(var(--c)); color: #020617; }
+  .scene-live { opacity: 0; font-size: .8rem; font-weight: 800; letter-spacing: .12em; color: rgb(var(--c)); }
+  .scene-btn[data-active="true"] .scene-live { opacity: 1; }
+  .scene-missing { display: none; }
+  .scene-btn[data-missing="true"] .scene-missing { display: inline-block; }
+
+  /* ---------- Lampu rakaman ---------- */
+  .rec-lamp {
+    width: 3.75rem; height: 3.75rem; border-radius: 9999px;
+    background: radial-gradient(circle at 35% 30%, #475569, #1e293b);
+    border: 3px solid #334155;
+  }
+  .rec-lamp[data-on="true"] {
+    background: radial-gradient(circle at 35% 30%, #fca5a5, #ef4444 45%, #b91c1c);
+    border-color: #fecaca;
+    box-shadow: 0 0 0 6px rgb(239 68 68 / .25), 0 0 36px 8px rgb(239 68 68 / .75);
+    animation: recPulse 1.2s ease-in-out infinite;
+  }
+  .rec-lamp[data-busy="true"] { background: radial-gradient(circle at 35% 30%, #fde68a, #f59e0b); border-color: #fde68a; }
+  @keyframes recPulse { 50% { box-shadow: 0 0 0 10px rgb(239 68 68 / .08), 0 0 14px 2px rgb(239 68 68 / .45); } }
+
+  .rec-btn[data-state="idle"]      { background: #166534; border-color: #4ade80; }
+  .rec-btn[data-state="idle"]:hover:not(:disabled) { background: #15803d; }
+  .rec-btn[data-state="recording"] { background: #991b1b; border-color: #f87171; }
+  .rec-btn[data-state="recording"]:hover:not(:disabled) { background: #b91c1c; }
+  .rec-btn[data-state="confirm"]   { background: #b45309; border-color: #fcd34d; animation: confirmBlink .6s ease-in-out infinite alternate; }
+  .rec-btn[data-state="busy"]      { background: #334155; border-color: #64748b; }
+  .rec-btn:disabled { background: #1e293b !important; border-color: #334155 !important; opacity: .6; animation: none; }
+  @keyframes confirmBlink { to { background: #92400e; } }
+
+  /* ---------- Pemasa ---------- */
+  .timer-digits { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; line-height: 1; letter-spacing: -.02em; }
+  .timer-digits[data-level="warn"]  { color: #fbbf24; }
+  .timer-digits[data-level="crit"]  { color: #f87171; animation: critPulse 1s ease-in-out infinite; }
+  .timer-digits[data-level="done"]  { color: #f87171; animation: doneFlash .6s steps(2) infinite; }
+  @keyframes critPulse { 50% { opacity: .55; } }
+  @keyframes doneFlash { 50% { opacity: .2; } }
+
+  /* ---------- Penunjuk sambungan ---------- */
+  .status-dot { width: .9rem; height: .9rem; border-radius: 9999px; background: #ef4444; box-shadow: 0 0 10px #ef4444; }
+  [data-conn="connected"]  .status-dot { background: #22c55e; box-shadow: 0 0 12px #22c55e; }
+  [data-conn="connecting"] .status-dot { background: #f59e0b; box-shadow: 0 0 12px #f59e0b; animation: recPulse 1s ease-in-out infinite; }
+
+  .chip { min-height: 3.25rem; padding: 0 1.1rem; border-radius: .9rem; font-weight: 700; font-size: 1.05rem; background: #1e293b; border: 2px solid #334155; }
+  .chip:hover { background: #334155; }
+  .field {
+    height: 3.25rem; border-radius: .9rem; background: #0f172a; border: 2px solid #334155;
+    padding: 0 1rem; font-size: 1.1rem; color: #f1f5f9; width: 100%;
+  }
+  .field::placeholder { color: #64748b; }
+  input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+  input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .field:focus { border-color: #38bdf8; }
+  .lbl { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #94a3b8; margin-bottom: .3rem; }
+  summary { list-style: none; cursor: pointer; }
+  summary::-webkit-details-marker { display: none; }
+
+  #toast {
+    position: fixed; left: 50%; bottom: 1.5rem; transform: translate(-50%, 140%);
+    max-width: min(92vw, 40rem); padding: 1rem 1.5rem; border-radius: 1rem;
+    background: #1e293b; border: 2px solid #475569; font-weight: 600; font-size: 1.05rem;
+    transition: transform .25s ease, opacity .25s ease; z-index: 50; text-align: center;
+    opacity: 0; pointer-events: none;
+  }
+  #toast.show { transform: translate(-50%, 0); opacity: 1; }
+  #toast[data-kind="error"] { border-color: #f87171; }
+  #toast[data-kind="ok"] { border-color: #4ade80; }
+
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+
+<body class="text-slate-100 font-sans antialiased">
+<div class="min-h-screen flex flex-col gap-3 p-3 sm:p-4 max-w-[1800px] mx-auto">
+
+  <!-- ===================== 1. SAMBUNGAN OBS ===================== -->
+  <header id="connBar" data-conn="disconnected"
+          class="bg-slate-900 border-2 border-slate-800 rounded-2xl p-3 flex flex-wrap items-end gap-x-4 gap-y-3">
+    <div class="flex items-center gap-3 xl:mr-2 xl:pb-1">
+      <div class="text-3xl" aria-hidden="true">🎓</div>
+      <div>
+        <h1 class="text-lg font-extrabold leading-tight">Lecturer Teaching Control Panel</h1>
+        <p class="text-xs text-slate-400">OBS Studio · WebSocket v5</p>
+      </div>
+    </div>
+
+    <!-- Status + ingat password -->
+    <div class="ml-auto xl:order-3 flex items-center gap-4">
+      <div id="statusPill" class="flex items-center gap-3 h-[3.25rem] px-4 rounded-xl bg-slate-950 border-2 border-slate-700 min-w-[11.5rem]" role="status" aria-live="polite">
+        <span class="status-dot"></span>
+        <span id="statusText" class="font-extrabold tracking-wide">Disconnected</span>
+      </div>
+    </div>
+
+    <!-- 1. Sambungan pantas -->
+    <form id="connForm" class="order-last basis-full xl:order-2 xl:basis-0 xl:flex-1 grid grid-cols-2 md:grid-cols-[2fr_1fr_2fr_auto] gap-3 items-end" autocomplete="off">
+      <div class="col-span-2 md:col-span-1">
+        <label class="lbl" for="host">Host</label>
+        <input id="host" class="field" type="text" inputmode="url" value="localhost" spellcheck="false" autocapitalize="off">
+      </div>
+      <div>
+        <label class="lbl" for="port">Port</label>
+        <input id="port" class="field min-w-[6rem]" type="number" inputmode="numeric" value="4455" min="1" max="65535">
+      </div>
+      <div>
+        <div class="flex items-center justify-between"><label class="lbl" for="password">Password</label>
+        <label class="flex items-center gap-1.5 text-xs text-slate-400 nosel mb-[.3rem]"><input id="rememberPw" type="checkbox" class="w-4 h-4 accent-sky-500"> Ingat</label></div>
+        <input id="password" class="field" type="password" placeholder="(jika ada)" autocomplete="off">
+      </div>
+      <button id="connectBtn" type="submit"
+              class="h-[3.25rem] px-8 rounded-xl text-lg font-extrabold bg-sky-600 hover:bg-sky-500 border-2 border-sky-300/40 min-w-[11rem] col-span-2 md:col-span-1">
+        Sambung
+      </button>
+    </form>
+  </header>
+
+  <!-- ===================== 2. SCENE ===================== -->
+  <section aria-labelledby="sceneHeading" class="flex flex-col gap-3">
+    <div class="flex items-center justify-between">
+      <h2 id="sceneHeading" class="text-sm font-bold uppercase tracking-[.15em] text-slate-400">Scene · Tekan <kbd class="px-2 py-0.5 rounded bg-slate-800 border border-slate-600">1</kbd> <kbd class="px-2 py-0.5 rounded bg-slate-800 border border-slate-600">2</kbd> <kbd class="px-2 py-0.5 rounded bg-slate-800 border border-slate-600">3</kbd></h2>
+      <details id="sceneCfg" class="relative">
+        <summary class="chip flex items-center nosel">⚙ Nama scene OBS</summary>
+        <div class="absolute right-0 z-30 mt-2 w-[min(92vw,32rem)] bg-slate-900 border-2 border-slate-600 rounded-2xl p-4 shadow-2xl flex flex-col gap-3">
+          <p class="text-sm text-slate-400">Nama mesti <b>sama tepat</b> dengan nama scene dalam OBS. Pilih daripada senarai selepas bersambung.</p>
+          <div><label class="lbl" for="sceneName1">Tekan 1 — Slaid Kuliah</label><input id="sceneName1" class="field" list="obsScenes" spellcheck="false"></div>
+          <div><label class="lbl" for="sceneName2">Tekan 2 — Demo Litar + Scope</label><input id="sceneName2" class="field" list="obsScenes" spellcheck="false"></div>
+          <div><label class="lbl" for="sceneName3">Tekan 3 — Slaid + Kamera PiP</label><input id="sceneName3" class="field" list="obsScenes" spellcheck="false"></div>
+          <datalist id="obsScenes"></datalist>
+          <button type="button" id="sceneCfgClose" class="chip bg-sky-700 border-sky-400/50">Siap</button>
+        </div>
+      </details>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <button class="scene-btn" data-scene-idx="0" style="--c: 56 189 248" disabled>
+        <div class="flex items-start justify-between"><span class="scene-key">1</span><span class="scene-live">● PROGRAM</span></div>
+        <div>
+          <div class="text-2xl font-extrabold leading-tight">Slaid Kuliah</div>
+          <div class="text-sm text-slate-400 mt-1 truncate"><span class="scene-name"></span> <span class="scene-missing ml-1 px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold text-xs">TIADA DALAM OBS</span></div>
+        </div>
+      </button>
+      <button class="scene-btn" data-scene-idx="1" style="--c: 251 191 36" disabled>
+        <div class="flex items-start justify-between"><span class="scene-key">2</span><span class="scene-live">● PROGRAM</span></div>
+        <div>
+          <div class="text-2xl font-extrabold leading-tight">Demo Litar + Scope</div>
+          <div class="text-sm text-slate-400 mt-1 truncate"><span class="scene-name"></span> <span class="scene-missing ml-1 px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold text-xs">TIADA DALAM OBS</span></div>
+        </div>
+      </button>
+      <button class="scene-btn" data-scene-idx="2" style="--c: 52 211 153" disabled>
+        <div class="flex items-start justify-between"><span class="scene-key">3</span><span class="scene-live">● PROGRAM</span></div>
+        <div>
+          <div class="text-2xl font-extrabold leading-tight">Slaid + Kamera PiP</div>
+          <div class="text-sm text-slate-400 mt-1 truncate"><span class="scene-name"></span> <span class="scene-missing ml-1 px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold text-xs">TIADA DALAM OBS</span></div>
+        </div>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===================== 3 & 4. REKAMAN + PEMASA ===================== -->
+  <section class="grid grid-cols-1 lg:grid-cols-5 gap-3">
+
+    <!-- Rakaman -->
+    <div class="lg:col-span-2 bg-slate-900 border-2 border-slate-800 rounded-2xl p-4 flex flex-col gap-3">
+      <div class="flex items-center gap-4">
+        <div id="recLamp" class="rec-lamp shrink-0" data-on="false" aria-hidden="true"></div>
+        <div class="min-w-0">
+          <div id="recLabel" class="text-xl font-extrabold">TIDAK MERAKAM</div>
+          <div id="recTime" class="text-3xl font-bold timer-digits text-slate-300">00:00:00</div>
+        </div>
+      </div>
+      <button id="recBtn" class="rec-btn border-4 rounded-2xl flex-1 min-h-[6rem] text-2xl font-extrabold px-4" data-state="idle" disabled>
+        ● MULA RAKAMAN
+      </button>
+      <p id="recInfo" class="text-sm text-slate-500 min-h-[1.25rem] truncate"></p>
+    </div>
+
+    <!-- Pemasa kuliah -->
+    <div class="lg:col-span-3 bg-slate-900 border-2 border-slate-800 rounded-2xl p-4 flex flex-col gap-3">
+      <div class="flex items-center justify-between">
+        <h2 class="text-sm font-bold uppercase tracking-[.15em] text-slate-400">Pemasa Kuliah</h2>
+        <div id="timerState" class="text-sm font-bold text-slate-400">Sedia</div>
+      </div>
+
+      <div id="timerDisplay" class="timer-digits text-center font-extrabold text-[4.5rem] sm:text-[5.75rem] py-0" data-level="ok" role="timer">50:00</div>
+
+      <div class="grid grid-cols-3 gap-3">
+        <button id="timerToggle" class="min-h-[4.5rem] rounded-2xl text-xl font-extrabold bg-sky-600 hover:bg-sky-500 border-2 border-sky-300/40">▶ Mula</button>
+        <button id="timerAdd" class="min-h-[4.5rem] rounded-2xl text-xl font-extrabold bg-slate-800 hover:bg-slate-700 border-2 border-slate-600">+5 min</button>
+        <button id="timerReset" class="min-h-[4.5rem] rounded-2xl text-xl font-extrabold bg-slate-800 hover:bg-slate-700 border-2 border-slate-600">↺ Set Semula</button>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="lbl !mb-0 mr-1">Tempoh (min)</span>
+        <button class="chip" data-preset="30">30</button>
+        <button class="chip" data-preset="45">45</button>
+        <button class="chip" data-preset="50">50</button>
+        <button class="chip" data-preset="60">60</button>
+        <button class="chip" data-preset="90">90</button>
+        <button class="chip" data-preset="120">120</button>
+        <input id="timerMinutes" class="field !w-28 text-center" type="number" inputmode="numeric" min="1" max="600" value="50" aria-label="Tempoh tersuai dalam minit">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 5. NOTA PANTAS ===================== -->
+  <section class="flex-1 min-h-[9rem] bg-slate-900 border-2 border-slate-800 rounded-2xl p-4 flex flex-col gap-2">
+    <div class="flex items-center justify-between gap-3">
+      <h2 class="text-sm font-bold uppercase tracking-[.15em] text-slate-400">Nota Pantas Pensyarah</h2>
+      <div class="flex items-center gap-3">
+        <span id="noteStatus" class="text-sm text-slate-500 nosel">Disimpan automatik</span>
+        <button id="noteClear" class="chip !min-h-[2.75rem] nosel">Kosongkan</button>
+      </div>
+    </div>
+    <textarea id="notes" class="flex-1 min-h-[5.5rem] w-full resize-none rounded-xl bg-slate-950 border-2 border-slate-700 focus:border-sky-400 p-4 text-xl leading-relaxed text-slate-100 placeholder-slate-600"
+              placeholder="Taip nota di sini — tajuk, soalan pelajar, perkara untuk diulang… (disimpan automatik)" spellcheck="false"></textarea>
+  </section>
+</div>
+
+<div id="toast" role="alert" data-kind="info"></div>
+
+<script>
+(() => {
+  'use strict';
+  const $  = (id) => document.getElementById(id);
+  const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+
+  /* ---------- localStorage selamat (try/catch) ---------- */
+  const store = {
+    get(k, d = null) { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch { return d; } },
+    set(k, v)        { try { localStorage.setItem(k, v); return true; } catch { return false; } },
+    del(k)           { try { localStorage.removeItem(k); } catch {} },
+  };
+  const K = {
+    host: 'ltcp.host', port: 'ltcp.port', pw: 'ltcp.password', remember: 'ltcp.rememberPw',
+    scenes: 'ltcp.sceneNames', notes: 'ltcp.notes', timer: 'ltcp.timer',
+  };
+
+  /* ---------- Toast ---------- */
+  let toastTimer;
+  function toast(msg, kind = 'info', ms = 4000) {
+    const t = $('toast');
+    t.textContent = msg; t.dataset.kind = kind; t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), ms);
+  }
+
+  const pad = (n) => String(n).padStart(2, '0');
+  function fmtHMS(totalSec) {
+    totalSec = Math.max(0, Math.floor(totalSec));
+    const h = Math.floor(totalSec / 3600), m = Math.floor((totalSec % 3600) / 60), s = totalSec % 60;
+    return `${pad(h)}:${pad(m)}:${pad(s)}`;
+  }
+
+  /* =====================================================================
+   * 1. SAMBUNGAN OBS
+   * ===================================================================== */
+  if (typeof OBSWebSocket === 'undefined') {
+    toast('obs-websocket-js gagal dimuat (semak sambungan internet / CDN).', 'error', 10000);
+  }
+  const obs = (typeof OBSWebSocket !== 'undefined') ? new OBSWebSocket() : null;
+
+  let connected = false, connecting = false, intentionalClose = false;
+  let sceneList = [];          // nama scene yang wujud dalam OBS
+  let currentScene = null;     // scene program semasa
+
+  $('host').value = store.get(K.host, 'localhost');
+  $('port').value = store.get(K.port, '4455');
+  $('rememberPw').checked = store.get(K.remember) === '1';
+  if ($('rememberPw').checked) $('password').value = store.get(K.pw, '');
+
+  function setConn(state) { // 'disconnected' | 'connecting' | 'connected'
+    $('connBar').dataset.conn = state;
+    $('statusText').textContent = { connected: 'Connected', connecting: 'Connecting…', disconnected: 'Disconnected' }[state];
+    const btn = $('connectBtn');
+    btn.textContent = { connected: 'Putuskan', connecting: 'Menyambung…', disconnected: 'Sambung' }[state];
+    btn.disabled = state === 'connecting';
+    btn.classList.toggle('bg-sky-600', state !== 'connected');
+    btn.classList.toggle('hover:bg-sky-500', state !== 'connected');
+    btn.classList.toggle('bg-slate-700', state === 'connected');
+    btn.classList.toggle('hover:bg-slate-600', state === 'connected');
+    ['host', 'port', 'password'].forEach(id => $(id).disabled = state !== 'disconnected');
+    renderScenes(); renderRec();
+  }
+
+  function errText(e) {
+    if (e && e.code === 4009) return 'Password OBS salah.';
+    if (e && e.code === 4005) return 'OBS belum bersedia — cuba lagi sebentar.';
+    return 'Tidak dapat sambung ke OBS. Pastikan OBS berjalan dan Tools → WebSocket Server Settings → Enable dihidupkan (port 4455).';
+  }
+
+  async function doConnect() {
+    if (!obs || connected || connecting) return;
+    const host = $('host').value.trim() || 'localhost';
+    const port = parseInt($('port').value, 10) || 4455;
+    const pw = $('password').value;
+    store.set(K.host, host); store.set(K.port, String(port));
+    store.set(K.remember, $('rememberPw').checked ? '1' : '0');
+    if ($('rememberPw').checked) store.set(K.pw, pw); else store.del(K.pw);
+
+    connecting = true; intentionalClose = false; setConn('connecting');
+    try {
+      await obs.connect(`ws://${host}:${port}`, pw || undefined);
+      connected = true; connecting = false;
+      setConn('connected');
+      toast('Berjaya bersambung ke OBS', 'ok', 2000);
+      await syncFromObs();
+    } catch (e) {
+      connected = false; connecting = false;
+      setConn('disconnected');
+      toast(errText(e), 'error', 7000);
+    }
+  }
+  async function doDisconnect() {
+    intentionalClose = true;
+    try { await obs.disconnect(); } catch {}
+  }
+  $('connForm').addEventListener('submit', (e) => { e.preventDefault(); connected ? doDisconnect() : doConnect(); });
+
+  if (obs) {
+    obs.on('ConnectionClosed', () => {
+      const wasConnected = connected;
+      connected = false; connecting = false;
+      currentScene = null; recState = { active: false, busy: false, paused: false };
+      setConn('disconnected');
+      if (wasConnected && !intentionalClose) toast('Sambungan ke OBS terputus.', 'error', 6000);
+    });
+    obs.on('CurrentProgramSceneChanged', (d) => { currentScene = d.sceneName; renderScenes(); });
+    obs.on('SceneListChanged', () => refreshSceneList());
+    obs.on('RecordStateChanged', onRecordStateChanged);
+  }
+
+  async function syncFromObs() {
+    await refreshSceneList();
+    try { currentScene = (await obs.call('GetCurrentProgramScene')).sceneName; } catch {}
+    renderScenes();
+    await refreshRecordStatus();
+  }
+
+  /* =====================================================================
+   * 2. SCENE + PINTASAN KEKUNCI
+   * ===================================================================== */
+  const DEFAULT_SCENES = ['Slaid Kuliah', 'Demo Litar + Scope', 'Slaid + Kamera PiP'];
+  let sceneNames = DEFAULT_SCENES.slice();
+  try {
+    const saved = JSON.parse(store.get(K.scenes, 'null'));
+    if (Array.isArray(saved) && saved.length === 3) sceneNames = saved.map((s, i) => (typeof s === 'string' && s.trim()) ? s : DEFAULT_SCENES[i]);
+  } catch {}
+
+  const sceneBtns = $$('.scene-btn');
+  const sceneInputs = [1, 2, 3].map(n => $('sceneName' + n));
+  sceneInputs.forEach((inp, i) => {
+    inp.value = sceneNames[i];
+    inp.addEventListener('input', () => {
+      sceneNames[i] = inp.value.trim() || DEFAULT_SCENES[i];
+      store.set(K.scenes, JSON.stringify(sceneNames));
+      renderScenes();
+    });
+  });
+  $('sceneCfgClose').addEventListener('click', () => { $('sceneCfg').open = false; });
+
+  async function refreshSceneList() {
+    try {
+      const r = await obs.call('GetSceneList');
+      sceneList = r.scenes.map(s => s.sceneName);
+      $('obsScenes').replaceChildren(...sceneList.map(n => { const o = document.createElement('option'); o.value = n; return o; }));
+    } catch { sceneList = []; }
+    renderScenes();
+  }
+
+  function renderScenes() {
+    sceneBtns.forEach((btn, i) => {
+      const name = sceneNames[i];
+      btn.querySelector('.scene-name').textContent = '→ ' + name;
+      btn.disabled = !connected;
+      btn.dataset.active = String(connected && currentScene === name);
+      btn.dataset.missing = String(connected && sceneList.length > 0 && !sceneList.includes(name));
+    });
+  }
+
+  async function switchScene(i) {
+    const btn = sceneBtns[i];
+    btn.dataset.flash = 'true'; setTimeout(() => { btn.dataset.flash = 'false'; }, 180);
+    if (!connected) { toast('Belum bersambung ke OBS — tekan "Sambung" dahulu.', 'error'); return; }
+    const name = sceneNames[i];
+    try {
+      await obs.call('SetCurrentProgramScene', { sceneName: name });
+      currentScene = name; renderScenes();           // event OBS akan mengesahkan
+    } catch (e) {
+      toast(`Gagal tukar ke scene "${name}". Semak nama scene dalam ⚙ Nama scene OBS.`, 'error', 6000);
+    }
+  }
+  sceneBtns.forEach((btn, i) => btn.addEventListener('click', () => switchScene(i)));
+
+  window.addEventListener('keydown', (e) => {
+    if (e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
+    const t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+    const m = /^(?:Digit|Numpad)([1-3])$/.exec(e.code);
+    if (m) { e.preventDefault(); switchScene(parseInt(m[1], 10) - 1); }
+  });
+
+  /* =====================================================================
+   * 3. RAKAMAN
+   * ===================================================================== */
+  let recState = { active: false, busy: false, paused: false };
+  let recBaseMs = 0, recSyncAt = 0;       // masa rakaman terkumpul + masa selaras
+  let confirmStop = false, confirmTimer;
+
+  async function refreshRecordStatus() {
+    if (!connected) return;
+    try {
+      const s = await obs.call('GetRecordStatus');
+      recState = { active: !!s.outputActive, busy: false, paused: !!s.outputPaused };
+      recBaseMs = s.outputDuration || 0; recSyncAt = Date.now();
+      renderRec();
+    } catch {}
+  }
+
+  function onRecordStateChanged(d) {
+    const st = d.outputState;
+    if (st === 'OBS_WEBSOCKET_OUTPUT_STARTING')      recState = { active: false, busy: true, paused: false };
+    else if (st === 'OBS_WEBSOCKET_OUTPUT_STARTED')  { recState = { active: true, busy: false, paused: false }; recBaseMs = 0; recSyncAt = Date.now(); $('recInfo').textContent = ''; }
+    else if (st === 'OBS_WEBSOCKET_OUTPUT_STOPPING') recState = { active: true, busy: true, paused: false };
+    else if (st === 'OBS_WEBSOCKET_OUTPUT_STOPPED')  {
+      recState = { active: false, busy: false, paused: false };
+      if (d.outputPath) { $('recInfo').textContent = 'Disimpan: ' + d.outputPath; $('recInfo').title = d.outputPath; toast('Rakaman dihentikan & disimpan', 'ok', 3500); }
+    }
+    else if (st === 'OBS_WEBSOCKET_OUTPUT_PAUSED')   { recBaseMs += Date.now() - recSyncAt; recState.paused = true; }
+    else if (st === 'OBS_WEBSOCKET_OUTPUT_RESUMED')  { recState.paused = false; recSyncAt = Date.now(); }
+    if (st !== 'OBS_WEBSOCKET_OUTPUT_STOPPING') cancelConfirm();
+    renderRec();
+  }
+
+  function cancelConfirm() { confirmStop = false; clearTimeout(confirmTimer); }
+
+  function renderRec() {
+    const lamp = $('recLamp'), btn = $('recBtn');
+    lamp.dataset.on = String(recState.active && !recState.busy && !recState.paused);
+    lamp.dataset.busy = String(recState.busy);
+    let state, text, label;
+    if (!connected)            { state = 'idle';      text = '● MULA RAKAMAN';  label = 'TIDAK MERAKAM'; }
+    else if (recState.busy)    { state = 'busy';      text = 'Sila tunggu…';    label = recState.active ? 'MENGHENTI…' : 'MEMULAKAN…'; }
+    else if (recState.active && confirmStop) { state = 'confirm'; text = '⚠ TEKAN LAGI UNTUK HENTI'; label = 'SEDANG MERAKAM'; }
+    else if (recState.active)  { state = 'recording'; text = '■ HENTI RAKAMAN'; label = recState.paused ? 'DIJEDA' : 'SEDANG MERAKAM'; }
+    else                       { state = 'idle';      text = '● MULA RAKAMAN';  label = 'TIDAK MERAKAM'; }
+    btn.dataset.state = state; btn.textContent = text; btn.disabled = !connected || recState.busy;
+    $('recLabel').textContent = label;
+    $('recLabel').className = 'text-xl font-extrabold ' + (recState.active && !recState.paused ? 'text-red-400' : 'text-slate-300');
+    renderRecTime();
+  }
+  function renderRecTime() {
+    const ms = recState.active ? recBaseMs + (recState.paused ? 0 : Date.now() - recSyncAt) : 0;
+    $('recTime').textContent = fmtHMS(ms / 1000);
+    $('recTime').style.color = recState.active ? '#fca5a5' : '';
+  }
+  setInterval(renderRecTime, 500);
+  setInterval(() => { if (connected && recState.active) refreshRecordStatus(); }, 10000);   // selaras semula
+
+  $('recBtn').addEventListener('click', async () => {
+    if (!connected || recState.busy) return;
+    try {
+      if (!recState.active) {
+        await obs.call('StartRecord');
+      } else if (!confirmStop) {                      // Sentuh pertama: minta pengesahan (elak henti tak sengaja)
+        confirmStop = true; renderRec();
+        confirmTimer = setTimeout(() => { confirmStop = false; renderRec(); }, 3000);
+      } else {
+        cancelConfirm(); renderRec();
+        await obs.call('StopRecord');
+      }
+    } catch (e) {
+      cancelConfirm(); renderRec();
+      toast('Operasi rakaman gagal: ' + (e && e.message ? e.message : 'ralat tidak diketahui'), 'error', 6000);
+    }
+  });
+
+  /* =====================================================================
+   * 4. PEMASA KULIAH
+   * ===================================================================== */
+  const timer = { durationSec: 50 * 60, remainingMs: 50 * 60 * 1000, running: false, endAt: 0, finished: false };
+  let audioCtx = null;
+
+  function saveTimer() {
+    store.set(K.timer, JSON.stringify({ d: timer.durationSec, r: timer.remainingMs, run: timer.running, end: timer.endAt, fin: timer.finished }));
+  }
+  (function restoreTimer() {
+    try {
+      const s = JSON.parse(store.get(K.timer, 'null'));
+      if (!s || !(s.d > 0)) return;
+      timer.durationSec = s.d; timer.remainingMs = s.r; timer.finished = !!s.fin;
+      if (s.run && s.end) { timer.running = true; timer.endAt = s.end; }
+    } catch {}
+    $('timerMinutes').value = String(Math.round(timer.durationSec / 60));
+  })();
+
+  function beep(count = 3) {
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      for (let i = 0; i < count; i++) {
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        const t0 = audioCtx.currentTime + i * 0.45;
+        o.type = 'sine'; o.frequency.value = 880;
+        g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(0.4, t0 + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.35);
+        o.connect(g).connect(audioCtx.destination); o.start(t0); o.stop(t0 + 0.4);
+      }
+    } catch {}
+  }
+
+  function currentRemainingMs() { return timer.running ? Math.max(0, timer.endAt - Date.now()) : timer.remainingMs; }
+
+  function renderTimer() {
+    const ms = currentRemainingMs();
+    const sec = Math.ceil(ms / 1000);
+    const disp = $('timerDisplay');
+    disp.textContent = sec >= 3600 ? fmtHMS(sec) : `${pad(Math.floor(sec / 60))}:${pad(sec % 60)}`;
+    let level = 'ok';
+    if (timer.finished) level = 'done'; else if (sec <= 60) level = 'crit'; else if (sec <= 300) level = 'warn';
+    if (!timer.running && !timer.finished) level = sec <= 300 && ms < timer.durationSec * 1000 ? level : 'ok';
+    disp.dataset.level = level;
+    $('timerState').textContent = timer.finished ? 'MASA TAMAT!' : timer.running ? 'Berjalan' : (ms < timer.durationSec * 1000 ? 'Dijeda' : 'Sedia');
+    const tg = $('timerToggle');
+    tg.textContent = timer.running ? '⏸ Jeda' : (ms < timer.durationSec * 1000 && !timer.finished ? '▶ Sambung' : '▶ Mula');
+    tg.classList.toggle('bg-amber-600', timer.running); tg.classList.toggle('hover:bg-amber-500', timer.running);
+    tg.classList.toggle('bg-sky-600', !timer.running); tg.classList.toggle('hover:bg-sky-500', !timer.running);
+    document.title = timer.running ? `${disp.textContent} · Lecturer Control Panel` : 'Lecturer Teaching Control Panel';
+  }
+
+  function tickTimer() {
+    if (timer.running && currentRemainingMs() <= 0) {
+      timer.running = false; timer.remainingMs = 0; timer.finished = true; saveTimer();
+      beep(3); toast('⏰ Masa kuliah tamat!', 'error', 8000);
+    }
+    renderTimer();
+  }
+  setInterval(tickTimer, 250);
+
+  function setDuration(min) {
+    min = Math.min(600, Math.max(1, Math.round(min) || 1));
+    timer.durationSec = min * 60; timer.remainingMs = timer.durationSec * 1000;
+    timer.running = false; timer.finished = false; $('timerMinutes').value = String(min);
+    saveTimer(); renderTimer();
+  }
+
+  $('timerToggle').addEventListener('click', () => {
+    audioCtx = audioCtx || (() => { try { return new (window.AudioContext || window.webkitAudioContext)(); } catch { return null; } })(); // buka audio melalui sentuhan pengguna
+    if (timer.running) {
+      timer.remainingMs = currentRemainingMs(); timer.running = false;
+    } else {
+      if (timer.finished || timer.remainingMs <= 0) { timer.remainingMs = timer.durationSec * 1000; timer.finished = false; }
+      timer.endAt = Date.now() + timer.remainingMs; timer.running = true;
+    }
+    saveTimer(); renderTimer();
+  });
+  $('timerAdd').addEventListener('click', () => {
+    const add = 5 * 60 * 1000;
+    if (timer.running) timer.endAt += add; else timer.remainingMs = currentRemainingMs() + add;
+    timer.durationSec = Math.max(timer.durationSec, Math.ceil((currentRemainingMs()) / 1000));
+    timer.finished = false; saveTimer(); renderTimer();
+  });
+  $('timerReset').addEventListener('click', () => setDuration(timer.durationSec / 60));
+  $$('[data-preset]').forEach(b => b.addEventListener('click', () => setDuration(parseInt(b.dataset.preset, 10))));
+  $('timerMinutes').addEventListener('change', (e) => setDuration(parseFloat(e.target.value)));
+
+  /* =====================================================================
+   * 5. NOTA PANTAS (auto-simpan)
+   * ===================================================================== */
+  const notes = $('notes');
+  notes.value = store.get(K.notes, '');
+  let noteTimer;
+  function saveNotes() {
+    const ok = store.set(K.notes, notes.value);
+    const t = new Date();
+    $('noteStatus').textContent = ok ? `Disimpan ${pad(t.getHours())}:${pad(t.getMinutes())}:${pad(t.getSeconds())}` : 'Tidak dapat simpan (storan disekat)';
+    $('noteStatus').style.color = ok ? '#4ade80' : '#f87171';
+  }
+  notes.addEventListener('input', () => {
+    $('noteStatus').textContent = 'Menyimpan…'; $('noteStatus').style.color = '';
+    clearTimeout(noteTimer); noteTimer = setTimeout(saveNotes, 400);
+  });
+  window.addEventListener('beforeunload', () => { clearTimeout(noteTimer); store.set(K.notes, notes.value); });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) { clearTimeout(noteTimer); store.set(K.notes, notes.value); } });
+  $('noteClear').addEventListener('click', () => {
+    if (!notes.value) return;
+    if (confirm('Kosongkan semua nota?')) { notes.value = ''; saveNotes(); }
+  });
+
+  /* ---------- Mula ---------- */
+  setConn('disconnected');
+  renderTimer();
+})();
+</script>
+</body>
+</html>
