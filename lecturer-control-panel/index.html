@@ -4,271 +4,438 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Lecturer Teaching Control Panel</title>
-<meta name="theme-color" content="#020617">
+<meta name="theme-color" content="#6E5CE7">
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <!-- Tailwind CSS (CDN) -->
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- obs-websocket-js v5 (CDN) → global: OBSWebSocket -->
 <script src="https://cdn.jsdelivr.net/npm/obs-websocket-js@5.0.6/dist/obs-ws.global.js"></script>
 
 <style>
-  :root { color-scheme: dark; }
-  html, body { height: 100%; }
+  /* =====================================================================
+   * DESIGN TOKENS  (diambil daripada rujukan UI: ungu-indigo + kad putih
+   * + aksen merah jambu / biru muda, sudut besar, bayang lembut berlapis)
+   * ===================================================================== */
+  :root {
+    --page:        #D9D3F1;      /* latar lavender luar */
+    --violet:      #6E5CE7;      /* bingkai utama */
+    --violet-deep: #5B4BD0;      /* panel dalam */
+    --violet-ink:  #4A3BB8;
+    --violet-soft: #EDE9FD;      /* butang sekunder pada kad putih */
+    --violet-pale: #F5F3FD;      /* medan / kad kelabu-lavender */
+    --sel:         #7B61E8;      /* "tarikh dipilih" */
+    --pink:        #F28FD9;
+    --pink-2:      #E87BCB;
+    --blue:        #6CC4FA;
+    --blue-2:      #55B3F3;
+    --ink:         #1E1B4B;      /* teks pada kad putih */
+    --ink-soft:    #8B87B3;
+    --on-violet:   #fff;
+    --on-violet-2: rgba(255,255,255,.58);
+    --ok:          #2DD4A0;
+    --warn:        #FFB547;
+    --danger:      #FF5C86;
+    --rec:         #FF3B5C;
+
+    /* Radius */
+    --r-shell: 44px;
+    --r-panel: 30px;
+    --r-card:  24px;
+    --r-btn:   18px;
+
+    /* Bayang berlapis (lembut, ungu — bukan hitam) */
+    --sh-shell: 0 60px 90px -40px rgba(80,55,200,.55), 0 28px 50px -24px rgba(60,40,160,.40);
+    --sh-card:  0 18px 30px -12px rgba(38,20,125,.38), 0 4px 10px -2px rgba(38,20,125,.14);
+    --sh-white: 0 14px 28px -12px rgba(60,40,150,.28), 0 2px 6px rgba(60,40,150,.08);
+    --sh-btn:   0 12px 22px -8px rgba(80,55,215,.55);
+    --sh-inset: inset 0 2px 6px rgba(80,60,170,.08);
+  }
+  * { font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, 'Segoe UI', sans-serif; }
+  html, body { min-height: 100%; }
   body {
-    background: #020617;
+    background: var(--page);
+    color: var(--ink);
     -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;           /* tiada zoom dua-ketuk pada Surface */
+    touch-action: manipulation;
     overscroll-behavior: none;
   }
-  /* Elak pilihan teks tidak sengaja semasa menyentuh butang */
   button, .nosel { user-select: none; -webkit-user-select: none; }
-  button { touch-action: manipulation; transition: transform .08s ease, background-color .15s ease, box-shadow .15s ease, border-color .15s ease; }
-  button:active:not(:disabled) { transform: scale(.97); }
+  button { touch-action: manipulation; cursor: pointer; transition: transform .12s ease, background-color .18s ease, box-shadow .18s ease, opacity .18s ease, filter .18s ease; }
+  button:active:not(:disabled) { transform: scale(.965); }
   button:disabled { cursor: not-allowed; }
-  button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid #38bdf8; outline-offset: 2px; }
+  :focus-visible { outline: 3px solid #fff; outline-offset: 2px; box-shadow: 0 0 0 6px rgba(123,97,232,.55); }
 
-  /* ---------- Butang Scene ---------- */
-  .scene-btn {
-    --c: 56 189 248;                      /* RGB aksen (ditimpa setiap butang) */
-    position: relative; text-align: left;
-    background: rgb(15 23 42);
-    border: 3px solid rgb(51 65 85);
-    border-radius: 1.25rem;
-    padding: 1rem 1.3rem;
-    min-height: 8.25rem;
-    display: flex; flex-direction: column; justify-content: space-between;
+  /* ---------- Bingkai ---------- */
+  .page  { min-height: 100vh; padding: 11px; display: flex; }
+  .shell {
+    flex: 1; width: 100%; max-width: 1560px; margin: 0 auto;
+    background: var(--violet); border-radius: var(--r-shell);
+    box-shadow: var(--sh-shell);
+    padding: 18px 24px 20px;
+    display: flex; flex-direction: column; gap: 14px;
+    color: var(--on-violet);
   }
-  .scene-btn:hover:not(:disabled) { border-color: rgb(var(--c) / .7); background: rgb(30 41 59); }
-  .scene-btn[data-active="true"] {
-    background: rgb(var(--c) / .18);
-    border-color: rgb(var(--c));
-    box-shadow: 0 0 0 4px rgb(var(--c) / .25), 0 0 40px rgb(var(--c) / .35);
-  }
-  .scene-btn[data-flash="true"] { background: rgb(var(--c) / .35); }
-  .scene-btn:disabled { opacity: .45; }
-  .scene-key {
-    width: 3.25rem; height: 3.25rem; border-radius: .9rem;
-    display: grid; place-items: center;
-    font-weight: 800; font-size: 1.6rem;
-    background: rgb(var(--c) / .18); color: rgb(var(--c));
-    border: 2px solid rgb(var(--c) / .6);
-  }
-  .scene-btn[data-active="true"] .scene-key { background: rgb(var(--c)); color: #020617; }
-  .scene-live { opacity: 0; font-size: .8rem; font-weight: 800; letter-spacing: .12em; color: rgb(var(--c)); }
-  .scene-btn[data-active="true"] .scene-live { opacity: 1; }
-  .scene-missing { display: none; }
-  .scene-btn[data-missing="true"] .scene-missing { display: inline-block; }
+  @media (max-width: 767px) { .page { padding: 8px; } .shell { padding: 16px; border-radius: 30px; } }
 
-  /* ---------- Lampu rakaman ---------- */
-  .rec-lamp {
-    width: 3.75rem; height: 3.75rem; border-radius: 9999px;
-    background: radial-gradient(circle at 35% 30%, #475569, #1e293b);
-    border: 3px solid #334155;
+  h2.sec { font-size: 1.05rem; font-weight: 700; letter-spacing: .01em; }
+  .muted { color: var(--on-violet-2); }
+
+  /* ---------- Nav / sambungan ---------- */
+  .nav { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .logo { width: 44px; height: 44px; }
+  .brand h1 { font-size: 1.05rem; font-weight: 800; line-height: 1.15; }
+  .brand p  { font-size: .72rem; color: var(--on-violet-2); font-weight: 500; }
+
+  .connect-pill {
+    flex: 1 1 34rem; display: flex; flex-wrap: wrap; align-items: center; gap: 4px;
+    background: rgba(255,255,255,.13); border-radius: 26px; padding: 6px 6px 6px 10px;
   }
-  .rec-lamp[data-on="true"] {
-    background: radial-gradient(circle at 35% 30%, #fca5a5, #ef4444 45%, #b91c1c);
-    border-color: #fecaca;
-    box-shadow: 0 0 0 6px rgb(239 68 68 / .25), 0 0 36px 8px rgb(239 68 68 / .75);
-    animation: recPulse 1.2s ease-in-out infinite;
+  .pfield { flex: 1 1 7rem; min-width: 0; padding: 4px 14px; border-radius: 18px; border-right: 0; position: relative; }
+  .pfield + .pfield::before { content: ""; position: absolute; left: -2px; top: 12px; bottom: 12px; width: 1px; background: rgba(255,255,255,.2); }
+  .pfield:focus-within { background: rgba(255,255,255,.12); }
+  .pfield.host { flex: 2 1 9rem; } .pfield.port { flex: 0 1 6.5rem; }
+  .pfield label.lbl { display: flex; align-items: center; justify-content: space-between; font-size: .66rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--on-violet-2); }
+  .pfield input[type=text], .pfield input[type=number], .pfield input[type=password] {
+    width: 100%; background: transparent; border: 0; outline: none; color: #fff; font-size: 1.05rem; font-weight: 600; height: 2rem; padding: 0;
   }
-  .rec-lamp[data-busy="true"] { background: radial-gradient(circle at 35% 30%, #fde68a, #f59e0b); border-color: #fde68a; }
-  @keyframes recPulse { 50% { box-shadow: 0 0 0 10px rgb(239 68 68 / .08), 0 0 14px 2px rgb(239 68 68 / .45); } }
-
-  .rec-btn[data-state="idle"]      { background: #166534; border-color: #4ade80; }
-  .rec-btn[data-state="idle"]:hover:not(:disabled) { background: #15803d; }
-  .rec-btn[data-state="recording"] { background: #991b1b; border-color: #f87171; }
-  .rec-btn[data-state="recording"]:hover:not(:disabled) { background: #b91c1c; }
-  .rec-btn[data-state="confirm"]   { background: #b45309; border-color: #fcd34d; animation: confirmBlink .6s ease-in-out infinite alternate; }
-  .rec-btn[data-state="busy"]      { background: #334155; border-color: #64748b; }
-  .rec-btn:disabled { background: #1e293b !important; border-color: #334155 !important; opacity: .6; animation: none; }
-  @keyframes confirmBlink { to { background: #92400e; } }
-
-  /* ---------- Pemasa ---------- */
-  .timer-digits { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; line-height: 1; letter-spacing: -.02em; }
-  .timer-digits[data-level="warn"]  { color: #fbbf24; }
-  .timer-digits[data-level="crit"]  { color: #f87171; animation: critPulse 1s ease-in-out infinite; }
-  .timer-digits[data-level="done"]  { color: #f87171; animation: doneFlash .6s steps(2) infinite; }
-  @keyframes critPulse { 50% { opacity: .55; } }
-  @keyframes doneFlash { 50% { opacity: .2; } }
-
-  /* ---------- Penunjuk sambungan ---------- */
-  .status-dot { width: .9rem; height: .9rem; border-radius: 9999px; background: #ef4444; box-shadow: 0 0 10px #ef4444; }
-  [data-conn="connected"]  .status-dot { background: #22c55e; box-shadow: 0 0 12px #22c55e; }
-  [data-conn="connecting"] .status-dot { background: #f59e0b; box-shadow: 0 0 12px #f59e0b; animation: recPulse 1s ease-in-out infinite; }
-
-  .chip { min-height: 3.25rem; padding: 0 1.1rem; border-radius: .9rem; font-weight: 700; font-size: 1.05rem; background: #1e293b; border: 2px solid #334155; }
-  .chip:hover { background: #334155; }
-  .field {
-    height: 3.25rem; border-radius: .9rem; background: #0f172a; border: 2px solid #334155;
-    padding: 0 1rem; font-size: 1.1rem; color: #f1f5f9; width: 100%;
-  }
-  .field::placeholder { color: #64748b; }
+  .pfield input::placeholder { color: rgba(255,255,255,.4); font-weight: 500; }
+  .pfield input:focus-visible { outline: none; box-shadow: none; }
+  .remember { display: inline-flex; align-items: center; gap: 5px; font-size: .68rem; letter-spacing: 0; text-transform: none; font-weight: 600; }
+  .remember input { width: 15px; height: 15px; accent-color: #fff; }
   input[type=number] { -moz-appearance: textfield; appearance: textfield; }
   input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-  .field:focus { border-color: #38bdf8; }
-  .lbl { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #94a3b8; margin-bottom: .3rem; }
-  summary { list-style: none; cursor: pointer; }
-  summary::-webkit-details-marker { display: none; }
 
+  #connectBtn {
+    height: 3.25rem; min-width: 9.5rem; padding: 0 1.8rem; border-radius: 20px;
+    background: #fff; color: var(--sel); font-weight: 800; font-size: 1.05rem; box-shadow: var(--sh-btn);
+  }
+  #connectBtn:hover:not(:disabled) { background: #F3F0FF; }
+  #connBar[data-conn="connected"] #connectBtn { background: rgba(255,255,255,.2); color: #fff; box-shadow: none; }
+  #connBar[data-conn="connecting"] #connectBtn { opacity: .7; }
+
+  #statusPill {
+    display: flex; align-items: center; gap: 10px; height: 3.25rem; padding: 0 1.2rem; min-width: 11.5rem;
+    background: #fff; color: var(--ink); border-radius: 20px; box-shadow: var(--sh-white); font-weight: 800;
+  }
+  .status-dot { width: .8rem; height: .8rem; border-radius: 9999px; background: var(--danger); box-shadow: 0 0 0 4px rgba(255,92,134,.22); }
+  [data-conn="connected"]  .status-dot { background: var(--ok); box-shadow: 0 0 0 4px rgba(45,212,160,.25); }
+  [data-conn="connecting"] .status-dot { background: var(--warn); box-shadow: 0 0 0 4px rgba(255,181,71,.3); animation: pulse 1s ease-in-out infinite; }
+  @keyframes pulse { 50% { transform: scale(1.35); } }
+
+  /* ---------- Susun atur utama ---------- */
+  .main { display: grid; gap: 14px; grid-template-columns: 1fr; }
+  @media (min-width: 1024px) { .main { grid-template-columns: minmax(0,1fr) 24rem; } }
+  @media (min-width: 1536px) { .main { grid-template-columns: minmax(0,1fr) 27rem; } }
+  .left { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+
+  .panel { background: var(--violet-deep); border-radius: var(--r-panel); padding: 20px 22px; box-shadow: inset 0 1px 0 rgba(255,255,255,.06); }
+  .panel.scenes { flex: 1; display: flex; flex-direction: column; gap: 14px; }
+
+  kbd { display: inline-grid; place-items: center; min-width: 1.6rem; height: 1.6rem; padding: 0 .35rem; border-radius: 8px; background: rgba(255,255,255,.16); font-size: .75rem; font-weight: 700; color: #fff; }
+
+  .chip-btn {
+    min-height: 2.9rem; padding: 0 1.1rem; border-radius: 16px; font-weight: 700; font-size: .95rem;
+    background: rgba(255,255,255,.14); color: #fff;
+  }
+  .chip-btn:hover { background: rgba(255,255,255,.24); }
+  summary { list-style: none; cursor: pointer; } summary::-webkit-details-marker { display: none; }
+
+  /* ---------- Kad Scene ---------- */
+  .scene-grid { flex: 1; display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 768px) { .scene-grid { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+  .scene-btn {
+    --bg: #fff; --fg: var(--ink); --sub: var(--ink-soft); --key-bg: #E4F2FF; --key-fg: #2E9BEA;
+    position: relative; overflow: hidden; text-align: left;
+    background: var(--bg); color: var(--fg);
+    border-radius: var(--r-card); padding: 1.1rem 1.25rem; min-height: 8.75rem;
+    display: flex; flex-direction: column; justify-content: space-between;
+    box-shadow: var(--sh-card);
+  }
+  .scene-btn[data-theme="pink"] { --bg: linear-gradient(150deg, var(--pink), var(--pink-2)); --fg: #fff; --sub: rgba(255,255,255,.78); --key-bg: rgba(255,255,255,.3); --key-fg: #fff; }
+  .scene-btn[data-theme="blue"] { --bg: linear-gradient(150deg, var(--blue), var(--blue-2)); --fg: #fff; --sub: rgba(255,255,255,.82); --key-bg: rgba(255,255,255,.3); --key-fg: #fff; }
+  .scene-btn::after { content: ""; position: absolute; right: -2.2rem; bottom: -2.8rem; width: 8rem; height: 8rem; border-radius: 9999px; background: rgba(255,255,255,.16); pointer-events: none; }
+  .scene-btn[data-theme="white"]::after { background: #EEF6FF; }
+  .scene-btn > * { position: relative; z-index: 1; }
+  .scene-btn:hover:not(:disabled) { transform: translateY(-2px); }
+  .scene-btn[data-active="true"] {
+    transform: translateY(-5px);
+    box-shadow: 0 0 0 4px #fff, 0 0 0 9px rgba(255,255,255,.28), 0 26px 38px -14px rgba(30,15,110,.55);
+  }
+  .scene-btn[data-flash="true"] { filter: brightness(1.08); }
+  .scene-btn:disabled { opacity: .55; filter: saturate(.7); }
+  .scene-grid[data-has-active="true"] .scene-btn:not([data-active="true"]):not(:disabled) { opacity: .93; }
+  .scene-key { width: 3rem; height: 3rem; border-radius: 9999px; display: grid; place-items: center; font-weight: 800; font-size: 1.4rem; background: var(--key-bg); color: var(--key-fg); }
+  .scene-live { display: inline-flex; align-items: center; gap: 6px; opacity: 0; transform: scale(.85); transition: all .2s ease; background: var(--ink); color: #fff; font-size: .72rem; font-weight: 800; letter-spacing: .1em; padding: .35rem .75rem; border-radius: 9999px; }
+  .scene-live i { width: .5rem; height: .5rem; border-radius: 9999px; background: var(--ok); }
+  .scene-btn[data-active="true"] .scene-live { opacity: 1; transform: none; }
+  .scene-title { font-size: 1.4rem; font-weight: 800; line-height: 1.15; }
+  .scene-btn:not([data-theme="white"]) .scene-title { text-shadow: 0 1px 3px rgba(40,20,120,.28); }
+  .scene-sub { margin-top: .25rem; font-size: .8rem; font-weight: 500; color: var(--sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .scene-missing { display: none; margin-left: .4rem; padding: .1rem .5rem; border-radius: 8px; background: var(--ink); color: #FFD27A; font-weight: 800; font-size: .65rem; }
+  .scene-btn[data-missing="true"] .scene-missing { display: inline-block; }
+
+  /* ---------- Rakaman ---------- */
+  .rec-row { display: flex; flex-wrap: wrap; align-items: stretch; gap: 16px 20px; }
+  .rec-lamp {
+    width: 4rem; height: 4rem; border-radius: 9999px; flex-shrink: 0;
+    background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.35), rgba(255,255,255,.12));
+    box-shadow: inset 0 0 0 3px rgba(255,255,255,.22);
+  }
+  .rec-lamp[data-on="true"] {
+    background: radial-gradient(circle at 35% 30%, #ffb3c0, var(--rec) 45%, #C81E45);
+    box-shadow: inset 0 0 0 3px rgba(255,255,255,.55), 0 0 0 7px rgba(255,59,92,.28), 0 0 38px 8px rgba(255,59,92,.7);
+    animation: recPulse 1.2s ease-in-out infinite;
+  }
+  .rec-lamp[data-busy="true"] { background: radial-gradient(circle at 35% 30%, #fff0c2, var(--warn)); }
+  @keyframes recPulse { 50% { box-shadow: inset 0 0 0 3px rgba(255,255,255,.55), 0 0 0 12px rgba(255,59,92,.08), 0 0 16px 2px rgba(255,59,92,.45); } }
+  #recLabel { font-size: .85rem; font-weight: 800; letter-spacing: .1em; color: var(--on-violet-2); }
+  #recLabel[data-on="true"] { color: #FFB3C4; }
+  #recTime { font-size: 2.1rem; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; color: #fff; }
+  #recTime[data-on="false"] { color: rgba(255,255,255,.7); }
+
+  .rec-btn {
+    flex: 1 1 14rem; min-height: 5.25rem; border-radius: 22px; font-size: 1.35rem; font-weight: 800; padding: 0 1.2rem;
+    background: #fff; color: var(--sel); box-shadow: var(--sh-btn);
+  }
+  .rec-btn[data-state="idle"]:hover:not(:disabled) { background: #F3F0FF; }
+  .rec-btn[data-state="recording"] { background: var(--danger); color: #fff; box-shadow: 0 14px 26px -10px rgba(255,59,92,.7); }
+  .rec-btn[data-state="confirm"]   { background: var(--warn); color: var(--ink); animation: confirmBlink .6s ease-in-out infinite alternate; }
+  .rec-btn[data-state="busy"]      { background: rgba(255,255,255,.2); color: #fff; box-shadow: none; }
+  .rec-btn:disabled { background: rgba(255,255,255,.14) !important; color: rgba(255,255,255,.5) !important; box-shadow: none !important; animation: none; }
+  @keyframes confirmBlink { to { filter: brightness(.9); } }
+
+  /* ---------- Panel putih: Pemasa ---------- */
+  .white-panel {
+    background: #fff; color: var(--ink); border-radius: var(--r-panel); padding: 22px;
+    display: flex; flex-direction: column; gap: 14px; box-shadow: var(--sh-white);
+  }
+  .date-btn { width: 3.25rem; height: 3.25rem; border-radius: 9999px; border: 2px solid #E7E3F7; display: grid; place-items: center; color: var(--ink); flex-shrink: 0; }
+  .state-pill { font-size: .75rem; font-weight: 800; padding: .35rem .85rem; border-radius: 9px; background: var(--pink); color: #fff; }
+  .state-pill[data-state="running"] { background: var(--blue-2); }
+  .state-pill[data-state="paused"]  { background: var(--warn); }
+  .state-pill[data-state="done"]    { background: var(--danger); animation: flash .8s steps(2) infinite; }
+
+  .ring-wrap { position: relative; width: min(100%, 15.5rem); aspect-ratio: 1; margin: 2px auto; --ring: var(--sel); }
+  .ring-wrap[data-level="warn"] { --ring: var(--warn); }
+  .ring-wrap[data-level="crit"], .ring-wrap[data-level="done"] { --ring: var(--danger); }
+  .ring-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+  .ring-track { fill: none; stroke: var(--violet-soft); stroke-width: 14; }
+  .ring-prog  { fill: none; stroke: var(--ring); stroke-width: 14; stroke-linecap: round; stroke-dasharray: 691.15; stroke-dashoffset: 0; transition: stroke-dashoffset .3s linear, stroke .3s ease; filter: drop-shadow(0 6px 8px rgba(123,97,232,.35)); }
+  .ring-center { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+  #timerDisplay { font-size: 3.5rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -.02em; color: var(--ink); }
+  #timerDisplay[data-level="warn"] { color: #E8920F; }
+  #timerDisplay[data-level="crit"] { color: var(--danger); animation: flash 1s ease-in-out infinite; }
+  #timerDisplay[data-level="done"] { color: var(--danger); animation: flash .6s steps(2) infinite; }
+  @keyframes flash { 50% { opacity: .35; } }
+  .ring-cap { font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); margin-top: .4rem; }
+
+  .btn-main  { min-height: 3.75rem; border-radius: var(--r-btn); font-size: 1.15rem; font-weight: 800; color: #fff; background: var(--sel); box-shadow: var(--sh-btn); }
+  .btn-main:hover { background: #6C50DD; }
+  .btn-main[data-running="true"] { background: var(--warn); color: var(--ink); box-shadow: 0 12px 22px -8px rgba(255,181,71,.6); }
+  .btn-soft  { min-height: 3.75rem; border-radius: var(--r-btn); font-size: 1rem; font-weight: 800; color: var(--sel); background: var(--violet-soft); }
+  .btn-soft:hover { background: #E2DCFB; }
+
+  .preset { height: 2.9rem; padding: 0; border-radius: 9999px; font-weight: 700; font-size: .95rem; color: var(--ink); background: transparent; }
+  .preset:hover { background: var(--violet-soft); }
+  .preset[data-on="true"] { background: var(--sel); color: #fff; box-shadow: 0 8px 16px -6px rgba(123,97,232,.7); }
+  .lbl-dark { font-size: .7rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+  .field-light {
+    height: 2.9rem; border-radius: 16px; background: var(--violet-pale); border: 2px solid transparent; box-shadow: var(--sh-inset);
+    color: var(--ink); font-weight: 700; font-size: 1rem; padding: 0 .9rem; width: 100%;
+  }
+  .field-light:focus { border-color: var(--sel); outline: none; }
+
+  /* ---------- Nota ---------- */
+  .notes-card { flex: 1; min-height: 9.5rem; background: #fff; color: var(--ink); border-radius: var(--r-panel); padding: 18px 22px 22px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--sh-white); }
+  .notes-card textarea {
+    flex: 1; min-height: 4.5rem; width: 100%; resize: none; background: var(--violet-pale); border: 2px solid transparent; border-radius: 20px;
+    padding: 14px 18px; font-size: 1.15rem; line-height: 1.6; color: var(--ink); box-shadow: var(--sh-inset); font-weight: 500;
+  }
+  .notes-card textarea::placeholder { color: #A9A3CF; }
+  .notes-card textarea:focus { outline: none; border-color: var(--sel); background: #fff; }
+  .chip-soft { min-height: 2.6rem; padding: 0 1rem; border-radius: 14px; font-weight: 700; font-size: .9rem; background: var(--violet-soft); color: var(--sel); }
+  .chip-soft:hover { background: #E2DCFB; }
+
+  /* ---------- Dropdown nama scene ---------- */
+  .cfg-pop { position: absolute; right: 0; z-index: 30; margin-top: .6rem; width: min(92vw, 30rem); background: #fff; color: var(--ink); border-radius: 26px; padding: 18px; box-shadow: 0 30px 60px -20px rgba(40,20,130,.55), 0 6px 16px rgba(40,20,130,.18); display: flex; flex-direction: column; gap: 12px; }
+  .cfg-pop .lbl-dark { display: block; margin-bottom: .3rem; }
+
+  /* ---------- Toast ---------- */
   #toast {
-    position: fixed; left: 50%; bottom: 1.5rem; transform: translate(-50%, 140%);
-    max-width: min(92vw, 40rem); padding: 1rem 1.5rem; border-radius: 1rem;
-    background: #1e293b; border: 2px solid #475569; font-weight: 600; font-size: 1.05rem;
-    transition: transform .25s ease, opacity .25s ease; z-index: 50; text-align: center;
-    opacity: 0; pointer-events: none;
+    position: fixed; left: 50%; bottom: 1.5rem; transform: translate(-50%, 140%); opacity: 0; pointer-events: none;
+    max-width: min(92vw, 40rem); padding: 1rem 1.6rem; border-radius: 20px; text-align: center;
+    background: #fff; color: var(--ink); font-weight: 700; font-size: 1rem; z-index: 50;
+    box-shadow: 0 24px 40px -14px rgba(40,20,130,.5), 0 4px 10px rgba(40,20,130,.15);
+    border-left: 6px solid var(--sel);
+    transition: transform .25s ease, opacity .25s ease;
   }
   #toast.show { transform: translate(-50%, 0); opacity: 1; }
-  #toast[data-kind="error"] { border-color: #f87171; }
-  #toast[data-kind="ok"] { border-color: #4ade80; }
+  #toast[data-kind="error"] { border-left-color: var(--danger); }
+  #toast[data-kind="ok"] { border-left-color: var(--ok); }
 
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 </head>
 
-<body class="text-slate-100 font-sans antialiased">
-<div class="min-h-screen flex flex-col gap-3 p-3 sm:p-4 max-w-[1800px] mx-auto">
+<body class="antialiased">
+<div class="page">
+<div class="shell">
 
   <!-- ===================== 1. SAMBUNGAN OBS ===================== -->
-  <header id="connBar" data-conn="disconnected"
-          class="bg-slate-900 border-2 border-slate-800 rounded-2xl p-3 flex flex-wrap items-end gap-x-4 gap-y-3">
-    <div class="flex items-center gap-3 xl:mr-2 xl:pb-1">
-      <div class="text-3xl" aria-hidden="true">🎓</div>
+  <header id="connBar" data-conn="disconnected" class="nav">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 44 44" aria-hidden="true">
+        <circle cx="22" cy="22" r="22" fill="rgba(255,255,255,.14)"/>
+        <circle cx="22" cy="13.5" r="6" fill="#fff"/><circle cx="30.5" cy="22" r="6" fill="#fff" opacity=".85"/>
+        <circle cx="22" cy="30.5" r="6" fill="#fff" opacity=".7"/><circle cx="13.5" cy="22" r="6" fill="#fff" opacity=".55"/>
+      </svg>
       <div>
-        <h1 class="text-lg font-extrabold leading-tight">Lecturer Teaching Control Panel</h1>
-        <p class="text-xs text-slate-400">OBS Studio · WebSocket v5</p>
+        <h1>Lecturer Teaching Control Panel</h1>
+        <p>OBS Studio · WebSocket v5</p>
       </div>
     </div>
 
-    <!-- Status + ingat password -->
-    <div class="ml-auto xl:order-3 flex items-center gap-4">
-      <div id="statusPill" class="flex items-center gap-3 h-[3.25rem] px-4 rounded-xl bg-slate-950 border-2 border-slate-700 min-w-[11.5rem]" role="status" aria-live="polite">
-        <span class="status-dot"></span>
-        <span id="statusText" class="font-extrabold tracking-wide">Disconnected</span>
-      </div>
-    </div>
-
-    <!-- 1. Sambungan pantas -->
-    <form id="connForm" class="order-last basis-full xl:order-2 xl:basis-0 xl:flex-1 grid grid-cols-2 md:grid-cols-[2fr_1fr_2fr_auto] gap-3 items-end" autocomplete="off">
-      <div class="col-span-2 md:col-span-1">
+    <form id="connForm" class="connect-pill" autocomplete="off">
+      <div class="pfield host">
         <label class="lbl" for="host">Host</label>
-        <input id="host" class="field" type="text" inputmode="url" value="localhost" spellcheck="false" autocapitalize="off">
+        <input id="host" type="text" inputmode="url" value="localhost" spellcheck="false" autocapitalize="off">
       </div>
-      <div>
+      <div class="pfield port">
         <label class="lbl" for="port">Port</label>
-        <input id="port" class="field min-w-[6rem]" type="number" inputmode="numeric" value="4455" min="1" max="65535">
+        <input id="port" type="number" inputmode="numeric" value="4455" min="1" max="65535">
       </div>
-      <div>
-        <div class="flex items-center justify-between"><label class="lbl" for="password">Password</label>
-        <label class="flex items-center gap-1.5 text-xs text-slate-400 nosel mb-[.3rem]"><input id="rememberPw" type="checkbox" class="w-4 h-4 accent-sky-500"> Ingat</label></div>
-        <input id="password" class="field" type="password" placeholder="(jika ada)" autocomplete="off">
+      <div class="pfield">
+        <label class="lbl" for="password">Password
+          <span class="remember nosel"><input id="rememberPw" type="checkbox"> Ingat</span>
+        </label>
+        <input id="password" type="password" placeholder="(jika ada)" autocomplete="off">
       </div>
-      <button id="connectBtn" type="submit"
-              class="h-[3.25rem] px-8 rounded-xl text-lg font-extrabold bg-sky-600 hover:bg-sky-500 border-2 border-sky-300/40 min-w-[11rem] col-span-2 md:col-span-1">
-        Sambung
-      </button>
+      <button id="connectBtn" type="submit">Sambung</button>
     </form>
+
+    <div id="statusPill" role="status" aria-live="polite">
+      <span class="status-dot"></span>
+      <span id="statusText">Disconnected</span>
+    </div>
   </header>
 
-  <!-- ===================== 2. SCENE ===================== -->
-  <section aria-labelledby="sceneHeading" class="flex flex-col gap-3">
-    <div class="flex items-center justify-between">
-      <h2 id="sceneHeading" class="text-sm font-bold uppercase tracking-[.15em] text-slate-400">Scene · Tekan <kbd class="px-2 py-0.5 rounded bg-slate-800 border border-slate-600">1</kbd> <kbd class="px-2 py-0.5 rounded bg-slate-800 border border-slate-600">2</kbd> <kbd class="px-2 py-0.5 rounded bg-slate-800 border border-slate-600">3</kbd></h2>
-      <details id="sceneCfg" class="relative">
-        <summary class="chip flex items-center nosel">⚙ Nama scene OBS</summary>
-        <div class="absolute right-0 z-30 mt-2 w-[min(92vw,32rem)] bg-slate-900 border-2 border-slate-600 rounded-2xl p-4 shadow-2xl flex flex-col gap-3">
-          <p class="text-sm text-slate-400">Nama mesti <b>sama tepat</b> dengan nama scene dalam OBS. Pilih daripada senarai selepas bersambung.</p>
-          <div><label class="lbl" for="sceneName1">Tekan 1 — Slaid Kuliah</label><input id="sceneName1" class="field" list="obsScenes" spellcheck="false"></div>
-          <div><label class="lbl" for="sceneName2">Tekan 2 — Demo Litar + Scope</label><input id="sceneName2" class="field" list="obsScenes" spellcheck="false"></div>
-          <div><label class="lbl" for="sceneName3">Tekan 3 — Slaid + Kamera PiP</label><input id="sceneName3" class="field" list="obsScenes" spellcheck="false"></div>
-          <datalist id="obsScenes"></datalist>
-          <button type="button" id="sceneCfgClose" class="chip bg-sky-700 border-sky-400/50">Siap</button>
+  <!-- ===================== UTAMA ===================== -->
+  <main class="main">
+    <div class="left">
+
+      <!-- 2. SCENE -->
+      <section class="panel scenes" aria-labelledby="sceneHeading">
+        <div class="flex items-center justify-between gap-3">
+          <h2 id="sceneHeading" class="sec flex items-center gap-2 flex-wrap">Scene <span class="muted font-medium text-sm">· tekan</span> <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd></h2>
+          <details id="sceneCfg" class="relative">
+            <summary class="chip-btn inline-flex items-center nosel">⚙ Nama scene OBS</summary>
+            <div class="cfg-pop">
+              <p class="text-sm" style="color:var(--ink-soft)">Nama mesti <b style="color:var(--ink)">sama tepat</b> dengan nama scene dalam OBS. Pilih daripada senarai selepas bersambung.</p>
+              <div><label class="lbl-dark" for="sceneName1">Tekan 1 — Slaid Kuliah</label><input id="sceneName1" class="field-light" list="obsScenes" spellcheck="false"></div>
+              <div><label class="lbl-dark" for="sceneName2">Tekan 2 — Demo Litar + Scope</label><input id="sceneName2" class="field-light" list="obsScenes" spellcheck="false"></div>
+              <div><label class="lbl-dark" for="sceneName3">Tekan 3 — Slaid + Kamera PiP</label><input id="sceneName3" class="field-light" list="obsScenes" spellcheck="false"></div>
+              <datalist id="obsScenes"></datalist>
+              <button type="button" id="sceneCfgClose" class="btn-main !min-h-[3rem]">Siap</button>
+            </div>
+          </details>
         </div>
-      </details>
+
+        <div class="scene-grid" id="sceneGrid" data-has-active="false">
+          <button class="scene-btn" data-scene-idx="0" data-theme="white" disabled>
+            <div class="flex items-start justify-between"><span class="scene-key">1</span><span class="scene-live"><i></i>LIVE</span></div>
+            <div><div class="scene-title">Slaid Kuliah</div>
+              <div class="scene-sub"><span class="scene-name"></span><span class="scene-missing">TIADA DALAM OBS</span></div></div>
+          </button>
+          <button class="scene-btn" data-scene-idx="1" data-theme="pink" disabled>
+            <div class="flex items-start justify-between"><span class="scene-key">2</span><span class="scene-live"><i></i>LIVE</span></div>
+            <div><div class="scene-title">Demo Litar + Scope</div>
+              <div class="scene-sub"><span class="scene-name"></span><span class="scene-missing">TIADA DALAM OBS</span></div></div>
+          </button>
+          <button class="scene-btn" data-scene-idx="2" data-theme="blue" disabled>
+            <div class="flex items-start justify-between"><span class="scene-key">3</span><span class="scene-live"><i></i>LIVE</span></div>
+            <div><div class="scene-title">Slaid + Kamera PiP</div>
+              <div class="scene-sub"><span class="scene-name"></span><span class="scene-missing">TIADA DALAM OBS</span></div></div>
+          </button>
+        </div>
+      </section>
+
+      <!-- 3. REKAMAN -->
+      <section class="panel" aria-label="Rakaman">
+        <div class="rec-row">
+          <div class="flex items-center gap-4">
+            <div id="recLamp" class="rec-lamp" data-on="false" aria-hidden="true"></div>
+            <div class="min-w-0">
+              <div id="recLabel" data-on="false">TIDAK MERAKAM</div>
+              <div id="recTime" data-on="false">00:00:00</div>
+            </div>
+          </div>
+          <button id="recBtn" class="rec-btn" data-state="idle" disabled>● MULA RAKAMAN</button>
+        </div>
+        <p id="recInfo" class="text-xs muted mt-2 truncate min-h-[1rem]"></p>
+      </section>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-      <button class="scene-btn" data-scene-idx="0" style="--c: 56 189 248" disabled>
-        <div class="flex items-start justify-between"><span class="scene-key">1</span><span class="scene-live">● PROGRAM</span></div>
-        <div>
-          <div class="text-2xl font-extrabold leading-tight">Slaid Kuliah</div>
-          <div class="text-sm text-slate-400 mt-1 truncate"><span class="scene-name"></span> <span class="scene-missing ml-1 px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold text-xs">TIADA DALAM OBS</span></div>
+    <!-- 4. PEMASA KULIAH -->
+    <aside class="white-panel" aria-label="Pemasa kuliah">
+      <div class="flex items-center gap-3">
+        <div class="date-btn" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="3"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/></svg>
         </div>
-      </button>
-      <button class="scene-btn" data-scene-idx="1" style="--c: 251 191 36" disabled>
-        <div class="flex items-start justify-between"><span class="scene-key">2</span><span class="scene-live">● PROGRAM</span></div>
-        <div>
-          <div class="text-2xl font-extrabold leading-tight">Demo Litar + Scope</div>
-          <div class="text-sm text-slate-400 mt-1 truncate"><span class="scene-name"></span> <span class="scene-missing ml-1 px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold text-xs">TIADA DALAM OBS</span></div>
-        </div>
-      </button>
-      <button class="scene-btn" data-scene-idx="2" style="--c: 52 211 153" disabled>
-        <div class="flex items-start justify-between"><span class="scene-key">3</span><span class="scene-live">● PROGRAM</span></div>
-        <div>
-          <div class="text-2xl font-extrabold leading-tight">Slaid + Kamera PiP</div>
-          <div class="text-sm text-slate-400 mt-1 truncate"><span class="scene-name"></span> <span class="scene-missing ml-1 px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold text-xs">TIADA DALAM OBS</span></div>
-        </div>
-      </button>
-    </div>
-  </section>
-
-  <!-- ===================== 3 & 4. REKAMAN + PEMASA ===================== -->
-  <section class="grid grid-cols-1 lg:grid-cols-5 gap-3">
-
-    <!-- Rakaman -->
-    <div class="lg:col-span-2 bg-slate-900 border-2 border-slate-800 rounded-2xl p-4 flex flex-col gap-3">
-      <div class="flex items-center gap-4">
-        <div id="recLamp" class="rec-lamp shrink-0" data-on="false" aria-hidden="true"></div>
         <div class="min-w-0">
-          <div id="recLabel" class="text-xl font-extrabold">TIDAK MERAKAM</div>
-          <div id="recTime" class="text-3xl font-bold timer-digits text-slate-300">00:00:00</div>
+          <div id="dateDay" class="text-xs font-medium" style="color:var(--ink-soft)">&nbsp;</div>
+          <div id="dateFull" class="text-xl font-extrabold leading-tight">Pemasa Kuliah</div>
+        </div>
+        <div id="timerState" class="state-pill ml-auto" data-state="ready">Sedia</div>
+      </div>
+
+      <div id="timerWrap" class="ring-wrap" data-level="ok">
+        <svg viewBox="0 0 244 244" aria-hidden="true">
+          <circle class="ring-track" cx="122" cy="122" r="110"/>
+          <circle id="timerRing" class="ring-prog" cx="122" cy="122" r="110"/>
+        </svg>
+        <div class="ring-center">
+          <div id="timerDisplay" data-level="ok" role="timer">50:00</div>
+          <div class="ring-cap">baki masa</div>
         </div>
       </div>
-      <button id="recBtn" class="rec-btn border-4 rounded-2xl flex-1 min-h-[6rem] text-2xl font-extrabold px-4" data-state="idle" disabled>
-        ● MULA RAKAMAN
-      </button>
-      <p id="recInfo" class="text-sm text-slate-500 min-h-[1.25rem] truncate"></p>
-    </div>
 
-    <!-- Pemasa kuliah -->
-    <div class="lg:col-span-3 bg-slate-900 border-2 border-slate-800 rounded-2xl p-4 flex flex-col gap-3">
-      <div class="flex items-center justify-between">
-        <h2 class="text-sm font-bold uppercase tracking-[.15em] text-slate-400">Pemasa Kuliah</h2>
-        <div id="timerState" class="text-sm font-bold text-slate-400">Sedia</div>
+      <div class="grid grid-cols-[1.5fr_1fr_1fr] gap-3">
+        <button id="timerToggle" class="btn-main" data-running="false">▶ Mula</button>
+        <button id="timerAdd" class="btn-soft">+5 min</button>
+        <button id="timerReset" class="btn-soft">↺ Semula</button>
       </div>
 
-      <div id="timerDisplay" class="timer-digits text-center font-extrabold text-[4.5rem] sm:text-[5.75rem] py-0" data-level="ok" role="timer">50:00</div>
-
-      <div class="grid grid-cols-3 gap-3">
-        <button id="timerToggle" class="min-h-[4.5rem] rounded-2xl text-xl font-extrabold bg-sky-600 hover:bg-sky-500 border-2 border-sky-300/40">▶ Mula</button>
-        <button id="timerAdd" class="min-h-[4.5rem] rounded-2xl text-xl font-extrabold bg-slate-800 hover:bg-slate-700 border-2 border-slate-600">+5 min</button>
-        <button id="timerReset" class="min-h-[4.5rem] rounded-2xl text-xl font-extrabold bg-slate-800 hover:bg-slate-700 border-2 border-slate-600">↺ Set Semula</button>
+      <div>
+        <div class="lbl-dark mb-1">Tempoh (minit)</div>
+        <div class="grid grid-cols-6 gap-1">
+          <button class="preset" data-preset="30">30</button>
+          <button class="preset" data-preset="45">45</button>
+          <button class="preset" data-preset="50">50</button>
+          <button class="preset" data-preset="60">60</button>
+          <button class="preset" data-preset="90">90</button>
+          <button class="preset" data-preset="120">120</button>
+          </div>
+        <input id="timerMinutes" class="field-light mt-2 text-center" type="number" inputmode="numeric" min="1" max="600" value="50" placeholder="Tersuai (minit)" aria-label="Tempoh tersuai dalam minit">
       </div>
-
-      <div class="flex flex-wrap items-center gap-2">
-        <span class="lbl !mb-0 mr-1">Tempoh (min)</span>
-        <button class="chip" data-preset="30">30</button>
-        <button class="chip" data-preset="45">45</button>
-        <button class="chip" data-preset="50">50</button>
-        <button class="chip" data-preset="60">60</button>
-        <button class="chip" data-preset="90">90</button>
-        <button class="chip" data-preset="120">120</button>
-        <input id="timerMinutes" class="field !w-28 text-center" type="number" inputmode="numeric" min="1" max="600" value="50" aria-label="Tempoh tersuai dalam minit">
-      </div>
-    </div>
-  </section>
+    </aside>
+  </main>
 
   <!-- ===================== 5. NOTA PANTAS ===================== -->
-  <section class="flex-1 min-h-[9rem] bg-slate-900 border-2 border-slate-800 rounded-2xl p-4 flex flex-col gap-2">
+  <section class="notes-card" aria-label="Nota pantas pensyarah">
     <div class="flex items-center justify-between gap-3">
-      <h2 class="text-sm font-bold uppercase tracking-[.15em] text-slate-400">Nota Pantas Pensyarah</h2>
+      <h2 class="sec">Nota Pantas Pensyarah</h2>
       <div class="flex items-center gap-3">
-        <span id="noteStatus" class="text-sm text-slate-500 nosel">Disimpan automatik</span>
-        <button id="noteClear" class="chip !min-h-[2.75rem] nosel">Kosongkan</button>
+        <span id="noteStatus" class="text-sm nosel" style="color:var(--ink-soft)">Disimpan automatik</span>
+        <button id="noteClear" class="chip-soft nosel">Kosongkan</button>
       </div>
     </div>
-    <textarea id="notes" class="flex-1 min-h-[5.5rem] w-full resize-none rounded-xl bg-slate-950 border-2 border-slate-700 focus:border-sky-400 p-4 text-xl leading-relaxed text-slate-100 placeholder-slate-600"
-              placeholder="Taip nota di sini — tajuk, soalan pelajar, perkara untuk diulang… (disimpan automatik)" spellcheck="false"></textarea>
+    <textarea id="notes" placeholder="Taip nota di sini — tajuk, soalan pelajar, perkara untuk diulang… (disimpan automatik)" spellcheck="false"></textarea>
   </section>
+</div>
 </div>
 
 <div id="toast" role="alert" data-kind="info"></div>
@@ -305,6 +472,16 @@
     return `${pad(h)}:${pad(m)}:${pad(s)}`;
   }
 
+  /* ---------- Tarikh pada panel pemasa ---------- */
+  function renderDate() {
+    const d = new Date();
+    try {
+      $('dateDay').textContent  = d.toLocaleDateString('ms-MY', { weekday: 'long' });
+      $('dateFull').textContent = d.toLocaleDateString('ms-MY', { day: 'numeric', month: 'long' });
+    } catch {}
+  }
+  renderDate(); setInterval(renderDate, 60000);
+
   /* =====================================================================
    * 1. SAMBUNGAN OBS
    * ===================================================================== */
@@ -328,10 +505,6 @@
     const btn = $('connectBtn');
     btn.textContent = { connected: 'Putuskan', connecting: 'Menyambung…', disconnected: 'Sambung' }[state];
     btn.disabled = state === 'connecting';
-    btn.classList.toggle('bg-sky-600', state !== 'connected');
-    btn.classList.toggle('hover:bg-sky-500', state !== 'connected');
-    btn.classList.toggle('bg-slate-700', state === 'connected');
-    btn.classList.toggle('hover:bg-slate-600', state === 'connected');
     ['host', 'port', 'password'].forEach(id => $(id).disabled = state !== 'disconnected');
     renderScenes(); renderRec();
   }
@@ -422,13 +595,17 @@
   }
 
   function renderScenes() {
+    let anyActive = false;
     sceneBtns.forEach((btn, i) => {
       const name = sceneNames[i];
       btn.querySelector('.scene-name').textContent = '→ ' + name;
       btn.disabled = !connected;
-      btn.dataset.active = String(connected && currentScene === name);
+      const active = connected && currentScene === name;
+      anyActive = anyActive || active;
+      btn.dataset.active = String(active);
       btn.dataset.missing = String(connected && sceneList.length > 0 && !sceneList.includes(name));
     });
+    $('sceneGrid').dataset.hasActive = String(anyActive);
   }
 
   async function switchScene(i) {
@@ -489,7 +666,8 @@
 
   function renderRec() {
     const lamp = $('recLamp'), btn = $('recBtn');
-    lamp.dataset.on = String(recState.active && !recState.busy && !recState.paused);
+    const lit = recState.active && !recState.busy && !recState.paused;
+    lamp.dataset.on = String(lit);
     lamp.dataset.busy = String(recState.busy);
     let state, text, label;
     if (!connected)            { state = 'idle';      text = '● MULA RAKAMAN';  label = 'TIDAK MERAKAM'; }
@@ -499,13 +677,13 @@
     else                       { state = 'idle';      text = '● MULA RAKAMAN';  label = 'TIDAK MERAKAM'; }
     btn.dataset.state = state; btn.textContent = text; btn.disabled = !connected || recState.busy;
     $('recLabel').textContent = label;
-    $('recLabel').className = 'text-xl font-extrabold ' + (recState.active && !recState.paused ? 'text-red-400' : 'text-slate-300');
+    $('recLabel').dataset.on = String(recState.active && !recState.paused);
+    $('recTime').dataset.on = String(recState.active);
     renderRecTime();
   }
   function renderRecTime() {
     const ms = recState.active ? recBaseMs + (recState.paused ? 0 : Date.now() - recSyncAt) : 0;
     $('recTime').textContent = fmtHMS(ms / 1000);
-    $('recTime').style.color = recState.active ? '#fca5a5' : '';
   }
   setInterval(renderRecTime, 500);
   setInterval(() => { if (connected && recState.active) refreshRecordStatus(); }, 10000);   // selaras semula
@@ -531,6 +709,7 @@
   /* =====================================================================
    * 4. PEMASA KULIAH
    * ===================================================================== */
+  const RING_C = 2 * Math.PI * 110;
   const timer = { durationSec: 50 * 60, remainingMs: 50 * 60 * 1000, running: false, endAt: 0, finished: false };
   let audioCtx = null;
 
@@ -568,15 +747,28 @@
     const sec = Math.ceil(ms / 1000);
     const disp = $('timerDisplay');
     disp.textContent = sec >= 3600 ? fmtHMS(sec) : `${pad(Math.floor(sec / 60))}:${pad(sec % 60)}`;
+    disp.style.fontSize = sec >= 3600 ? '2.6rem' : '';
+    const started = ms < timer.durationSec * 1000;
+
     let level = 'ok';
     if (timer.finished) level = 'done'; else if (sec <= 60) level = 'crit'; else if (sec <= 300) level = 'warn';
-    if (!timer.running && !timer.finished) level = sec <= 300 && ms < timer.durationSec * 1000 ? level : 'ok';
-    disp.dataset.level = level;
-    $('timerState').textContent = timer.finished ? 'MASA TAMAT!' : timer.running ? 'Berjalan' : (ms < timer.durationSec * 1000 ? 'Dijeda' : 'Sedia');
+    if (!timer.running && !timer.finished && !started) level = 'ok';
+    disp.dataset.level = level; $('timerWrap').dataset.level = level;
+
+    const progress = timer.finished ? 1 : Math.min(1, Math.max(0, ms / (timer.durationSec * 1000)));
+    $('timerRing').style.strokeDashoffset = String(RING_C * (1 - progress));
+
+    const st = timer.finished ? 'done' : timer.running ? 'running' : started ? 'paused' : 'ready';
+    $('timerState').dataset.state = st;
+    $('timerState').textContent = { done: 'Masa tamat!', running: 'Berjalan', paused: 'Dijeda', ready: 'Sedia' }[st];
+
     const tg = $('timerToggle');
-    tg.textContent = timer.running ? '⏸ Jeda' : (ms < timer.durationSec * 1000 && !timer.finished ? '▶ Sambung' : '▶ Mula');
-    tg.classList.toggle('bg-amber-600', timer.running); tg.classList.toggle('hover:bg-amber-500', timer.running);
-    tg.classList.toggle('bg-sky-600', !timer.running); tg.classList.toggle('hover:bg-sky-500', !timer.running);
+    tg.textContent = timer.running ? '⏸ Jeda' : (started && !timer.finished ? '▶ Sambung' : '▶ Mula');
+    tg.dataset.running = String(timer.running);
+
+    const mins = Math.round(timer.durationSec / 60);
+    $$('[data-preset]').forEach(b => { b.dataset.on = String(parseInt(b.dataset.preset, 10) === mins); });
+
     document.title = timer.running ? `${disp.textContent} · Lecturer Control Panel` : 'Lecturer Teaching Control Panel';
   }
 
@@ -626,7 +818,7 @@
     const ok = store.set(K.notes, notes.value);
     const t = new Date();
     $('noteStatus').textContent = ok ? `Disimpan ${pad(t.getHours())}:${pad(t.getMinutes())}:${pad(t.getSeconds())}` : 'Tidak dapat simpan (storan disekat)';
-    $('noteStatus').style.color = ok ? '#4ade80' : '#f87171';
+    $('noteStatus').style.color = ok ? '#17A57B' : '#E0305A';
   }
   notes.addEventListener('input', () => {
     $('noteStatus').textContent = 'Menyimpan…'; $('noteStatus').style.color = '';
