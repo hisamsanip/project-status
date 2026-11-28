@@ -111,7 +111,9 @@
     section{border:1.5px solid var(--soft);padding:20px 22px;border-radius:22px}
     .hero{border-radius:28px;padding:30px 30px}
     .no-print{display:none!important}
-    .sec-head,.lead,h2,h3,.lead + .note{break-after:avoid}
+    .sec-head,.lead,h2,h3{break-after:avoid}
+    .box{break-inside:auto}
+    .chk li{break-inside:avoid}
     th,td{padding:7px 9px}
     .scenes,.diagram,.note.danger{break-inside:avoid}
     ol.steps{gap:9px}
@@ -126,8 +128,8 @@
   <header class="hero">
     <img src="brand/podium-wordmark-on-violet.svg" alt="Podium">
     <h1>Manual Pengguna</h1>
-    <p>Sediakan laptop, kamera, OBS dan osiloskop, kemudian kawal semuanya dengan satu sentuhan.</p>
-    <div class="meta"><span>Versi 1.1</span><span>EMEET Piko+ · Keysight DSOX1204A</span><span>Kali pertama ≈ 45 minit</span><span>Kuliah seterusnya ≈ 10 minit</span></div>
+    <p>Sediakan Surface, kamera, OBS dan osiloskop. Mengajar secara langsung, dan simpan video untuk rujukan pelajar.</p>
+    <div class="meta"><span>Versi 1.2</span><span>Microsoft Surface · EMEET Piko+ · Keysight DSOX1204A</span><span>Kali pertama ≈ 45 minit</span><span>Kuliah seterusnya ≈ 10 minit</span></div>
   </header>
 
   <!-- ===================== ISI KANDUNGAN ===================== -->
@@ -141,8 +143,9 @@
       <a href="#osiloskop"><b>4</b>Setup osiloskop</a>
       <a href="#obs"><b>5</b>Setup OBS</a>
       <a href="#podium"><b>6</b>Sambung Podium</a>
-      <a href="#semak"><b>7</b>Senarai semak kuliah</a>
-      <a href="#masalah"><b>8</b>Masalah lazim</a>
+      <a href="#langsung"><b>7</b>Mengajar langsung &amp; simpan video</a>
+      <a href="#semak"><b>8</b>Senarai semak kuliah</a>
+      <a href="#masalah"><b>9</b>Masalah lazim</a>
     </nav>
 
     <h3>Gambaran sistem</h3>
@@ -152,10 +155,10 @@
         <g font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-weight="700" text-anchor="middle">
           <!-- sumber -->
           <rect x="10" y="20" width="200" height="70" rx="20" fill="#fff"/><circle cx="46" cy="55" r="14" fill="#6CC4FA"/><text x="130" y="52" font-size="17" fill="#1E1B4B">Kamera litar</text><text x="130" y="72" font-size="12" fill="#6B6699" font-weight="600">EMEET Piko+ · USB-C</text>
-          <rect x="10" y="115" width="200" height="70" rx="20" fill="#fff"/><circle cx="46" cy="150" r="14" fill="#F28FD9"/><text x="130" y="147" font-size="17" fill="#1E1B4B">Keysight DSOX1204A</text><text x="130" y="167" font-size="12" fill="#6B6699" font-weight="600">LAN (pelayar) / USB (BenchVue)</text>
+          <rect x="10" y="115" width="200" height="70" rx="20" fill="#fff"/><circle cx="46" cy="150" r="14" fill="#F28FD9"/><text x="134" y="147" font-size="17" fill="#1E1B4B">DSOX1204A</text><text x="134" y="167" font-size="12" fill="#6B6699" font-weight="600">Keysight · LAN / USB</text>
           <rect x="10" y="210" width="200" height="70" rx="20" fill="#fff"/><circle cx="46" cy="245" r="14" fill="#2DD4A0"/><text x="130" y="242" font-size="17" fill="#1E1B4B">Mikrofon</text><text x="130" y="262" font-size="12" fill="#6B6699" font-weight="600">USB / 3.5 mm</text>
           <!-- anak panah -->
-          <g stroke="#6B6699" stroke-width="3" fill="none" marker-end="url(#ar)" stroke-linecap="round"><path d="M212 55 H318"/><path d="M212 150 H318"/><path d="M212 245 H318"/><path d="M590 150 H668"/></g>
+          <g stroke="#6B6699" stroke-width="3" fill="none" marker-end="url(#ar)" stroke-linecap="round"><path d="M212 55 H318"/><path d="M212 150 H318"/><path d="M212 245 H318"/><path d="M590 85 H646"/><path d="M590 222 H646"/></g>
           <!-- laptop -->
           <rect x="320" y="20" width="268" height="260" rx="30" fill="#6E5CE7"/>
           <text x="454" y="62" font-size="20" fill="#fff" font-weight="800">Laptop / Surface</text>
@@ -163,8 +166,10 @@
           <rect x="344" y="172" width="220" height="90" rx="18" fill="#fff"/><g transform="translate(366 190) scale(.8)"><image href="brand/podium-icon.svg" width="56" height="56"/></g><text x="474" y="212" font-size="20" fill="#1E1B4B" font-weight="800">Podium</text><text x="474" y="236" font-size="12" fill="#6B6699" font-weight="600">panel sentuh</text>
           <path d="M454 160 V170" stroke="#fff" stroke-width="3" stroke-dasharray="2 5" stroke-linecap="round"/>
           <!-- keluaran -->
-          <rect x="672" y="95" width="198" height="110" rx="24" fill="#fff"/><circle cx="772" cy="130" r="13" fill="none" stroke="#FF3B5C" stroke-width="5"/><circle cx="772" cy="130" r="5" fill="#FF3B5C"/>
-          <text x="771" y="170" font-size="16" fill="#1E1B4B" font-weight="800">Fail rakaman</text><text x="771" y="190" font-size="12" fill="#6B6699" font-weight="600">.mkv / .mp4</text>
+          <rect x="650" y="20" width="225" height="130" rx="24" fill="#fff"/><circle cx="762" cy="52" r="13" fill="#2DD4A0"/><circle cx="762" cy="52" r="5" fill="#fff"/>
+          <text x="762" y="90" font-size="16" fill="#1E1B4B" font-weight="800">Pelajar (langsung)</text><text x="762" y="110" font-size="12" fill="#6B6699" font-weight="600">Kamera Maya: Teams · Zoom · Meet</text><text x="762" y="128" font-size="12" fill="#6B6699" font-weight="600">Siaran: YouTube · Facebook</text>
+          <rect x="650" y="165" width="225" height="115" rx="24" fill="#fff"/><circle cx="762" cy="196" r="13" fill="none" stroke="#FF3B5C" stroke-width="5"/><circle cx="762" cy="196" r="5" fill="#FF3B5C"/>
+          <text x="762" y="234" font-size="16" fill="#1E1B4B" font-weight="800">Fail rakaman</text><text x="762" y="254" font-size="12" fill="#6B6699" font-weight="600">rujukan pelajar · .mkv / .mp4</text>
         </g>
       </svg>
     </div>
@@ -180,7 +185,7 @@
       <div class="box">
         <h3><span class="req m">WAJIB</span> Barang utama</h3>
         <ul class="chk">
-          <li><input type="checkbox"><span>Laptop / Surface<small>Windows 10/11, RAM 8 GB ke atas</small></span></li>
+          <li><input type="checkbox"><span>Microsoft Surface<small>Pro, Laptop atau Go · Windows 10/11 · RAM 8 GB ke atas</small></span></li>
           <li><input type="checkbox"><span>Pengecas laptop</span></li>
           <li><input type="checkbox"><span>Kamera EMEET Piko+<small>Kabel USB-C disertakan. Jika laptop hanya ada USB-A, sediakan penyesuai</small></span></li>
           <li><input type="checkbox"><span>Tripod atau lengan kamera<small>Semak sama ada Piko+ boleh dipasang pada tripod anda; jika tidak, guna pengapit atau penyangga yang stabil</small></span></li>
@@ -188,6 +193,8 @@
           <li><input type="checkbox"><span>Osiloskop Keysight DSOX1204A + probe<small>Probe yang disertakan, dan kabel kuasa</small></span></li>
           <li><input type="checkbox"><span>Kabel LAN (RJ-45)<small>Untuk menghantar paparan osiloskop ke laptop</small></span></li>
           <li><input type="checkbox"><span>Router / suis rangkaian (atau soket LAN)<small>Laptop dan osiloskop mesti dalam rangkaian yang sama. Jika laptop tiada port LAN, perlu penyesuai USB-C ke Ethernet</small></span></li>
+          <li><input type="checkbox"><span>Hab USB-C (USB-A + Ethernet)<small>Perlu jika Surface anda hanya mempunyai port USB-C (kebanyakan Surface Pro terkini)</small></span></li>
+          <li><input type="checkbox"><span>Sambungan internet<small>Perlu untuk siaran langsung. Disyorkan kabel LAN; jika Wi-Fi, duduk dekat router</small></span></li>
           <li><input type="checkbox"><span>Litar / papan projek (breadboard) untuk demo</span></li>
         </ul>
       </div>
@@ -197,6 +204,7 @@
           <li><input type="checkbox"><span>Kabel USB (USB-A ke USB-B)<small>Untuk perisian BenchVue melalui port USB di belakang osiloskop</small></span></li>
           <li><input type="checkbox"><span>Hab USB berkuasa / penyesuai USB-C ke USB-A<small>Surface mempunyai port yang sedikit</small></span></li>
           <li><input type="checkbox"><span>Kamera kedua (muka pensyarah)<small>Untuk scene 3. Jika tiada, guna Piko+ yang sama</small></span></li>
+          <li><input type="checkbox"><span>Earphone / headphone<small>Elak bunyi bergema semasa mesyuarat dalam talian</small></span></li>
           <li><input type="checkbox"><span>Lampu meja<small>Cahaya sisi supaya litar jelas</small></span></li>
           <li><input type="checkbox"><span>Skrin kedua / projektor</span></li>
           <li><input type="checkbox"><span>Cakera luaran / pemacu pen<small>Untuk salinan fail rakaman</small></span></li>
@@ -222,6 +230,10 @@
       <li><div><b class="t">Tutup program lain</b><p>Tutup Teams, Zoom, muat turun, dan tab pelayar yang banyak. Tangguhkan kemas kini Windows.</p></div></li>
       <li><div><b class="t">Pasang kabel ke port yang betul</b><p>Guna port <b>USB 3</b> (biasanya biru atau bertanda SS) untuk kamera. Jika port tidak cukup, guna hab USB berkuasa atau penyesuai USB-C ke USB-A. Untuk paparan osiloskop, sambungkan juga ke rangkaian (kabel LAN atau penyesuai USB-C ke Ethernet).</p>
         <div class="note tip"><b class="tag">TIP</b><span>Jika gambar kamera tersangkut, pindahkan kamera ke port USB 3 yang tidak dikongsi dengan peranti lain.</span></div></div></li>
+      <li><div><b class="t">Surface: guna hab USB-C</b><p>Kebanyakan Surface Pro terkini hanya ada port USB-C. Sambung hab USB-C (dengan port USB-A dan Ethernet) untuk mikrofon, kabel LAN osiloskop dan kabel lain. Sambung Piko+ terus ke port USB-C Surface jika boleh.</p></div></li>
+      <li><div><b class="t">Surface: elak panas dan penurunan prestasi</b><p>Surface (terutama Pro) boleh memperlahankan prestasi apabila panas. Letak di tempat berudara, jangan tutup dengan kertas atau kain, dan guna <b>pengecas asal</b>. Jika Surface tersangkut semasa siaran dan rakaman serentak, lihat Bahagian 9.</p></div></li>
+      <li><div><b class="t">Surface: semak jenis pemproses</b><p>Surface Pro 11 dan Surface Laptop 7 menggunakan pemproses Snapdragon (ARM). Pada obsproject.com, pilih muat turun untuk <b>Windows ARM</b> jika ada, dan pastikan kamera serta mikrofon dikesan. Surface Intel menggunakan muat turun Windows biasa.</p></div></li>
+      <li><div><b class="t">Surface: guna sentuhan untuk Podium</b><p>Podium direka untuk skrin sentuh. Tekan <kbd>Win</kbd> + <kbd>←</kbd> untuk letak Podium pada separuh kiri skrin dan OBS pada separuh kanan, supaya anda boleh menyentuh Podium sambil melihat OBS.</p></div></li>
       <li><div><b class="t">(Pilihan) Guna dua skrin</b><p>Tekan <kbd>Win</kbd> + <kbd>P</kbd> → <b>Extend</b>. Letak slaid pada skrin projektor dan panel Podium pada skrin Surface.</p></div></li>
     </ol>
   </section>
@@ -336,6 +348,15 @@
       <li><div><b class="t">Rakaman ujian 10 saat</b><p>Tekan <b>Start Recording</b>, bercakap sebentar, kemudian <b>Stop Recording</b>. Buka <span class="path">File → Show Recordings</span> dan mainkan fail itu.</p>
         <div class="note ok"><b class="tag">SEMAK</b><span>Gambar jelas, bunyi ada, dan fail boleh dimainkan.</span></div></div></li>
     </ol>
+  
+    <h3>D. Sediakan siaran langsung</h3>
+    <ol class="steps">
+      <li><div><b class="t">Kamera Maya (untuk Teams, Zoom, Google Meet)</b><p>Tiada apa perlu dipasang dalam OBS 28 ke atas. Podium menghidupkannya dengan butang <b>Kamera Maya</b>. Untuk menguji tanpa Podium, tekan <b>Start Virtual Camera</b> pada kotak <b>Controls</b> OBS.</p></div></li>
+      <li><div><b class="t">Siaran ke YouTube atau Facebook (pilihan)</b><p class="path">Settings → Stream → Service: YouTube - RTMPS (atau Facebook Live)</p><p>Tekan <b>Connect Account</b> atau tampal <b>Stream Key</b>, kemudian <span class="k">OK</span>. Kunci siaran diperoleh dari YouTube Studio → <b>Go Live</b>.</p>
+        <div class="note warn"><b class="tag">PENTING</b><span>Jangan kongsi kunci siaran kepada sesiapa. Siapa yang ada kunci boleh menyiar pada saluran anda. Tetapkan siaran sebagai <b>Unlisted</b> supaya hanya pelajar yang ada pautan boleh menonton.</span></div></div></li>
+      <li><div><b class="t">Tetapan siaran</b><p class="path">Settings → Output → Streaming</p><p><b>Video Bitrate</b> ≈ <b>4500 Kbps</b> (1080p, 30 fps), <b>Audio Bitrate</b> 160. Kelajuan <b>muat naik</b> internet sekurang-kurangnya 8 Mbps; guna kabel LAN jika boleh.</p></div></li>
+      <li><div><b class="t">Siaran dan rakaman serentak</b><p>Boleh, dan disyorkan: rakaman tempatan ialah salinan keselamatan jika internet terputus. Jika Surface tersangkut, tukar <span class="path">Settings → Output → Recording Quality</span> kepada <b>Same as stream</b>.</p></div></li>
+    </ol>
   </section>
 
   <!-- ===================== 6. PODIUM ===================== -->
@@ -346,18 +367,63 @@
       <li><div><b class="t">Buka Podium</b><p>Dalam <b>Chrome</b> atau <b>Edge</b> pada laptop yang sama dengan OBS, buka <a href="https://lecturer-control-panel.vercel.app">lecturer-control-panel.vercel.app</a>. Anda juga boleh membuka fail <span class="k">index.html</span> terus.</p>
         <div class="note tip"><b class="tag">TIP</b><span>Tambah ke bar penanda buku (bookmark) supaya mudah dibuka semula.</span></div></div></li>
       <li><div><b class="t">Isi sambungan</b><p><b>Host</b> = <span class="k">localhost</span> · <b>Port</b> = <span class="k">4455</span> · <b>Password</b> = kata laluan WebSocket tadi. Tanda <b>Ingat</b> jika laptop ini peribadi.</p></div></li>
-      <li><div><b class="t">Tekan “Sambung”</b><p>Status berubah kepada <b style="color:#0E7A5A">● Connected</b>. Jika tidak berjaya, lihat Bahagian 8.</p></div></li>
+      <li><div><b class="t">Tekan “Sambung”</b><p>Status berubah kepada <b style="color:#0E7A5A">● Connected</b>. Jika tidak berjaya, lihat Bahagian 9.</p></div></li>
       <li><div><b class="t">Uji tiga scene</b><p>Sentuh kad atau tekan <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> pada papan kekunci. Kad yang aktif akan menunjukkan <b>LIVE</b> dan scene dalam OBS bertukar.</p>
         <div class="note warn"><b class="tag">NOTA</b><span>Kad bertanda “TIADA DALAM OBS”? Tekan <b>⚙ Nama scene OBS</b> dan pilih nama yang betul daripada senarai.</span></div></div></li>
-      <li><div><b class="t">Mula dan henti rakaman</b><p>Tekan <b>MULA RAKAMAN</b>. Lampu <b style="color:#FF3B5C">merah</b> menyala dan masa berjalan. Untuk berhenti, tekan <b>dua kali</b> (tekan pertama meminta pengesahan).</p></div></li>
+      <li><div><b class="t">Siaran langsung (pilihan)</b><p>Kad <b>Siaran Langsung</b> ada dua butang: <b>Kamera Maya</b> (untuk Teams, Zoom, Meet) dan <b>Mula Siaran</b> (YouTube, Facebook). Apabila aktif, lampu dan butang bertukar <b style="color:#0E7A5A">hijau</b>. Untuk berhenti, tekan <b>dua kali</b>. Cara guna: Bahagian 7.</p></div></li>
+      <li><div><b class="t">Mula dan henti rakaman</b><p>Tekan <b>MULA RAKAMAN</b>. Lampu <b style="color:#FF3B5C">merah</b> menyala dan masa berjalan. Untuk berhenti, tekan <b>dua kali</b> (tekan pertama meminta pengesahan). Rakaman ini boleh dikongsi kepada pelajar selepas kuliah (Bahagian 7).</p></div></li>
       <li><div><b class="t">Pemasa kuliah</b><p>Pilih tempoh (30, 45, 50, 60, 90, 120 minit atau taip sendiri) → <b>Mula</b>. Pemasa bertukar <b style="color:#B96A00">kuning</b> pada 5 minit terakhir, <b style="color:#F2603C">coral</b> pada 1 minit terakhir, dan berbunyi apabila tamat.</p></div></li>
       <li><div><b class="t">Nota pantas</b><p>Taip di kotak bawah. Nota <b>disimpan automatik</b> dan masih ada walaupun halaman dimuat semula.</p></div></li>
     </ol>
   </section>
 
-  <!-- ===================== 7. SENARAI SEMAK ===================== -->
+  <!-- ===================== 7. MENGAJAR LANGSUNG ===================== -->
+  <section id="langsung">
+    <div class="sec-head"><div class="n">7</div><h2>Mengajar langsung &amp; simpan video</h2></div>
+    <p class="lead">Pilih cara anda mengajar. Anda boleh mengajar secara langsung <b>dan</b> menyimpan video untuk rujukan pelajar pada masa yang sama.</p>
+
+    <table>
+      <tr><th style="width:24%">Cara</th><th>Sesuai untuk</th><th style="width:25%">Butang Podium</th></tr>
+      <tr><td><b>1. Mesyuarat dalam talian</b></td><td>Kelas dalam Teams, Zoom atau Google Meet. Pelajar sudah ada pautan kelas.</td><td>Kamera Maya + Rakaman</td></tr>
+      <tr><td><b>2. Siaran langsung</b></td><td>Ramai penonton atau kelas dalam YouTube/Facebook. Pelajar hanya menonton.</td><td>Mula Siaran + Rakaman</td></tr>
+      <tr><td><b>3. Rakam sahaja</b></td><td>Pelajar menonton kemudian (kelas terbalik / ulang kaji).</td><td>Rakaman</td></tr>
+    </table>
+    <div class="note ok"><b class="tag">DISYORKAN</b><span>Hidupkan <b>Rakaman</b> pada setiap kuliah, walaupun mengajar secara langsung. Jika internet terputus, anda masih ada video penuh untuk pelajar.</span></div>
+
+    <h3>Cara 1: Mesyuarat dalam talian (Kamera Maya)</h3>
+    <ol class="steps">
+      <li><div><b class="t">Hidupkan Kamera Maya</b><p>Dalam Podium tekan <b>Kamera Maya</b>. Lampu menjadi <b style="color:#0E7A5A">hijau</b>.</p></div></li>
+      <li><div><b class="t">Pilih kamera dalam aplikasi mesyuarat</b><p>Buka Teams, Zoom atau Meet. Pada tetapan <b>Video / Camera</b>, pilih <b>OBS Virtual Camera</b>. Pelajar kini melihat apa yang ada dalam OBS (scene yang dipilih).</p></div></li>
+      <li><div><b class="t">Pilih mikrofon dalam aplikasi mesyuarat</b><p>Kamera Maya hanya menghantar <b>gambar</b>, bukan bunyi. Dalam tetapan <b>Audio / Microphone</b> aplikasi mesyuarat, pilih mikrofon sebenar anda (atau mikrofon EMEET).</p></div></li>
+      <li><div><b class="t">Jangan kongsi skrin</b><p>Slaid, litar dan osiloskop dihantar melalui scene OBS. Tukar scene dengan <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> atau sentuhan. Dengan itu pelajar tidak melihat skrin Podium atau OBS.</p></div></li>
+      <li><div><b class="t">Hidupkan Rakaman</b><p>Tekan <b>MULA RAKAMAN</b> untuk menyimpan salinan.</p>
+        <div class="note warn"><b class="tag">PRIVASI</b><span>OBS merakam <b>Desktop Audio</b> (bunyi dari aplikasi mesyuarat), jadi suara pelajar boleh terakam. Jika tidak mahu, matikan <b>Desktop Audio</b> pada <b>Audio Mixer</b> OBS, dan ikut dasar institusi anda tentang rakaman kelas.</span></div></div></li>
+    </ol>
+
+    <h3>Cara 2: Siaran langsung (YouTube / Facebook)</h3>
+    <ol class="steps">
+      <li><div><b class="t">Cipta acara siaran</b><p>Di YouTube Studio atau Facebook, cipta acara siaran dan tetapkan sebagai <b>Unlisted</b> / dikongsi dengan pautan. Salin kunci siaran ke <span class="path">OBS → Settings → Stream</span> (Bahagian 5, D).</p></div></li>
+      <li><div><b class="t">Tekan “Mula Siaran”</b><p>Dalam Podium tekan <b>Mula Siaran</b>. Tunggu butang menjadi <b style="color:#0E7A5A">hijau</b> dan label <b>SIARAN LANGSUNG</b>. Platform mungkin mengambil beberapa saat sebelum menunjukkan status Live.</p></div></li>
+      <li><div><b class="t">Kongsi pautan dengan pelajar</b><p>Hantar pautan acara melalui e-mel, kumpulan WhatsApp atau sistem pembelajaran institusi anda.</p></div></li>
+      <li><div><b class="t">Hidupkan Rakaman, dan henti apabila tamat</b><p>Tekan <b>MULA RAKAMAN</b>. Selepas kuliah, tekan <b>Henti Siaran</b> dua kali dan kemudian henti rakaman dua kali.</p></div></li>
+    </ol>
+
+    <h3>Simpan video untuk rujukan pelajar</h3>
+    <ol class="steps">
+      <li><div><b class="t">Henti rakaman dan tunggu mesej “disimpan”</b><p>Podium memaparkan laluan fail selepas rakaman berhenti.</p></div></li>
+      <li><div><b class="t">Tukar kepada MP4</b><p>Fail <i>.mkv</i> selamat tetapi tidak semua peranti boleh memainkannya. Dalam OBS: <span class="path">File → Remux Recordings</span> dan pilih fail itu untuk mendapatkan <i>.mp4</i>.</p></div></li>
+      <li><div><b class="t">Semak dan potong (pilihan)</b><p>Mainkan 10 saat pertama dan terakhir. Untuk membuang bahagian awal atau akhir, guna aplikasi penyuntingan video yang ada dalam Windows (contoh Clipchamp jika tersedia).</p></div></li>
+      <li><div><b class="t">Namakan fail dengan jelas</b><p>Contoh: <span class="k">EEE201_BabLitar_2026-11-28.mp4</span> (kod kursus, tajuk, tarikh).</p></div></li>
+      <li><div><b class="t">Muat naik dan kongsi</b>
+        <ul><li><b>YouTube</b> (Unlisted): sesuai untuk pelajar ramai dan telefon.</li><li><b>OneDrive / SharePoint / Teams</b>: sesuai jika institusi anda menggunakan Microsoft 365. Tetapkan akses kepada pelajar kursus sahaja.</li><li><b>Google Drive</b>: tetapkan “Sesiapa yang ada pautan”, atau senarai e-mel pelajar.</li></ul>
+        <div class="note tip"><b class="tag">TIP</b><span>Satu jam rakaman kira-kira 2–5 GB. Jika terlalu besar untuk dimuat naik, mampatkan dahulu dengan aplikasi seperti HandBrake.</span></div></div></li>
+      <li><div><b class="t">Salin ke cakera luaran</b><p>Simpan satu salinan di luar Surface sebelum memadam fail untuk mengosongkan ruang.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- ===================== 8. SENARAI SEMAK ===================== -->
   <section id="semak">
-    <div class="sec-head"><div class="n">7</div><h2>Senarai semak kuliah</h2></div>
+    <div class="sec-head"><div class="n">8</div><h2>Senarai semak kuliah</h2></div>
     <p class="lead">Gunakan setiap kali. Kuliah seterusnya hanya perlu ≈ 10 minit.</p>
     <div class="two">
       <div class="box">
@@ -369,6 +435,8 @@
           <li><input type="checkbox"><span>Bunyi diuji (bar tidak menyentuh merah)</span></li>
           <li><input type="checkbox"><span>Podium <b>Connected</b>, tiga scene diuji</span></li>
           <li><input type="checkbox"><span>Pemasa dipilih (contoh 50 minit)</span></li>
+          <li><input type="checkbox"><span>Kamera Maya atau Siaran dihidupkan (hijau); aplikasi mesyuarat memilih <b>OBS Virtual Camera</b></span></li>
+          <li><input type="checkbox"><span>Rakan semak: gambar jelas dan bunyi didengar</span></li>
           <li><input type="checkbox"><span>Ruang simpanan ≥ 20 GB</span></li>
           <li><input type="checkbox"><span>Tekan <b>MULA RAKAMAN</b> dan lampu merah menyala</span></li>
         </ul>
@@ -376,9 +444,11 @@
       <div class="box">
         <h3>Selepas kuliah</h3>
         <ul class="chk">
+          <li><input type="checkbox"><span>Henti Siaran dan Kamera Maya (tekan dua kali)</span></li>
           <li><input type="checkbox"><span>Henti rakaman (tekan dua kali) dan tunggu mesej “disimpan”</span></li>
           <li><input type="checkbox"><span>Mainkan 10 saat pertama dan terakhir fail rakaman</span></li>
           <li><input type="checkbox"><span>Salin fail ke cakera luaran atau awan</span></li>
+          <li><input type="checkbox"><span>Muat naik video dan kongsi pautan dengan pelajar (Bahagian 7)</span></li>
           <li><input type="checkbox"><span>Putuskan Podium dan tutup OBS</span></li>
           <li><input type="checkbox"><span>Matikan osiloskop dan cabut probe</span></li>
           <li><input type="checkbox"><span>Gulung kabel, simpan kamera dan mikrofon</span></li>
@@ -389,7 +459,7 @@
 
   <!-- ===================== 8. MASALAH ===================== -->
   <section id="masalah" class="pb">
-    <div class="sec-head"><div class="n">8</div><h2>Masalah lazim</h2></div>
+    <div class="sec-head"><div class="n">9</div><h2>Masalah lazim</h2></div>
     <p class="lead">Cari masalah anda, cuba penyelesaian mengikut turutan.</p>
     <table>
       <tr><th style="width:30%">Masalah</th><th>Penyelesaian</th></tr>
@@ -399,6 +469,13 @@
       <tr><td><b>Skrin slaid hitam dalam OBS</b></td><td>Tukar <b>Window Capture</b> kepada <b>Display Capture</b>. Atau jalankan OBS sebagai <i>Administrator</i>.</td></tr>
       <tr><td><b>Kamera tidak dikesan</b></td><td>Tutup program lain yang menggunakan kamera (Teams, Zoom, Camera). Cabut dan cucuk semula ke port USB 3. Dalam OBS pilih semula kamera di <b>Properties</b>.</td></tr>
       <tr><td><b>Tiada bunyi dalam rakaman</b></td><td>Semak <span class="path">Settings → Audio → Mic/Auxiliary Audio</span>. Pastikan ikon pembesar suara pada <b>Audio Mixer</b> tidak dibisukan (tidak bergaris merah).</td></tr>
+      <tr><td><b>Aplikasi mesyuarat tidak menunjukkan “OBS Virtual Camera”</b></td><td>Tekan <b>Kamera Maya</b> dalam Podium dahulu (lampu hijau), kemudian buka semula tetapan kamera dalam Teams/Zoom/Meet. Jika masih tiada, mulakan semula aplikasi mesyuarat. Pastikan OBS versi 28 ke atas.</td></tr>
+      <tr><td><b>Pelajar tidak dengar suara saya (Kamera Maya)</b></td><td>OBS Virtual Camera hanya menghantar gambar. Dalam tetapan <b>Audio / Microphone</b> aplikasi mesyuarat, pilih mikrofon sebenar anda.</td></tr>
+      <tr><td><b>Pratonton diri nampak terbalik</b></td><td>Pratonton sendiri dalam aplikasi mesyuarat biasanya dicerminkan untuk anda sahaja. Pelajar melihat gambar yang betul. Uji dengan seorang rakan.</td></tr>
+      <tr><td><b>“Siaran gagal dimulakan”</b></td><td>Dalam OBS semak <span class="path">Settings → Stream</span>: kunci siaran betul dan acara telah dicipta di YouTube/Facebook. Semak sambungan internet.</td></tr>
+      <tr><td><b>Siaran terputus-putus / “menyambung semula”</b></td><td>Guna kabel LAN, turunkan <b>Video Bitrate</b> kepada 3000 Kbps dan tutup muat turun lain. Rakaman tempatan tidak terjejas.</td></tr>
+      <tr><td><b>Surface panas atau tersangkut semasa siaran + rakaman</b></td><td>Pilih encoder <b>Hardware</b> (QSV), tetapkan <b>Recording Quality: Same as stream</b>, FPS 30, guna pengecas asal dan letak di tempat berudara.</td></tr>
+      <tr><td><b>Rakaman ada suara pelajar</b></td><td>OBS merakam <b>Desktop Audio</b> dari aplikasi mesyuarat. Matikan <b>Desktop Audio</b> pada <b>Audio Mixer</b> jika tidak mahu.</td></tr>
       <tr><td><b>Gambar tersangkut / “dropped frames”</b></td><td>Pilih encoder <b>Hardware</b>, kurangkan FPS kepada 30, tutup program lain, gunakan port USB 3 yang berasingan untuk setiap peranti, dan pastikan mod kuasa <b>Best performance</b>.</td></tr>
       <tr><td><b>Gambar kamera berkelip atau berubah cerah</b></td><td>Matikan <b>Auto Exposure</b> dan <b>Auto White Balance</b> pada kamera. Elak cahaya yang berkelip (lampu murah).</td></tr>
       <tr><td><b>Gelombang osiloskop tidak stabil</b></td><td>Semak aras <b>Trigger</b> berada pada tengah gelombang, sumber trigger sepadan dengan saluran yang diukur, dan klip bumi disambung ke bumi litar.</td></tr>
@@ -415,7 +492,7 @@
 
   <footer>
     <img src="brand/podium-wordmark-on-light.svg" alt="Podium">
-    <div>Kawal kuliah anda dengan satu sentuhan · Manual Pengguna v1.1</div>
+    <div>Kawal kuliah anda dengan satu sentuhan · Manual Pengguna v1.2</div>
     <button class="print-btn no-print" onclick="window.print()">Cetak / Simpan sebagai PDF</button>
   </footer>
 </div>

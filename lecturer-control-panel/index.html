@@ -217,6 +217,32 @@
   .rec-btn:disabled { background: rgba(255,255,255,.14) !important; color: rgba(255,255,255,.5) !important; box-shadow: none !important; animation: none; }
   @keyframes confirmBlink { to { filter: brightness(.9); } }
 
+  /* ---------- Siaran langsung (hijau = hidup) ---------- */
+  .out-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 14px; }
+  .out-grid .panel { padding: 16px 18px; }
+  .btn-pair { flex: 1 1 14rem; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .live-btn {
+    min-height: 5.25rem; border-radius: 22px; padding: 0 .7rem; background: #fff; color: var(--sel); box-shadow: var(--sh-btn);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; line-height: 1.15; text-align: center;
+  }
+  .live-btn .bt { font-size: 1.02rem; font-weight: 800; }
+  .live-btn .bs { font-size: .72rem; font-weight: 600; opacity: .78; }
+  .live-btn[data-state="idle"]:hover:not(:disabled) { background: #F3F0FF; }
+  .live-btn[data-state="on"]      { background: var(--ok); color: var(--ink); box-shadow: 0 14px 26px -10px rgba(45,212,160,.75); }
+  .live-btn[data-state="confirm"] { background: var(--warn); color: var(--ink); animation: confirmBlink .6s ease-in-out infinite alternate; }
+  .live-btn[data-state="busy"]    { background: rgba(255,255,255,.2); color: #fff; box-shadow: none; }
+  .live-btn:disabled { background: rgba(255,255,255,.14) !important; color: rgba(255,255,255,.5) !important; box-shadow: none !important; animation: none; }
+  .rec-lamp.live[data-on="true"] {
+    background: radial-gradient(circle at 35% 30%, #c4f7e6, var(--ok) 45%, #12A077);
+    box-shadow: inset 0 0 0 3px rgba(255,255,255,.55), 0 0 0 7px rgba(45,212,160,.28), 0 0 38px 8px rgba(45,212,160,.65);
+    animation: livePulse 1.2s ease-in-out infinite;
+  }
+  @keyframes livePulse { 50% { box-shadow: inset 0 0 0 3px rgba(255,255,255,.55), 0 0 0 12px rgba(45,212,160,.08), 0 0 16px 2px rgba(45,212,160,.45); } }
+  #liveLabel { font-size: .85rem; font-weight: 800; letter-spacing: .1em; color: var(--on-violet-2); }
+  #liveLabel[data-on="true"] { color: #9CF3D6; }
+  #liveTime { font-size: 2.1rem; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; color: #fff; }
+  #liveTime[data-on="false"] { color: rgba(255,255,255,.85); }
+
   /* ---------- Panel putih: Pemasa ---------- */
   .white-panel {
     background: #fff; color: var(--ink); border-radius: var(--r-panel); padding: 22px;
@@ -368,20 +394,39 @@
         </div>
       </section>
 
-      <!-- 3. REKAMAN -->
-      <section class="panel" aria-label="Rakaman">
-        <div class="rec-row">
-          <div class="flex items-center gap-4">
-            <div id="recLamp" class="rec-lamp" data-on="false" aria-hidden="true"></div>
-            <div class="min-w-0">
-              <div id="recLabel" data-on="false">TIDAK MERAKAM</div>
-              <div id="recTime" data-on="false">00:00:00</div>
+      <!-- 3. SIARAN LANGSUNG + REKAMAN -->
+      <div class="out-grid">
+        <section class="panel" aria-label="Siaran langsung">
+          <div class="rec-row">
+            <div class="flex items-center gap-4">
+              <div id="liveLamp" class="rec-lamp live" data-on="false" aria-hidden="true"></div>
+              <div class="min-w-0">
+                <div id="liveLabel" data-on="false">TIDAK DISIARKAN</div>
+                <div id="liveTime" data-on="false">00:00:00</div>
+              </div>
+            </div>
+            <div class="btn-pair">
+              <button id="camBtn" class="live-btn" data-state="idle" disabled><span class="bt">Kamera Maya</span><span class="bs">Teams · Zoom · Meet</span></button>
+              <button id="streamBtn" class="live-btn" data-state="idle" disabled><span class="bt">Mula Siaran</span><span class="bs">YouTube · Facebook</span></button>
             </div>
           </div>
-          <button id="recBtn" class="rec-btn" data-state="idle" disabled>● MULA RAKAMAN</button>
-        </div>
-        <p id="recInfo" class="text-xs muted mt-2 truncate min-h-[1rem]"></p>
-      </section>
+          <p id="liveInfo" class="text-xs muted mt-2 truncate min-h-[1rem]"></p>
+        </section>
+
+        <section class="panel" aria-label="Rakaman">
+          <div class="rec-row">
+            <div class="flex items-center gap-4">
+              <div id="recLamp" class="rec-lamp" data-on="false" aria-hidden="true"></div>
+              <div class="min-w-0">
+                <div id="recLabel" data-on="false">TIDAK MERAKAM</div>
+                <div id="recTime" data-on="false">00:00:00</div>
+              </div>
+            </div>
+            <button id="recBtn" class="rec-btn" data-state="idle" disabled>● MULA RAKAMAN</button>
+          </div>
+          <p id="recInfo" class="text-xs muted mt-2 truncate min-h-[1rem]"></p>
+        </section>
+      </div>
     </div>
 
     <!-- 4. PEMASA KULIAH -->
@@ -511,7 +556,7 @@
     btn.textContent = { connected: 'Putuskan', connecting: 'Menyambung…', disconnected: 'Sambung' }[state];
     btn.disabled = state === 'connecting';
     ['host', 'port', 'password'].forEach(id => $(id).disabled = state !== 'disconnected');
-    renderScenes(); renderRec();
+    renderScenes(); renderRec(); renderLive();
   }
 
   function errText(e) {
@@ -553,12 +598,15 @@
       const wasConnected = connected;
       connected = false; connecting = false;
       currentScene = null; recState = { active: false, busy: false, paused: false };
+      resetLive();
       setConn('disconnected');
       if (wasConnected && !intentionalClose) toast('Sambungan ke OBS terputus.', 'error', 6000);
     });
     obs.on('CurrentProgramSceneChanged', (d) => { currentScene = d.sceneName; renderScenes(); });
     obs.on('SceneListChanged', () => refreshSceneList());
     obs.on('RecordStateChanged', onRecordStateChanged);
+    obs.on('StreamStateChanged', onStreamStateChanged);
+    obs.on('VirtualcamStateChanged', onCamStateChanged);
   }
 
   async function syncFromObs() {
@@ -566,6 +614,7 @@
     try { currentScene = (await obs.call('GetCurrentProgramScene')).sceneName; } catch {}
     renderScenes();
     await refreshRecordStatus();
+    await refreshLiveStatus();
   }
 
   /* =====================================================================
@@ -708,6 +757,130 @@
     } catch (e) {
       cancelConfirm(); renderRec();
       toast('Operasi rakaman gagal: ' + (e && e.message ? e.message : 'ralat tidak diketahui'), 'error', 6000);
+    }
+  });
+
+  /* =====================================================================
+   * 3b. SIARAN LANGSUNG  (Kamera Maya untuk Teams/Zoom/Meet · Siaran RTMP)
+   * ===================================================================== */
+  let live = { cam: false, camBusy: false, stream: false, streamBusy: false, reconnecting: false };
+  let streamBaseMs = 0, streamSyncAt = 0, camSince = 0;
+  let confirmCam = false, confirmStream = false, confirmCamTimer, confirmStreamTimer;
+
+  function resetLive() {
+    live = { cam: false, camBusy: false, stream: false, streamBusy: false, reconnecting: false };
+    confirmCam = confirmStream = false; clearTimeout(confirmCamTimer); clearTimeout(confirmStreamTimer);
+    renderLive();
+  }
+
+  async function refreshLiveStatus() {
+    if (!connected) return;
+    try {
+      const s = await obs.call('GetStreamStatus');
+      live.stream = !!s.outputActive; live.reconnecting = !!s.outputReconnecting; live.streamBusy = false;
+      streamBaseMs = s.outputDuration || 0; streamSyncAt = Date.now();
+    } catch {}
+    try {
+      const c = await obs.call('GetVirtualCamStatus');
+      const was = live.cam; live.cam = !!c.outputActive; live.camBusy = false;
+      if (live.cam && !was) camSince = Date.now();
+    } catch {}
+    renderLive();
+  }
+
+  function onStreamStateChanged(d) {
+    const st = d.outputState;
+    if (st === 'OBS_WEBSOCKET_OUTPUT_STARTING')        { live.streamBusy = true; }
+    else if (st === 'OBS_WEBSOCKET_OUTPUT_STARTED')    { live.stream = true; live.streamBusy = false; live.reconnecting = false; streamBaseMs = 0; streamSyncAt = Date.now(); }
+    else if (st === 'OBS_WEBSOCKET_OUTPUT_STOPPING')   { live.streamBusy = true; }
+    else if (st === 'OBS_WEBSOCKET_OUTPUT_STOPPED')    { live.stream = false; live.streamBusy = false; live.reconnecting = false; }
+    else if (st === 'OBS_WEBSOCKET_OUTPUT_RECONNECTING') { live.reconnecting = true; toast('Siaran terputus — OBS cuba menyambung semula…', 'error', 5000); }
+    else if (st === 'OBS_WEBSOCKET_OUTPUT_RECONNECTED')  { live.reconnecting = false; toast('Siaran bersambung semula', 'ok', 2500); }
+    if (st !== 'OBS_WEBSOCKET_OUTPUT_STOPPING') { confirmStream = false; clearTimeout(confirmStreamTimer); }
+    renderLive();
+  }
+
+  function onCamStateChanged(d) {
+    const st = d.outputState;
+    if (st === 'OBS_WEBSOCKET_OUTPUT_STARTING')      { live.camBusy = true; }
+    else if (st === 'OBS_WEBSOCKET_OUTPUT_STARTED')  { live.cam = true; live.camBusy = false; camSince = Date.now(); }
+    else if (st === 'OBS_WEBSOCKET_OUTPUT_STOPPING') { live.camBusy = true; }
+    else if (st === 'OBS_WEBSOCKET_OUTPUT_STOPPED')  { live.cam = false; live.camBusy = false; }
+    if (st !== 'OBS_WEBSOCKET_OUTPUT_STOPPING') { confirmCam = false; clearTimeout(confirmCamTimer); }
+    renderLive();
+  }
+
+  function setLiveBtn(btn, state, text, sub, disabled) {
+    btn.dataset.state = state; btn.disabled = disabled;
+    btn.querySelector('.bt').textContent = text; btn.querySelector('.bs').textContent = sub;
+  }
+
+  function renderLive() {
+    const any = live.cam || live.stream;
+    $('liveLamp').dataset.on = String(any && !live.reconnecting);
+    $('liveLamp').dataset.busy = String(live.camBusy || live.streamBusy || live.reconnecting);
+    let label = 'TIDAK DISIARKAN';
+    if (live.reconnecting) label = 'MENYAMBUNG SEMULA…';
+    else if (live.stream && live.cam) label = 'SIARAN + KAMERA MAYA';
+    else if (live.stream) label = 'SIARAN LANGSUNG';
+    else if (live.cam) label = 'KAMERA MAYA AKTIF';
+    $('liveLabel').textContent = label; $('liveLabel').dataset.on = String(any);
+    $('liveTime').dataset.on = String(any);
+
+    const cam = $('camBtn'), str = $('streamBtn');
+    if (!connected)               setLiveBtn(cam, 'idle', 'Kamera Maya', 'Teams · Zoom · Meet', true);
+    else if (live.camBusy)        setLiveBtn(cam, 'busy', 'Sila tunggu…', ' ', true);
+    else if (live.cam && confirmCam) setLiveBtn(cam, 'confirm', 'Tekan lagi', 'untuk henti', false);
+    else if (live.cam)            setLiveBtn(cam, 'on', '● Kamera Maya', 'Aktif · tekan untuk henti', false);
+    else                          setLiveBtn(cam, 'idle', 'Kamera Maya', 'Teams · Zoom · Meet', false);
+
+    if (!connected)               setLiveBtn(str, 'idle', 'Mula Siaran', 'YouTube · Facebook', true);
+    else if (live.streamBusy)     setLiveBtn(str, 'busy', 'Sila tunggu…', ' ', true);
+    else if (live.stream && confirmStream) setLiveBtn(str, 'confirm', 'Tekan lagi', 'untuk henti', false);
+    else if (live.stream)         setLiveBtn(str, 'on', '■ Henti Siaran', live.reconnecting ? 'Menyambung semula…' : 'Menyiar · tekan untuk henti', false);
+    else                          setLiveBtn(str, 'idle', 'Mula Siaran', 'YouTube · Facebook', false);
+    renderLiveTime();
+  }
+  function renderLiveTime() {
+    const ms = live.stream ? streamBaseMs + (Date.now() - streamSyncAt) : live.cam ? Date.now() - camSince : 0;
+    $('liveTime').textContent = fmtHMS(ms / 1000);
+  }
+  setInterval(renderLiveTime, 500);
+  setInterval(() => { if (connected && (live.stream || live.cam)) refreshLiveStatus(); }, 10000);
+
+  $('camBtn').addEventListener('click', async () => {
+    if (!connected || live.camBusy) return;
+    try {
+      if (!live.cam) {
+        await obs.call('StartVirtualCam');
+      } else if (!confirmCam) {
+        confirmCam = true; renderLive();
+        confirmCamTimer = setTimeout(() => { confirmCam = false; renderLive(); }, 3000);
+      } else {
+        confirmCam = false; clearTimeout(confirmCamTimer); renderLive();
+        await obs.call('StopVirtualCam');
+      }
+    } catch (e) {
+      confirmCam = false; renderLive();
+      toast('Kamera Maya gagal dimulakan. Pastikan OBS ialah versi 28 ke atas dan tiada program lain sedang menggunakannya.', 'error', 7000);
+    }
+  });
+
+  $('streamBtn').addEventListener('click', async () => {
+    if (!connected || live.streamBusy) return;
+    try {
+      if (!live.stream) {
+        await obs.call('StartStream');
+      } else if (!confirmStream) {
+        confirmStream = true; renderLive();
+        confirmStreamTimer = setTimeout(() => { confirmStream = false; renderLive(); }, 3000);
+      } else {
+        confirmStream = false; clearTimeout(confirmStreamTimer); renderLive();
+        await obs.call('StopStream');
+      }
+    } catch (e) {
+      confirmStream = false; renderLive();
+      toast('Siaran gagal dimulakan. Dalam OBS semak Settings → Stream (kunci siaran) dan sambungan internet.', 'error', 7000);
     }
   });
 
