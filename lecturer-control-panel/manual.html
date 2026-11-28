@@ -107,7 +107,8 @@
     @page{size:A4;margin:12mm}
     body{background:#fff;padding:0;font-size:12px}
     .wrap{max-width:none;gap:12px}
-    section,.hero{box-shadow:none}
+    /* Bayang kabur dirasterkan dalam PDF dan dipaparkan sebagai segi empat oleh penonton PDF iOS, jadi dimatikan untuk cetakan */
+    *,*::before,*::after{box-shadow:none!important;text-shadow:none!important;filter:none!important}
     section{border:1.5px solid var(--soft);padding:20px 22px;border-radius:22px}
     .hero{border-radius:28px;padding:30px 30px}
     .no-print{display:none!important}
