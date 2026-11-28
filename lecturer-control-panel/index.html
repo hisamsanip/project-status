@@ -611,7 +611,7 @@
 
   async function syncFromObs() {
     await refreshSceneList();
-    try { currentScene = (await obs.call('GetCurrentProgramScene')).sceneName; } catch {}
+    try { const r = await obs.call('GetCurrentProgramScene'); currentScene = r.sceneName ?? r.currentProgramSceneName; } catch {}
     renderScenes();
     await refreshRecordStatus();
     await refreshLiveStatus();
@@ -701,12 +701,26 @@
     } catch {}
   }
 
+  let recWatch;
+  function watchRecStart() {
+    clearTimeout(recWatch);
+    recWatch = setTimeout(async () => {
+      if (!(recState.busy && !recState.active)) return;
+      await refreshRecordStatus();
+      if (!recState.active) {
+        recState.busy = false; renderRec();
+        toast('Rakaman tidak bermula. Dalam OBS semak folder rakaman di Settings → Output dan ruang simpanan.', 'error', 8000);
+      }
+    }, 12000);
+  }
+
   function onRecordStateChanged(d) {
     const st = d.outputState;
-    if (st === 'OBS_WEBSOCKET_OUTPUT_STARTING')      recState = { active: false, busy: true, paused: false };
-    else if (st === 'OBS_WEBSOCKET_OUTPUT_STARTED')  { recState = { active: true, busy: false, paused: false }; recBaseMs = 0; recSyncAt = Date.now(); $('recInfo').textContent = ''; }
+    if (st === 'OBS_WEBSOCKET_OUTPUT_STARTING')      { recState = { active: false, busy: true, paused: false }; watchRecStart(); }
+    else if (st === 'OBS_WEBSOCKET_OUTPUT_STARTED')  { clearTimeout(recWatch); recState = { active: true, busy: false, paused: false }; recBaseMs = 0; recSyncAt = Date.now(); $('recInfo').textContent = ''; }
     else if (st === 'OBS_WEBSOCKET_OUTPUT_STOPPING') recState = { active: true, busy: true, paused: false };
     else if (st === 'OBS_WEBSOCKET_OUTPUT_STOPPED')  {
+      clearTimeout(recWatch);
       recState = { active: false, busy: false, paused: false };
       if (d.outputPath) { $('recInfo').textContent = 'Disimpan: ' + d.outputPath; $('recInfo').title = d.outputPath; toast('Rakaman dihentikan & disimpan', 'ok', 3500); }
     }
@@ -788,12 +802,27 @@
     renderLive();
   }
 
+  // OBS tidak menghantar STOPPED apabila siaran gagal dimulakan (contoh kunci siaran tiada),
+  // jadi selepas 12 saat kita selaraskan semula status supaya butang tidak tersekat.
+  let streamWatch;
+  function watchStreamStart() {
+    clearTimeout(streamWatch);
+    streamWatch = setTimeout(async () => {
+      if (!(live.streamBusy && !live.stream)) return;
+      await refreshLiveStatus();
+      if (!live.stream) {
+        live.streamBusy = false; renderLive();
+        toast('Siaran tidak bermula. Dalam OBS semak Settings → Stream (kunci siaran) dan sambungan internet.', 'error', 8000);
+      }
+    }, 12000);
+  }
+
   function onStreamStateChanged(d) {
     const st = d.outputState;
-    if (st === 'OBS_WEBSOCKET_OUTPUT_STARTING')        { live.streamBusy = true; }
-    else if (st === 'OBS_WEBSOCKET_OUTPUT_STARTED')    { live.stream = true; live.streamBusy = false; live.reconnecting = false; streamBaseMs = 0; streamSyncAt = Date.now(); }
+    if (st === 'OBS_WEBSOCKET_OUTPUT_STARTING')        { live.streamBusy = true; watchStreamStart(); }
+    else if (st === 'OBS_WEBSOCKET_OUTPUT_STARTED')    { clearTimeout(streamWatch); live.stream = true; live.streamBusy = false; live.reconnecting = false; streamBaseMs = 0; streamSyncAt = Date.now(); }
     else if (st === 'OBS_WEBSOCKET_OUTPUT_STOPPING')   { live.streamBusy = true; }
-    else if (st === 'OBS_WEBSOCKET_OUTPUT_STOPPED')    { live.stream = false; live.streamBusy = false; live.reconnecting = false; }
+    else if (st === 'OBS_WEBSOCKET_OUTPUT_STOPPED')    { clearTimeout(streamWatch); live.stream = false; live.streamBusy = false; live.reconnecting = false; }
     else if (st === 'OBS_WEBSOCKET_OUTPUT_RECONNECTING') { live.reconnecting = true; toast('Siaran terputus — OBS cuba menyambung semula…', 'error', 5000); }
     else if (st === 'OBS_WEBSOCKET_OUTPUT_RECONNECTED')  { live.reconnecting = false; toast('Siaran bersambung semula', 'ok', 2500); }
     if (st !== 'OBS_WEBSOCKET_OUTPUT_STOPPING') { confirmStream = false; clearTimeout(confirmStreamTimer); }
