@@ -36,11 +36,40 @@
   .meta span{background:rgba(255,255,255,.18);border-radius:12px;padding:6px 14px;font-weight:700;font-size:.85rem}
 
   /* ---- isi kandungan ---- */
-  .toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
-  .toc a{display:flex;gap:12px;align-items:center;text-decoration:none;color:var(--ink);background:var(--pale);border-radius:18px;padding:12px 14px;font-weight:700;font-size:.95rem}
-  .toc a b{flex:none;width:34px;height:34px;border-radius:50%;background:var(--violet);color:#fff;display:grid;place-items:center;font-weight:800}
+  .toc{display:flex;flex-direction:column;gap:10px}
+  .toc .row{display:grid;grid-template-columns:150px 1fr;gap:10px;align-items:stretch}
+  .toc a{display:flex;gap:10px;align-items:center;text-decoration:none;color:var(--ink);background:var(--pale);border-radius:16px;padding:10px 12px;font-weight:700;font-size:.92rem}
+  .toc a b{flex:none;width:30px;height:30px;border-radius:50%;background:var(--violet);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.9rem}
+  .toc a i{margin-left:auto;font-style:normal;font-size:.72rem;font-weight:700;color:var(--ink-soft);white-space:nowrap}
+  .toc a i[data-pg]:not([data-pg=""])::before{content:"ms. "}
+  .toc a i[data-pg]:not([data-pg=""])::after{content:attr(data-pg)}
+  .toc .items{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+  .toc a.lab{flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;background:var(--violet);color:#fff;padding:12px 16px}
+  .toc a.lab span{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;opacity:.9}
+  .toc a.lab b{width:auto;height:auto;background:none;font-size:1.15rem;display:block;border-radius:0}
+  .toc a.lab i{margin-left:0;color:rgba(255,255,255,.88)}
+  @media screen{ .toc a i{display:none} }
+  @media (max-width:640px){ .toc .row{grid-template-columns:1fr} }
 
   section{background:#fff;border-radius:30px;box-shadow:var(--sh-white);padding:30px 34px}
+  /* ---- halaman pemisah bab ---- */
+  section.divider{background:var(--violet);color:#fff;border-radius:44px;box-shadow:var(--sh-shell);padding:48px 44px;position:relative;overflow:hidden;min-height:440px;display:flex;flex-direction:column;justify-content:space-between;gap:28px}
+  section.divider:before{content:"";position:absolute;right:-110px;top:-110px;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,.1)}
+  section.divider:after{content:"";position:absolute;right:-70px;bottom:-130px;width:300px;height:300px;border-radius:50%;background:var(--pink)}
+  section.divider>*{position:relative;z-index:1}
+  .dv-top{display:flex;justify-content:space-between;align-items:center}
+  .dv-top img{height:36px;display:block}
+  .dv-tag{background:rgba(255,255,255,.18);border-radius:12px;padding:6px 16px;font-weight:800;letter-spacing:.14em;font-size:.85rem}
+  .dv-letter{position:absolute!important;right:40px;top:90px;font-size:20rem;line-height:.8;font-weight:800;color:rgba(255,255,255,.12);z-index:0!important;letter-spacing:-.04em;pointer-events:none}
+  .dv-main h2{font-size:clamp(2.6rem,8vw,4.6rem);line-height:1;letter-spacing:-.03em;font-weight:800;margin:0 0 12px;color:#fff}
+  .dv-main p{margin:0;font-size:1.1rem;font-weight:500;color:rgba(255,255,255,.92);max-width:480px}
+  .dv-list{list-style:none;margin:0;padding:0;display:grid;gap:10px;max-width:500px}
+  .dv-list li{display:flex;gap:14px;align-items:center;background:rgba(255,255,255,.16);border-radius:18px;padding:11px 16px;font-weight:700}
+  .dv-list li b{flex:none;width:34px;height:34px;border-radius:50%;background:#fff;color:var(--violet);display:grid;place-items:center;font-weight:800}
+  .dv-list li small{margin-left:auto;font-weight:600;color:rgba(255,255,255,.92);font-size:.8rem;white-space:nowrap}
+  @media (max-width:640px){ section.divider{padding:32px 24px;border-radius:32px} .dv-letter{font-size:12rem;top:110px;right:20px} }
+
+
   .sec-head{display:flex;align-items:center;gap:14px;margin-bottom:6px}
   .sec-head .n{flex:none;width:46px;height:46px;border-radius:16px;background:var(--violet);color:#fff;display:grid;place-items:center;font-weight:800;font-size:1.3rem;box-shadow:var(--sh-btn)}
   h2{margin:0;font-size:1.45rem;font-weight:800;letter-spacing:-.01em}
@@ -115,24 +144,48 @@
     .sec-head,.lead,h2,h3{break-after:avoid}
     .chk li{break-inside:avoid}
     /* Senarai semak: setiap satu bermula pada muka surat sendiri dan muat satu muka surat */
-    #barang,#semak{break-before:page;break-inside:avoid}
+    section.sec{break-before:page}
+    section.divider{break-before:page;break-after:page;break-inside:avoid;height:268mm;min-height:0;border:0;border-radius:28px;padding:36px 34px;overflow:hidden}
+    .dv-letter{font-size:17rem;top:70px;right:24px}
+    .dv-list{max-width:410px}
+    .hero:after{right:-70px;bottom:-150px}
+    #barang,#semak{break-inside:avoid}
     #barang .chk li,#semak .chk li{padding:5px 0}
     #barang .box,#semak .box{padding:12px 16px;break-inside:avoid}
     #barang .note,#semak .note{font-size:.8rem;padding:8px 12px;margin-top:6px;gap:10px}
     #barang .chk small{font-size:.72rem;line-height:1.3}
     #barang .chk li{padding:4px 0}
-    .toc a{padding:8px 12px;font-size:.88rem}
-    .toc a b{width:28px;height:28px}
+    .toc{gap:6px}
+    .toc .row{grid-template-columns:120px 1fr;gap:8px}
+    .toc .items{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px}
+    .toc a{padding:6px 10px;font-size:.8rem;gap:8px;border-radius:14px}
+    .toc a b{width:24px;height:24px;font-size:.78rem}
+    .toc a.lab{padding:8px 12px}
+    .toc a.lab b{font-size:1rem}
+    ol.steps{gap:8px}
+    ol.steps>li{padding:8px 12px}
+    th,td{padding:5px 9px}
     .diagram{padding:8px}
     .wrap>section:nth-of-type(1) h3{margin:14px 0 6px}
     .wrap>section:nth-of-type(1) .note{font-size:.8rem;padding:7px 12px;margin-top:8px!important}
     .hero{padding:24px 28px}
     .hero h1{margin:16px 0 6px}
     .meta{margin-top:14px}
-    th,td{padding:7px 9px}
     .scenes,.diagram,.note.danger{break-inside:avoid}
-    ol.steps{gap:9px}
-    ol.steps>li{padding:10px 14px}
+    h3{margin:16px 0 8px}
+    .note{margin-top:6px;padding:8px 14px}
+    ol.steps b.t{font-size:.98rem}
+    .lead{margin:4px 0 12px}
+    .wrap>footer{display:none}
+    .scenes{gap:8px}
+    .scene{padding:10px}
+    .scene .frame{aspect-ratio:2.3/1}
+    .scene p{margin:2px 0 6px}
+    .hero img{height:44px}
+    .hero h1{font-size:2.2rem;margin:12px 0 4px}
+    .hero p{font-size:1rem}
+    .meta{gap:6px;margin-top:10px}
+    .meta span{font-size:.72rem;padding:4px 10px}
   }
 </style>
 </head>
@@ -152,15 +205,30 @@
     <h2>Isi kandungan</h2>
     <p class="lead">Ikut mengikut nombor. Setiap langkah pendek dan ada kotak semak.</p>
     <nav class="toc">
-      <a href="#barang"><b>1</b>Senarai barang</a>
-      <a href="#laptop"><b>2</b>Setup laptop</a>
-      <a href="#kamera"><b>3</b>Setup kamera</a>
-      <a href="#osiloskop"><b>4</b>Setup osiloskop</a>
-      <a href="#obs"><b>5</b>Setup OBS</a>
-      <a href="#podium"><b>6</b>Sambung Podium</a>
-      <a href="#langsung"><b>7</b>Mengajar langsung &amp; simpan video</a>
-      <a href="#semak"><b>8</b>Senarai semak kuliah</a>
-      <a href="#masalah"><b>9</b>Masalah lazim</a>
+      <div class="row">
+        <a class="lab" href="#bab-a"><span>Bab A</span><b>Persediaan</b><i data-pg="2"></i></a>
+        <div class="items">
+          <a href="#barang"><b>1</b><span>Senarai barang</span><i data-pg="3"></i></a>
+          <a href="#laptop"><b>2</b><span>Setup laptop</span><i data-pg="4"></i></a>
+          <a href="#kamera"><b>3</b><span>Setup kamera</span><i data-pg="6"></i></a>
+          <a href="#osiloskop"><b>4</b><span>Setup osiloskop</span><i data-pg="8"></i></a>
+          <a href="#obs"><b>5</b><span>Setup OBS</span><i data-pg="11"></i></a>
+        </div>
+      </div>
+      <div class="row">
+        <a class="lab" href="#bab-b"><span>Bab B</span><b>Mengajar</b><i data-pg="14"></i></a>
+        <div class="items">
+          <a href="#podium"><b>6</b><span>Sambung Podium</span><i data-pg="15"></i></a>
+          <a href="#langsung"><b>7</b><span>Mengajar langsung &amp; simpan video</span><i data-pg="16"></i></a>
+        </div>
+      </div>
+      <div class="row">
+        <a class="lab" href="#bab-c"><span>Bab C</span><b>Rujukan</b><i data-pg="18"></i></a>
+        <div class="items">
+          <a href="#semak"><b>8</b><span>Senarai semak kuliah</span><i data-pg="19"></i></a>
+          <a href="#masalah"><b>9</b><span>Masalah lazim</span><i data-pg="20"></i></a>
+        </div>
+      </div>
     </nav>
 
     <h3>Gambaran sistem</h3>
@@ -191,8 +259,19 @@
     <div class="note tip" style="margin-top:12px"><b class="tag">TIP</b><span>Podium mengawal OBS melalui <span class="k">ws://localhost:4455</span>. Kedua-duanya mesti dalam <b>laptop yang sama</b>.</span></div>
   </section>
 
+  <!-- ===================== PEMISAH BAB A ===================== -->
+  <section id="bab-a" class="divider" aria-label="Bab A: Persediaan">
+    <div class="dv-top"><img src="brand/podium-wordmark-on-violet.svg" alt="Podium"><span class="dv-tag">BAB A</span></div>
+    <div class="dv-letter" aria-hidden="true">A</div>
+    <div class="dv-main">
+      <h2>Persediaan</h2>
+      <p>Lakukan sekali sahaja. Selepas itu, kuliah seterusnya hanya perlukan kira-kira 10 minit.</p>
+    </div>
+    <ol class="dv-list"><li><b>1</b><span>Senarai barang</span><small>semak barang</small></li><li><b>2</b><span>Setup laptop</span><small>≈ 10 minit</small></li><li><b>3</b><span>Setup kamera</span><small>≈ 10 minit</small></li><li><b>4</b><span>Setup osiloskop</span><small>≈ 15 minit</small></li><li><b>5</b><span>Setup OBS</span><small>≈ 15 minit</small></li></ol>
+  </section>
+
   <!-- ===================== 1. BARANG ===================== -->
-  <section id="barang">
+  <section id="barang" class="sec">
     <div class="sec-head"><div class="n">1</div><h2>Senarai barang</h2></div>
     <p class="lead">Semak semua barang sebelum bermula. Tandakan kotak apabila sudah ada.</p>
     <div class="note ok" style="margin:0 0 14px"><b class="tag">PERALATAN</b><span>Manual ini ditulis untuk <b>kamera EMEET Piko+</b> dan <b>osiloskop Keysight DSOX1204A</b> (4 saluran, 70 MHz). Nama menu boleh berbeza sedikit mengikut versi firmware; jika berbeza, ikut buku manual pengeluar.</span></div>
@@ -231,7 +310,7 @@
   </section>
 
   <!-- ===================== 2. LAPTOP ===================== -->
-  <section id="laptop" class="pb">
+  <section id="laptop" class="sec">
     <div class="sec-head"><div class="n">2</div><h2>Setup laptop</h2></div>
     <p class="lead">Matlamat: laptop tidak tersangkut, tidak berbunyi notifikasi, dan ada ruang untuk rakaman. Masa: ≈ 10 minit.</p>
     <ol class="steps">
@@ -254,7 +333,7 @@
   </section>
 
   <!-- ===================== 3. KAMERA ===================== -->
-  <section id="kamera">
+  <section id="kamera" class="sec">
     <div class="sec-head"><div class="n">3</div><h2>Setup kamera (EMEET Piko+)</h2></div>
     <p class="lead">Matlamat: pelajar nampak litar dengan jelas, tanpa gambar yang tiba-tiba kabur atau berkelip. Masa: ≈ 10 minit.</p>
     <div class="note tip" style="margin:0 0 14px"><b class="tag">TIP</b><span>Piko+ ialah webcam <b>4K dwilensa</b> (sensor Sony 1/2.55 inci, sudut pandang 73°, USB-C) dengan fokus automatik AI. <b>Kamera A</b> = litar di meja (wajib). <b>Kamera B</b> = muka pensyarah (pilihan). Jika hanya ada satu Piko+, scene 3 menggunakan Kamera A.</span></div>
@@ -275,7 +354,7 @@
   </section>
 
   <!-- ===================== 4. OSILOSKOP ===================== -->
-  <section id="osiloskop" class="pb">
+  <section id="osiloskop" class="sec">
     <div class="sec-head"><div class="n">4</div><h2>Setup osiloskop (Keysight DSOX1204A)</h2></div>
     <p class="lead">Matlamat: gelombang yang stabil, jelas, dan sampai ke OBS. Masa: ≈ 15 minit.</p>
 
@@ -322,7 +401,7 @@
   </section>
 
   <!-- ===================== 5. OBS ===================== -->
-  <section id="obs" class="pb">
+  <section id="obs" class="sec">
     <div class="sec-head"><div class="n">5</div><h2>Setup OBS</h2></div>
     <p class="lead">Matlamat: 3 scene yang bernama tepat, bunyi jelas, dan rakaman disimpan dengan selamat. Masa: ≈ 15 minit.</p>
 
@@ -374,8 +453,19 @@
     </ol>
   </section>
 
+  <!-- ===================== PEMISAH BAB B ===================== -->
+  <section id="bab-b" class="divider" aria-label="Bab B: Mengajar">
+    <div class="dv-top"><img src="brand/podium-wordmark-on-violet.svg" alt="Podium"><span class="dv-tag">BAB B</span></div>
+    <div class="dv-letter" aria-hidden="true">B</div>
+    <div class="dv-main">
+      <h2>Mengajar</h2>
+      <p>Gunakan setiap kali anda mengajar: sambung Podium, kemudian mengajar secara langsung dan simpan video untuk pelajar.</p>
+    </div>
+    <ol class="dv-list"><li><b>6</b><span>Sambung Podium</span><small>≈ 3 minit</small></li><li><b>7</b><span>Mengajar langsung &amp; simpan video</span><small>pilih cara</small></li></ol>
+  </section>
+
   <!-- ===================== 6. PODIUM ===================== -->
-  <section id="podium" class="pb">
+  <section id="podium" class="sec">
     <div class="sec-head"><div class="n">6</div><h2>Sambung Podium</h2></div>
     <p class="lead">Podium ialah panel sentuh untuk menukar scene, merakam dan mengira masa. Masa: ≈ 3 minit.</p>
     <ol class="steps">
@@ -393,7 +483,7 @@
   </section>
 
   <!-- ===================== 7. MENGAJAR LANGSUNG ===================== -->
-  <section id="langsung">
+  <section id="langsung" class="sec">
     <div class="sec-head"><div class="n">7</div><h2>Mengajar langsung &amp; simpan video</h2></div>
     <p class="lead">Pilih cara anda mengajar. Anda boleh mengajar secara langsung <b>dan</b> menyimpan video untuk rujukan pelajar pada masa yang sama.</p>
 
@@ -436,8 +526,19 @@
     </ol>
   </section>
 
+  <!-- ===================== PEMISAH BAB C ===================== -->
+  <section id="bab-c" class="divider" aria-label="Bab C: Rujukan">
+    <div class="dv-top"><img src="brand/podium-wordmark-on-violet.svg" alt="Podium"><span class="dv-tag">BAB C</span></div>
+    <div class="dv-letter" aria-hidden="true">C</div>
+    <div class="dv-main">
+      <h2>Rujukan</h2>
+      <p>Semak sebelum dan selepas kuliah, dan cari penyelesaian apabila ada masalah.</p>
+    </div>
+    <ol class="dv-list"><li><b>8</b><span>Senarai semak kuliah</span><small>setiap kali</small></li><li><b>9</b><span>Masalah lazim</span><small>bila perlu</small></li></ol>
+  </section>
+
   <!-- ===================== 8. SENARAI SEMAK ===================== -->
-  <section id="semak">
+  <section id="semak" class="sec">
     <div class="sec-head"><div class="n">8</div><h2>Senarai semak kuliah</h2></div>
     <p class="lead">Gunakan setiap kali. Kuliah seterusnya hanya perlu ≈ 10 minit.</p>
     <div class="two">
@@ -473,7 +574,7 @@
   </section>
 
   <!-- ===================== 8. MASALAH ===================== -->
-  <section id="masalah" class="pb">
+  <section id="masalah" class="sec">
     <div class="sec-head"><div class="n">9</div><h2>Masalah lazim</h2></div>
     <p class="lead">Cari masalah anda, cuba penyelesaian mengikut turutan.</p>
     <table>
