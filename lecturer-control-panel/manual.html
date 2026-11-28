@@ -226,14 +226,14 @@
         <a class="lab" href="#bab-b"><span>Bab B</span><b>Mengajar</b><i data-pg="18"></i></a>
         <div class="items">
           <a href="#podium"><b>6</b><span>Sambung Podium</span><i data-pg="19"></i></a>
-          <a href="#langsung"><b>7</b><span>Mengajar langsung &amp; simpan video</span><i data-pg="21"></i></a>
+          <a href="#langsung"><b>7</b><span>Mengajar langsung &amp; simpan video</span><i data-pg="23"></i></a>
         </div>
       </div>
       <div class="row">
-        <a class="lab" href="#bab-c"><span>Bab C</span><b>Rujukan</b><i data-pg="24"></i></a>
+        <a class="lab" href="#bab-c"><span>Bab C</span><b>Rujukan</b><i data-pg="26"></i></a>
         <div class="items">
-          <a href="#semak"><b>8</b><span>Senarai semak kuliah</span><i data-pg="25"></i></a>
-          <a href="#masalah"><b>9</b><span>Masalah lazim</span><i data-pg="26"></i></a>
+          <a href="#semak"><b>8</b><span>Senarai semak kuliah</span><i data-pg="27"></i></a>
+          <a href="#masalah"><b>9</b><span>Masalah lazim</span><i data-pg="28"></i></a>
         </div>
       </div>
     </nav>
@@ -334,7 +334,7 @@
       <li><div><b class="t">Surface: guna hab USB-C</b><p>Kebanyakan Surface Pro terkini hanya ada port USB-C. Sambung hab USB-C (dengan port USB-A dan Ethernet) untuk mikrofon, kabel LAN osiloskop dan kabel lain. Sambung Piko+ terus ke port USB-C Surface jika boleh.</p></div></li>
       <li><div><b class="t">Surface: elak panas dan penurunan prestasi</b><p>Surface (terutama Pro) boleh memperlahankan prestasi apabila panas. Letak di tempat berudara, jangan tutup dengan kertas atau kain, dan guna <b>pengecas asal</b>. Jika Surface tersangkut semasa siaran dan rakaman serentak, lihat Bahagian 9.</p></div></li>
       <li><div><b class="t">Surface: semak jenis pemproses</b><p>Surface Pro 11 dan Surface Laptop 7 menggunakan pemproses Snapdragon (ARM). Pada obsproject.com, pilih muat turun untuk <b>Windows ARM</b> jika ada, dan pastikan kamera serta mikrofon dikesan. Surface Intel menggunakan muat turun Windows biasa.</p></div></li>
-      <li><div><b class="t">Surface: guna sentuhan untuk Podium</b><p>Podium direka untuk skrin sentuh. Tekan <kbd>Win</kbd> + <kbd>←</kbd> untuk letak Podium pada separuh kiri skrin dan OBS pada separuh kanan, supaya anda boleh menyentuh Podium sambil melihat OBS.</p></div></li>
+      <li><div><b class="t">Surface: guna sentuhan untuk Podium</b><p>Podium direka untuk skrin sentuh. Tekan <kbd>Win</kbd> + <kbd>←</kbd> untuk letak Podium pada separuh kiri skrin dan OBS pada separuh kanan, supaya anda boleh menyentuh Podium sambil melihat OBS. Podium menyesuaikan saiznya secara automatik dengan skrin, jadi semua kawalan muat tanpa menatal.</p></div></li>
       <li><div><b class="t">(Pilihan) Guna dua skrin</b><p>Tekan <kbd>Win</kbd> + <kbd>P</kbd> → <b>Extend</b>. Letak slaid pada skrin projektor dan panel Podium pada skrin Surface.</p></div></li>
     </ol>
   </section>
@@ -555,6 +555,21 @@
       <li><div><b class="t">Pemasa kuliah</b><p>Pilih tempoh (30, 45, 50, 60, 90, 120 minit atau taip sendiri) → <b>Mula</b>. Pemasa bertukar <b style="color:#B96A00">kuning</b> pada 5 minit terakhir, <b style="color:#F2603C">coral</b> pada 1 minit terakhir, dan berbunyi apabila tamat.</p></div></li>
       <li><div><b class="t">Nota pantas</b><p>Taip di kotak bawah. Nota <b>disimpan automatik</b> dan masih ada walaupun halaman dimuat semula.</p></div></li>
     </ol>
+  
+    <h3>Guna dari telefon atau tablet (pilihan)</h3>
+    <div class="note ok" style="margin:0 0 10px"><b class="tag">AUTO-FIT</b><span>Podium menyesuaikan saiznya secara automatik dengan skrin <b>Surface, laptop, monitor, tablet dan telefon</b>. Pada Surface dan laptop, semua kawalan muat pada satu skrin tanpa menatal. Podium juga boleh dipasang sebagai aplikasi pada skrin utama.</span></div>
+    <div class="note warn" style="margin:0 0 10px"><b class="tag">PENTING</b><span>Laman <b>https</b> (seperti <span class="k">podium-panel.vercel.app</span>) tidak boleh menyambung ke OBS melalui alamat IP kerana pelayar menyekatnya. Untuk telefon, Podium mesti dibuka melalui <b>http</b> dari laptop anda (langkah 3). Podium akan memaparkan mesej jika anda mencubanya. Pada Surface/laptop yang sama dengan OBS, guna <span class="k">localhost</span> seperti biasa.</span></div>
+    <figure class="fig narrow"><img src="manual-img/fig-podium-phone.png" alt="Podium pada telefon: borang sambungan dengan IP laptop, dan selepas bersambung dengan Kamera Maya dan rakaman aktif"><figcaption><b>Rajah 6.2</b> Podium pada telefon. Kiri: isi <b>Host</b> dengan alamat IP laptop, <b>Port</b> 4455 dan <b>Password</b>. Kanan: selepas bersambung, borang diringkaskan dan kad Siaran Langsung, Rakaman dan Pemasa tersusun menegak.</figcaption></figure>
+    <ol class="steps">
+      <li><div><b class="t">Sambung laptop dan telefon ke Wi-Fi yang sama</b><p>Jika Wi-Fi kampus menyekat peranti berhubung antara satu sama lain, sambungkan <b>kedua-duanya</b> ke hotspot telefon.</p></div></li>
+      <li><div><b class="t">Hidupkan kata laluan WebSocket dalam OBS</b><p class="path">Tools → WebSocket Server Settings → Enable Authentication</p><p>Wajib kerana sesiapa dalam rangkaian yang sama boleh mengawal OBS jika tiada kata laluan. Jika Windows meminta kebenaran firewall untuk OBS, pilih rangkaian <b>Private</b>.</p></div></li>
+      <li><div><b class="t">Hidangkan Podium dari laptop melalui http</b><p>Buka <b>Command Prompt</b> dalam folder <span class="k">lecturer-control-panel</span> (yang mengandungi <span class="k">index.html</span>) dan taip:</p><p><span class="k">python -m http.server 8080</span> (atau <span class="k">py -m http.server 8080</span>)</p><p>Kaedah ini memerlukan Python daripada python.org. Biarkan tetingkap itu terbuka sepanjang kuliah.</p></div></li>
+      <li><div><b class="t">Cari alamat IP laptop</b><p class="path">Settings → Network &amp; internet → Wi-Fi → (nama rangkaian) → Properties → IPv4 address</p><p>Contoh: <span class="k">192.168.1.20</span>.</p></div></li>
+      <li><div><b class="t">Buka Podium pada telefon</b><p>Dalam pelayar telefon, taip <span class="k">http://192.168.1.20:8080</span> (gantikan dengan IP anda).</p></div></li>
+      <li><div><b class="t">Sambung ke OBS</b><p>Isi <b>Host</b> = IP laptop, <b>Port</b> = 4455, <b>Password</b> = kata laluan WebSocket, kemudian tekan <b>Sambung</b>. Selepas bersambung, borang sambungan diringkaskan supaya kawalan utama kelihatan.</p></div></li>
+      <li><div><b class="t">(Pilihan) Tambah ke skrin utama</b><p><b>Android (Chrome):</b> menu ⋮ → <b>Add to Home screen</b>. <b>iPhone (Safari):</b> butang Kongsi → <b>Add to Home Screen</b>. Podium dibuka seperti aplikasi tanpa bar alamat.</p>
+        <div class="note warn"><b class="tag">NOTA</b><span>Pemasangan penuh sebagai aplikasi (PWA) hanya tersedia pada laman https. Pada alamat http setempat, pelayar mungkin hanya membuat pintasan.</span></div></div></li>
+    </ol>
   </section>
 
   <!-- ===================== 7. MENGAJAR LANGSUNG ===================== -->
@@ -656,6 +671,8 @@
     <table>
       <tr><th style="width:30%">Masalah</th><th>Penyelesaian</th></tr>
       <tr><td><b>Podium tidak boleh sambung</b></td><td>1) OBS mesti dibuka. 2) Dalam OBS: <span class="path">Tools → WebSocket Server Settings</span> mesti <b>Enable</b>. 3) Port <b>4455</b>. 4) Password sama. 5) Gunakan Chrome atau Edge pada laptop yang sama dengan OBS.</td></tr>
+      <tr><td><b>Telefon: “Halaman ini dibuka melalui https…”</b></td><td>Laman https tidak boleh menyambung ke IP OBS. Buka Podium melalui <b>http</b> dari laptop (Bahagian 6, langkah 3), contohnya <span class="k">http://192.168.1.20:8080</span>.</td></tr>
+      <tr><td><b>Telefon tidak dapat sambung walaupun IP betul</b></td><td>Pastikan telefon dan laptop dalam Wi-Fi yang sama, OBS dibuka dengan WebSocket aktif, Windows Firewall membenarkan OBS pada rangkaian <b>Private</b>, dan password betul. Jika Wi-Fi kampus menyekat peranti, guna hotspot telefon.</td></tr>
       <tr><td><b>“Password OBS salah”</b></td><td>Buka semula WebSocket Server Settings dan lihat atau jana kata laluan baharu, kemudian taip semula dalam Podium.</td></tr>
       <tr><td><b>Kad scene bertanda “TIADA DALAM OBS”</b></td><td>Nama scene dalam OBS tidak sama tepat. Tekan <b>⚙ Nama scene OBS</b> dalam Podium dan pilih nama dari senarai, atau betulkan nama dalam OBS.</td></tr>
       <tr><td><b>Skrin slaid hitam dalam OBS</b></td><td>Tukar <b>Window Capture</b> kepada <b>Display Capture</b>. Atau jalankan OBS sebagai <i>Administrator</i>.</td></tr>
