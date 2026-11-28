@@ -3,8 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Lecturer Teaching Control Panel</title>
+<title>Podium — Lecturer Teaching Control Panel</title>
+<meta name="description" content="Podium — kawal kuliah anda dengan satu sentuhan. Panel kawalan OBS Studio untuk pensyarah: tukar scene, rakam dan pemasa kuliah.">
 <meta name="theme-color" content="#6E5CE7">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJQb2RpdW0iPjx0aXRsZT5Qb2RpdW08L3RpdGxlPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZ2EiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiM3QjZBRUUiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM1QjRCRDAiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxOCIgZmlsbD0idXJsKCNnYSkiLz48Y2lyY2xlIGN4PSIzMiIgY3k9IjMyIiByPSIxOC41IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHBhdGhMZW5ndGg9IjEwMCIgc3Ryb2tlLWRhc2hhcnJheT0iNzYgMjQiIHRyYW5zZm9ybT0icm90YXRlKC05MCAzMiAzMikiLz48Y2lyY2xlIGN4PSIzMiIgY3k9IjMyIiByPSI2LjUiIGZpbGw9IiNGMjhGRDkiLz48L3N2Zz4=">
+<link rel="apple-touch-icon" href="brand/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Podium — Lecturer Teaching Control Panel">
+<meta property="og:description" content="Kawal kuliah anda dengan satu sentuhan. Scene · Rakam · Masa — untuk OBS Studio.">
+<meta property="og:image" content="https://lecturer-control-panel.vercel.app/brand/podium-og-image.png">
+<meta name="twitter:card" content="summary_large_image">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,13 +40,14 @@
     --blue:        #6CC4FA;
     --blue-2:      #55B3F3;
     --ink:         #1E1B4B;      /* teks pada kad putih */
-    --ink-soft:    #8B87B3;
+    --ink-soft:    #6B6699;      /* 5.3:1 pada putih */
     --on-violet:   #fff;
-    --on-violet-2: rgba(255,255,255,.58);
+    --on-violet-2: rgba(255,255,255,.86);
     --ok:          #2DD4A0;
     --warn:        #FFB547;
-    --danger:      #FF5C86;
-    --rec:         #FF3B5C;
+    --danger:      #F2603C;      /* amaran / masa kritikal (BUKAN rakaman) */
+    --idle:        #B9B3DF;      /* tidak bersambung */
+    --rec:         #FF3B5C;      /* merah dikhaskan untuk rakaman sahaja */
 
     /* Radius */
     --r-shell: 44px;
@@ -87,8 +96,9 @@
   .nav { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; }
   .brand { display: flex; align-items: center; gap: 12px; }
   .logo { width: 44px; height: 44px; }
-  .brand h1 { font-size: 1.05rem; font-weight: 800; line-height: 1.15; }
-  .brand p  { font-size: .72rem; color: var(--on-violet-2); font-weight: 500; }
+  .brand h1 { line-height: 1; margin: 0; }
+  .wm { height: 30px; width: auto; display: block; }
+  .brand p  { font-size: .72rem; color: var(--on-violet-2); font-weight: 500; margin-top: 3px; letter-spacing: .01em; }
 
   .connect-pill {
     flex: 1 1 34rem; display: flex; flex-wrap: wrap; align-items: center; gap: 4px;
@@ -102,7 +112,7 @@
   .pfield input[type=text], .pfield input[type=number], .pfield input[type=password] {
     width: 100%; background: transparent; border: 0; outline: none; color: #fff; font-size: 1.05rem; font-weight: 600; height: 2rem; padding: 0;
   }
-  .pfield input::placeholder { color: rgba(255,255,255,.4); font-weight: 500; }
+  .pfield input::placeholder { color: rgba(255,255,255,.62); font-weight: 500; }
   .pfield input:focus-visible { outline: none; box-shadow: none; }
   .remember { display: inline-flex; align-items: center; gap: 5px; font-size: .68rem; letter-spacing: 0; text-transform: none; font-weight: 600; }
   .remember input { width: 15px; height: 15px; accent-color: #fff; }
@@ -121,7 +131,7 @@
     display: flex; align-items: center; gap: 10px; height: 3.25rem; padding: 0 1.2rem; min-width: 11.5rem;
     background: #fff; color: var(--ink); border-radius: 20px; box-shadow: var(--sh-white); font-weight: 800;
   }
-  .status-dot { width: .8rem; height: .8rem; border-radius: 9999px; background: var(--danger); box-shadow: 0 0 0 4px rgba(255,92,134,.22); }
+  .status-dot { width: .8rem; height: .8rem; border-radius: 9999px; background: var(--idle); box-shadow: 0 0 0 4px rgba(185,179,223,.35); }
   [data-conn="connected"]  .status-dot { background: var(--ok); box-shadow: 0 0 0 4px rgba(45,212,160,.25); }
   [data-conn="connecting"] .status-dot { background: var(--warn); box-shadow: 0 0 0 4px rgba(255,181,71,.3); animation: pulse 1s ease-in-out infinite; }
   @keyframes pulse { 50% { transform: scale(1.35); } }
@@ -155,8 +165,8 @@
     display: flex; flex-direction: column; justify-content: space-between;
     box-shadow: var(--sh-card);
   }
-  .scene-btn[data-theme="pink"] { --bg: linear-gradient(150deg, var(--pink), var(--pink-2)); --fg: #fff; --sub: rgba(255,255,255,.78); --key-bg: rgba(255,255,255,.3); --key-fg: #fff; }
-  .scene-btn[data-theme="blue"] { --bg: linear-gradient(150deg, var(--blue), var(--blue-2)); --fg: #fff; --sub: rgba(255,255,255,.82); --key-bg: rgba(255,255,255,.3); --key-fg: #fff; }
+  .scene-btn[data-theme="pink"] { --bg: linear-gradient(150deg, var(--pink), var(--pink-2)); --fg: var(--ink); --sub: rgba(30,27,75,.78); --key-bg: rgba(255,255,255,.6); --key-fg: var(--ink); }
+  .scene-btn[data-theme="blue"] { --bg: linear-gradient(150deg, var(--blue), var(--blue-2)); --fg: var(--ink); --sub: rgba(30,27,75,.78); --key-bg: rgba(255,255,255,.6); --key-fg: var(--ink); }
   .scene-btn::after { content: ""; position: absolute; right: -2.2rem; bottom: -2.8rem; width: 8rem; height: 8rem; border-radius: 9999px; background: rgba(255,255,255,.16); pointer-events: none; }
   .scene-btn[data-theme="white"]::after { background: #EEF6FF; }
   .scene-btn > * { position: relative; z-index: 1; }
@@ -173,7 +183,6 @@
   .scene-live i { width: .5rem; height: .5rem; border-radius: 9999px; background: var(--ok); }
   .scene-btn[data-active="true"] .scene-live { opacity: 1; transform: none; }
   .scene-title { font-size: 1.4rem; font-weight: 800; line-height: 1.15; }
-  .scene-btn:not([data-theme="white"]) .scene-title { text-shadow: 0 1px 3px rgba(40,20,120,.28); }
   .scene-sub { margin-top: .25rem; font-size: .8rem; font-weight: 500; color: var(--sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .scene-missing { display: none; margin-left: .4rem; padding: .1rem .5rem; border-radius: 8px; background: var(--ink); color: #FFD27A; font-weight: 800; font-size: .65rem; }
   .scene-btn[data-missing="true"] .scene-missing { display: inline-block; }
@@ -195,14 +204,14 @@
   #recLabel { font-size: .85rem; font-weight: 800; letter-spacing: .1em; color: var(--on-violet-2); }
   #recLabel[data-on="true"] { color: #FFB3C4; }
   #recTime { font-size: 2.1rem; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; color: #fff; }
-  #recTime[data-on="false"] { color: rgba(255,255,255,.7); }
+  #recTime[data-on="false"] { color: rgba(255,255,255,.85); }
 
   .rec-btn {
     flex: 1 1 14rem; min-height: 5.25rem; border-radius: 22px; font-size: 1.35rem; font-weight: 800; padding: 0 1.2rem;
     background: #fff; color: var(--sel); box-shadow: var(--sh-btn);
   }
   .rec-btn[data-state="idle"]:hover:not(:disabled) { background: #F3F0FF; }
-  .rec-btn[data-state="recording"] { background: var(--danger); color: #fff; box-shadow: 0 14px 26px -10px rgba(255,59,92,.7); }
+  .rec-btn[data-state="recording"] { background: var(--rec); color: #fff; box-shadow: 0 14px 26px -10px rgba(255,59,92,.7); }
   .rec-btn[data-state="confirm"]   { background: var(--warn); color: var(--ink); animation: confirmBlink .6s ease-in-out infinite alternate; }
   .rec-btn[data-state="busy"]      { background: rgba(255,255,255,.2); color: #fff; box-shadow: none; }
   .rec-btn:disabled { background: rgba(255,255,255,.14) !important; color: rgba(255,255,255,.5) !important; box-shadow: none !important; animation: none; }
@@ -214,10 +223,10 @@
     display: flex; flex-direction: column; gap: 14px; box-shadow: var(--sh-white);
   }
   .date-btn { width: 3.25rem; height: 3.25rem; border-radius: 9999px; border: 2px solid #E7E3F7; display: grid; place-items: center; color: var(--ink); flex-shrink: 0; }
-  .state-pill { font-size: .75rem; font-weight: 800; padding: .35rem .85rem; border-radius: 9px; background: var(--pink); color: #fff; }
+  .state-pill { font-size: .75rem; font-weight: 800; padding: .35rem .85rem; border-radius: 9px; background: var(--pink); color: var(--ink); }
   .state-pill[data-state="running"] { background: var(--blue-2); }
   .state-pill[data-state="paused"]  { background: var(--warn); }
-  .state-pill[data-state="done"]    { background: var(--danger); animation: flash .8s steps(2) infinite; }
+  .state-pill[data-state="done"]    { background: var(--danger); color: #fff; animation: flash .8s steps(2) infinite; }
 
   .ring-wrap { position: relative; width: min(100%, 15.5rem); aspect-ratio: 1; margin: 2px auto; --ring: var(--sel); }
   .ring-wrap[data-level="warn"] { --ring: var(--warn); }
@@ -227,7 +236,7 @@
   .ring-prog  { fill: none; stroke: var(--ring); stroke-width: 14; stroke-linecap: round; stroke-dasharray: 691.15; stroke-dashoffset: 0; transition: stroke-dashoffset .3s linear, stroke .3s ease; filter: drop-shadow(0 6px 8px rgba(123,97,232,.35)); }
   .ring-center { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
   #timerDisplay { font-size: 3.5rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -.02em; color: var(--ink); }
-  #timerDisplay[data-level="warn"] { color: #E8920F; }
+  #timerDisplay[data-level="warn"] { color: #B96A00; }
   #timerDisplay[data-level="crit"] { color: var(--danger); animation: flash 1s ease-in-out infinite; }
   #timerDisplay[data-level="done"] { color: var(--danger); animation: flash .6s steps(2) infinite; }
   @keyframes flash { 50% { opacity: .35; } }
@@ -255,7 +264,7 @@
     flex: 1; min-height: 4.5rem; width: 100%; resize: none; background: var(--violet-pale); border: 2px solid transparent; border-radius: 20px;
     padding: 14px 18px; font-size: 1.15rem; line-height: 1.6; color: var(--ink); box-shadow: var(--sh-inset); font-weight: 500;
   }
-  .notes-card textarea::placeholder { color: #A9A3CF; }
+  .notes-card textarea::placeholder { color: #7C77AD; }
   .notes-card textarea:focus { outline: none; border-color: var(--sel); background: #fff; }
   .chip-soft { min-height: 2.6rem; padding: 0 1rem; border-radius: 14px; font-weight: 700; font-size: .9rem; background: var(--violet-soft); color: var(--sel); }
   .chip-soft:hover { background: #E2DCFB; }
@@ -288,14 +297,10 @@
   <!-- ===================== 1. SAMBUNGAN OBS ===================== -->
   <header id="connBar" data-conn="disconnected" class="nav">
     <div class="brand">
-      <svg class="logo" viewBox="0 0 44 44" aria-hidden="true">
-        <circle cx="22" cy="22" r="22" fill="rgba(255,255,255,.14)"/>
-        <circle cx="22" cy="13.5" r="6" fill="#fff"/><circle cx="30.5" cy="22" r="6" fill="#fff" opacity=".85"/>
-        <circle cx="22" cy="30.5" r="6" fill="#fff" opacity=".7"/><circle cx="13.5" cy="22" r="6" fill="#fff" opacity=".55"/>
-      </svg>
+      <svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="18" fill="#fff" fill-opacity=".16"/><circle cx="32" cy="32" r="18.5" fill="none" stroke="#fff" stroke-width="5.5" stroke-linecap="round" pathLength="100" stroke-dasharray="76 24" transform="rotate(-90 32 32)"/><circle cx="32" cy="32" r="6.5" fill="#F28FD9"/></svg>
       <div>
-        <h1>Lecturer Teaching Control Panel</h1>
-        <p>OBS Studio · WebSocket v5</p>
+        <h1 class="wordmark"><svg class="wm" xmlns="http://www.w3.org/2000/svg" viewBox="-4.0 -82.0 376.5 112.0" role="img" aria-label="Podium"><path d="M20.50 20L5.50 20L5.50-54.60L19.50-54.60L19.50-48.90Q21.90-51.80 25.60-53.60Q30.20-55.80 36.20-55.80Q44-55.80 50.30-52Q56.60-48.20 60.30-41.75Q64-35.30 64-27.30Q64-19.40 60.35-12.90Q56.70-6.40 50.40-2.60Q44.10 1.20 36.10 1.20Q30.50 1.20 25.80-0.90Q22.80-2.10 20.50-4.20L20.50 20M34.30-12.30Q38.50-12.30 41.70-14.20Q44.90-16.10 46.70-19.50Q48.50-22.90 48.50-27.30Q48.50-31.70 46.70-35.05Q44.90-38.40 41.70-40.35Q38.50-42.30 34.30-42.30Q30.30-42.30 27.15-40.40Q24-38.50 22.25-35.10Q20.50-31.70 20.50-27.30Q20.50-22.90 22.25-19.50Q24-16.10 27.15-14.20Q30.30-12.30 34.30-12.30 M159.60 1.20Q151.60 1.20 145.30-2.60Q139-6.40 135.35-12.90Q131.70-19.40 131.70-27.30Q131.70-35.30 135.40-41.75Q139.10-48.20 145.40-52Q151.70-55.80 159.50-55.80Q165.50-55.80 170.20-53.60Q173.10-52.10 175.20-50L175.20-75.70L190.20-75.70L190.20 0L176.20 0L176.20-5.20Q173.70-2.40 170-0.90Q165.20 1.20 159.60 1.20M161.40-12.30Q165.50-12.30 168.60-14.20Q171.70-16.10 173.45-19.50Q175.20-22.90 175.20-27.30Q175.20-31.70 173.45-35.10Q171.70-38.50 168.60-40.40Q165.50-42.30 161.40-42.30Q157.30-42.30 154.05-40.35Q150.80-38.40 149-35.05Q147.20-31.70 147.20-27.30Q147.20-22.90 149-19.50Q150.80-16.10 154.05-14.20Q157.30-12.30 161.40-12.30 M214.20 0L199.20 0L199.20-54.60L214.20-54.60L214.20 0M214.20-59.50L199.20-59.50L199.20-74.50L214.20-74.50 M242.80 1.20Q236.20 1.20 231.55-1.65Q226.90-4.50 224.50-9.60Q222.10-14.70 222.10-21.50L222.10-54.60L237.10-54.60L237.10-22.70Q237.10-19.60 238.35-17.25Q239.60-14.90 241.90-13.60Q244.20-12.30 247.10-12.30Q250.10-12.30 252.35-13.60Q254.60-14.90 255.85-17.25Q257.10-19.60 257.10-22.70L257.10-54.60L272.10-54.60L272.10 0L258.10 0L258.10-6.60Q256.20-3.10 252.80-1.20Q248.50 1.20 242.80 1.20 M296.10 0L281.10 0L281.10-54.60L295.10-54.60L295.10-48Q296.60-51 299.40-52.80Q304-55.80 310.40-55.80Q317.20-55.80 322.40-52.40Q325.40-50.30 327-47.50Q329.20-50.70 332.20-52.60Q337.20-55.80 343.90-55.80Q349.80-55.80 354.35-53.20Q358.90-50.60 361.50-45.95Q364.10-41.30 364.10-35.10L364.10 0L349.10 0L349.10-31.90Q349.10-35.10 347.95-37.40Q346.80-39.70 344.70-41Q342.60-42.30 339.60-42.30Q336.70-42.30 334.55-41Q332.40-39.70 331.25-37.40Q330.10-35.10 330.10-31.90L330.10 0L315.10 0L315.10-31.90Q315.10-35.10 313.95-37.40Q312.80-39.70 310.70-41Q308.60-42.30 305.60-42.30Q302.70-42.30 300.55-41Q298.40-39.70 297.25-37.40Q296.10-35.10 296.10-31.90" fill="#fff"/><circle cx="97.85" cy="-27.30" r="21.75" fill="none" stroke="#fff" stroke-width="15.00" stroke-linecap="round" pathLength="100" stroke-dasharray="76 24" transform="rotate(-90 97.85 -27.30)"/><circle cx="97.85" cy="-27.30" r="8.70" fill="#F28FD9"/></svg></h1>
+        <p>Lecturer Teaching Control Panel</p>
       </div>
     </div>
 
@@ -769,7 +774,7 @@
     const mins = Math.round(timer.durationSec / 60);
     $$('[data-preset]').forEach(b => { b.dataset.on = String(parseInt(b.dataset.preset, 10) === mins); });
 
-    document.title = timer.running ? `${disp.textContent} · Lecturer Control Panel` : 'Lecturer Teaching Control Panel';
+    document.title = timer.running ? `${disp.textContent} · Podium` : 'Podium — Lecturer Teaching Control Panel';
   }
 
   function tickTimer() {
