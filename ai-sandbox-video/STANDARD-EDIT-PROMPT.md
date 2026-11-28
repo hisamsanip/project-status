@@ -16,6 +16,7 @@ blocked and use the fallback listed. Never fake a result.
 - Format: <16:9 1920x1080 | 9:16 1080x1920 | 1:1 1080x1080>
 - Target length: <e.g. 60 s, or "as short as the content allows">
 - Tone / brand: <colours, logo path, mood of music>
+- Cinematic look: <none | subtle | classic teal-orange | warm film | cool moody>, letterbox <yes | no>
 - Voiceover: <keep original speech | replace with generated voiceover | none>
 - Must keep / must not show: <anything>
 
@@ -69,7 +70,23 @@ Use in this order and tell me which one was used:
   API (needs a free key and an allowed host: report if blocked). Never use watermarked or unlicensed footage.
 - Keep a `credits.md` listing the source and licence of every B-roll clip and music track.
 
-## PHASE 6: Background music
+## PHASE 6: Cinematic look
+Skip only if the INPUT block says `none`. Apply one consistent grade to every camera shot and B-roll clip.
+- Pick the look by testing, not guessing: render 3 candidate grades on the same reference frame with
+  `hyperframes grade-compare` (or an FFmpeg contact sheet), look at them, and choose the one that fits the tone.
+- Build the grade in FFmpeg (or a `.cube` LUT via `lut3d`) from these parts, kept subtle:
+  - contrast S-curve and slightly lifted blacks (`curves`, `eq=contrast=1.05:saturation=0.92`)
+  - colour split: cool shadows, warm highlights (`colorbalance`); skin tones must stay natural
+  - soft vignette (`vignette=PI/6`) and fine film grain (`noise=alls=6:allf=t`), never heavy
+  - optional 2.39:1 letterbox bars, only if `letterbox: yes` and nothing important sits in the cropped area
+- Do NOT grade screen recordings, UI shots, logos or text cards: they must stay sharp and legible.
+  Grade only live footage and stock B-roll, then composite the untouched graphics on top.
+- Match exposure and white balance across clips first, then grade, so the look is uniform.
+- Check skin tones and highlights on 3 frames (start, middle, end): no clipped whites, no crushed blacks,
+  no colour banding. If it looks heavy, halve the strength.
+- Keep the original and the graded version, so I can compare or switch the look off.
+
+## PHASE 7: Background music
 - Choose music to fit the tone: <calm | upbeat | corporate | cinematic>. Royalty-free only
   (Pixabay Music, YouTube Audio Library, or music I supply). If no source is reachable, tell me and
   ask me to supply a track. Do not synthesise a placeholder and call it finished.
@@ -77,20 +94,21 @@ Use in this order and tell me which one was used:
   while someone talks and rises 2 to 3 dB in gaps. Fade in 1 s, fade out 2 s. Trim or loop to length.
 - Final programme loudness: -16 LUFS integrated, true peak below -1.5 dBTP.
 
-## PHASE 7: Assemble and render
+## PHASE 8: Assemble and render
 - HyperFrames: intro (2 to 4 s: logo and title) and outro (3 to 5 s: call to action), with text set from
   composition variables so both languages reuse one template.
-- Remotion: timeline = intro, main video with cuts, B-roll cutaways, subtitles, voiceover, music, outro.
+- Remotion: timeline = intro, graded main video with cuts, graded B-roll cutaways, untouched graphics, subtitles, voiceover, music, outro.
   Animate step or section headings in and out. Keep motion quick and simple.
 - Render H.264 MP4, AAC audio 192 kbps, yuv420p, `-movflags +faststart`.
 - Also export `subtitles.srt` and a 1280x720 preview.
 
-## PHASE 8: Quality checks (all must pass before you say "done")
+## PHASE 9: Quality checks (all must pass before you say "done")
 - [ ] No silence longer than 0.6 s anywhere in the final audio (re-run silencedetect on the output).
 - [ ] Every subtitle appears while its words are spoken (sample 5 points across the video).
 - [ ] No text clipped or off-screen. Extract frames at the start, middle and end, and LOOK at them.
 - [ ] Voice clearly audible over music. Integrated loudness -16 LUFS (+/- 1).
 - [ ] Duration, resolution and fps match the INPUT block. Audio and video lengths match.
+- [ ] Cinematic look is consistent across all clips; text and UI stay sharp and ungraded; skin tones look natural.
 - [ ] B-roll never covers something the narration says is on the original screen.
 - [ ] `credits.md` is complete.
 
