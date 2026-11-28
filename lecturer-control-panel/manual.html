@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Podium — Manual Pengguna</title>
+<meta name="description" content="Manual langkah demi langkah: senarai barang, persediaan laptop, kamera, OBS dan osiloskop untuk merakam kuliah dengan Podium.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="brand/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --page:#D9D3F1; --violet:#6E5CE7; --deep:#5B4BD0; --sel:#7B61E8; --soft:#EDE9FD; --pale:#F5F3FD;
+    --pink:#F28FD9; --blue:#6CC4FA; --ink:#1E1B4B; --ink-soft:#6B6699; --green:#2DD4A0; --amber:#FFB547; --coral:#F2603C;
+    --sh-white:0 14px 28px -12px rgba(60,40,150,.28), 0 2px 6px rgba(60,40,150,.08);
+    --sh-btn:0 12px 22px -8px rgba(80,55,215,.55);
+    --sh-shell:0 60px 90px -40px rgba(80,55,200,.55), 0 28px 50px -24px rgba(60,40,160,.40);
+  }
+  *{box-sizing:border-box;font-family:'Plus Jakarta Sans',ui-sans-serif,system-ui,'Segoe UI',sans-serif}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--page);color:var(--ink);padding:16px;line-height:1.55;font-size:16px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .wrap{max-width:920px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+  a{color:var(--sel);font-weight:700}
+
+  /* ---- kulit ---- */
+  .hero{background:var(--violet);color:#fff;border-radius:44px;box-shadow:var(--sh-shell);padding:48px 44px;position:relative;overflow:hidden}
+  .hero:before{content:"";position:absolute;right:-90px;top:-90px;width:320px;height:320px;border-radius:50%;background:rgba(255,255,255,.1)}
+  .hero:after{content:"";position:absolute;right:80px;bottom:-120px;width:210px;height:210px;border-radius:50%;background:var(--pink)}
+  .hero>*{position:relative;z-index:1}
+  .hero img{height:60px;display:block}
+  .hero h1{font-size:clamp(2rem,5vw,3rem);line-height:1.08;letter-spacing:-.02em;font-weight:800;margin:26px 0 8px}
+  .hero p{margin:0;font-size:1.1rem;font-weight:500;color:rgba(255,255,255,.88);max-width:520px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+  .meta span{background:rgba(255,255,255,.18);border-radius:12px;padding:6px 14px;font-weight:700;font-size:.85rem}
+
+  /* ---- isi kandungan ---- */
+  .toc{display:flex;flex-direction:column;gap:10px}
+  .toc .row{display:grid;grid-template-columns:150px 1fr;gap:10px;align-items:stretch}
+  .toc a{display:flex;gap:10px;align-items:center;text-decoration:none;color:var(--ink);background:var(--pale);border-radius:16px;padding:10px 12px;font-weight:700;font-size:.92rem}
+  .toc a b{flex:none;width:30px;height:30px;border-radius:50%;background:var(--violet);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.9rem}
+  .toc a i{margin-left:auto;font-style:normal;font-size:.72rem;font-weight:700;color:var(--ink-soft);white-space:nowrap}
+  .toc a i[data-pg]:not([data-pg=""])::before{content:"ms. "}
+  .toc a i[data-pg]:not([data-pg=""])::after{content:attr(data-pg)}
+  .toc .items{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+  .toc a.lab{flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;background:var(--violet);color:#fff;padding:12px 16px}
+  .toc a.lab span{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;opacity:.9}
+  .toc a.lab b{width:auto;height:auto;background:none;font-size:1.15rem;display:block;border-radius:0}
+  .toc a.lab i{margin-left:0;color:rgba(255,255,255,.88)}
+  @media screen{ .toc a i{display:none} }
+  @media (max-width:640px){ .toc .row{grid-template-columns:1fr} }
+
+  section{background:#fff;border-radius:30px;box-shadow:var(--sh-white);padding:30px 34px}
+  /* ---- halaman pemisah bab ---- */
+  section.divider{background:var(--violet);color:#fff;border-radius:44px;box-shadow:var(--sh-shell);padding:48px 44px;position:relative;overflow:hidden;min-height:440px;display:flex;flex-direction:column;justify-content:space-between;gap:28px}
+  section.divider:before{content:"";position:absolute;right:-110px;top:-110px;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,.1)}
+  section.divider:after{content:"";position:absolute;right:-70px;bottom:-130px;width:300px;height:300px;border-radius:50%;background:var(--pink)}
+  section.divider>*{position:relative;z-index:1}
+  .dv-top{display:flex;justify-content:space-between;align-items:center}
+  .dv-top img{height:36px;display:block}
+  .dv-tag{background:rgba(255,255,255,.18);border-radius:12px;padding:6px 16px;font-weight:800;letter-spacing:.14em;font-size:.85rem}
+  .dv-letter{position:absolute!important;right:40px;top:90px;font-size:20rem;line-height:.8;font-weight:800;color:rgba(255,255,255,.12);z-index:0!important;letter-spacing:-.04em;pointer-events:none}
+  .dv-main h2{font-size:clamp(2.6rem,8vw,4.6rem);line-height:1;letter-spacing:-.03em;font-weight:800;margin:0 0 12px;color:#fff}
+  .dv-main p{margin:0;font-size:1.1rem;font-weight:500;color:rgba(255,255,255,.92);max-width:480px}
+  .dv-list{list-style:none;margin:0;padding:0;display:grid;gap:10px;max-width:500px}
+  .dv-list li{display:flex;gap:14px;align-items:center;background:rgba(255,255,255,.16);border-radius:18px;padding:11px 16px;font-weight:700}
+  .dv-list li b{flex:none;width:34px;height:34px;border-radius:50%;background:#fff;color:var(--violet);display:grid;place-items:center;font-weight:800}
+  .dv-list li small{margin-left:auto;font-weight:600;color:rgba(255,255,255,.92);font-size:.8rem;white-space:nowrap}
+  @media (max-width:640px){ section.divider{padding:32px 24px;border-radius:32px} .dv-letter{font-size:12rem;top:110px;right:20px} }
+
+
+  .sec-head{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+  .sec-head .n{flex:none;width:46px;height:46px;border-radius:16px;background:var(--violet);color:#fff;display:grid;place-items:center;font-weight:800;font-size:1.3rem;box-shadow:var(--sh-btn)}
+  h2{margin:0;font-size:1.45rem;font-weight:800;letter-spacing:-.01em}
+  .lead{margin:6px 0 20px;color:var(--ink-soft);font-weight:500}
+  h3{margin:26px 0 10px;font-size:1.05rem;font-weight:800;color:var(--deep)}
+
+  /* ---- langkah ---- */
+  ol.steps{list-style:none;margin:0;padding:0;counter-reset:s;display:flex;flex-direction:column;gap:12px}
+  ol.steps>li{counter-increment:s;display:grid;grid-template-columns:44px 1fr;gap:14px;background:var(--pale);border-radius:20px;padding:14px 16px;break-inside:avoid}
+  ol.steps>li:before{content:counter(s);width:44px;height:44px;border-radius:50%;background:var(--sel);color:#fff;display:grid;place-items:center;font-weight:800;font-size:1.15rem;box-shadow:0 8px 16px -6px rgba(123,97,232,.7)}
+  ol.steps b.t{display:block;font-weight:800;font-size:1.02rem;margin-bottom:2px}
+  ol.steps p{margin:0}
+  ol.steps ul{margin:6px 0 0;padding-left:20px}
+  ol.steps li li{margin:2px 0;display:list-item;grid-template-columns:none;background:none;padding:0}
+  ol.steps li li:before{content:none}
+  kbd,.k{display:inline-block;background:#fff;border:1.5px solid #D6D0F2;border-bottom-width:3px;border-radius:8px;padding:0 7px;font-weight:700;font-size:.85em;white-space:nowrap}
+  .path{font-weight:700;color:var(--deep)}
+
+  /* ---- nota ---- */
+  .note{display:flex;gap:12px;border-radius:18px;padding:12px 16px;margin-top:10px;font-weight:600;font-size:.95rem;break-inside:avoid}
+  .note b.tag{flex:none;align-self:flex-start;border-radius:9px;padding:2px 10px;font-size:.72rem;letter-spacing:.1em;font-weight:800;margin-top:2px}
+  .note.tip{background:#E8F7FF}.note.tip .tag{background:var(--blue);color:var(--ink)}
+  .note.warn{background:#FFF3DC}.note.warn .tag{background:var(--amber);color:var(--ink)}
+  .note.danger{background:#FFE9E2;border:2px solid var(--coral)}.note.danger .tag{background:var(--coral);color:#fff}
+  .note.ok{background:#E5FAF3}.note.ok .tag{background:var(--green);color:var(--ink)}
+
+  /* ---- senarai barang ---- */
+  .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+  .box{background:var(--pale);border-radius:22px;padding:16px 18px;break-inside:avoid}
+  .box h3{margin:0 0 8px}
+  .chk{list-style:none;margin:0;padding:0}
+  .chk li{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed #D6D0F2;font-weight:600}
+  .chk li:last-child{border-bottom:0}
+  .chk input{flex:none;width:22px;height:22px;margin-top:1px;accent-color:var(--sel)}
+  .chk small{display:block;font-weight:500;color:var(--ink-soft)}
+
+  /* ---- jadual ---- */
+  table{width:100%;border-collapse:collapse;font-size:.93rem}
+  th,td{text-align:left;padding:10px 10px;border-bottom:1px solid var(--soft);vertical-align:top}
+  th{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);background:var(--pale)}
+  tr{break-inside:avoid}
+  td b{font-weight:800}
+
+  /* ---- rajah ---- */
+  .diagram{background:var(--pale);border-radius:24px;padding:14px;overflow:hidden}
+  .diagram svg{width:100%;height:auto;display:block}
+  .scenes{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+  .scene{border-radius:22px;padding:14px;break-inside:avoid;box-shadow:var(--sh-white)}
+  .scene h4{margin:0 0 2px;font-size:1rem;font-weight:800;display:flex;gap:10px;align-items:center}
+  .scene h4 i{font-style:normal;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.6);font-weight:800}
+  .scene p{margin:2px 0 10px;font-size:.85rem;font-weight:600;opacity:.85}
+  .frame{aspect-ratio:16/9;background:var(--ink);border-radius:12px;position:relative;overflow:hidden;display:grid}
+  .frame span{position:absolute;display:grid;place-items:center;text-align:center;font-size:.72rem;font-weight:800;color:var(--ink);border-radius:6px}
+  .s1{background:#fff}.s2{background:var(--pink)}.s3{background:var(--blue)}
+  .req{display:inline-block;border-radius:9px;padding:1px 9px;font-size:.72rem;font-weight:800;letter-spacing:.06em}
+  .req.m{background:var(--violet);color:#fff}.req.o{background:var(--soft);color:var(--deep)}
+
+  .fig{margin:14px 0;background:var(--pale);border-radius:22px;padding:12px;break-inside:avoid}
+  .fig img,.fig svg{width:100%;height:auto;display:block;border-radius:12px;background:transparent}
+  .fig.narrow{max-width:600px;margin-left:auto;margin-right:auto}
+  .fig figcaption{font-size:.82rem;font-weight:600;color:var(--ink-soft);margin-top:8px;line-height:1.75}
+  .fig figcaption b{color:var(--ink)}
+  .ref{font-weight:600;color:var(--ink-soft);font-size:.82em}
+  .nb{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#F28FD9;color:#1E1B4B;font-weight:800;font-size:.72rem;margin:0 3px 0 4px;vertical-align:1px}
+  footer{color:var(--ink-soft);font-weight:600;font-size:.85rem;text-align:center;padding:10px;display:flex;flex-direction:column;align-items:center;gap:8px}
+  footer img{height:26px}
+  .print-btn{font:inherit;font-weight:800;background:var(--sel);color:#fff;border:0;border-radius:16px;padding:12px 22px;cursor:pointer;box-shadow:var(--sh-btn);font-size:.95rem}
+
+  @media (max-width:640px){ section{padding:22px 18px;border-radius:24px} .hero{padding:32px 24px;border-radius:32px} ol.steps>li{grid-template-columns:36px 1fr;padding:12px} ol.steps>li:before{width:36px;height:36px;font-size:1rem} }
+  @media print{
+    @page{size:A4;margin:12mm}
+    body{background:#fff;padding:0;font-size:12px}
+    .wrap{max-width:none;gap:12px}
+    /* Bayang kabur dirasterkan dalam PDF dan dipaparkan sebagai segi empat oleh penonton PDF iOS, jadi dimatikan untuk cetakan */
+    *,*::before,*::after{box-shadow:none!important;text-shadow:none!important;filter:none!important}
+    section{border:1.5px solid var(--soft);padding:20px 22px;border-radius:22px}
+    .hero{border-radius:28px;padding:30px 30px}
+    .no-print{display:none!important}
+    .sec-head,.lead,h2,h3{break-after:avoid}
+    .chk li{break-inside:avoid}
+    /* Senarai semak: setiap satu bermula pada muka surat sendiri dan muat satu muka surat */
+    section.sec{break-before:page}
+    section.divider{break-before:page;break-after:page;break-inside:avoid;height:268mm;min-height:0;border:0;border-radius:28px;padding:36px 34px;overflow:hidden}
+    .dv-letter{font-size:17rem;top:70px;right:24px}
+    .dv-list{max-width:410px}
+    .hero:after{right:-70px;bottom:-150px}
+    #barang,#semak{break-inside:avoid}
+    #barang .chk li,#semak .chk li{padding:5px 0}
+    #barang .box,#semak .box{padding:12px 16px;break-inside:avoid}
+    #barang .note,#semak .note{font-size:.8rem;padding:8px 12px;margin-top:6px;gap:10px}
+    #barang .chk small{font-size:.72rem;line-height:1.3}
+    #barang .chk li{padding:4px 0}
+    .toc{gap:6px}
+    .toc .row{grid-template-columns:120px 1fr;gap:8px}
+    .toc .items{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px}
+    .toc a{padding:6px 10px;font-size:.8rem;gap:8px;border-radius:14px}
+    .toc a b{width:24px;height:24px;font-size:.78rem}
+    .toc a.lab{padding:8px 12px}
+    .toc a.lab b{font-size:1rem}
+    ol.steps{gap:8px}
+    ol.steps>li{padding:8px 12px}
+    th,td{padding:5px 9px}
+    .diagram{padding:8px}
+    .wrap>section:nth-of-type(1) h3{margin:14px 0 6px}
+    .wrap>section:nth-of-type(1) .note{font-size:.8rem;padding:7px 12px;margin-top:8px!important}
+    .hero{padding:24px 28px}
+    .hero h1{margin:16px 0 6px}
+    .meta{margin-top:14px}
+    .scenes,.diagram,.note.danger{break-inside:avoid}
+    h3{margin:16px 0 8px}
+    .note{margin-top:6px;padding:8px 14px}
+    ol.steps b.t{font-size:.98rem}
+    .lead{margin:4px 0 12px}
+    .wrap>footer{display:none}
+    .scenes{gap:8px}
+    .scene{padding:10px}
+    .scene .frame{aspect-ratio:2.3/1}
+    .scene p{margin:2px 0 6px}
+    .hero img{height:44px}
+    .hero h1{font-size:2.2rem;margin:12px 0 4px}
+    .hero p{font-size:1rem}
+    .meta{gap:6px;margin-top:10px}
+    .meta span{font-size:.72rem;padding:4px 10px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===================== KULIT ===================== -->
+  <header class="hero">
+    <img src="brand/podium-wordmark-on-violet.svg" alt="Podium">
+    <h1>Manual Pengguna</h1>
+    <p>Sediakan Surface, kamera, OBS dan osiloskop. Mengajar secara langsung, dan simpan video untuk rujukan pelajar.</p>
+    <div class="meta"><span>Versi 1.2</span><span>Microsoft Surface · EMEET Piko+ · Keysight DSOX1204A</span><span>Kali pertama ≈ 45 minit</span><span>Kuliah seterusnya ≈ 10 minit</span></div>
+  </header>
+
+  <!-- ===================== ISI KANDUNGAN ===================== -->
+  <section>
+    <h2>Isi kandungan</h2>
+    <p class="lead">Ikut mengikut nombor. Setiap langkah pendek dan ada kotak semak.</p>
+    <nav class="toc">
+      <div class="row">
+        <a class="lab" href="#bab-a"><span>Bab A</span><b>Persediaan</b><i data-pg="2"></i></a>
+        <div class="items">
+          <a href="#barang"><b>1</b><span>Senarai barang</span><i data-pg="3"></i></a>
+          <a href="#laptop"><b>2</b><span>Setup laptop</span><i data-pg="4"></i></a>
+          <a href="#kamera"><b>3</b><span>Setup kamera</span><i data-pg="6"></i></a>
+          <a href="#osiloskop"><b>4</b><span>Setup osiloskop</span><i data-pg="8"></i></a>
+          <a href="#obs"><b>5</b><span>Setup OBS</span><i data-pg="12"></i></a>
+        </div>
+      </div>
+      <div class="row">
+        <a class="lab" href="#bab-b"><span>Bab B</span><b>Mengajar</b><i data-pg="18"></i></a>
+        <div class="items">
+          <a href="#podium"><b>6</b><span>Sambung Podium</span><i data-pg="19"></i></a>
+          <a href="#langsung"><b>7</b><span>Mengajar langsung &amp; simpan video</span><i data-pg="23"></i></a>
+        </div>
+      </div>
+      <div class="row">
+        <a class="lab" href="#bab-c"><span>Bab C</span><b>Rujukan</b><i data-pg="26"></i></a>
+        <div class="items">
+          <a href="#semak"><b>8</b><span>Senarai semak kuliah</span><i data-pg="27"></i></a>
+          <a href="#masalah"><b>9</b><span>Masalah lazim</span><i data-pg="28"></i></a>
+        </div>
+      </div>
+    </nav>
+
+    <h3>Gambaran sistem</h3>
+    <div class="diagram">
+      <svg viewBox="0 0 880 300" role="img" aria-label="Kamera, osiloskop dan mikrofon disambung ke laptop yang menjalankan OBS dan Podium, menghasilkan fail rakaman">
+        <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6699"/></marker></defs>
+        <g font-family="Plus Jakarta Sans, Segoe UI, sans-serif" font-weight="700" text-anchor="middle">
+          <!-- sumber -->
+          <rect x="10" y="20" width="200" height="70" rx="20" fill="#fff"/><circle cx="46" cy="55" r="14" fill="#6CC4FA"/><text x="130" y="52" font-size="17" fill="#1E1B4B">Kamera litar</text><text x="130" y="72" font-size="12" fill="#6B6699" font-weight="600">EMEET Piko+ · USB-C</text>
+          <rect x="10" y="115" width="200" height="70" rx="20" fill="#fff"/><circle cx="46" cy="150" r="14" fill="#F28FD9"/><text x="134" y="147" font-size="17" fill="#1E1B4B">DSOX1204A</text><text x="134" y="167" font-size="12" fill="#6B6699" font-weight="600">Keysight · LAN / USB</text>
+          <rect x="10" y="210" width="200" height="70" rx="20" fill="#fff"/><circle cx="46" cy="245" r="14" fill="#2DD4A0"/><text x="130" y="242" font-size="17" fill="#1E1B4B">Mikrofon</text><text x="130" y="262" font-size="12" fill="#6B6699" font-weight="600">USB / 3.5 mm</text>
+          <!-- anak panah -->
+          <g stroke="#6B6699" stroke-width="3" fill="none" marker-end="url(#ar)" stroke-linecap="round"><path d="M212 55 H318"/><path d="M212 150 H318"/><path d="M212 245 H318"/><path d="M590 85 H646"/><path d="M590 222 H646"/></g>
+          <!-- laptop -->
+          <rect x="320" y="20" width="268" height="260" rx="30" fill="#6E5CE7"/>
+          <text x="454" y="62" font-size="20" fill="#fff" font-weight="800">Laptop / Surface</text>
+          <rect x="344" y="82" width="220" height="74" rx="18" fill="#5B4BD0"/><text x="454" y="112" font-size="20" fill="#fff" font-weight="800">OBS Studio</text><text x="454" y="136" font-size="12" fill="#fff" font-weight="600" opacity=".85">scene · rakam</text>
+          <rect x="344" y="172" width="220" height="90" rx="18" fill="#fff"/><g transform="translate(366 190) scale(.8)"><image href="brand/podium-icon.svg" width="56" height="56"/></g><text x="474" y="212" font-size="20" fill="#1E1B4B" font-weight="800">Podium</text><text x="474" y="236" font-size="12" fill="#6B6699" font-weight="600">panel sentuh</text>
+          <path d="M454 160 V170" stroke="#fff" stroke-width="3" stroke-dasharray="2 5" stroke-linecap="round"/>
+          <!-- keluaran -->
+          <rect x="650" y="20" width="225" height="130" rx="24" fill="#fff"/><circle cx="762" cy="52" r="13" fill="#2DD4A0"/><circle cx="762" cy="52" r="5" fill="#fff"/>
+          <text x="762" y="90" font-size="16" fill="#1E1B4B" font-weight="800">Pelajar (langsung)</text><text x="762" y="110" font-size="12" fill="#6B6699" font-weight="600">Kamera Maya: Teams · Zoom · Meet</text><text x="762" y="128" font-size="12" fill="#6B6699" font-weight="600">Siaran: YouTube · Facebook</text>
+          <rect x="650" y="165" width="225" height="115" rx="24" fill="#fff"/><circle cx="762" cy="196" r="13" fill="none" stroke="#FF3B5C" stroke-width="5"/><circle cx="762" cy="196" r="5" fill="#FF3B5C"/>
+          <text x="762" y="234" font-size="16" fill="#1E1B4B" font-weight="800">Fail rakaman</text><text x="762" y="254" font-size="12" fill="#6B6699" font-weight="600">rujukan pelajar · .mkv / .mp4</text>
+        </g>
+      </svg>
+    </div>
+    <div class="note tip" style="margin-top:12px"><b class="tag">TIP</b><span>Podium mengawal OBS melalui <span class="k">ws://localhost:4455</span>. Kedua-duanya mesti dalam <b>laptop yang sama</b>.</span></div>
+  </section>
+
+  <!-- ===================== PEMISAH BAB A ===================== -->
+  <section id="bab-a" class="divider" aria-label="Bab A: Persediaan">
+    <div class="dv-top"><img src="brand/podium-wordmark-on-violet.svg" alt="Podium"><span class="dv-tag">BAB A</span></div>
+    <div class="dv-letter" aria-hidden="true">A</div>
+    <div class="dv-main">
+      <h2>Persediaan</h2>
+      <p>Lakukan sekali sahaja. Selepas itu, kuliah seterusnya hanya perlukan kira-kira 10 minit.</p>
+    </div>
+    <ol class="dv-list"><li><b>1</b><span>Senarai barang</span><small>semak barang</small></li><li><b>2</b><span>Setup laptop</span><small>≈ 10 minit</small></li><li><b>3</b><span>Setup kamera</span><small>≈ 10 minit</small></li><li><b>4</b><span>Setup osiloskop</span><small>≈ 15 minit</small></li><li><b>5</b><span>Setup OBS</span><small>≈ 15 minit</small></li></ol>
+  </section>
+
+  <!-- ===================== 1. BARANG ===================== -->
+  <section id="barang" class="sec">
+    <div class="sec-head"><div class="n">1</div><h2>Senarai barang</h2></div>
+    <p class="lead">Semak semua barang sebelum bermula. Tandakan kotak apabila sudah ada.</p>
+    <div class="note ok" style="margin:0 0 14px"><b class="tag">PERALATAN</b><span>Manual ini ditulis untuk <b>kamera EMEET Piko+</b> dan <b>osiloskop Keysight DSOX1204A</b> (4 saluran, 70 MHz). Nama menu boleh berbeza sedikit mengikut versi firmware; jika berbeza, ikut buku manual pengeluar.</span></div>
+    <div class="two">
+      <div class="box">
+        <h3><span class="req m">WAJIB</span> Barang utama</h3>
+        <ul class="chk">
+          <li><input type="checkbox"><span>Microsoft Surface<small>Pro, Laptop atau Go · Windows 10/11 · RAM 8 GB ke atas</small></span></li>
+          <li><input type="checkbox"><span>Pengecas laptop</span></li>
+          <li><input type="checkbox"><span>Kamera EMEET Piko+<small>Kabel USB-C disertakan. Jika laptop hanya ada USB-A, sediakan penyesuai</small></span></li>
+          <li><input type="checkbox"><span>Tripod atau lengan kamera<small>Semak sama ada Piko+ boleh dipasang pada tripod anda; jika tidak, guna pengapit atau penyangga yang stabil</small></span></li>
+          <li><input type="checkbox"><span>Mikrofon<small>Piko+ ada mikrofon terbina dalam, tetapi mikrofon klip (lavalier) lebih jelas jika pensyarah jauh</small></span></li>
+          <li><input type="checkbox"><span>Osiloskop Keysight DSOX1204A + probe<small>Probe yang disertakan, dan kabel kuasa</small></span></li>
+          <li><input type="checkbox"><span>Kabel LAN (RJ-45)<small>Untuk menghantar paparan osiloskop ke laptop</small></span></li>
+          <li><input type="checkbox"><span>Router / suis rangkaian (atau soket LAN)<small>Laptop dan osiloskop mesti dalam rangkaian yang sama. Jika laptop tiada port LAN, perlu penyesuai USB-C ke Ethernet</small></span></li>
+          <li><input type="checkbox"><span>Hab USB-C (USB-A + Ethernet)<small>Perlu jika Surface anda hanya mempunyai port USB-C (kebanyakan Surface Pro terkini)</small></span></li>
+          <li><input type="checkbox"><span>Sambungan internet<small>Perlu untuk siaran langsung. Disyorkan kabel LAN; jika Wi-Fi, duduk dekat router</small></span></li>
+          <li><input type="checkbox"><span>Litar / papan projek (breadboard) untuk demo</span></li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3><span class="req o">PILIHAN</span> Digalakkan</h3>
+        <ul class="chk">
+          <li><input type="checkbox"><span>Kabel USB (USB-A ke USB-B)<small>Untuk perisian BenchVue melalui port USB di belakang osiloskop</small></span></li>
+          <li><input type="checkbox"><span>Hab USB berkuasa / penyesuai USB-C ke USB-A<small>Surface mempunyai port yang sedikit</small></span></li>
+          <li><input type="checkbox"><span>Kamera kedua (muka pensyarah)<small>Untuk scene 3. Jika tiada, guna Piko+ yang sama</small></span></li>
+          <li><input type="checkbox"><span>Earphone / headphone<small>Elak bunyi bergema semasa mesyuarat dalam talian</small></span></li>
+          <li><input type="checkbox"><span>Lampu meja<small>Cahaya sisi supaya litar jelas</small></span></li>
+          <li><input type="checkbox"><span>Skrin kedua / projektor</span></li>
+          <li><input type="checkbox"><span>Cakera luaran / pemacu pen<small>Untuk salinan fail rakaman</small></span></li>
+          <li><input type="checkbox"><span>Tuala kecil / pembersih lensa</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="note warn"><b class="tag">PENTING</b><span>DSOX1204A <b>tidak</b> mempunyai port video HDMI/VGA dalam spesifikasi yang disemak. Modul VGA Keysight (DSOXLAN) disenaraikan untuk siri 2000/3000 X sahaja. Jadi <b>kad tangkap HDMI tidak diperlukan</b>; paparan osiloskop dihantar melalui <b>LAN</b> atau <b>USB</b> (Bahagian 4).</span></div>
+  </section>
+
+  <!-- ===================== 2. LAPTOP ===================== -->
+  <section id="laptop" class="sec">
+    <div class="sec-head"><div class="n">2</div><h2>Setup laptop</h2></div>
+    <p class="lead">Matlamat: laptop tidak tersangkut, tidak berbunyi notifikasi, dan ada ruang untuk rakaman. Masa: ≈ 10 minit.</p>
+    <ol class="steps">
+      <li><div><b class="t">Palamkan pengecas</b><p>Rakaman video menggunakan banyak bateri. Pastikan pengecas dipasang sepanjang kuliah.</p></div></li>
+      <li><div><b class="t">Pasang OBS Studio</b><p>Muat turun dari <a href="https://obsproject.com">obsproject.com</a>, pilih <b>Windows</b>, buka fail dan tekan <span class="k">Next</span> sehingga siap. Guna <b>versi 28 atau lebih baharu</b>.</p>
+        <div class="note ok"><b class="tag">SEMAK</b><span>Dalam OBS terdapat menu <span class="path">Tools → WebSocket Server Settings</span>. Jika tiada, kemas kini OBS.</span></div></div></li>
+      <li><div><b class="t">Set mod kuasa kepada prestasi terbaik</b><p class="path">Settings → System → Power &amp; battery → Power mode → Best performance</p></div></li>
+      <li><div><b class="t">Jangan biarkan skrin tidur</b><p class="path">Settings → System → Power &amp; battery → Screen and sleep → pilih <b>Never</b> (semasa plugged in).</p></div></li>
+      <li><div><b class="t">Matikan notifikasi</b><p>Supaya tiada mesej muncul dalam rakaman.</p><p class="path">Settings → System → Notifications → hidupkan <b>Do not disturb</b></p></div></li>
+      <li><div><b class="t">Pastikan ruang simpanan mencukupi</b><p>Kosongkan sekurang-kurangnya <b>20 GB</b>. Satu jam rakaman ≈ 2–5 GB.</p><p class="path">Settings → System → Storage</p></div></li>
+      <li><div><b class="t">Tutup program lain</b><p>Tutup Teams, Zoom, muat turun, dan tab pelayar yang banyak. Tangguhkan kemas kini Windows.</p></div></li>
+      <li><div><b class="t">Pasang kabel ke port yang betul</b><p>Guna port <b>USB 3</b> (biasanya biru atau bertanda SS) untuk kamera. Jika port tidak cukup, guna hab USB berkuasa atau penyesuai USB-C ke USB-A. Untuk paparan osiloskop, sambungkan juga ke rangkaian (kabel LAN atau penyesuai USB-C ke Ethernet).</p>
+        <div class="note tip"><b class="tag">TIP</b><span>Jika gambar kamera tersangkut, pindahkan kamera ke port USB 3 yang tidak dikongsi dengan peranti lain.</span></div></div></li>
+      <li><div><b class="t">Surface: guna hab USB-C</b><p>Kebanyakan Surface Pro terkini hanya ada port USB-C. Sambung hab USB-C (dengan port USB-A dan Ethernet) untuk mikrofon, kabel LAN osiloskop dan kabel lain. Sambung Piko+ terus ke port USB-C Surface jika boleh.</p></div></li>
+      <li><div><b class="t">Surface: elak panas dan penurunan prestasi</b><p>Surface (terutama Pro) boleh memperlahankan prestasi apabila panas. Letak di tempat berudara, jangan tutup dengan kertas atau kain, dan guna <b>pengecas asal</b>. Jika Surface tersangkut semasa siaran dan rakaman serentak, lihat Bahagian 9.</p></div></li>
+      <li><div><b class="t">Surface: semak jenis pemproses</b><p>Surface Pro 11 dan Surface Laptop 7 menggunakan pemproses Snapdragon (ARM). Pada obsproject.com, pilih muat turun untuk <b>Windows ARM</b> jika ada, dan pastikan kamera serta mikrofon dikesan. Surface Intel menggunakan muat turun Windows biasa.</p></div></li>
+      <li><div><b class="t">Surface: guna sentuhan untuk Podium</b><p>Podium direka untuk skrin sentuh. Tekan <kbd>Win</kbd> + <kbd>←</kbd> untuk letak Podium pada separuh kiri skrin dan OBS pada separuh kanan, supaya anda boleh menyentuh Podium sambil melihat OBS. Podium menyesuaikan saiznya secara automatik dengan skrin, jadi semua kawalan muat tanpa menatal.</p></div></li>
+      <li><div><b class="t">(Pilihan) Guna dua skrin</b><p>Tekan <kbd>Win</kbd> + <kbd>P</kbd> → <b>Extend</b>. Letak slaid pada skrin projektor dan panel Podium pada skrin Surface.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- ===================== 3. KAMERA ===================== -->
+  <section id="kamera" class="sec">
+    <div class="sec-head"><div class="n">3</div><h2>Setup kamera (EMEET Piko+)</h2></div>
+    <p class="lead">Matlamat: pelajar nampak litar dengan jelas, tanpa gambar yang tiba-tiba kabur atau berkelip. Masa: ≈ 10 minit.</p>
+    <div class="note tip" style="margin:0 0 14px"><b class="tag">TIP</b><span>Piko+ ialah webcam <b>4K dwilensa</b> (sensor Sony 1/2.55 inci, sudut pandang 73°, USB-C) dengan fokus automatik AI. <b>Kamera A</b> = litar di meja (wajib). <b>Kamera B</b> = muka pensyarah (pilihan). Jika hanya ada satu Piko+, scene 3 menggunakan Kamera A.</span></div>
+    <figure class="fig narrow"><img src="manual-img/fig-piko.jpg" alt="Kamera EMEET Piko+ dengan dua lensa dan tapak klip, serta spesifikasi ringkas"><figcaption><b>Rajah 3.1</b> Kamera EMEET Piko+. <span class="nb">1</span> dua lensa (satu untuk gambar 4K, satu untuk bantuan AI) · <span class="nb">2</span> badan kamera dengan lampu penunjuk kecil di bawah lensa · <span class="nb">3</span> tapak berbentuk klip (semak sama ada boleh dipasang pada tripod anda). Spesifikasi daripada ulasan dan penjual.</figcaption></figure>
+    <figure class="fig "><svg viewBox="0 0 880 340" role="img" aria-label="Kamera dipasang kira-kira 40 sentimeter di atas papan litar menghala ke bawah, bingkai kira-kira 55 sentimeter lebar, dan contoh bingkai dari kamera">
+<defs><marker id="ar4" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#1E1B4B"/></marker></defs>
+<line x1="20" y1="292" x2="540" y2="292" stroke="#C9C2EE" stroke-width="8" stroke-linecap="round"/>
+<rect x="64" y="64" width="12" height="228" rx="4" fill="#1E1B4B"/><rect x="64" y="64" width="270" height="12" rx="4" fill="#1E1B4B"/>
+<polygon points="334,102 197,292 471,292" fill="#6E5CE7" fill-opacity=".14" stroke="#6E5CE7" stroke-opacity=".5" stroke-width="2" stroke-dasharray="6 5"/>
+<rect x="304" y="76" width="60" height="28" rx="10" fill="#1E1B4B"/><circle cx="322" cy="90" r="7" fill="#F28FD9"/><circle cx="346" cy="90" r="7" fill="#6CC4FA"/>
+<rect x="288" y="274" width="92" height="18" rx="5" fill="#EDE9FD" stroke="#C9C2EE" stroke-width="1.5"/><circle cx="292" cy="277" r="1.8" fill="#8B87B3"/><circle cx="292" cy="283" r="1.8" fill="#8B87B3"/><circle cx="300" cy="277" r="1.8" fill="#8B87B3"/><circle cx="300" cy="283" r="1.8" fill="#8B87B3"/><circle cx="308" cy="277" r="1.8" fill="#8B87B3"/><circle cx="308" cy="283" r="1.8" fill="#8B87B3"/><circle cx="316" cy="277" r="1.8" fill="#8B87B3"/><circle cx="316" cy="283" r="1.8" fill="#8B87B3"/><circle cx="324" cy="277" r="1.8" fill="#8B87B3"/><circle cx="324" cy="283" r="1.8" fill="#8B87B3"/><circle cx="332" cy="277" r="1.8" fill="#8B87B3"/><circle cx="332" cy="283" r="1.8" fill="#8B87B3"/><circle cx="340" cy="277" r="1.8" fill="#8B87B3"/><circle cx="340" cy="283" r="1.8" fill="#8B87B3"/><circle cx="348" cy="277" r="1.8" fill="#8B87B3"/><circle cx="348" cy="283" r="1.8" fill="#8B87B3"/><circle cx="356" cy="277" r="1.8" fill="#8B87B3"/><circle cx="356" cy="283" r="1.8" fill="#8B87B3"/><circle cx="364" cy="277" r="1.8" fill="#8B87B3"/><circle cx="364" cy="283" r="1.8" fill="#8B87B3"/>
+<rect x="318" y="268" width="14" height="6" rx="2" fill="#F2C58E"/><circle cx="352" cy="271" r="4" fill="#FF3B5C"/>
+<line x1="500" y1="104" x2="500" y2="290" stroke="#1E1B4B" stroke-width="2.2" marker-start="url(#ar4)" marker-end="url(#ar4)"/>
+<text x="512" y="204" font-size="16" font-weight="800" fill="#1E1B4B">≈ 40 cm</text>
+<line x1="197" y1="318" x2="471" y2="318" stroke="#1E1B4B" stroke-width="2.2" marker-start="url(#ar4)" marker-end="url(#ar4)"/>
+<text x="334" y="336" text-anchor="middle" font-size="14" font-weight="800" fill="#1E1B4B">bingkai ≈ 50–60 cm lebar</text>
+<text x="378" y="62" font-size="13" font-weight="800" fill="#1E1B4B">EMEET Piko+ · dua lensa · USB-C</text>
+<text x="86" y="130" font-size="12.5" font-weight="700" fill="#6B6699">tripod / lengan</text>
+<rect x="580" y="62" width="288" height="162" rx="14" fill="#0F172F"/>
+<rect x="622" y="106" width="204" height="74" rx="10" fill="#EDE9FD"/><line x1="632" y1="118" x2="816" y2="118" stroke="#F28FD9" stroke-width="3"/><line x1="632" y1="168" x2="816" y2="168" stroke="#1E1B4B" stroke-width="3"/>
+<rect x="700" y="132" width="44" height="18" rx="5" fill="#F2C58E"/><circle cx="770" cy="141" r="6" fill="#FF3B5C"/>
+<text x="724" y="248" text-anchor="middle" font-size="14" font-weight="800" fill="#1E1B4B">Contoh bingkai dari kamera</text>
+<text x="724" y="268" text-anchor="middle" font-size="12.5" font-weight="600" fill="#6B6699">litar memenuhi kira-kira ½–⅔ bingkai,</text>
+<text x="724" y="286" text-anchor="middle" font-size="12.5" font-weight="600" fill="#6B6699">tulisan komponen boleh dibaca</text>
+<g><circle cx="334" cy="50" r="15" fill="#F28FD9" stroke="#fff" stroke-width="3"/><text x="334" y="56" text-anchor="middle" font-size="17" font-weight="800" fill="#1E1B4B">1</text></g><g><circle cx="470" cy="170" r="15" fill="#F28FD9" stroke="#fff" stroke-width="3"/><text x="470" y="176" text-anchor="middle" font-size="17" font-weight="800" fill="#1E1B4B">2</text></g><g><circle cx="590" cy="76" r="15" fill="#F28FD9" stroke="#fff" stroke-width="3"/><text x="590" y="82" text-anchor="middle" font-size="17" font-weight="800" fill="#1E1B4B">3</text></g>
+</svg><figcaption><b>Rajah 3.2</b> Kedudukan kamera (ilustrasi; rupa sebenar Piko+ berbeza). <span class="nb">1</span> kamera menghala ke bawah di atas litar · <span class="nb">2</span> mulakan pada ≈ 40 cm, naikkan ke 50–60 cm jika kabur · <span class="nb">3</span> bingkai yang baik.</figcaption></figure>
+    <ol class="steps">
+      <li><div><b class="t">Letak kamera di atas litar <span class="ref">(Rajah 3.2)</span></b><p>Pasang pada tripod atau lengan, kira-kira <b>40 cm</b> di atas papan litar, menghala ke bawah. Pada jarak ini bingkai meliputi kira-kira 50–60 cm lebar.</p>
+        <div class="note warn"><b class="tag">UJI</b><span>Piko+ direka untuk wajah di meja. Jarak fokus dekat untuk litar tidak dapat disahkan daripada sumber yang saya boleh baca. Jika gambar kabur pada 40 cm, naikkan kamera ke 50–60 cm sehingga tulisan komponen tajam.</span></div></div></li>
+      <li><div><b class="t">Sambung dengan USB-C</b><p>Cucuk kabel USB-C yang disertakan ke laptop. Windows memasang pemacu secara automatik (plug-and-play). Untuk gambar 4K, guna port <b>USB 3</b> atau USB-C.</p></div></li>
+      <li><div><b class="t">Atur cahaya</b><p>Letak lampu di <b>sisi</b> litar. Elakkan cahaya terang <b>di belakang</b> litar. Elakkan pantulan pada skrin atau papan litar.</p></div></li>
+      <li><div><b class="t">Pilih kamera dalam OBS</b><p>Dalam OBS, tekan <span class="k">+</span> di <b>Sources</b> → <b>Video Capture Device</b> → beri nama “Kamera Litar” → pilih <b>EMEET Piko+</b>.</p>
+        <p>Tetapkan <b>Resolution/FPS Type: Custom</b>, resolusi <b>1920×1080</b>, FPS <b>30</b>.</p>
+        <div class="note tip"><b class="tag">TIP</b><span>Piko+ boleh 4K pada 30 fps, tetapi kanvas OBS dalam manual ini ialah 1080p. Untuk kuliah, 1080p sudah cukup tajam dan lebih ringan untuk laptop.</span></div></div></li>
+      <li><div><b class="t">Matikan ciri AI yang mengganggu</b><p>Piko+ mempunyai <b>fokus automatik AI</b> dan pengesanan wajah. Untuk demo litar, fokus boleh tiba-tiba bertukar apabila tangan atau muka masuk bingkai. Jika perisian EMEET (dari laman sokongan EMEET) menyediakan pilihan <b>penjejakan / auto framing</b>, matikan; jika ada pilihan <b>fokus manual</b>, gunakannya dan tetapkan pada papan litar.</p>
+        <p>Kemudian dalam OBS: klik kanan sumber → <b>Properties</b>, dan matikan pilihan auto bagi <b>Focus</b>, <b>Exposure</b> dan <b>White Balance</b> jika tersedia.</p>
+        <div class="note warn"><b class="tag">NOTA</b><span>Nama pilihan dan perisian EMEET tidak dapat disemak dari sini. Jika berbeza, rujuk buku panduan Piko+.</span></div></div></li>
+      <li><div><b class="t">Semak bingkai</b><p>Tulisan pada komponen boleh dibaca? Gambar tidak berubah fokus apabila tangan masuk? Tangan pensyarah tidak menutup litar? Jika ya, kamera sudah sedia.</p></div></li>
+      <li><div><b class="t">(Pilihan) Guna mikrofon Piko+</b><p>Piko+ mempunyai mikrofon terbina dalam. Jika mahu menggunakannya, pilih mikrofon <b>EMEET</b> di <span class="path">Settings → Audio → Mic/Auxiliary Audio</span>. Mikrofon klip lebih jelas jika pensyarah jauh dari kamera.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- ===================== 4. OSILOSKOP ===================== -->
+  <section id="osiloskop" class="sec">
+    <div class="sec-head"><div class="n">4</div><h2>Setup osiloskop (Keysight DSOX1204A)</h2></div>
+    <p class="lead">Matlamat: gelombang yang stabil, jelas, dan sampai ke OBS. Masa: ≈ 15 minit.</p>
+
+    <div class="note danger" style="margin:0 0 14px"><b class="tag">KESELAMATAN</b><span>
+      <b>1.</b> Klip bumi (ground clip) probe disambung ke titik <b>bumi/GND litar</b> sahaja.<br>
+      <b>2.</b> Jangan ukur voltan elektrik rumah (mains) dengan probe biasa.<br>
+      <b>3.</b> Jangan melebihi voltan maksimum yang tertera pada probe dan osiloskop.<br>
+      <b>4.</b> Matikan kuasa litar sebelum mengubah sambungan.</span></div>
+
+    <div class="note tip" style="margin:0 0 14px"><b class="tag">TIP</b><span>DSOX1204A mempunyai <b>4 saluran</b> (CH1–CH4), port <b>LAN</b>, port <b>USB host</b> (depan) dan port <b>USB device</b> (belakang). Di Keysight, butang penetapan automatik dinamakan <span class="k">Auto Scale</span>, dan butang set semula dinamakan <span class="k">Default Setup</span>.</span></div>
+
+    <figure class="fig"><img src="manual-img/fig-dsox-panel.jpg" alt="Panel depan osiloskop Keysight DSOX1204G dengan butang dan port bernombor"><figcaption><b>Rajah 4.1</b> Panel depan Keysight InfiniiVision 1000 X-Series. <span class="nb">1</span> <b>Auto Scale</b> · <span class="nb">2</span> <b>Default Setup</b> · <span class="nb">3</span> <b>Run/Stop</b> · <span class="nb">4</span> tombol <b>Horizontal</b> (Time/div) · <span class="nb">5</span> tombol <b>Vertical</b> (Volts/div atas, kedudukan bawah) · <span class="nb">6</span> tombol <b>Trigger Level</b> · <span class="nb">7</span> butang saluran <b>1–4</b> · <span class="nb">8</span> input <b>CH1–CH4</b> · <span class="nb">9</span> terminal <b>Demo / Probe Comp</b> dan bumi di sebelahnya · <span class="nb">10</span> port <b>USB</b> depan · <span class="nb">11</span> <b>Intensity</b> (dengan tombol Entry) · <span class="nb">12</span> <b>Utility</b>. Enam butang kelabu di kanan skrin ialah <i>softkey</i>; fungsinya mengikut menu pada skrin.<br><b>Nota:</b> foto ini model <b>DSOX1204G</b>. Model <b>A</b> (anda) tiada penjana gelombang terbina dalam, jadi tiada port <i>Gen Out</i> dan butang <i>Wave Gen</i>; kawalan lain pada panel serupa.</figcaption></figure>
+    <figure class="fig "><svg viewBox="0 0 880 370" role="img" aria-label="Probe disambung ke CH1 osiloskop, hujung probe ke titik ukur litar dan klip bumi ke GND litar">
+<rect x="14" y="14" width="400" height="300" rx="26" fill="#1E1B4B"/>
+<rect x="34" y="34" width="262" height="168" rx="12" fill="#0F172F"/><line x1="60" y1="34" x2="60" y2="202" stroke="#2F2D6B" stroke-width="1"/><line x1="86" y1="34" x2="86" y2="202" stroke="#2F2D6B" stroke-width="1"/><line x1="112" y1="34" x2="112" y2="202" stroke="#2F2D6B" stroke-width="1"/><line x1="138" y1="34" x2="138" y2="202" stroke="#2F2D6B" stroke-width="1"/><line x1="164" y1="34" x2="164" y2="202" stroke="#2F2D6B" stroke-width="1"/><line x1="190" y1="34" x2="190" y2="202" stroke="#2F2D6B" stroke-width="1"/><line x1="216" y1="34" x2="216" y2="202" stroke="#2F2D6B" stroke-width="1"/><line x1="242" y1="34" x2="242" y2="202" stroke="#2F2D6B" stroke-width="1"/><line x1="268" y1="34" x2="268" y2="202" stroke="#2F2D6B" stroke-width="1"/><line x1="294" y1="34" x2="294" y2="202" stroke="#2F2D6B" stroke-width="1"/><line x1="34" y1="58" x2="296" y2="58" stroke="#2F2D6B" stroke-width="1"/><line x1="34" y1="82" x2="296" y2="82" stroke="#2F2D6B" stroke-width="1"/><line x1="34" y1="106" x2="296" y2="106" stroke="#2F2D6B" stroke-width="1"/><line x1="34" y1="130" x2="296" y2="130" stroke="#2F2D6B" stroke-width="1"/><line x1="34" y1="154" x2="296" y2="154" stroke="#2F2D6B" stroke-width="1"/><line x1="34" y1="178" x2="296" y2="178" stroke="#2F2D6B" stroke-width="1"/>
+<polyline points="46,150 80,150 80,80 126,80 126,150 172,150 172,80 218,80 218,150 264,150 264,80 290,80" fill="none" stroke="#F28FD9" stroke-width="3.5" stroke-linejoin="round"/>
+<rect x="34" y="212" width="36" height="10" rx="4" fill="#3A3780"/><rect x="78" y="212" width="36" height="10" rx="4" fill="#3A3780"/><rect x="122" y="212" width="36" height="10" rx="4" fill="#3A3780"/><rect x="166" y="212" width="36" height="10" rx="4" fill="#3A3780"/><rect x="210" y="212" width="36" height="10" rx="4" fill="#3A3780"/><rect x="254" y="212" width="36" height="10" rx="4" fill="#3A3780"/>
+<circle cx="352" cy="78" r="24" fill="#2F2D6B" stroke="#6E5CE7" stroke-width="3"/><line x1="352" y1="78" x2="352" y2="60" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+<circle cx="352" cy="150" r="24" fill="#2F2D6B" stroke="#6E5CE7" stroke-width="3"/><line x1="352" y1="150" x2="366" y2="136" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+<circle cx="70" cy="266" r="16" fill="#C9C6E6"/><circle cx="70" cy="266" r="6" fill="#1E1B4B"/><text x="70" y="241" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">CH1</text><circle cx="130" cy="266" r="16" fill="#C9C6E6"/><circle cx="130" cy="266" r="6" fill="#1E1B4B"/><text x="130" y="241" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">CH2</text><circle cx="190" cy="266" r="16" fill="#C9C6E6"/><circle cx="190" cy="266" r="6" fill="#1E1B4B"/><text x="190" y="241" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">CH3</text><circle cx="250" cy="266" r="16" fill="#C9C6E6"/><circle cx="250" cy="266" r="6" fill="#1E1B4B"/><text x="250" y="241" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">CH4</text>
+<circle cx="326" cy="266" r="8" fill="#EDE9FD"/><circle cx="366" cy="266" r="8" fill="#EDE9FD"/>
+<text x="346" y="241" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">Demo / Probe Comp</text>
+<path d="M70 282 C 70 360, 470 360, 522 190" fill="none" stroke="#8B87B3" stroke-width="5" stroke-linecap="round"/>
+<rect x="520" y="158" width="132" height="34" rx="12" fill="#6CC4FA"/>
+<rect x="566" y="146" width="44" height="14" rx="5" fill="#fff"/><rect x="590" y="148" width="18" height="10" rx="3" fill="#1E1B4B"/>
+<text x="556" y="214" text-anchor="middle" font-size="12" font-weight="800" fill="#1E1B4B">suis ×1 / ×10</text>
+<line x1="652" y1="175" x2="708" y2="175" stroke="#8B87B3" stroke-width="4" stroke-linecap="round"/>
+<rect x="690" y="70" width="176" height="238" rx="18" fill="#EDE9FD" stroke="#C9C2EE" stroke-width="2"/>
+<line x1="706" y1="92" x2="850" y2="92" stroke="#F28FD9" stroke-width="4"/><line x1="706" y1="268" x2="850" y2="268" stroke="#1E1B4B" stroke-width="4"/>
+<rect x="744" y="160" width="62" height="30" rx="8" fill="#F2C58E"/><line x1="720" y1="175" x2="744" y2="175" stroke="#1E1B4B" stroke-width="3"/><line x1="806" y1="175" x2="830" y2="175" stroke="#1E1B4B" stroke-width="3"/>
+<circle cx="716" cy="175" r="6" fill="#F28FD9" stroke="#1E1B4B" stroke-width="2"/>
+<text x="778" y="128" text-anchor="middle" font-size="12" font-weight="700" fill="#1E1B4B">titik diukur</text>
+<text x="778" y="290" text-anchor="middle" font-size="12" font-weight="800" fill="#1E1B4B">GND (0 V)</text>
+<path d="M612 192 C 612 250, 690 262, 742 268" fill="none" stroke="#1E1B4B" stroke-width="4" stroke-linecap="round"/>
+<rect x="736" y="258" width="30" height="20" rx="5" fill="#1E1B4B"/>
+<g><circle cx="34" cy="266" r="15" fill="#F28FD9" stroke="#fff" stroke-width="3"/><text x="34" y="272" text-anchor="middle" font-size="17" font-weight="800" fill="#1E1B4B">1</text></g><g><circle cx="588" cy="122" r="15" fill="#F28FD9" stroke="#fff" stroke-width="3"/><text x="588" y="128" text-anchor="middle" font-size="17" font-weight="800" fill="#1E1B4B">2</text></g><g><circle cx="716" cy="140" r="15" fill="#F28FD9" stroke="#fff" stroke-width="3"/><text x="716" y="146" text-anchor="middle" font-size="17" font-weight="800" fill="#1E1B4B">3</text></g><g><circle cx="752" cy="238" r="15" fill="#F28FD9" stroke="#fff" stroke-width="3"/><text x="752" y="244" text-anchor="middle" font-size="17" font-weight="800" fill="#1E1B4B">4</text></g>
+</svg><figcaption><b>Rajah 4.2</b> Sambungan probe (ilustrasi ringkas; susunan panel sebenar boleh berbeza). <span class="nb">1</span> Probe ke <b>CH1</b> · <span class="nb">2</span> suis probe <b>×10</b> · <span class="nb">3</span> hujung probe ke titik yang diukur · <span class="nb">4</span> klip bumi ke <b>GND</b> litar.</figcaption></figure><figure class="fig "><svg viewBox="0 0 880 240" role="img" aria-label="Tiga bentuk gelombang segi empat: kurang kompensasi dengan penjuru bulat, betul, dan lebih kompensasi dengan penjuru bertanduk">
+<rect x="10" y="14" width="270" height="140" rx="14" fill="#0F172F"/><line x1="40" y1="14" x2="40" y2="154" stroke="#2F2D6B"/><line x1="70" y1="14" x2="70" y2="154" stroke="#2F2D6B"/><line x1="100" y1="14" x2="100" y2="154" stroke="#2F2D6B"/><line x1="130" y1="14" x2="130" y2="154" stroke="#2F2D6B"/><line x1="160" y1="14" x2="160" y2="154" stroke="#2F2D6B"/><line x1="190" y1="14" x2="190" y2="154" stroke="#2F2D6B"/><line x1="220" y1="14" x2="220" y2="154" stroke="#2F2D6B"/><line x1="250" y1="14" x2="250" y2="154" stroke="#2F2D6B"/><line x1="10" y1="42" x2="280" y2="42" stroke="#2F2D6B"/><line x1="10" y1="70" x2="280" y2="70" stroke="#2F2D6B"/><line x1="10" y1="98" x2="280" y2="98" stroke="#2F2D6B"/><line x1="10" y1="126" x2="280" y2="126" stroke="#2F2D6B"/>
+<polyline points="24.0,112.0 27.0,98.3 30.0,87.6 33.0,79.3 36.0,72.8 39.0,67.8 42.0,63.8 45.0,60.8 48.0,58.4 51.0,56.5 54.0,55.1 57.0,54.0 60.0,53.1 63.0,52.4 66.0,51.9 69.0,51.5 72.0,51.1 75.0,50.9 78.0,50.7 81.0,50.5 84.0,50.4 84.0,50.0 87.0,63.7 90.0,74.4 93.0,82.7 96.0,89.2 99.0,94.2 102.0,98.2 105.0,101.2 108.0,103.6 111.0,105.5 114.0,106.9 117.0,108.0 120.0,108.9 123.0,109.6 126.0,110.1 129.0,110.5 132.0,110.9 135.0,111.1 138.0,111.3 141.0,111.5 144.0,111.6 144.0,112.0 147.0,98.3 150.0,87.6 153.0,79.3 156.0,72.8 159.0,67.8 162.0,63.8 165.0,60.8 168.0,58.4 171.0,56.5 174.0,55.1 177.0,54.0 180.0,53.1 183.0,52.4 186.0,51.9 189.0,51.5 192.0,51.1 195.0,50.9 198.0,50.7 201.0,50.5 204.0,50.4 204.0,50.0 207.0,63.7 210.0,74.4 213.0,82.7 216.0,89.2 219.0,94.2 222.0,98.2 225.0,101.2 228.0,103.6 231.0,105.5 234.0,106.9 237.0,108.0 240.0,108.9 243.0,109.6 246.0,110.1 249.0,110.5 252.0,110.9 255.0,111.1 258.0,111.3 261.0,111.5 264.0,111.6" fill="none" stroke="#F28FD9" stroke-width="3.2" stroke-linejoin="round"/>
+<circle cx="24" cy="182" r="7" fill="#FFB547"/><text x="40" y="187" font-size="15" font-weight="800" fill="#1E1B4B">Kurang kompensasi</text>
+<text x="40" y="208" font-size="12.5" font-weight="600" fill="#6B6699">Penjuru menaik membulat</text><text x="40" y="226" font-size="12.5" font-weight="700" fill="#6B6699">Laras skru probe sedikit demi sedikit</text>
+<rect x="305" y="14" width="270" height="140" rx="14" fill="#0F172F"/><line x1="335" y1="14" x2="335" y2="154" stroke="#2F2D6B"/><line x1="365" y1="14" x2="365" y2="154" stroke="#2F2D6B"/><line x1="395" y1="14" x2="395" y2="154" stroke="#2F2D6B"/><line x1="425" y1="14" x2="425" y2="154" stroke="#2F2D6B"/><line x1="455" y1="14" x2="455" y2="154" stroke="#2F2D6B"/><line x1="485" y1="14" x2="485" y2="154" stroke="#2F2D6B"/><line x1="515" y1="14" x2="515" y2="154" stroke="#2F2D6B"/><line x1="545" y1="14" x2="545" y2="154" stroke="#2F2D6B"/><line x1="305" y1="42" x2="575" y2="42" stroke="#2F2D6B"/><line x1="305" y1="70" x2="575" y2="70" stroke="#2F2D6B"/><line x1="305" y1="98" x2="575" y2="98" stroke="#2F2D6B"/><line x1="305" y1="126" x2="575" y2="126" stroke="#2F2D6B"/>
+<polyline points="319.0,112.0 319.0,50.0 379.0,50.0 379.0,112.0 439.0,112.0 439.0,112.0 439.0,50.0 499.0,50.0 499.0,112.0 559.0,112.0" fill="none" stroke="#F28FD9" stroke-width="3.2" stroke-linejoin="round"/>
+<circle cx="319" cy="182" r="7" fill="#2DD4A0"/><text x="335" y="187" font-size="15" font-weight="800" fill="#1E1B4B">Betul</text>
+<text x="335" y="208" font-size="12.5" font-weight="600" fill="#6B6699">Segi empat tepat dan rata</text><text x="335" y="226" font-size="12.5" font-weight="700" fill="#6B6699">Probe sedia digunakan</text>
+<rect x="600" y="14" width="270" height="140" rx="14" fill="#0F172F"/><line x1="630" y1="14" x2="630" y2="154" stroke="#2F2D6B"/><line x1="660" y1="14" x2="660" y2="154" stroke="#2F2D6B"/><line x1="690" y1="14" x2="690" y2="154" stroke="#2F2D6B"/><line x1="720" y1="14" x2="720" y2="154" stroke="#2F2D6B"/><line x1="750" y1="14" x2="750" y2="154" stroke="#2F2D6B"/><line x1="780" y1="14" x2="780" y2="154" stroke="#2F2D6B"/><line x1="810" y1="14" x2="810" y2="154" stroke="#2F2D6B"/><line x1="840" y1="14" x2="840" y2="154" stroke="#2F2D6B"/><line x1="600" y1="42" x2="870" y2="42" stroke="#2F2D6B"/><line x1="600" y1="70" x2="870" y2="70" stroke="#2F2D6B"/><line x1="600" y1="98" x2="870" y2="98" stroke="#2F2D6B"/><line x1="600" y1="126" x2="870" y2="126" stroke="#2F2D6B"/>
+<polyline points="614.0,112.0 617.0,65.8 620.0,60.6 623.0,57.1 626.0,54.8 629.0,53.2 632.0,52.1 635.0,51.4 638.0,51.0 641.0,50.6 644.0,50.4 647.0,50.3 650.0,50.2 653.0,50.1 656.0,50.1 659.0,50.1 662.0,50.0 665.0,50.0 668.0,50.0 671.0,50.0 674.0,50.0 674.0,50.0 677.0,96.2 680.0,101.4 683.0,104.9 686.0,107.2 689.0,108.8 692.0,109.9 695.0,110.6 698.0,111.0 701.0,111.4 704.0,111.6 707.0,111.7 710.0,111.8 713.0,111.9 716.0,111.9 719.0,111.9 722.0,112.0 725.0,112.0 728.0,112.0 731.0,112.0 734.0,112.0 734.0,112.0 737.0,65.8 740.0,60.6 743.0,57.1 746.0,54.8 749.0,53.2 752.0,52.1 755.0,51.4 758.0,51.0 761.0,50.6 764.0,50.4 767.0,50.3 770.0,50.2 773.0,50.1 776.0,50.1 779.0,50.1 782.0,50.0 785.0,50.0 788.0,50.0 791.0,50.0 794.0,50.0 794.0,50.0 797.0,96.2 800.0,101.4 803.0,104.9 806.0,107.2 809.0,108.8 812.0,109.9 815.0,110.6 818.0,111.0 821.0,111.4 824.0,111.6 827.0,111.7 830.0,111.8 833.0,111.9 836.0,111.9 839.0,111.9 842.0,112.0 845.0,112.0 848.0,112.0 851.0,112.0 854.0,112.0" fill="none" stroke="#F28FD9" stroke-width="3.2" stroke-linejoin="round"/>
+<circle cx="614" cy="182" r="7" fill="#F2603C"/><text x="630" y="187" font-size="15" font-weight="800" fill="#1E1B4B">Lebih kompensasi</text>
+<text x="630" y="208" font-size="12.5" font-weight="600" fill="#6B6699">Penjuru bertanduk (melonjak)</text><text x="630" y="226" font-size="12.5" font-weight="700" fill="#6B6699">Laras skru ke arah bertentangan</text>
+</svg><figcaption><b>Rajah 4.3</b> Kompensasi probe pada terminal <b>Demo / Probe Comp</b> (langkah 3). Laras skru kecil pada probe sehingga gelombang menyerupai panel tengah.</figcaption></figure>
+    <ol class="steps">
+      <li><div><b class="t">Letak dan hidupkan osiloskop</b><p>Letak di atas meja yang stabil, berhampiran litar. Skrin menghadap pensyarah. Palamkan kuasa, hidupkan, dan tunggu sehingga skrin utama muncul.</p></div></li>
+      <li><div><b class="t">Pasang probe <span class="ref">(Rajah 4.2)</span></b><p>Cucuk probe ke <b>CH1</b> (dan CH2–CH4 jika perlu). Pada probe ada suis <b>×1 / ×10</b>. Pilih <b>×10</b> untuk kebanyakan kerja.</p>
+        <p>Pada menu saluran (tekan nombor saluran, contoh <span class="k">1</span>), tetapkan <b>Probe</b> kepada <b>10:1</b> supaya sepadan dengan suis.</p></div></li>
+      <li><div><b class="t">Kompensasi probe (sekali setiap kali guna probe baharu) <span class="ref">(Rajah 4.3)</span></b>
+        <ul><li>Sambung hujung probe ke terminal <b>Demo / Probe Comp</b> di panel depan (penunjuk 9 dalam Rajah 4.1). Klip bumi ke terminal bumi di sebelahnya (simbol bumi).</li><li>Tekan <span class="k">Default Setup</span>, kemudian <span class="k">Auto Scale</span>. Anda patut nampak gelombang segi empat.</li><li>Pusing skru kecil pada probe sehingga penjuru gelombang <b>tegak dan rata</b> (tidak bulat atau bertanduk). Ulang untuk setiap probe.</li></ul></div></li>
+      <li><div><b class="t">Laras paparan asas</b>
+        <ul><li><b>Volts/div</b> (tombol menegak): gelombang memenuhi kira-kira 3–6 petak.</li><li><b>Time/div</b> (tombol mengufuk): nampak 2–5 kitaran.</li><li><b>Trigger</b>: jenis <i>Edge</i>, <i>Rising</i>, aras (tombol Level) di tengah gelombang.</li></ul>
+        <p>Tidak pasti? Tekan <span class="k">Auto Scale</span> dahulu, kemudian halusi.</p></div></li>
+      <li><div><b class="t">Jadikan paparan jelas untuk dipaparkan</b>
+        <ul><li>Tekan butang <span class="k">Intensity</span> (di bawah tombol Entry; penunjuk 11 dalam Rajah 4.1), kemudian putar tombol <b>Entry</b> untuk menaikkan kecerahan gelombang.</li><li>Untuk grid dan pilihan paparan lain, tekan <span class="k">Display</span> dan guna softkey di kanan skrin.</li><li>Tutup menu yang tidak perlu supaya gelombang tidak terlindung.</li></ul>
+        <div class="note warn"><b class="tag">NOTA</b><span>Nama softkey dalam menu Display boleh berbeza mengikut versi firmware.</span></div></div></li>
+      <li><div><b class="t">Pilih cara paparan osiloskop masuk ke OBS</b><p>DSOX1204A <b>tiada port video</b>, jadi tiada kad tangkap. Pilih <b>satu</b> cara di bawah. Cuba <b>A</b> dahulu.</p></div></li>
+    </ol>
+
+    <table style="margin:12px 0 4px">
+      <tr><th style="width:26%">Pilihan</th><th>Cara</th><th style="width:27%">Kebaikan / Kelemahan</th></tr>
+      <tr><td><b>A. LAN + pelayar</b><br><small>disyorkan</small></td><td>Sambung kabel LAN, buka alamat IP osiloskop dalam Chrome/Edge untuk melihat dan mengawal skrin. Dalam OBS tambah <b>Window Capture</b> pada tetingkap pelayar itu.</td><td>✔ Tiada perisian dan tiada kad tangkap<br>✘ Perlu rangkaian yang sama; sedikit lengah</td></tr>
+      <tr><td><b>B. USB + BenchVue</b></td><td>Pasang <b>Keysight BenchVue</b> (aplikasi Oscilloscope) dan <b>IO Libraries</b>. Sambung kabel USB ke port USB belakang osiloskop. Dalam OBS tambah <b>Window Capture</b> pada tetingkap BenchVue.</td><td>✔ Tidak perlu rangkaian<br>✘ Perlu pasang perisian; semak lesen dan versi</td></tr>
+      <tr><td><b>C. Kamera ke skrin</b><br><small>pilihan terakhir</small></td><td>Halakan kamera (Kamera B atau kamera lain) <b>tegak lurus</b> ke skrin osiloskop. Kunci fokus dan pendedahan. Kurangkan pantulan cahaya.</td><td>✔ Sentiasa boleh<br>✘ Kurang tajam; boleh ada corak berkelip (moiré)</td></tr>
+    </table>
+
+    <h3>Langkah Pilihan A: LAN + pelayar</h3>
+    <figure class="fig "><svg viewBox="0 0 880 166" role="img" aria-label="Osiloskop disambung dengan kabel LAN ke router, laptop membuka alamat IP dalam pelayar, kemudian OBS menangkap tetingkap pelayar">
+<defs><marker id="ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6699"/></marker></defs>
+<rect x="10" y="14" width="136" height="116" rx="20" fill="#fff" stroke="#C9C2EE" stroke-width="2"/><circle cx="78.0" cy="44" r="12" fill="#F28FD9"/><text x="78.0" y="82" text-anchor="middle" font-size="15.5" font-weight="800" fill="#1E1B4B">DSOX1204A</text><text x="78.0" y="104" text-anchor="middle" font-size="12" font-weight="600" fill="#6B6699">port LAN</text><rect x="190" y="14" width="136" height="116" rx="20" fill="#fff" stroke="#C9C2EE" stroke-width="2"/><circle cx="258.0" cy="44" r="12" fill="#6CC4FA"/><text x="258.0" y="82" text-anchor="middle" font-size="15.5" font-weight="800" fill="#1E1B4B">Router / suis</text><text x="258.0" y="104" text-anchor="middle" font-size="12" font-weight="600" fill="#6B6699">rangkaian sama</text><rect x="370" y="14" width="136" height="116" rx="20" fill="#fff" stroke="#C9C2EE" stroke-width="2"/><circle cx="438.0" cy="44" r="12" fill="#6E5CE7"/><text x="438.0" y="82" text-anchor="middle" font-size="15.5" font-weight="800" fill="#1E1B4B">Laptop</text><text x="438.0" y="104" text-anchor="middle" font-size="12" font-weight="600" fill="#6B6699">http://alamat IP</text><rect x="550" y="14" width="136" height="116" rx="20" fill="#fff" stroke="#C9C2EE" stroke-width="2"/><circle cx="618.0" cy="44" r="12" fill="#2DD4A0"/><text x="618.0" y="82" text-anchor="middle" font-size="15.5" font-weight="800" fill="#1E1B4B">Pelayar</text><text x="618.0" y="104" text-anchor="middle" font-size="12" font-weight="600" fill="#6B6699">skrin osiloskop</text><rect x="730" y="14" width="136" height="116" rx="20" fill="#fff" stroke="#C9C2EE" stroke-width="2"/><circle cx="798.0" cy="44" r="12" fill="#FFB547"/><text x="798.0" y="82" text-anchor="middle" font-size="15.5" font-weight="800" fill="#1E1B4B">OBS</text><text x="798.0" y="104" text-anchor="middle" font-size="12" font-weight="600" fill="#6B6699">Window Capture</text>
+<path d="M148 72 H186" stroke="#6B6699" stroke-width="3" stroke-linecap="round" marker-end="url(#ar2)"/><path d="M328 72 H366" stroke="#6B6699" stroke-width="3" stroke-linecap="round" marker-end="url(#ar2)"/><path d="M508 72 H546" stroke="#6B6699" stroke-width="3" stroke-linecap="round" marker-end="url(#ar2)"/><path d="M688 72 H726" stroke="#6B6699" stroke-width="3" stroke-linecap="round" marker-end="url(#ar2)"/>
+<text x="168" y="154" text-anchor="middle" font-size="11.5" font-weight="700" fill="#6B6699">kabel LAN</text>
+<text x="528" y="154" text-anchor="middle" font-size="11.5" font-weight="700" fill="#6B6699">Chrome / Edge</text>
+</svg><figcaption><b>Rajah 4.4</b> Pilihan A: paparan osiloskop sampai ke OBS melalui rangkaian.</figcaption></figure>
+    <ol class="steps" style="counter-reset:s 6">
+      <li><div><b class="t">Sambung kabel LAN</b><p>Dari port LAN di belakang osiloskop ke router/suis yang sama dengan laptop.</p></div></li>
+      <li><div><b class="t">Cari alamat IP osiloskop</b><p>Tekan <span class="k">Utility</span> → <b>I/O</b> → <b>LAN Settings</b> dan catat alamat IP (contoh <span class="k">192.168.1.50</span>).</p>
+        <div class="note warn"><b class="tag">NOTA</b><span>Susunan menu boleh berbeza mengikut firmware. Jika tidak jumpa, cari “LAN” dalam buku panduan.</span></div></div></li>
+      <li><div><b class="t">Buka halaman web osiloskop</b><p>Pada laptop, buka Chrome atau Edge dan taip <span class="k">http://</span> diikuti alamat IP itu. Pilih halaman kawalan jauh (Remote Front Panel / Browser Web Control) untuk melihat skrin osiloskop.</p></div></li>
+      <li><div><b class="t">Tangkap tetingkap itu dalam OBS</b><p>Dalam OBS: <span class="k">+</span> → <b>Window Capture</b> → pilih tetingkap pelayar itu. Klik kanan sumber → <b>Transform</b> → <b>Edit Transform</b> dan isi <b>Crop</b> untuk membuang bar alamat dan tab.</p></div></li>
+      <li><div><b class="t">Uji dengan isyarat contoh</b><p>Gunakan isyarat <b>Demo / Probe Comp</b> atau penjana fungsi. Lihat dalam <b>Preview</b> OBS: gelombang mesti boleh dibaca dari jauh.</p>
+        <div class="note ok"><b class="tag">SEMAK</b><span>Gelombang stabil, jelas, dan tidak terpotong dalam gambar OBS.</span></div></div></li>
+    </ol>
+  </section>
+
+  <!-- ===================== 5. OBS ===================== -->
+  <section id="obs" class="sec">
+    <div class="sec-head"><div class="n">5</div><h2>Setup OBS</h2></div>
+    <p class="lead">Matlamat: 3 scene yang bernama tepat, bunyi jelas, dan rakaman disimpan dengan selamat. Masa: ≈ 15 minit.</p>
+
+    <h3>Kenali antara muka OBS</h3>
+    <figure class="fig "><img src="manual-img/fig-obs-main.png" alt="Antara muka OBS Studio dengan kotak Scenes, Sources, Audio Mixer dan Controls"><figcaption><b>Rajah 5.1</b> Antara muka OBS (tangkapan skrin sebenar, OBS 30). <span class="nb">1</span> Preview · <span class="nb">2</span> Scenes · <span class="nb">3</span> Sources · <span class="nb">4</span> Audio Mixer · <span class="nb">5</span> Controls · <span class="nb">6</span> Start Streaming · <span class="nb">7</span> Start Recording · <span class="nb">8</span> Settings. Pada OBS Windows, kotak Controls juga ada butang <b>Start Virtual Camera</b>.</figcaption></figure>
+    <h3>A. Tetapan asas</h3>
+    <ol class="steps">
+      <li><div><b class="t">Buka OBS, jalankan wizard</b><p>Kali pertama, OBS menunjukkan <b>Auto-Configuration Wizard</b>. Pilih <b>Optimize just for recording</b> → <span class="k">Next</span>. Pilih <b>1920×1080</b>, FPS <b>30</b> → <span class="k">Apply Settings</span>.</p></div></li>
+      <li><div><b class="t">Semak video</b><p class="path">Settings → Video <span class="ref">(Rajah 5.2)</span></p><p>Base (Canvas) Resolution <b>1920×1080</b> · Output (Scaled) Resolution <b>1920×1080</b> · Common FPS Values <b>30</b>.</p></div></li>
+      <li><div><b class="t">Tetapan rakaman</b><p class="path">Settings → Output → Output Mode: Simple → Recording <span class="ref">(Rajah 5.3)</span></p>
+        <ul><li><b>Recording Path</b>: pilih folder yang mudah dicari (contoh <i>Videos\Kuliah</i>).</li><li><b>Recording Quality</b>: <i>High Quality, Medium File Size</i>.</li><li><b>Recording Format</b>: <i>mkv</i> (selamat jika komputer terhenti secara tiba-tiba).</li><li><b>Video Encoder</b> (di bawah Recording): pilih <i>Hardware (QSV / NVENC / AMD)</i> jika ada. Jika tiada, pilih <i>Software (x264)</i>.</li></ul>
+        <div class="note tip"><b class="tag">TIP</b><span>Untuk menukar mkv kepada mp4 selepas kuliah: <span class="path">File → Remux Recordings</span>.</span></div></div></li>
+      <li><div><b class="t">Pilih mikrofon</b><p class="path">Settings → Audio → Mic/Auxiliary Audio</p><p>Pilih mikrofon anda. Tekan <span class="k">OK</span>.</p></div></li>
+    </ol>
+
+    <figure class="fig narrow"><img src="manual-img/fig-obs-video.png" alt="Tetapan Video OBS: resolusi 1920x1080 dan 30 FPS"><figcaption><b>Rajah 5.2</b> <b>Settings → Video</b>. <span class="nb">1</span> Base (Canvas) 1920×1080 · <span class="nb">2</span> Output (Scaled) 1920×1080 · <span class="nb">3</span> Common FPS Values 30.</figcaption></figure><figure class="fig narrow"><img src="manual-img/fig-obs-output.png" alt="Tetapan Output OBS: laluan rakaman, kualiti, format dan encoder"><figcaption><b>Rajah 5.3</b> <b>Settings → Output</b> (Output Mode: Simple). <span class="nb">1</span> Recording Path · <span class="nb">2</span> Recording Quality: <i>High Quality, Medium File Size</i> · <span class="nb">3</span> Recording Format: <i>Matroska Video (.mkv)</i> · <span class="nb">4</span> Video Encoder (rakaman) · <span class="nb">5</span> Video Bitrate untuk siaran (4500 Kbps).</figcaption></figure>
+    <h3>B. Bina 3 scene (nama mesti tepat)</h3>
+    <div class="note warn" style="margin:0 0 12px"><b class="tag">PENTING</b><span>Taip nama <b>sama tepat</b> (huruf, jarak, tanda +): <b>Slaid Kuliah</b> · <b>Demo Litar + Scope</b> · <b>Slaid + Kamera PiP</b>. Jika berbeza, Podium akan menunjukkan “TIADA DALAM OBS”.</span></div>
+    <figure class="fig "><img src="manual-img/fig-obs-scenes.png" alt="Tiga scene Podium dalam OBS dengan senarai sumbernya"><figcaption><b>Rajah 5.4</b> Tiga scene dan sumber di dalamnya (tangkapan skrin sebenar; kotak warna mewakili slaid, kamera dan osiloskop sebenar).</figcaption></figure>
+    <ol class="steps">
+      <li><div><b class="t">Cipta scene <span class="ref">(Rajah 5.4)</span></b><p>Di kotak <b>Scenes</b> (bawah kiri), tekan <span class="k">+</span> tiga kali dan namakan setiap satu seperti di atas.</p></div></li>
+      <li><div><b class="t">Scene “Slaid Kuliah”</b><p>Pilih scene → <span class="k">+</span> di <b>Sources</b> → <b>Display Capture</b> (seluruh skrin) atau <b>Window Capture</b> (tetingkap PowerPoint sahaja). Namakan “Slaid”.</p>
+        <div class="note warn"><b class="tag">NOTA</b><span>Jika skrin tangkapan hitam, tukar kepada <b>Display Capture</b>, atau jalankan OBS sebagai <i>Administrator</i>.</span></div></div></li>
+      <li><div><b class="t">Scene “Demo Litar + Scope”</b><p>Tambah <b>Video Capture Device</b> “Kamera Litar” (EMEET Piko+) dan sumber osiloskop (<b>Window Capture</b> pada pelayar atau BenchVue untuk Pilihan A/B; <b>Video Capture Device</b> kamera kedua untuk Pilihan C). Seret dan kecilkan kedua-duanya supaya <b>kiri dan kanan</b> sama besar.</p></div></li>
+      <li><div><b class="t">Scene “Slaid + Kamera PiP”</b><p>Tekan <span class="k">+</span> → <b>Add Existing</b> → pilih “Slaid”. Kemudian tambah kamera (Kamera B, atau Kamera Litar jika hanya satu) dan seret ke <b>penjuru kanan bawah</b>. Tarik sudut kotak untuk mengecilkannya.</p></div></li>
+      <li><div><b class="t">Semak bunyi</b><p>Bercakap dalam mikrofon dan lihat bar <b>Mic/Aux</b> di <b>Audio Mixer</b>. Bar patut kerap sampai <b>kuning</b> dan <b>tidak</b> menyentuh merah. Laras gelangsar jika terlalu kuat atau perlahan.</p></div></li>
+    </ol>
+
+    <h3>C. Hidupkan WebSocket (supaya Podium boleh mengawal OBS)</h3>
+    <figure class="fig narrow"><img src="manual-img/fig-obs-ws.png" alt="Dialog WebSocket Server Settings dalam OBS"><figcaption><b>Rajah 5.5</b> <b>Tools → WebSocket Server Settings</b>. <span class="nb">1</span> Enable WebSocket server · <span class="nb">2</span> Server Port <b>4455</b> · <span class="nb">3</span> Enable Authentication · <span class="nb">4</span> Server Password · <span class="nb">5</span> Generate Password. Catat kata laluan itu untuk Podium.</figcaption></figure>
+    <ol class="steps">
+      <li><div><b class="t">Buka tetapan WebSocket</b><p class="path">Tools → WebSocket Server Settings</p></div></li>
+      <li><div><b class="t">Tetapkan <span class="ref">(Rajah 5.5)</span></b>
+        <ul><li>Tanda <b>Enable WebSocket server</b>.</li><li><b>Server Port</b>: <b>4455</b>.</li><li>Tanda <b>Enable Authentication</b> dan tetapkan <b>Server Password</b> (atau tekan <i>Generate Password</i>). <b>Catat kata laluan ini.</b></li><li>Tekan <span class="k">OK</span>.</li></ul></div></li>
+      <li><div><b class="t">Rakaman ujian 10 saat</b><p>Tekan <b>Start Recording</b>, bercakap sebentar, kemudian <b>Stop Recording</b>. Buka <span class="path">File → Show Recordings</span> dan mainkan fail itu.</p>
+        <div class="note ok"><b class="tag">SEMAK</b><span>Gambar jelas, bunyi ada, dan fail boleh dimainkan.</span></div></div></li>
+    </ol>
+  
+    <h3>D. Sediakan siaran langsung</h3>
+    <figure class="fig narrow"><img src="manual-img/fig-obs-stream.png" alt="Tetapan Stream OBS: Service YouTube - RTMPS dan Stream Key"><figcaption><b>Rajah 5.6</b> <b>Settings → Stream</b>. <span class="nb">1</span> Service: <i>YouTube - RTMPS</i> (atau Facebook Live) · <span class="nb">2</span> Stream Key (tampal kunci siaran; dipaparkan sebagai titik).</figcaption></figure>
+    <ol class="steps">
+      <li><div><b class="t">Kamera Maya (untuk Teams, Zoom, Google Meet)</b><p>Tiada apa perlu dipasang dalam OBS 28 ke atas. Podium menghidupkannya dengan butang <b>Kamera Maya</b>. Untuk menguji tanpa Podium, tekan <b>Start Virtual Camera</b> pada kotak <b>Controls</b> OBS (butang ini ada pada OBS Windows).</p></div></li>
+      <li><div><b class="t">Siaran ke YouTube atau Facebook (pilihan) <span class="ref">(Rajah 5.6)</span></b><p class="path">Settings → Stream → Service: YouTube - RTMPS (atau Facebook Live)</p><p>Tekan <b>Connect Account</b> atau tampal <b>Stream Key</b>, kemudian <span class="k">OK</span>. Kunci siaran diperoleh dari YouTube Studio → <b>Go Live</b>.</p>
+        <div class="note warn"><b class="tag">PENTING</b><span>Jangan kongsi kunci siaran kepada sesiapa. Siapa yang ada kunci boleh menyiar pada saluran anda. Tetapkan siaran sebagai <b>Unlisted</b> supaya hanya pelajar yang ada pautan boleh menonton.</span></div></div></li>
+      <li><div><b class="t">Tetapan siaran</b><p class="path">Settings → Output → Streaming</p><p><b>Video Bitrate</b> ≈ <b>4500 Kbps</b> (1080p, 30 fps), <b>Audio Bitrate</b> 160. Kelajuan <b>muat naik</b> internet sekurang-kurangnya 8 Mbps; guna kabel LAN jika boleh.</p></div></li>
+      <li><div><b class="t">Siaran dan rakaman serentak</b><p>Boleh, dan disyorkan: rakaman tempatan ialah salinan keselamatan jika internet terputus. Jika Surface tersangkut, tukar <span class="path">Settings → Output → Recording Quality</span> kepada <b>Same as stream</b>. Nota: OBS memberi amaran bahawa rakaman dengan kualiti ini <b>tidak boleh dijeda</b>, dan mutu rakaman sama seperti siaran.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- ===================== PEMISAH BAB B ===================== -->
+  <section id="bab-b" class="divider" aria-label="Bab B: Mengajar">
+    <div class="dv-top"><img src="brand/podium-wordmark-on-violet.svg" alt="Podium"><span class="dv-tag">BAB B</span></div>
+    <div class="dv-letter" aria-hidden="true">B</div>
+    <div class="dv-main">
+      <h2>Mengajar</h2>
+      <p>Gunakan setiap kali anda mengajar: sambung Podium, kemudian mengajar secara langsung dan simpan video untuk pelajar.</p>
+    </div>
+    <ol class="dv-list"><li><b>6</b><span>Sambung Podium</span><small>≈ 3 minit</small></li><li><b>7</b><span>Mengajar langsung &amp; simpan video</span><small>pilih cara</small></li></ol>
+  </section>
+
+  <!-- ===================== 6. PODIUM ===================== -->
+  <section id="podium" class="sec">
+    <div class="sec-head"><div class="n">6</div><h2>Sambung Podium</h2></div>
+    <p class="lead">Podium ialah panel sentuh untuk menukar scene, merakam dan mengira masa. Masa: ≈ 3 minit.</p>
+    <figure class="fig "><img src="manual-img/fig-podium-idle.png" alt="Papan Podium yang bersambung ke OBS dengan bahagian bernombor"><figcaption><b>Rajah 6.1</b> Papan Podium selepas bersambung. <span class="nb">1</span> Host, Port, Password dan <b>Sambung</b> · <span class="nb">2</span> status Connected · <span class="nb">3</span> kad scene (tekan 1/2/3) · <span class="nb">4</span> Siaran Langsung: Kamera Maya dan Mula Siaran · <span class="nb">5</span> Rakaman · <span class="nb">6</span> Pemasa kuliah · <span class="nb">7</span> Nota pantas.</figcaption></figure>
+    <ol class="steps">
+      <li><div><b class="t">Buka Podium <span class="ref">(Rajah 6.1)</span></b><p>Dalam <b>Chrome</b> atau <b>Edge</b> pada laptop yang sama dengan OBS, buka <a href="https://podium-panel.vercel.app">podium-panel.vercel.app</a>. Anda juga boleh membuka fail <span class="k">index.html</span> terus.</p>
+        <div class="note tip"><b class="tag">TIP</b><span>Tambah ke bar penanda buku (bookmark) supaya mudah dibuka semula.</span></div></div></li>
+      <li><div><b class="t">Isi sambungan</b><p><b>Host</b> = <span class="k">localhost</span> · <b>Port</b> = <span class="k">4455</span> · <b>Password</b> = kata laluan WebSocket tadi. Tanda <b>Ingat</b> jika laptop ini peribadi.</p></div></li>
+      <li><div><b class="t">Tekan “Sambung”</b><p>Status berubah kepada <b style="color:#0E7A5A">● Connected</b>. Jika tidak berjaya, lihat Bahagian 9.</p></div></li>
+      <li><div><b class="t">Uji tiga scene</b><p>Sentuh kad atau tekan <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> pada papan kekunci. Kad yang aktif akan menunjukkan <b>LIVE</b> dan scene dalam OBS bertukar.</p>
+        <div class="note warn"><b class="tag">NOTA</b><span>Kad bertanda “TIADA DALAM OBS”? Tekan <b>⚙ Nama scene OBS</b> dan pilih nama yang betul daripada senarai.</span></div></div></li>
+      <li><div><b class="t">Siaran langsung (pilihan)</b><p>Kad <b>Siaran Langsung</b> ada dua butang: <b>Kamera Maya</b> (untuk Teams, Zoom, Meet) dan <b>Mula Siaran</b> (YouTube, Facebook). Apabila aktif, lampu dan butang bertukar <b style="color:#0E7A5A">hijau</b>. Untuk berhenti, tekan <b>dua kali</b>. Cara guna: Bahagian 7.</p></div></li>
+      <li><div><b class="t">Mula dan henti rakaman</b><p>Tekan <b>MULA RAKAMAN</b>. Lampu <b style="color:#FF3B5C">merah</b> menyala dan masa berjalan. Untuk berhenti, tekan <b>dua kali</b> (tekan pertama meminta pengesahan). Rakaman ini boleh dikongsi kepada pelajar selepas kuliah (Bahagian 7).</p></div></li>
+      <li><div><b class="t">Pemasa kuliah</b><p>Pilih tempoh (30, 45, 50, 60, 90, 120 minit atau taip sendiri) → <b>Mula</b>. Pemasa bertukar <b style="color:#B96A00">kuning</b> pada 5 minit terakhir, <b style="color:#F2603C">coral</b> pada 1 minit terakhir, dan berbunyi apabila tamat.</p></div></li>
+      <li><div><b class="t">Nota pantas</b><p>Taip di kotak bawah. Nota <b>disimpan automatik</b> dan masih ada walaupun halaman dimuat semula.</p></div></li>
+    </ol>
+  
+    <h3>Guna dari telefon atau tablet (pilihan)</h3>
+    <div class="note ok" style="margin:0 0 10px"><b class="tag">AUTO-FIT</b><span>Podium menyesuaikan saiznya secara automatik dengan skrin <b>Surface, laptop, monitor, tablet dan telefon</b>. Pada Surface dan laptop, semua kawalan muat pada satu skrin tanpa menatal. Podium juga boleh dipasang sebagai aplikasi pada skrin utama.</span></div>
+    <div class="note warn" style="margin:0 0 10px"><b class="tag">PENTING</b><span>Laman <b>https</b> (seperti <span class="k">podium-panel.vercel.app</span>) tidak boleh menyambung ke OBS melalui alamat IP kerana pelayar menyekatnya. Untuk telefon, Podium mesti dibuka melalui <b>http</b> dari laptop anda (langkah 3). Podium akan memaparkan mesej jika anda mencubanya. Pada Surface/laptop yang sama dengan OBS, guna <span class="k">localhost</span> seperti biasa.</span></div>
+    <figure class="fig narrow"><img src="manual-img/fig-podium-phone.png" alt="Podium pada telefon: borang sambungan dengan IP laptop, dan selepas bersambung dengan Kamera Maya dan rakaman aktif"><figcaption><b>Rajah 6.2</b> Podium pada telefon. Kiri: isi <b>Host</b> dengan alamat IP laptop, <b>Port</b> 4455 dan <b>Password</b>. Kanan: selepas bersambung, borang diringkaskan dan kad Siaran Langsung, Rakaman dan Pemasa tersusun menegak.</figcaption></figure>
+    <ol class="steps">
+      <li><div><b class="t">Sambung laptop dan telefon ke Wi-Fi yang sama</b><p>Jika Wi-Fi kampus menyekat peranti berhubung antara satu sama lain, sambungkan <b>kedua-duanya</b> ke hotspot telefon.</p></div></li>
+      <li><div><b class="t">Hidupkan kata laluan WebSocket dalam OBS</b><p class="path">Tools → WebSocket Server Settings → Enable Authentication</p><p>Wajib kerana sesiapa dalam rangkaian yang sama boleh mengawal OBS jika tiada kata laluan. Jika Windows meminta kebenaran firewall untuk OBS, pilih rangkaian <b>Private</b>.</p></div></li>
+      <li><div><b class="t">Hidangkan Podium dari laptop melalui http</b><p>Buka <b>Command Prompt</b> dalam folder <span class="k">lecturer-control-panel</span> (yang mengandungi <span class="k">index.html</span>) dan taip:</p><p><span class="k">python -m http.server 8080</span> (atau <span class="k">py -m http.server 8080</span>)</p><p>Kaedah ini memerlukan Python daripada python.org. Biarkan tetingkap itu terbuka sepanjang kuliah.</p></div></li>
+      <li><div><b class="t">Cari alamat IP laptop</b><p class="path">Settings → Network &amp; internet → Wi-Fi → (nama rangkaian) → Properties → IPv4 address</p><p>Contoh: <span class="k">192.168.1.20</span>.</p></div></li>
+      <li><div><b class="t">Buka Podium pada telefon</b><p>Dalam pelayar telefon, taip <span class="k">http://192.168.1.20:8080</span> (gantikan dengan IP anda).</p></div></li>
+      <li><div><b class="t">Sambung ke OBS</b><p>Isi <b>Host</b> = IP laptop, <b>Port</b> = 4455, <b>Password</b> = kata laluan WebSocket, kemudian tekan <b>Sambung</b>. Selepas bersambung, borang sambungan diringkaskan supaya kawalan utama kelihatan.</p></div></li>
+      <li><div><b class="t">(Pilihan) Tambah ke skrin utama</b><p><b>Android (Chrome):</b> menu ⋮ → <b>Add to Home screen</b>. <b>iPhone (Safari):</b> butang Kongsi → <b>Add to Home Screen</b>. Podium dibuka seperti aplikasi tanpa bar alamat.</p>
+        <div class="note warn"><b class="tag">NOTA</b><span>Pemasangan penuh sebagai aplikasi (PWA) hanya tersedia pada laman https. Pada alamat http setempat, pelayar mungkin hanya membuat pintasan.</span></div></div></li>
+    </ol>
+  </section>
+
+  <!-- ===================== 7. MENGAJAR LANGSUNG ===================== -->
+  <section id="langsung" class="sec">
+    <div class="sec-head"><div class="n">7</div><h2>Mengajar langsung &amp; simpan video</h2></div>
+    <p class="lead">Pilih cara anda mengajar. Anda boleh mengajar secara langsung <b>dan</b> menyimpan video untuk rujukan pelajar pada masa yang sama.</p>
+
+    <table>
+      <tr><th style="width:24%">Cara</th><th>Sesuai untuk</th><th style="width:25%">Butang Podium</th></tr>
+      <tr><td><b>1. Mesyuarat dalam talian</b></td><td>Kelas dalam Teams, Zoom atau Google Meet. Pelajar sudah ada pautan kelas.</td><td>Kamera Maya + Rakaman</td></tr>
+      <tr><td><b>2. Siaran langsung</b></td><td>Ramai penonton atau kelas dalam YouTube/Facebook. Pelajar hanya menonton.</td><td>Mula Siaran + Rakaman</td></tr>
+      <tr><td><b>3. Rakam sahaja</b></td><td>Pelajar menonton kemudian (kelas terbalik / ulang kaji).</td><td>Rakaman</td></tr>
+    </table>
+    <div class="note ok"><b class="tag">DISYORKAN</b><span>Hidupkan <b>Rakaman</b> pada setiap kuliah, walaupun mengajar secara langsung. Jika internet terputus, anda masih ada video penuh untuk pelajar.</span></div>
+
+    <figure class="fig "><img src="manual-img/fig-podium-live.png" alt="Podium semasa Kamera Maya, siaran dan rakaman sedang berjalan"><figcaption><b>Rajah 7.1</b> Siaran dan rakaman berjalan serentak. <span class="nb">1</span> Kamera Maya aktif (hijau) · <span class="nb">2</span> Siaran berjalan (hijau) · <span class="nb">3</span> lampu hijau = disiarkan · <span class="nb">4</span> lampu merah = merakam · <span class="nb">5</span> Henti Rakaman.</figcaption></figure>
+    <h3>Cara 1: Mesyuarat dalam talian (Kamera Maya)</h3>
+    <ol class="steps">
+      <li><div><b class="t">Hidupkan Kamera Maya</b><p>Dalam Podium tekan <b>Kamera Maya</b>. Lampu menjadi <b style="color:#0E7A5A">hijau</b>.</p></div></li>
+      <li><div><b class="t">Pilih kamera dalam aplikasi mesyuarat</b><p>Buka Teams, Zoom atau Meet. Pada tetapan <b>Video / Camera</b>, pilih <b>OBS Virtual Camera</b>. Pelajar kini melihat apa yang ada dalam OBS (scene yang dipilih).</p></div></li>
+      <li><div><b class="t">Pilih mikrofon dalam aplikasi mesyuarat</b><p>Kamera Maya hanya menghantar <b>gambar</b>, bukan bunyi. Dalam tetapan <b>Audio / Microphone</b> aplikasi mesyuarat, pilih mikrofon sebenar anda (atau mikrofon EMEET).</p></div></li>
+      <li><div><b class="t">Jangan kongsi skrin</b><p>Slaid, litar dan osiloskop dihantar melalui scene OBS. Tukar scene dengan <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> atau sentuhan. Dengan itu pelajar tidak melihat skrin Podium atau OBS.</p></div></li>
+      <li><div><b class="t">Hidupkan Rakaman</b><p>Tekan <b>MULA RAKAMAN</b> untuk menyimpan salinan.</p>
+        <div class="note warn"><b class="tag">PRIVASI</b><span>OBS merakam <b>Desktop Audio</b> (bunyi dari aplikasi mesyuarat), jadi suara pelajar boleh terakam. Jika tidak mahu, matikan <b>Desktop Audio</b> pada <b>Audio Mixer</b> OBS, dan ikut dasar institusi anda tentang rakaman kelas.</span></div></div></li>
+    </ol>
+
+    <h3>Cara 2: Siaran langsung (YouTube / Facebook)</h3>
+    <ol class="steps">
+      <li><div><b class="t">Cipta acara siaran</b><p>Di YouTube Studio atau Facebook, cipta acara siaran dan tetapkan sebagai <b>Unlisted</b> / dikongsi dengan pautan. Salin kunci siaran ke <span class="path">OBS → Settings → Stream</span> (Bahagian 5, D).</p></div></li>
+      <li><div><b class="t">Tekan “Mula Siaran”</b><p>Dalam Podium tekan <b>Mula Siaran</b>. Tunggu butang menjadi <b style="color:#0E7A5A">hijau</b> dan label <b>SIARAN LANGSUNG</b>. Platform mungkin mengambil beberapa saat sebelum menunjukkan status Live.</p></div></li>
+      <li><div><b class="t">Kongsi pautan dengan pelajar</b><p>Hantar pautan acara melalui e-mel, kumpulan WhatsApp atau sistem pembelajaran institusi anda.</p></div></li>
+      <li><div><b class="t">Hidupkan Rakaman, dan henti apabila tamat</b><p>Tekan <b>MULA RAKAMAN</b>. Selepas kuliah, tekan <b>Henti Siaran</b> dua kali dan kemudian henti rakaman dua kali.</p></div></li>
+    </ol>
+
+    <h3>Simpan video untuk rujukan pelajar</h3>
+    <ol class="steps">
+      <li><div><b class="t">Henti rakaman dan tunggu mesej “disimpan”</b><p>Podium memaparkan laluan fail selepas rakaman berhenti.</p></div></li>
+      <li><div><b class="t">Tukar kepada MP4</b><p>Fail <i>.mkv</i> selamat tetapi tidak semua peranti boleh memainkannya. Dalam OBS: <span class="path">File → Remux Recordings</span> dan pilih fail itu untuk mendapatkan <i>.mp4</i>.</p></div></li>
+      <li><div><b class="t">Semak dan potong (pilihan)</b><p>Mainkan 10 saat pertama dan terakhir. Untuk membuang bahagian awal atau akhir, guna aplikasi penyuntingan video yang ada dalam Windows (contoh Clipchamp jika tersedia).</p></div></li>
+      <li><div><b class="t">Namakan fail dengan jelas</b><p>Contoh: <span class="k">EEE201_BabLitar_2026-11-28.mp4</span> (kod kursus, tajuk, tarikh).</p></div></li>
+      <li><div><b class="t">Muat naik dan kongsi</b>
+        <ul><li><b>YouTube</b> (Unlisted): sesuai untuk pelajar ramai dan telefon.</li><li><b>OneDrive / SharePoint / Teams</b>: sesuai jika institusi anda menggunakan Microsoft 365. Tetapkan akses kepada pelajar kursus sahaja.</li><li><b>Google Drive</b>: tetapkan “Sesiapa yang ada pautan”, atau senarai e-mel pelajar.</li></ul>
+        <div class="note tip"><b class="tag">TIP</b><span>Satu jam rakaman kira-kira 2–5 GB. Jika terlalu besar untuk dimuat naik, mampatkan dahulu dengan aplikasi seperti HandBrake.</span></div></div></li>
+      <li><div><b class="t">Salin ke cakera luaran</b><p>Simpan satu salinan di luar Surface sebelum memadam fail untuk mengosongkan ruang.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- ===================== PEMISAH BAB C ===================== -->
+  <section id="bab-c" class="divider" aria-label="Bab C: Rujukan">
+    <div class="dv-top"><img src="brand/podium-wordmark-on-violet.svg" alt="Podium"><span class="dv-tag">BAB C</span></div>
+    <div class="dv-letter" aria-hidden="true">C</div>
+    <div class="dv-main">
+      <h2>Rujukan</h2>
+      <p>Semak sebelum dan selepas kuliah, dan cari penyelesaian apabila ada masalah.</p>
+    </div>
+    <ol class="dv-list"><li><b>8</b><span>Senarai semak kuliah</span><small>setiap kali</small></li><li><b>9</b><span>Masalah lazim</span><small>bila perlu</small></li></ol>
+  </section>
+
+  <!-- ===================== 8. SENARAI SEMAK ===================== -->
+  <section id="semak" class="sec">
+    <div class="sec-head"><div class="n">8</div><h2>Senarai semak kuliah</h2></div>
+    <p class="lead">Gunakan setiap kali. Kuliah seterusnya hanya perlu ≈ 10 minit.</p>
+    <div class="two">
+      <div class="box">
+        <h3>10 minit sebelum kuliah</h3>
+        <ul class="chk">
+          <li><input type="checkbox"><span>Pengecas dipasang, notifikasi dimatikan</span></li>
+          <li><input type="checkbox"><span>Kamera, mikrofon dan osiloskop dihidupkan</span></li>
+          <li><input type="checkbox"><span>OBS dibuka dan <b>Preview</b> nampak jelas</span></li>
+          <li><input type="checkbox"><span>Bunyi diuji (bar tidak menyentuh merah)</span></li>
+          <li><input type="checkbox"><span>Podium <b>Connected</b>, tiga scene diuji</span></li>
+          <li><input type="checkbox"><span>Pemasa dipilih (contoh 50 minit)</span></li>
+          <li><input type="checkbox"><span>Kamera Maya atau Siaran dihidupkan (hijau); aplikasi mesyuarat memilih <b>OBS Virtual Camera</b></span></li>
+          <li><input type="checkbox"><span>Rakan semak: gambar jelas dan bunyi didengar</span></li>
+          <li><input type="checkbox"><span>Ruang simpanan ≥ 20 GB</span></li>
+          <li><input type="checkbox"><span>Tekan <b>MULA RAKAMAN</b> dan lampu merah menyala</span></li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>Selepas kuliah</h3>
+        <ul class="chk">
+          <li><input type="checkbox"><span>Henti Siaran dan Kamera Maya (tekan dua kali)</span></li>
+          <li><input type="checkbox"><span>Henti rakaman (tekan dua kali) dan tunggu mesej “disimpan”</span></li>
+          <li><input type="checkbox"><span>Mainkan 10 saat pertama dan terakhir fail rakaman</span></li>
+          <li><input type="checkbox"><span>Salin fail ke cakera luaran atau awan</span></li>
+          <li><input type="checkbox"><span>Muat naik video dan kongsi pautan dengan pelajar (Bahagian 7)</span></li>
+          <li><input type="checkbox"><span>Putuskan Podium dan tutup OBS</span></li>
+          <li><input type="checkbox"><span>Matikan osiloskop dan cabut probe</span></li>
+          <li><input type="checkbox"><span>Gulung kabel, simpan kamera dan mikrofon</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 8. MASALAH ===================== -->
+  <section id="masalah" class="sec">
+    <div class="sec-head"><div class="n">9</div><h2>Masalah lazim</h2></div>
+    <p class="lead">Cari masalah anda, cuba penyelesaian mengikut turutan.</p>
+    <table>
+      <tr><th style="width:30%">Masalah</th><th>Penyelesaian</th></tr>
+      <tr><td><b>Podium tidak boleh sambung</b></td><td>1) OBS mesti dibuka. 2) Dalam OBS: <span class="path">Tools → WebSocket Server Settings</span> mesti <b>Enable</b>. 3) Port <b>4455</b>. 4) Password sama. 5) Gunakan Chrome atau Edge pada laptop yang sama dengan OBS.</td></tr>
+      <tr><td><b>Telefon: “Halaman ini dibuka melalui https…”</b></td><td>Laman https tidak boleh menyambung ke IP OBS. Buka Podium melalui <b>http</b> dari laptop (Bahagian 6, langkah 3), contohnya <span class="k">http://192.168.1.20:8080</span>.</td></tr>
+      <tr><td><b>Telefon tidak dapat sambung walaupun IP betul</b></td><td>Pastikan telefon dan laptop dalam Wi-Fi yang sama, OBS dibuka dengan WebSocket aktif, Windows Firewall membenarkan OBS pada rangkaian <b>Private</b>, dan password betul. Jika Wi-Fi kampus menyekat peranti, guna hotspot telefon.</td></tr>
+      <tr><td><b>“Password OBS salah”</b></td><td>Buka semula WebSocket Server Settings dan lihat atau jana kata laluan baharu, kemudian taip semula dalam Podium.</td></tr>
+      <tr><td><b>Kad scene bertanda “TIADA DALAM OBS”</b></td><td>Nama scene dalam OBS tidak sama tepat. Tekan <b>⚙ Nama scene OBS</b> dalam Podium dan pilih nama dari senarai, atau betulkan nama dalam OBS.</td></tr>
+      <tr><td><b>Skrin slaid hitam dalam OBS</b></td><td>Tukar <b>Window Capture</b> kepada <b>Display Capture</b>. Atau jalankan OBS sebagai <i>Administrator</i>.</td></tr>
+      <tr><td><b>Kamera tidak dikesan</b></td><td>Tutup program lain yang menggunakan kamera (Teams, Zoom, Camera). Cabut dan cucuk semula ke port USB 3. Dalam OBS pilih semula kamera di <b>Properties</b>.</td></tr>
+      <tr><td><b>Tiada bunyi dalam rakaman</b></td><td>Semak <span class="path">Settings → Audio → Mic/Auxiliary Audio</span>. Pastikan ikon pembesar suara pada <b>Audio Mixer</b> tidak dibisukan (tidak bergaris merah).</td></tr>
+      <tr><td><b>Aplikasi mesyuarat tidak menunjukkan “OBS Virtual Camera”</b></td><td>Tekan <b>Kamera Maya</b> dalam Podium dahulu (lampu hijau), kemudian buka semula tetapan kamera dalam Teams/Zoom/Meet. Jika masih tiada, mulakan semula aplikasi mesyuarat. Pastikan OBS versi 28 ke atas.</td></tr>
+      <tr><td><b>Pelajar tidak dengar suara saya (Kamera Maya)</b></td><td>OBS Virtual Camera hanya menghantar gambar. Dalam tetapan <b>Audio / Microphone</b> aplikasi mesyuarat, pilih mikrofon sebenar anda.</td></tr>
+      <tr><td><b>Pratonton diri nampak terbalik</b></td><td>Pratonton sendiri dalam aplikasi mesyuarat biasanya dicerminkan untuk anda sahaja. Pelajar melihat gambar yang betul. Uji dengan seorang rakan.</td></tr>
+      <tr><td><b>“Siaran gagal dimulakan”</b></td><td>Dalam OBS semak <span class="path">Settings → Stream</span>: kunci siaran betul dan acara telah dicipta di YouTube/Facebook. Semak sambungan internet.</td></tr>
+      <tr><td><b>Siaran terputus-putus / “menyambung semula”</b></td><td>Guna kabel LAN, turunkan <b>Video Bitrate</b> kepada 3000 Kbps dan tutup muat turun lain. Rakaman tempatan tidak terjejas.</td></tr>
+      <tr><td><b>Surface panas atau tersangkut semasa siaran + rakaman</b></td><td>Pilih encoder <b>Hardware</b> (QSV), tetapkan <b>Recording Quality: Same as stream</b>, FPS 30, guna pengecas asal dan letak di tempat berudara.</td></tr>
+      <tr><td><b>Rakaman ada suara pelajar</b></td><td>OBS merakam <b>Desktop Audio</b> dari aplikasi mesyuarat. Matikan <b>Desktop Audio</b> pada <b>Audio Mixer</b> jika tidak mahu.</td></tr>
+      <tr><td><b>Gambar tersangkut / “dropped frames”</b></td><td>Pilih encoder <b>Hardware</b>, kurangkan FPS kepada 30, tutup program lain, gunakan port USB 3 yang berasingan untuk setiap peranti, dan pastikan mod kuasa <b>Best performance</b>.</td></tr>
+      <tr><td><b>Gambar kamera berkelip atau berubah cerah</b></td><td>Matikan <b>Auto Exposure</b> dan <b>Auto White Balance</b> pada kamera. Elak cahaya yang berkelip (lampu murah).</td></tr>
+      <tr><td><b>Gelombang osiloskop tidak stabil</b></td><td>Semak aras <b>Trigger</b> berada pada tengah gelombang, sumber trigger sepadan dengan saluran yang diukur, dan klip bumi disambung ke bumi litar.</td></tr>
+      <tr><td><b>Gelombang segi empat bulat atau bertanduk</b></td><td>Lakukan <b>kompensasi probe</b> semula (Bahagian 4, langkah 3, sebelum menukar tetapan lain) dan semak suis ×1/×10 sepadan dengan tetapan saluran.</td></tr>
+      <tr><td><b>Halaman web osiloskop tidak dibuka</b></td><td>Pastikan kabel LAN dipasang dan laptop serta osiloskop dalam rangkaian yang sama (contoh sama-sama sambung ke router yang sama). Semak semula alamat IP pada osiloskop dan taip dengan <span class="k">http://</span>. Cuba pelayar lain (Edge atau Chrome).</td></tr>
+      <tr><td><b>BenchVue tidak menemui osiloskop</b></td><td>Pasang <b>IO Libraries</b> Keysight, sambung kabel USB ke port <b>belakang</b> osiloskop (bukan port depan), dan mulakan semula BenchVue. Jika masih gagal, guna Pilihan A.</td></tr>
+      <tr><td><b>Piko+ tidak fokus pada litar / fokus bertukar-tukar</b></td><td>Naikkan kamera ke 50–60 cm. Matikan penjejakan / auto framing AI dan guna fokus manual jika perisian EMEET menyediakannya. Elakkan gerakan tangan dekat bahagian atas bingkai.</td></tr>
+      <tr><td><b>Gambar 4K tersangkut</b></td><td>Tetapkan kamera kepada <b>1920×1080, 30 fps</b> dalam OBS dan guna port USB 3.</td></tr>
+      <tr><td><b>Gambar skrin osiloskop berkelip (kamera)</b></td><td>Halakan kamera tegak lurus ke skrin, kurangkan pantulan, kunci pendedahan, dan cuba ubah sedikit jarak atau sudut kamera.</td></tr>
+      <tr><td><b>Fail rakaman tidak boleh dibuka</b></td><td>Fail <i>.mkv</i>: guna <span class="path">File → Remux Recordings</span> untuk menukar kepada <i>.mp4</i>.</td></tr>
+    </table>
+    <div class="note ok" style="margin-top:14px"><b class="tag">LAIN-LAIN</b><span>Panduan jenama dan warna Podium: <a href="brand/brand-guide.html">brand/brand-guide.html</a></span></div>
+  </section>
+
+  <footer>
+    <img src="brand/podium-wordmark-on-light.svg" alt="Podium">
+    <div>Kawal kuliah anda dengan satu sentuhan · Manual Pengguna v1.2</div>
+    <button class="print-btn no-print" onclick="window.print()">Cetak / Simpan sebagai PDF</button>
+  </footer>
+</div>
+</body>
+</html>
